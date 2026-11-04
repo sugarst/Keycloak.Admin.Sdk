@@ -1,0 +1,4 @@
+* text=auto eol=lf
+# Trailing tabs in TSV files preserve intentionally empty columns.
+*.tsv whitespace=-blank-at-eol
+*.nupkg binary

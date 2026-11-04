@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <PublishAot>true</PublishAot>
+    <IlcTreatWarningsAsErrors>true</IlcTreatWarningsAsErrors>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../../src/Keycloak.Admin.Sdk/Keycloak.Admin.Sdk.csproj" />
+    <Compile Include="../Keycloak.Admin.Sdk.Tests/ContractSuite.cs" Link="ContractSuite.cs" />
+    <Compile Include="../Keycloak.Admin.Sdk.Tests/Endpoints.g.cs" Link="Endpoints.g.cs" />
+    <Compile Include="../Keycloak.Admin.Sdk.Tests/AlignmentContracts.cs" Link="AlignmentContracts.cs" />
+    <Compile Include="../Keycloak.Admin.Sdk.Tests/EndpointCase.cs" Link="EndpointCase.cs" />
+    <Compile Include="../Keycloak.Admin.Sdk.Tests/RuntimeContracts.cs" Link="RuntimeContracts.cs" />
+    <Compile Include="../Keycloak.Admin.Sdk.Tests/EndpointMatrix.g.cs" Link="EndpointMatrix.g.cs" />
+    <Compile Include="../Keycloak.Admin.Sdk.Tests/ModelMatrix.g.cs" Link="ModelMatrix.g.cs" />
+  </ItemGroup>
+</Project>

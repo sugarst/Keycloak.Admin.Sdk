@@ -1,0 +1,10 @@
+{
+  "keycloakVersion": "26.8.1",
+  "commit": "24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b",
+  "sourceArchiveSha256": "1e2ff1d7dc008515e15ed072eccd32c2c836e0ca0eb251591018f334ade60794",
+  "openApiSha256": "a1210e0a9eb8fad34db9b57e13086d3c3295109bda523f991add0188649ebbe9",
+  "serverImage": "quay.io/keycloak/keycloak@sha256:79c623a22abacf3fe6c00a5fb30f5b7843d717b234033b80995891c06116d244",
+  "testedServerPlatform": "linux/amd64",
+  "sdk": "10.0.403",
+  "discoveredEndpoints": 520
+}

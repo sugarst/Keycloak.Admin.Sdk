@@ -1,0 +1,11 @@
+{
+  "matrixOperationPercent": 100,
+  "sdkSourceMethodPercent": 100,
+  "sdkSourceLinePercent": 99.9,
+  "sdkSourceBranchPercent": 100,
+  "apiWrapperLinePercent": 100,
+  "apiWrapperBranchPercent": 100,
+  "modelLinePercent": 100,
+  "rawLinePercent": 94,
+  "rawBranchPercent": 59
+}

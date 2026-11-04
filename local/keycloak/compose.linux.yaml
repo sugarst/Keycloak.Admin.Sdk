@@ -1,0 +1,5 @@
+services:
+  keycloak:
+    extra_hosts:
+      # Managed tests expose .NET metadata/SMTP fixtures on the Linux Docker host.
+      - "host.docker.internal:host-gateway"

@@ -1,0 +1,46 @@
+[
+  {
+    "method": "GET",
+    "path": "/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/scope/search",
+    "responseSchema": { "$ref": "#/components/schemas/ScopeRepresentation" },
+    "reason": "ScopeService.find returns Response.ok(toRepresentation(model)), a single object; its ARRAY annotation and OpenAPI are incorrect.",
+    "source": "services/src/main/java/org/keycloak/authorization/admin/ScopeService.java"
+  },
+  {
+    "method": "POST",
+    "path": "/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/policy",
+    "requestSchema": { "$ref": "#/components/schemas/PolicyRepresentation" },
+    "responseSchema": { "$ref": "#/components/schemas/AbstractPolicyRepresentation" },
+    "reason": "PolicyService.create(String payload) parses the raw JSON object into PolicyRepresentation and returns a 201 entity; JSON-quoting payload changes the wire contract.",
+    "source": "services/src/main/java/org/keycloak/authorization/admin/PolicyService.java"
+  },
+  {
+    "method": "POST",
+    "path": "/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/permission",
+    "requestSchema": { "$ref": "#/components/schemas/PolicyRepresentation" },
+    "responseSchema": { "$ref": "#/components/schemas/AbstractPolicyRepresentation" },
+    "reason": "PermissionService inherits PolicyService.create and its raw JSON contract.",
+    "source": "services/src/main/java/org/keycloak/authorization/admin/PermissionService.java"
+  },
+  {
+    "method": "POST",
+    "path": "/admin/realms/{realm}/client-description-converter",
+    "rawRequest": true,
+    "reason": "RealmAdminResource.convertClientDescription consumes raw JSON/XML/text and inspects the original string. The caller supplies HttpContent with the correct media type.",
+    "source": "services/src/main/java/org/keycloak/services/resources/admin/RealmAdminResource.java"
+  },
+  {
+    "method": "GET",
+    "path": "/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/resource/{resource-id}/attributes",
+    "responseSchema": { "type": "object", "additionalProperties": { "type": "array", "items": { "type": "string" } } },
+    "reason": "ResourceSetService.getAttributes returns the resource attribute map in a JSON response omitted from the OpenAPI schema.",
+    "source": "services/src/main/java/org/keycloak/authorization/admin/ResourceSetService.java"
+  },
+  {
+    "method": "GET",
+    "path": "/admin/realms/{realm}/workflows/scheduled/{resource-id}",
+    "responseSchema": { "type": "array", "items": { "$ref": "#/components/schemas/WorkflowRepresentation" } },
+    "reason": "WorkflowsResource.getScheduledWorkflows declares List<WorkflowRepresentation> and returns toList(); the OpenAPI annotation incorrectly describes a single entity.",
+    "source": "services/src/main/java/org/keycloak/workflow/admin/resource/WorkflowsResource.java"
+  }
+]

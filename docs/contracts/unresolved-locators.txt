@@ -1,0 +1,3 @@
+/admin/realms/{realm}/{extension} -> RealmAdminResource.extension: Object (services/src/main/java/org/keycloak/services/resources/admin/RealmAdminResource.java:664)
+/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/permission/{type}/provider -> PolicyTypeService.getPolicyAdminResourceProvider: Object (services/src/main/java/org/keycloak/authorization/admin/PolicyTypeService.java:49)
+/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/policy/{type}/provider -> PolicyTypeService.getPolicyAdminResourceProvider: Object (services/src/main/java/org/keycloak/authorization/admin/PolicyTypeService.java:49)

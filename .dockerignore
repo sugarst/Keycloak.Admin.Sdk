@@ -1,0 +1,6 @@
+.git
+.cache
+**/bin
+**/obj
+artifacts
+local/keycloak/.env
