@@ -44,7 +44,7 @@ public sealed class UserApi(KeycloakAdminClient transport)
     public Task<AdminResponse> MoveCredentialToFirstAsync(string @realm, string @userId, string @credentialId, CancellationToken cancellationToken = default) =>
         transport.SendAsync(HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/users/{1}/credentials/{2}/moveToFirst", [@realm, @userId, @credentialId]), AdminUri.Query([]), null, cancellationToken);
 
-    /// <summary>Update a credential label for a user</summary>
+    /// <summary>Update a credential label for a user Supply HttpContent with the desired server-supported Content-Type; the request consumes and disposes it.</summary>
     public Task<AdminResponse> SetCredentialUserLabelAsync(string @realm, string @userId, string @credentialId, HttpContent? body = null, CancellationToken cancellationToken = default) =>
         transport.SendAsync(HttpMethod.Put, AdminUri.Path("/admin/realms/{0}/users/{1}/credentials/{2}/userLabel", [@realm, @userId, @credentialId]), AdminUri.Query([]), body, cancellationToken);
 

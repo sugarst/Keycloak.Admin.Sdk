@@ -60,7 +60,7 @@ services 的 44 项由授权策略动态路径 36 项、用户 VC 管理 7 项�
 
 ## 已处理的官方定义差异
 
-[overrides.json](../../contracts/overrides.json) 当前记录了 6 项修正：scope/search 单对象响应、policy/permission 的原始 JSON 对象与创建实体、client-description-converter 的原始载荷、resource attributes 的字典响应，以及 scheduled workflows 的列表响应。它们说明不能把 OpenAPI 直接等同于真实 wire 契约。
+[overrides.json](../../contracts/overrides.json) 当前记录了 7 项修正：scope/search 单对象响应、policy/permission 的原始 JSON 对象与创建实体、client-description-converter 的原始载荷、resource attributes 的字典响应，以及 scheduled workflows 的列表响应。它们说明不能把 OpenAPI 直接等同于真实 wire 契约。
 
 源码直接声明且可与 SDK 强类型结果机械比较的返回类型共 205 项，类型差异 0 项。该检查不覆盖 Java Response 包装的运行时实体、DTO 每个字段的序列化语义或响应状态码全量行为。
 

@@ -18,7 +18,7 @@ dotnet run --file local/keycloak/Service.cs
 
 管理员默认用户名为 `admin`；密码查看当前目录生成的 `.env` 中 `KEYCLOAK_ADMIN_PASSWORD`。数据库默认名称/用户均为 `keycloak`，密码为 `POSTGRES_PASSWORD`。密码文件已从 Git 和 Docker 构建上下文排除，工具不打印密码。
 
-这是用于本机测试的 `start-dev` 服务，端口只绑定 loopback。默认开启 `admin-fine-grained-authz:v2,workflows`，与现有真实测试的场景一致。Keycloak 的初始化管理员环境变量采用[官方容器配置](https://www.keycloak.org/server/containers)。
+这是用于本机测试的 `start-dev` 服务，端口只绑定 loopback。默认路线为 `fgap-v2-stable`，显式启用 FGAP v2，仅支持 26.8.1 正式功能；FGAP v1 需要声明 `fgap-v1-compat`。路线 JSON、环境变量、功能阶段和实际服务器核验规则见 [路线声明](../../docs/contracts/admin-api-routing.md)。Keycloak 的初始化管理员环境变量采用[官方容器配置](https://www.keycloak.org/server/containers)。
 
 ## 日常命令
 
@@ -32,11 +32,19 @@ dotnet run --file local/keycloak/Service.cs -- logs        # 最近 100 行日�
 dotnet run --file local/keycloak/Service.cs -- down        # 停止并移除本项目容器，保留数据库卷
 dotnet run --file local/keycloak/Service.cs -- test        # 启动环境并运行现有托管真实集成测试
 dotnet run --file local/keycloak/Service.cs -- test-native # 构建并运行 Native AOT 真实集成测试
+dotnet run --file local/keycloak/Service.cs -- test-full   # 声明路线的全部真实业务验收
+dotnet run --file local/keycloak/Service.cs -- test-full-native # 全部业务场景的 Native AOT 实跑
 ```
 
 `test` / `test-native` 自动从 `.env` 注入 `KC_TEST_URL`、`KC_TEST_USERNAME` 和 `KC_TEST_PASSWORD`，在独立测试 realm 中操作，结束后删除该 realm；SMTP 夹具使用的管理员邮箱会恢复。原生程序共享 Keycloak 容器网络，以 loopback 访问服务和 .NET SMTP/元数据夹具。托管程序运行在宿主机；Linux 自动叠加 `compose.linux.yaml` 提供宿主机回调地址，Docker Desktop 使用内置 `host.docker.internal`。
 
-这两个命令运行当前已有的真实场景，现有记录为 **91 个方法/路径、93 条状态观测**；它们不表示全部 520 个操作均经过真实服务器验收。全量 SDK 单元测试及覆盖率门禁继续由 `tools/Verify.cs` 执行。
+`test` / `test-native` 保留原有 91 个方法/路径场景。全功能验收使用 `test-full` / `test-full-native`：v2 正式路线 478/478、v1 兼容路线 492/492，两种执行方式均通过，政策排除项单独列出。逐接口业务证明见 [全功能验收](../../docs/contracts/full-live-acceptance.md)。全量 SDK 单元测试及覆盖率门禁继续由 `tools/Verify.cs` 执行。
+
+全功能测试自动启用 `acceptance` Compose profile，附加真实 OpenLDAP（固定镜像 digest），本机端口 `127.0.0.1:1389`，密码复用 `.env` 的随机测试密码；每轮创建并删除自己的目录子树。`compose.acceptance.yaml` 仅在全功能验收时叠加，配置发布版本的 X509 证书头读取器，用真实签名 CRL 验证吊销缓存。普通 `up` 恢复基础 Keycloak 配置；数据库卷保留。LDAP 辅助服务随 `down` 清理。
+
+一次重跑两条路线、托管和 AOT 四套完整场景并更新证据：`dotnet run --file tools/Test-AllAdminRoutes.cs -- --update-docs`。入口显式注入每次的 `KEYCLOAK_ADMIN_API_ROUTE`，结束后恢复普通 `fgap-v2-stable` 服务和 `.env` 声明。
+
+测试还会直接通过 SCRAM-SHA-256 连接真实 PostgreSQL，仅修改自己创建的隔离 realm，以验证清理 realm 缓存前后的陈旧/最新数据。LDAP 与 PostgreSQL 协议夹具均为 .NET 10 BCL 代码；不引入 SDK 运行时包或其他脚本语言。
 
 ## 配置与持久化
 

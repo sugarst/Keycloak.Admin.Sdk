@@ -7,6 +7,8 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 [TestClass]
 public sealed class ContractTests
 {
+    [TestMethod] public Task SamlExampleIsJsonString() => AlignmentContracts.SamlExampleStringAsync();
+    [TestMethod] public Task CertificateUploadAcceptsMultipart() => AlignmentContracts.CertificateUploadHasBodyAsync();
     [TestMethod]
     public void AllPublishedModelsRoundTrip() => ModelMatrix.Run();
 

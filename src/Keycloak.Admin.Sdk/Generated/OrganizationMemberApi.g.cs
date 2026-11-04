@@ -16,11 +16,11 @@ public sealed class OrganizationMemberApi(KeycloakAdminClient transport)
     public Task<AdminResponse<long>> CountAsync(string @realm, string @orgId, CancellationToken cancellationToken = default) =>
         transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/organizations/{1}/members/count", [@realm, @orgId]), AdminUri.Query([]), null, AdminJson.TypeInfo<long>(), cancellationToken);
 
-    /// <summary>Invites an existing user to the organization, using the specified user id</summary>
+    /// <summary>Invites an existing user to the organization, using the specified user id Supply HttpContent with the desired server-supported Content-Type; the request consumes and disposes it.</summary>
     public Task<AdminResponse> InviteExistingUserAsync(string @realm, string @orgId, HttpContent? body = null, CancellationToken cancellationToken = default) =>
         transport.SendAsync(HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/organizations/{1}/members/invite-existing-user", [@realm, @orgId]), AdminUri.Query([]), body, cancellationToken);
 
-    /// <summary>Invites an existing user or sends a registration link to a new user, based on the provided e-mail address.</summary>
+    /// <summary>Invites an existing user or sends a registration link to a new user, based on the provided e-mail address. Supply HttpContent with the desired server-supported Content-Type; the request consumes and disposes it.</summary>
     public Task<AdminResponse> InviteUserAsync(string @realm, string @orgId, HttpContent? body = null, string? @clientId = null, CancellationToken cancellationToken = default) =>
         transport.SendAsync(HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/organizations/{1}/members/invite-user", [@realm, @orgId]), AdminUri.Query([new("client_id", @clientId)]), body, cancellationToken);
 

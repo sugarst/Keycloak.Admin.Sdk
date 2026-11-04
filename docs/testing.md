@@ -23,7 +23,7 @@
 dotnet test tests/Keycloak.Admin.Sdk.Tests -c Release --logger 'trx;LogFileName=contracts.trx' --results-directory artifacts/test-results --collect 'XPlat Code Coverage'
 ```
 
-当前共 **536 个测试方法**：520 个按操作独立发现的功能契约矩阵用例，原有 11 项基础/六路径回归检查，1 项覆盖全部发布模型的 JSON 往返检查，以及 4 项 URI、token、构造参数/内容所有权、流异常检查。原有冒烟仍执行 520 次调用，另有独立矩阵逐项断言功能契约。路由检查通过后，在仓库根目录 `artifacts/routing-verified.tsv` 写入证据。
+当前共 **538 个测试方法**：520 个按操作独立发现的功能契约矩阵用例，原有 11 项基础/六路径回归检查，新增 2 项 SAML `@JsonValue` 字符串和隐式 multipart 请求体回归，1 项覆盖全部发布模型的 JSON 往返检查，以及 4 项 URI、token、构造参数/内容所有权、流异常检查。原有冒烟仍执行 520 次调用，另有独立矩阵逐项断言功能契约。路由检查通过后，在仓库根目录 `artifacts/routing-verified.tsv` 写入证据。
 
 矩阵期望值冻结在 `contracts/admin-api-test-matrix.json`，来源是独立 Java token 扫描器与发布 OpenAPI/已审定差异，不从 SDK 的 URI、请求序列化实现或原有生成冒烟样本计算期望值。每个操作测试声明的全部查询绑定（缺省、false/true、0/非零、Unicode、空串、重复/空列表）、不同路径参数的独立编码、完整/缺省请求体、成功状态/Location/header、完整/空集合/标量/空响应，以及 400/401/403/404/409/415/500、取消、网络失败和不重放。JSON 响应检查完整字段与非法 JSON；原始内容检查声明媒体类型及字节透传。服务端要求的具体文件/表单业务格式另由真实测试验证。
 
@@ -46,6 +46,12 @@ dotnet test tests/Keycloak.Admin.Sdk.Tests -c Release --logger 'trx;LogFileName=
 `AlignmentLive.cs` 覆盖六条修复路径，`CallbackFixture.cs` 用 .NET TcpListener 提供 SAML 元数据 HTTP 服务和 SMTP 接收器，核验真实回调及两封邮件投递，不需要外部服务账号。托管测试通过 `host.docker.internal` 回调，原生测试共享 Keycloak 容器网络并使用 loopback。成功后分别写入 `artifacts/six-contracts-live-managed.txt` 和 `artifacts/six-contracts-live-native-aot.txt`；完整场景及本次验证结果见 [六路径修复记录](contracts/six-path-fixes.md)。
 
 需要持久化 PostgreSQL 后端时，使用 [local/keycloak](../local/keycloak/README.md)：`dotnet run --file local/keycloak/Service.cs` 一键启动固定 Keycloak/PostgreSQL 镜像；`-- test` / `-- test-native` 在该服务上运行当前真实场景。工具生成并复用忽略提交的 `.env`，从运行中的服务核验版本和数据库 schema。测试支持 `KC_TEST_USERNAME`，并在 SMTP 夹具结束后恢复管理员邮箱，适合重复使用常驻环境。
+
+全功能业务验收使用该入口的 `test-full` / `test-full-native`，共享同一套 `Full*.cs` 业务场景。强类型分派 `LiveRoutes.g.cs` 仅生成 SDK 调用，不生成业务前置条件或期望值；真实资源 ID、协议结果和持久化断言由手写场景提供。`LiveLedger` 只接受已观察到的成功 SDK 响应和通过的业务证明；缺失项非空即失败。两个路线的支持范围、预览排除原因和 FGAP 委派授权结果均显式记录。
+
+本次在真实 Keycloak 26.8.1 + PostgreSQL 18.0 上通过 v2 正式路线 478/478、v1 兼容路线 492/492，托管及 Native AOT 均通过。LDAP 使用真实 OpenLDAP；SMTP、元数据/JWKS、X509/CRL、OIDC 登录/同意和 PostgreSQL/SCRAM 全部实际通信。缓存验证观察外部数据变更、密钥轮换和证书吊销后的结果，不以空 204 响应作为全部证明。结果见 [逐接口业务矩阵](contracts/full-live-acceptance.md)。
+
+`Check-FullAcceptance.cs` 校验当前源码指纹、实际路线/版本、完整且唯一的成功记录和非空业务证明。`Test-AcceptanceGate.cs` 在独立 artifacts 副本上注入十类缺陷，确认门禁拒绝缺失、重复、失败响应、空证明、额外操作、过期代码、未完成、错误执行方式、错误排除清单和缺失 FGAP 撤销证据；原始实测证据保留。CI 对两条声明路线分别执行真实 PostgreSQL 托管/AOT 场景及这些负向控制。
 
 ## 工具技术栈
 

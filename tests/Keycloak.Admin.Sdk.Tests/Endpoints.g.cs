@@ -237,10 +237,10 @@ public static partial class ContractSuite
         await sdk.ClientAttributeCertificate.GenerateAndGetKeystoreAsync("value /%中", "value /%中", "value /%中", body: JsonSerializer.Deserialize("{}", (System.Text.Json.Serialization.Metadata.JsonTypeInfo<KeyStoreConfig>)KeycloakJsonContext.Default.GetTypeInfo(typeof(KeyStoreConfig))!)!);
         handler.AssertCalled();
         handler.ExpectedMethod = "POST"; handler.ExpectedPath = "/prefix/admin/realms/value%20%2F%25%E4%B8%AD/clients/value%20%2F%25%E4%B8%AD/certificates/value%20%2F%25%E4%B8%AD/upload"; handler.ResponseBody = "{}";
-        await sdk.ClientAttributeCertificate.UploadJksAsync("value /%中", "value /%中", "value /%中");
+        await sdk.ClientAttributeCertificate.UploadJksAsync("value /%中", "value /%中", "value /%中", body: new StringContent("payload"));
         handler.AssertCalled();
         handler.ExpectedMethod = "POST"; handler.ExpectedPath = "/prefix/admin/realms/value%20%2F%25%E4%B8%AD/clients/value%20%2F%25%E4%B8%AD/certificates/value%20%2F%25%E4%B8%AD/upload-certificate"; handler.ResponseBody = "{}";
-        await sdk.ClientAttributeCertificate.UploadJksCertificateAsync("value /%中", "value /%中", "value /%中");
+        await sdk.ClientAttributeCertificate.UploadJksCertificateAsync("value /%中", "value /%中", "value /%中", body: new StringContent("payload"));
         handler.AssertCalled();
         handler.ExpectedMethod = "GET"; handler.ExpectedPath = "/prefix/admin/realms/value%20%2F%25%E4%B8%AD/clients-initial-access"; handler.ResponseBody = "[]";
         await sdk.ClientInitialAccess.ListAsync("value /%中");
@@ -335,7 +335,7 @@ public static partial class ContractSuite
         handler.ExpectedMethod = "GET"; handler.ExpectedPath = "/prefix/admin/realms/value%20%2F%25%E4%B8%AD/clients/value%20%2F%25%E4%B8%AD/evaluate-scopes/generate-example-id-token"; handler.ResponseBody = "{}";
         await sdk.ClientScopeEvaluate.GenerateExampleIdTokenAsync("value /%中", "value /%中", @audience: "q +&中", @scope: "q +&中", @userId: "q +&中");
         handler.AssertCalled();
-        handler.ExpectedMethod = "GET"; handler.ExpectedPath = "/prefix/admin/realms/value%20%2F%25%E4%B8%AD/clients/value%20%2F%25%E4%B8%AD/evaluate-scopes/generate-example-saml-response"; handler.ResponseBody = "{}";
+        handler.ExpectedMethod = "GET"; handler.ExpectedPath = "/prefix/admin/realms/value%20%2F%25%E4%B8%AD/clients/value%20%2F%25%E4%B8%AD/evaluate-scopes/generate-example-saml-response"; handler.ResponseBody = "\"value\"";
         await sdk.ClientScopeEvaluate.GenerateExampleSamlResponseAsync("value /%中", "value /%中", @audience: "q +&中", @scope: "q +&中", @userId: "q +&中");
         handler.AssertCalled();
         handler.ExpectedMethod = "GET"; handler.ExpectedPath = "/prefix/admin/realms/value%20%2F%25%E4%B8%AD/clients/value%20%2F%25%E4%B8%AD/evaluate-scopes/generate-example-userinfo"; handler.ResponseBody = "{}";
@@ -477,7 +477,7 @@ public static partial class ContractSuite
         await sdk.IdentityProviders.GetIdentityProviderFactoryAsync("value /%中", "value /%中");
         handler.AssertCalled();
         handler.ExpectedMethod = "POST"; handler.ExpectedPath = "/prefix/admin/realms/value%20%2F%25%E4%B8%AD/identity-provider/upload-certificate"; handler.ResponseBody = "{}";
-        await sdk.IdentityProviders.UploadCertificateAsync("value /%中");
+        await sdk.IdentityProviders.UploadCertificateAsync("value /%中", body: new StringContent("payload"));
         handler.AssertCalled();
         handler.ExpectedMethod = "GET"; handler.ExpectedPath = "/prefix/admin/realms/value%20%2F%25%E4%B8%AD/keys"; handler.ResponseBody = "{}";
         await sdk.Key.GetKeyMetadataAsync("value /%中");

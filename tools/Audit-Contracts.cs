@@ -113,6 +113,8 @@ return await ScriptHost.ExecuteAsync(args, "dotnet run --file tools/Audit-Contra
             bodyFindings.Add($"{key}\tmissing request body\t{string.Join(',', bodyParameters.Select(p => p.Type).Distinct())}\t{endpoint.Operation}");
         var consumes = variants.SelectMany(r => r.Method.Annotations.Where(a => a.Name == "Consumes").SelectMany(a => a.Arguments))
             .Select(t => Media(t.Text)).Where(v => v is not null).OfType<string>().Distinct(StringComparer.Ordinal).ToArray();
+        if (!bodyExposed && endpoint.Method is "POST" or "PUT" or "PATCH" && consumes.Any(m => m != "application/json"))
+            bodyFindings.Add($"{key}\tmissing implicit request content\t{string.Join(',', consumes)}\t{endpoint.Operation}");
         if (bodyExposed && !rawBody)
             foreach (string media in consumes.Where(m => m != "application/json"))
                 mediaFindings.Add($"{key}\t{media}\tJSON-only generated wrapper\t{endpoint.Operation}");
@@ -258,6 +260,8 @@ static string Key(string verb, string path) => verb + " " + JavaAuditIndex.Canon
 static string Source(AuditMethod method, string version) => $"[{method.Owner.Name}.{method.Name}](https://github.com/keycloak/keycloak/blob/{version}/{method.Owner.File}#L{method.Line})";
 static string? NetType(string java, JsonElement schemas)
 {
+    // The nested SAML response wrapper serializes its String getter with @JsonValue.
+    if (java == "SamlExampleResponse") return "string";
     if (java.EndsWith("[]", StringComparison.Ordinal)) return NetType(java[..^2], schemas) is { } element ? "List<" + element + ">" : null;
     int generic = java.IndexOf('<');
     if (generic > 0)

@@ -24,10 +24,31 @@ jobs:
             docs/contracts/test-coverage.md
   keycloak:
     runs-on: ubuntu-latest
+    timeout-minutes: 40
+    strategy:
+      matrix:
+        route: [fgap-v2-stable, fgap-v1-compat]
+    env:
+      KEYCLOAK_ADMIN_API_ROUTE: ${{ matrix.route }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 10.0.403
-      - run: dotnet run --file tools/Test-Integration.cs
-      - run: dotnet run --file tools/Test-Integration.cs -- --native-aot
+      - run: dotnet run --file local/keycloak/Service.cs -- test-full
+      - run: dotnet run --file local/keycloak/Service.cs -- test-full-native
+      - if: matrix.route == 'fgap-v2-stable'
+        run: dotnet run --file tools/Check-FullAcceptance.cs -- --v2
+      - if: matrix.route == 'fgap-v1-compat'
+        run: dotnet run --file tools/Check-FullAcceptance.cs -- --v1
+      - if: matrix.route == 'fgap-v2-stable'
+        run: dotnet run --file tools/Test-AcceptanceGate.cs -- --v2
+      - if: matrix.route == 'fgap-v1-compat'
+        run: dotnet run --file tools/Test-AcceptanceGate.cs -- --v1
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: full-business-acceptance-${{ matrix.route }}
+          path: artifacts/full-live/
+      - if: always()
+        run: dotnet run --file local/keycloak/Service.cs -- down

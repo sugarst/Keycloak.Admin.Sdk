@@ -8,7 +8,7 @@ public sealed class WorkflowApi(KeycloakAdminClient transport)
     public Task<AdminResponse> ToRepresentationAsync(string @realm, string @id, bool? @includeId = null, CancellationToken cancellationToken = default) =>
         transport.SendAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/workflows/{1}", [@realm, @id]), AdminUri.Query([new("includeId", @includeId)]), null, cancellationToken);
 
-    /// <summary>Update workflow</summary>
+    /// <summary>Update workflow Supply HttpContent with the desired server-supported Content-Type; the request consumes and disposes it.</summary>
     public Task<AdminResponse> UpdateAsync(string @realm, string @id, HttpContent? body = null, CancellationToken cancellationToken = default) =>
         transport.SendAsync(HttpMethod.Put, AdminUri.Path("/admin/realms/{0}/workflows/{1}", [@realm, @id]), AdminUri.Query([]), body, cancellationToken);
 

@@ -20,8 +20,8 @@ public sealed class IdentityProvidersApi(KeycloakAdminClient transport)
     public Task<AdminResponse<JsonElement>> GetIdentityProviderFactoryAsync(string @realm, string @providerId, CancellationToken cancellationToken = default) =>
         transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/identity-provider/providers/{1}", [@realm, @providerId]), AdminUri.Query([]), null, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
 
-    /// <summary>Uploads a certificate, prepares the jwks or public key associated, and returns the certificate representation.</summary>
-    public Task<AdminResponse<CertificateRepresentation>> UploadCertificateAsync(string @realm, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/identity-provider/upload-certificate", [@realm]), AdminUri.Query([]), null, AdminJson.TypeInfo<CertificateRepresentation>(), cancellationToken);
+    /// <summary>Uploads a certificate, prepares the jwks or public key associated, and returns the certificate representation. Supply HttpContent with the desired server-supported Content-Type; the request consumes and disposes it.</summary>
+    public Task<AdminResponse<CertificateRepresentation>> UploadCertificateAsync(string @realm, HttpContent? body = null, CancellationToken cancellationToken = default) =>
+        transport.SendJsonAsync(HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/identity-provider/upload-certificate", [@realm]), AdminUri.Query([]), body, AdminJson.TypeInfo<CertificateRepresentation>(), cancellationToken);
 
 }

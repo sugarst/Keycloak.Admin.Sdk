@@ -16,6 +16,9 @@
 | 认证 | 外部 token provider；内置 client credentials，认证 realm 与目标 realm 分开 |
 | 兼容性 | 首先仅声明经过验证的 26.8.1；不承诺兼容旧 SDK 的公开 API |
 | 完整性 | 仅当约定范围内的端点全部完成实现和验收，才宣称完整支持 |
+| FGAP 路线 | 默认 `fgap-v2-stable`，只支持 26.8.1 正式功能；`fgap-v1-compat` 仅作兼容支持。通过 JSON 或 `KEYCLOAK_ADMIN_API_ROUTE` 环境变量声明，部署和验收必须核对服务器实际启用版本 |
+
+路线规范位于 [admin-api-routes.json](../contracts/admin-api-routes.json)。完整 wire 契约仍保留 520 项并全部单测；v2 正式支持范围 478 项，v1 兼容范围 492 项。两条路线排除 28 项预览/实验 API，v2 另排除 14 项 v1 专用管理权限 API；Workflows 在 26.8.1 是 DEFAULT，纳入正式验收。逐项分类及真实托管/AOT 结果见 [路线说明](contracts/admin-api-routing.md) 和 [全功能验收](contracts/full-live-acceptance.md)。
 
 本项目不实现通用 OAuth/OIDC 或 UMA 客户端、JWT 验签、ASP.NET Core 中间件和 DI 扩展、SCIM、数字凭证协议或实验性 Admin API v2。管理 API 所需 token 获取属于基础设施。FGAP 等配置的底层管理端点按清单实现；跨请求业务编排单独设计，不假设原子性。
 

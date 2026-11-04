@@ -107,6 +107,10 @@ foreach (var op in operations.Where(o => o.Route is not null))
         .Select(m => m.Value).Distinct(StringComparer.Ordinal).ToArray();
     // A single URI can dispatch to different Java methods by Content-Type. Keep all payload formats.
     if (variants.Length > 1 && media.Length > 1) op.Op["x-raw-request"] = true;
+    // Multipart/form handlers can read session.getContext().getHttpRequest() directly,
+    // with no Java body parameter and no OpenAPI requestBody at all.
+    if (op.Verb is "POST" or "PUT" or "PATCH" && media.Any(m => !m.Contains("APPLICATION_JSON", StringComparison.Ordinal) && m != "\"application/json\""))
+        op.Op["x-raw-request"] = true;
     var parameters = op.Op["parameters"]?.AsArray() ?? new JsonArray();
     if (op.Op["parameters"] is null) op.Op["parameters"] = parameters;
     foreach (var variant in variants)

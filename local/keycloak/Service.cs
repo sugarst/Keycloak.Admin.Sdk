@@ -2,6 +2,7 @@
 #:property TargetFramework=net10.0
 #:property PublishAot=false
 #:include ../../tools/ScriptSupport.cs
+#:include ../../tests/Keycloak.Admin.Sdk.IntegrationTests/KeycloakRouteSupport.cs
 
 using System.Diagnostics;
 using System.Globalization;
@@ -12,8 +13,8 @@ using System.Text.Json;
 using System.Text.RegularExpressions;
 
 return await ScriptHost.ExecuteAsync(args,
-    "dotnet run --file local/keycloak/Service.cs -- [up|check|status|logs|down|test|test-native|reset --delete-data] (default: up)",
-    ["up", "check", "status", "logs", "down", "test", "test-native", "reset", "--delete-data"], async ct =>
+    "dotnet run --file local/keycloak/Service.cs -- [up|check|status|logs|down|test|test-native|test-full|test-full-native|reset --delete-data] (default: up)",
+    ["up", "check", "status", "logs", "down", "test", "test-native", "test-full", "test-full-native", "reset", "--delete-data"], async ct =>
 {
     string action = args.FirstOrDefault() ?? "up";
     if (action == "reset" ? args.Length != 2 || args[1] != "--delete-data" : args.Length > 1 || action == "--delete-data")
@@ -21,10 +22,25 @@ return await ScriptHost.ExecuteAsync(args,
     string root = ScriptHost.RepositoryRoot();
     string directory = Path.Combine(root, "local/keycloak");
     string envPath = Path.Combine(directory, ".env");
-    if (action is "up" or "test" or "test-native" or "reset") await InitializeAsync();
+    if (action is "up" or "test" or "test-native" or "test-full" or "test-full-native" or "reset") await InitializeAsync();
     if (!File.Exists(envPath)) throw new FileNotFoundException("Run Service.cs up first to initialize local credentials.");
     var settings = ReadSettings(envPath);
+    var route = KeycloakRoute.Load(root, Environment.GetEnvironmentVariable("KEYCLOAK_ADMIN_API_ROUTE") ?? ReadEnvironmentValue(envPath, "KEYCLOAK_ADMIN_API_ROUTE"));
+    string declaredFeatures = string.Join(',', route.Features);
+    string? manualFeatures = Environment.GetEnvironmentVariable("KEYCLOAK_FEATURES");
+    if (manualFeatures is not null && manualFeatures != declaredFeatures) throw new InvalidDataException("KEYCLOAK_FEATURES conflicts with the selected declarative route; choose KEYCLOAK_ADMIN_API_ROUTE instead.");
+    Environment.SetEnvironmentVariable("KEYCLOAK_ADMIN_API_ROUTE", route.Id);
+    Environment.SetEnvironmentVariable("KEYCLOAK_FEATURES", declaredFeatures);
+    if (action is "up" or "reset" || action.StartsWith("test", StringComparison.Ordinal))
+    {
+        var environmentLines = File.ReadAllLines(envPath).Where(l => !l.StartsWith("KEYCLOAK_ADMIN_API_ROUTE=", StringComparison.Ordinal) && !l.StartsWith("KEYCLOAK_FEATURES=", StringComparison.Ordinal)).ToList();
+        environmentLines.Add("KEYCLOAK_ADMIN_API_ROUTE='" + route.Id + "'");
+        environmentLines.Add("KEYCLOAK_FEATURES='" + declaredFeatures + "'");
+        await File.WriteAllTextAsync(envPath, string.Join('\n', environmentLines) + "\n", ct);
+    }
+    Console.WriteLine($"Declared route: {route.Id}; FGAP v{route.FgapVersion}; compatibilityOnly={route.CompatibilityOnly}; preview=false; experimental=false.");
     string[] compose = ["compose", "--project-name", "keycloak-admin-sdk-local", "--project-directory", directory, "--env-file", envPath, "-f", Path.Combine(directory, "compose.yaml"),
+        .. action.StartsWith("test-full", StringComparison.Ordinal) ? new[] { "-f", Path.Combine(directory, "compose.acceptance.yaml") } : [],
         .. OperatingSystem.IsLinux() ? new[] { "-f", Path.Combine(directory, "compose.linux.yaml") } : []];
     await ComposeAsync(["config", "--quiet"]);
     switch (action)
@@ -34,9 +50,9 @@ return await ScriptHost.ExecuteAsync(args,
         case "down": await ComposeAsync(["down", "--remove-orphans"]); return;
         case "reset": await ComposeAsync(["down", "--volumes", "--remove-orphans"]); break;
     }
-    if (action != "check") await ComposeAsync(["up", "--detach", "--wait", "--wait-timeout", "180"]);
+    if (action != "check") await ComposeAsync([.. action.StartsWith("test-full", StringComparison.Ordinal) ? new[] { "--profile", "acceptance" } : [], "up", "--detach", "--wait", "--wait-timeout", "180"]);
     await CheckAsync();
-    if (action is "test" or "test-native") await TestAsync(action == "test-native");
+    if (action.StartsWith("test", StringComparison.Ordinal)) await TestAsync(action.EndsWith("native", StringComparison.Ordinal));
 
     async Task InitializeAsync()
     {
@@ -53,7 +69,8 @@ return await ScriptHost.ExecuteAsync(args,
             ["POSTGRES_PASSWORD"] = Pick("POSTGRES_PASSWORD", secret()), ["POSTGRES_PORT"] = Pick("POSTGRES_PORT", "15432"),
             ["KEYCLOAK_ADMIN_USERNAME"] = Pick("KEYCLOAK_ADMIN_USERNAME", "admin"), ["KEYCLOAK_ADMIN_PASSWORD"] = Pick("KEYCLOAK_ADMIN_PASSWORD", secret()),
             ["KEYCLOAK_HTTP_PORT"] = Pick("KEYCLOAK_HTTP_PORT", "18080"), ["KEYCLOAK_MANAGEMENT_PORT"] = Pick("KEYCLOAK_MANAGEMENT_PORT", "19000"),
-            ["KEYCLOAK_FEATURES"] = Pick("KEYCLOAK_FEATURES", "admin-fine-grained-authz:v2,workflows")
+            ["KEYCLOAK_ADMIN_API_ROUTE"] = KeycloakRoute.Load(root).Id,
+            ["KEYCLOAK_FEATURES"] = string.Join(',', KeycloakRoute.Load(root).Features)
         };
         // Single-quoted dotenv values preserve literal $ and #. Generated passwords are ASCII hex.
         if (values.Values.Any(v => v.IndexOfAny(['\r', '\n', '\'']) >= 0)) throw new ArgumentException("Local environment values cannot contain newlines or single quotes.");
@@ -108,6 +125,7 @@ return await ScriptHost.ExecuteAsync(args,
         using var info = JsonDocument.Parse(await serverReply.Content.ReadAsStringAsync(ct));
         string? version = info.RootElement.GetProperty("systemInfo").GetProperty("version").GetString();
         if (version != "26.8.1") throw new InvalidDataException("Expected actual Keycloak server version 26.8.1, got " + version);
+        route.ValidateServer(info.RootElement);
         var sql = await ComposeAsync(["exec", "-T", "postgres", "psql", "--no-psqlrc", "--username", settings.DbUser, "--dbname", settings.DbName,
             "--tuples-only", "--no-align", "--set", "ON_ERROR_STOP=1", "--command",
             "SELECT current_setting('server_version_num') || '|' || current_setting('data_directory') || '|' || (to_regclass('public.realm') IS NOT NULL)::text;"], capture: true);
@@ -126,6 +144,16 @@ return await ScriptHost.ExecuteAsync(args,
             ["KC_TEST_URL"] = settings.Server.AbsoluteUri, ["KC_TEST_USERNAME"] = settings.Admin,
             ["KC_TEST_PASSWORD"] = settings.Password, ["KC_TEST_CALLBACK_HOST"] = "host.docker.internal"
         };
+        environment["KC_TEST_FULL_ADMIN"] = action.StartsWith("test-full", StringComparison.Ordinal) ? "1" : null;
+        environment["KC_TEST_LDAP_HOST"] = "127.0.0.1";
+        environment["KC_TEST_LDAP_PORT"] = "1389";
+        environment["KC_TEST_LDAP_PASSWORD"] = Environment.GetEnvironmentVariable("POSTGRES_PASSWORD") ?? ReadEnvironmentValue(envPath, "POSTGRES_PASSWORD")!;
+        environment["KC_TEST_PG_HOST"] = "127.0.0.1";
+        environment["KC_TEST_PG_PORT"] = Environment.GetEnvironmentVariable("POSTGRES_PORT") ?? ReadEnvironmentValue(envPath, "POSTGRES_PORT") ?? "15432";
+        environment["KC_TEST_PG_USER"] = settings.DbUser;
+        environment["KC_TEST_PG_DATABASE"] = settings.DbName;
+        environment["KC_TEST_PG_PASSWORD"] = environment["KC_TEST_LDAP_PASSWORD"];
+        environment["KEYCLOAK_ADMIN_API_ROUTE"] = route.Id;
         if (!native)
         {
             await ScriptHost.RunCheckedAsync(root, "dotnet", ["run", "--project", "tests/Keycloak.Admin.Sdk.IntegrationTests", "-c", "Release"], ct, environment: environment);
@@ -137,10 +165,14 @@ return await ScriptHost.ExecuteAsync(args,
         string container = "keycloak-sdk-local-test-" + Guid.NewGuid().ToString("N");
         environment["KC_TEST_URL"] = "http://127.0.0.1:8080/";
         environment["KC_TEST_CALLBACK_HOST"] = "127.0.0.1";
+        environment["KC_TEST_LDAP_HOST"] = "ldap";
+        environment["KC_TEST_LDAP_PORT"] = "389";
+        environment["KC_TEST_PG_HOST"] = "postgres";
+        environment["KC_TEST_PG_PORT"] = "5432";
         try
         {
             await ScriptHost.RunCheckedAsync(root, "docker", ["run", "--rm", "--name", container, "--network", "container:" + server.StandardOutput.Trim(),
-                "-v", root + ":/workspace", "-w", "/workspace", "-e", "KC_TEST_URL", "-e", "KC_TEST_USERNAME", "-e", "KC_TEST_PASSWORD", "-e", "KC_TEST_CALLBACK_HOST",
+                "-v", root + ":/workspace", "-w", "/workspace", "-e", "KC_TEST_URL", "-e", "KC_TEST_USERNAME", "-e", "KC_TEST_PASSWORD", "-e", "KC_TEST_CALLBACK_HOST", "-e", "KC_TEST_FULL_ADMIN", "-e", "KEYCLOAK_ADMIN_API_ROUTE", "-e", "KC_TEST_LDAP_HOST", "-e", "KC_TEST_LDAP_PORT", "-e", "KC_TEST_LDAP_PASSWORD", "-e", "KC_TEST_PG_HOST", "-e", "KC_TEST_PG_PORT", "-e", "KC_TEST_PG_USER", "-e", "KC_TEST_PG_DATABASE", "-e", "KC_TEST_PG_PASSWORD",
                 "mcr.microsoft.com/dotnet/aspnet:10.0.14-alpine3.24", "/workspace/artifacts/aot/integration/Keycloak.Admin.Sdk.IntegrationTests"], ct, environment: environment);
         }
         finally
@@ -179,4 +211,5 @@ static Settings ReadSettings(string path)
     return new(new Uri($"http://127.0.0.1:{Port("KEYCLOAK_HTTP_PORT", "18080")}/"),
         new Uri($"http://127.0.0.1:{Port("KEYCLOAK_MANAGEMENT_PORT", "19000")}/health/ready"), Get("KEYCLOAK_ADMIN_USERNAME", "admin"), password, dbName, dbUser);
 }
+static string? ReadEnvironmentValue(string path, string key) => File.ReadLines(path).Select(l => l.Trim()).Where(l => l.StartsWith(key + "=", StringComparison.Ordinal)).Select(l => l[(key.Length + 1)..].Trim().Trim('\'', '"')).LastOrDefault();
 sealed record Settings(Uri Server, Uri Health, string Admin, string Password, string DbName, string DbUser);

@@ -21,11 +21,15 @@ internal sealed class CallbackFixture : IAsyncDisposable
     private readonly Task webLoop;
     private int mails;
     private int metadataRequests;
+    public ConcurrentQueue<string> Messages { get; } = new();
+    public ConcurrentQueue<(string Method, string Path, string Body)> Requests { get; } = new();
+    public Func<string, string, string, (int Status, string Type, string Body)>? Responder { get; set; }
     public string Host { get; } = Environment.GetEnvironmentVariable("KC_TEST_CALLBACK_HOST") ?? "host.docker.internal";
     public int SmtpPort => ((IPEndPoint)smtp.LocalEndpoint).Port;
     public int MailCount => Volatile.Read(ref mails);
     public int MetadataRequests => Volatile.Read(ref metadataRequests);
     public string MetadataUrl => $"http://{Host}:{((IPEndPoint)web.LocalEndpoint).Port}/metadata";
+    public string WebUrl => $"http://{Host}:{((IPEndPoint)web.LocalEndpoint).Port}";
 
     public CallbackFixture()
     {
@@ -57,11 +61,13 @@ internal sealed class CallbackFixture : IAsyncDisposable
             await using var output = new StreamWriter(stream, new UTF8Encoding(false), leaveOpen: true) { NewLine = "\r\n", AutoFlush = true };
             await output.WriteLineAsync("220 fixture ESMTP");
             bool data = false;
+            var message = new StringBuilder();
             while (await input.ReadLineAsync(stopping.Token) is { } line)
             {
                 if (data)
                 {
-                    if (line == ".") { data = false; Interlocked.Increment(ref mails); await output.WriteLineAsync("250 accepted"); }
+                    if (line == ".") { data = false; Messages.Enqueue(message.ToString()); message.Clear(); Interlocked.Increment(ref mails); await output.WriteLineAsync("250 accepted"); }
+                    else message.AppendLine(line.StartsWith("..", StringComparison.Ordinal) ? line[1..] : line);
                     continue;
                 }
                 string command = line.Split(' ', 2)[0].ToUpperInvariant();
@@ -78,14 +84,21 @@ internal sealed class CallbackFixture : IAsyncDisposable
         {
             await using var stream = client.GetStream();
             using var input = new StreamReader(stream, Encoding.ASCII, leaveOpen: true);
-            if (await input.ReadLineAsync(stopping.Token) is not { } request || !request.StartsWith("GET /metadata ", StringComparison.Ordinal))
-                throw new InvalidOperationException("Unexpected metadata fixture request.");
-            while (await input.ReadLineAsync(stopping.Token) is { Length: > 0 }) { }
-            byte[] body = Encoding.UTF8.GetBytes(Metadata);
-            byte[] headers = Encoding.ASCII.GetBytes($"HTTP/1.1 200 OK\r\nContent-Type: application/samlmetadata+xml\r\nContent-Length: {body.Length}\r\nConnection: close\r\n\r\n");
+            if (await input.ReadLineAsync(stopping.Token) is not { } request) throw new IOException("Missing HTTP request.");
+            string[] parts = request.Split(' ');
+            int length = 0;
+            while (await input.ReadLineAsync(stopping.Token) is { Length: > 0 } header)
+                if (header.StartsWith("Content-Length:", StringComparison.OrdinalIgnoreCase)) length = int.Parse(header[15..].Trim(), System.Globalization.CultureInfo.InvariantCulture);
+            var chars = new char[length]; int offset = 0;
+            while (offset < chars.Length) { int read = await input.ReadAsync(chars.AsMemory(offset), stopping.Token); if (read == 0) throw new IOException("Truncated HTTP entity."); offset += read; }
+            string entity = new(chars);
+            Requests.Enqueue((parts[0], parts[1], entity));
+            var reply = Responder?.Invoke(parts[0], parts[1], entity) ?? (parts[0] == "GET" && parts[1] == "/metadata" ? (200, "application/samlmetadata+xml", Metadata) : (404, "text/plain", "Not found"));
+            if (parts[1] == "/metadata") Interlocked.Increment(ref metadataRequests);
+            byte[] body = Encoding.UTF8.GetBytes(reply.Item3);
+            byte[] headers = Encoding.ASCII.GetBytes($"HTTP/1.1 {reply.Item1} OK\r\nContent-Type: {reply.Item2}\r\nContent-Length: {body.Length}\r\nConnection: close\r\n\r\n");
             await stream.WriteAsync(headers, stopping.Token);
             await stream.WriteAsync(body, stopping.Token);
-            Interlocked.Increment(ref metadataRequests);
         }
     }
 

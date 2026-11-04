@@ -8,7 +8,7 @@ public sealed class WorkflowsApi(KeycloakAdminClient transport)
     public Task<AdminResponse> ListAsync(string @realm, bool? @exact = null, int? @first = null, int? @max = null, string? @search = null, CancellationToken cancellationToken = default) =>
         transport.SendAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/workflows", [@realm]), AdminUri.Query([new("exact", @exact), new("first", @first), new("max", @max), new("search", @search)]), null, cancellationToken);
 
-    /// <summary>Create workflow</summary>
+    /// <summary>Create workflow Supply HttpContent with the desired server-supported Content-Type; the request consumes and disposes it.</summary>
     public Task<AdminResponse> CreateAsync(string @realm, HttpContent? body = null, CancellationToken cancellationToken = default) =>
         transport.SendAsync(HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/workflows", [@realm]), AdminUri.Query([]), body, cancellationToken);
 

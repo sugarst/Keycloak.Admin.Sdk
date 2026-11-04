@@ -1,0 +1,521 @@
+method	path	fgapV2Managed	fgapV2NativeAot	fgapV1Managed	fgapV1NativeAot	proof
+DELETE	/admin/realms/{realm}/attack-detection/brute-force/users	PASS 204	PASS 204	PASS 204	PASS 204	Clearing realm attacks resets newly recorded failures
+GET	/admin/realms/{realm}/attack-detection/brute-force/users/{userId}	PASS 200	PASS 200	PASS 200	PASS 200	Clearing realm attacks resets newly recorded failures
+DELETE	/admin/realms/{realm}/attack-detection/brute-force/users/{userId}	PASS 204	PASS 204	PASS 204	PASS 204	Clearing selected user's attacks resets recorded failures
+GET	/admin/realms/{realm}/authentication/authenticator-providers	PASS 200	PASS 200	PASS 200	PASS 200	Discovery contains installed executable authentication provider: auth-cookie
+GET	/admin/realms/{realm}/authentication/client-authenticator-providers	PASS 200	PASS 200	PASS 200	PASS 200	Discovery contains installed executable authentication provider: client-secret
+POST	/admin/realms/{realm}/authentication/config	PASS 201	PASS 201	PASS 201	PASS 201	Standalone authenticator config persists settings
+GET	/admin/realms/{realm}/authentication/config-description/{providerId}	PASS 200	PASS 200	PASS 200	PASS 200	Provider configuration description exposes supported defaultProvider option
+GET	/admin/realms/{realm}/authentication/config/{id}	PASS 200	PASS 200	PASS 200	PASS 200	Authenticator configuration update persists changed value
+PUT	/admin/realms/{realm}/authentication/config/{id}	PASS 204	PASS 204	PASS 204	PASS 204	Authenticator configuration update persists changed value
+DELETE	/admin/realms/{realm}/authentication/config/{id}	PASS 204	PASS 204	PASS 204	PASS 204	Authenticator configuration deletion removes stored object
+POST	/admin/realms/{realm}/authentication/executions	PASS 201	PASS 201	PASS 201	PASS 201	Both execution creation endpoints persist provider and parent flow
+GET	/admin/realms/{realm}/authentication/executions/{executionId}	PASS 200	PASS 200	PASS 200	PASS 200	Execution configuration creates stored settings and a real execution link
+DELETE	/admin/realms/{realm}/authentication/executions/{executionId}	PASS 204	PASS 204	PASS 204	PASS 204	Execution deletion removes graph node
+POST	/admin/realms/{realm}/authentication/executions/{executionId}/config	PASS 201	PASS 201	PASS 201	PASS 201	Execution configuration creates stored settings and a real execution link
+GET	/admin/realms/{realm}/authentication/executions/{executionId}/config/{id}	PASS 200	PASS 200	PASS 200	PASS 200	Execution configuration creates stored settings and a real execution link
+POST	/admin/realms/{realm}/authentication/executions/{executionId}/lower-priority	PASS 204	PASS 204	PASS 204	PASS 204	Lower execution priority changes persisted ordering
+POST	/admin/realms/{realm}/authentication/executions/{executionId}/raise-priority	PASS 204	PASS 204	PASS 204	PASS 204	Raise execution priority changes persisted ordering
+GET	/admin/realms/{realm}/authentication/flows	PASS 200	PASS 200	PASS 200	PASS 200	Authentication flow update persists and appears in realm flow list
+POST	/admin/realms/{realm}/authentication/flows	PASS 201	PASS 201	PASS 201	PASS 201	Authentication flow creation persists alias and generated ID
+POST	/admin/realms/{realm}/authentication/flows/{flowAlias}/copy	PASS 201	PASS 201	PASS 201	PASS 201	Flow copy duplicates the complete execution graph
+GET	/admin/realms/{realm}/authentication/flows/{flowAlias}/executions	PASS 200	PASS 200	PASS 200	PASS 200	Execution deletion removes graph node
+PUT	/admin/realms/{realm}/authentication/flows/{flowAlias}/executions	PASS 204	PASS 204	PASS 204	PASS 204	Execution requirement update persists in flow graph
+POST	/admin/realms/{realm}/authentication/flows/{flowAlias}/executions/execution	PASS 201	PASS 201	PASS 201	PASS 201	Both execution creation endpoints persist provider and parent flow
+POST	/admin/realms/{realm}/authentication/flows/{flowAlias}/executions/flow	PASS 201	PASS 201	PASS 201	PASS 201	Nested flow endpoint creates flow and linking execution
+GET	/admin/realms/{realm}/authentication/flows/{id}	PASS 200	PASS 200	PASS 200	PASS 200	Authentication flow update persists and appears in realm flow list
+PUT	/admin/realms/{realm}/authentication/flows/{id}	PASS 204	PASS 204	PASS 204	PASS 204	Authentication flow update persists and appears in realm flow list
+DELETE	/admin/realms/{realm}/authentication/flows/{id}	PASS 204	PASS 204	PASS 204	PASS 204	Authentication flow deletion removes its graph
+GET	/admin/realms/{realm}/authentication/form-action-providers	PASS 200	PASS 200	PASS 200	PASS 200	Discovery contains installed executable authentication provider: registration-user-creation
+GET	/admin/realms/{realm}/authentication/form-providers	PASS 200	PASS 200	PASS 200	PASS 200	Discovery contains installed executable authentication provider: registration-page-form
+GET	/admin/realms/{realm}/authentication/per-client-config-description	PASS 200	PASS 200	PASS 200	PASS 200	Per-client authentication settings describe installed client-secret authenticator
+POST	/admin/realms/{realm}/authentication/register-required-action	PASS 204	PASS 204	PASS 204	PASS 204	Required-action registration persists provider alias
+GET	/admin/realms/{realm}/authentication/required-actions	PASS 200	PASS 200	PASS 200	PASS 200	Required-action registration persists provider alias
+GET	/admin/realms/{realm}/authentication/required-actions/{alias}	PASS 200	PASS 200	PASS 200	PASS 200	Required-action raise-priority restores ordering
+PUT	/admin/realms/{realm}/authentication/required-actions/{alias}	PASS 204	PASS 204	PASS 204	PASS 204	Required-action update changes persisted display name
+DELETE	/admin/realms/{realm}/authentication/required-actions/{alias}	PASS 204	PASS 204	PASS 204	PASS 204	Unregistered actions expose removed installed provider
+GET	/admin/realms/{realm}/authentication/required-actions/{alias}/config	PASS 200	PASS 200	PASS 200	PASS 200	Deleting required-action config removes custom value and recreates defaults
+PUT	/admin/realms/{realm}/authentication/required-actions/{alias}/config	PASS 204	PASS 204	PASS 204	PASS 204	Required-action configuration is persisted
+DELETE	/admin/realms/{realm}/authentication/required-actions/{alias}/config	PASS 204	PASS 204	PASS 204	PASS 204	Deleting required-action config removes custom value and recreates defaults
+GET	/admin/realms/{realm}/authentication/required-actions/{alias}/config-description	PASS 200	PASS 200	PASS 200	PASS 200	Required-action configuration description exposes configurable properties
+POST	/admin/realms/{realm}/authentication/required-actions/{alias}/lower-priority	PASS 204	PASS 204	PASS 204	PASS 204	Required-action lower-priority changes ordering
+POST	/admin/realms/{realm}/authentication/required-actions/{alias}/raise-priority	PASS 204	PASS 204	PASS 204	PASS 204	Required-action raise-priority restores ordering
+GET	/admin/realms/{realm}/authentication/unregistered-required-actions	PASS 200	PASS 200	PASS 200	PASS 200	Unregistered actions expose removed installed provider
+POST	/admin/realms/{realm}/clear-crl-cache	PASS 204	PASS 204	PASS 204	PASS 204	Clearing CRL cache refetches changed signed CRL and rejects revoked certificate authentication
+POST	/admin/realms/{realm}/clear-keys-cache	PASS 204	PASS 204	PASS 204	PASS 204	Clear keys cache refetches changed JWKS and accepts assertion signed with new RSA key
+POST	/admin/realms/{realm}/clear-realm-cache	PASS 204	PASS 204	PASS 204	PASS 204	Clearing realm cache exposes actual out-of-band PostgreSQL mutation
+POST	/admin/realms/{realm}/clear-user-cache	PASS 204	PASS 204	PASS 204	PASS 204	Clearing user cache exposes external LDAP attribute mutation
+GET	/admin/realms/{realm}/clients/{client-uuid}	PASS 200	PASS 200	PASS 200	PASS 200	Unregistering cluster node removes persisted host
+PUT	/admin/realms/{realm}/clients/{client-uuid}	PASS 204	PASS 204	PASS 204	PASS 204	Client update persists while preserving authorization services
+DELETE	/admin/realms/{realm}/clients/{client-uuid}	PASS 204	PASS 204	PASS 204	PASS 204	Deleting client removes actual scope owner
+GET	/admin/realms/{realm}/clients/{client-uuid}/client-secret	PASS 200	PASS 200	PASS 200	PASS 200	Read client secret matches configured authentication credential
+POST	/admin/realms/{realm}/clients/{client-uuid}/client-secret	PASS 200	PASS 200	PASS 200	PASS 200	Secret rotation retains previous secret and new secret authenticates against real OIDC token endpoint
+GET	/admin/realms/{realm}/clients/{client-uuid}/client-secret/rotated	PASS 200	PASS 200	PASS 200	PASS 200	Secret rotation retains previous secret and new secret authenticates against real OIDC token endpoint
+DELETE	/admin/realms/{realm}/clients/{client-uuid}/client-secret/rotated	PASS 204	PASS 204	PASS 204	PASS 204	Invalidating rotated secret removes stored old credential
+GET	/admin/realms/{realm}/clients/{client-uuid}/default-client-scopes	PASS 200	PASS 200	PASS 200	PASS 200	Client scope relationship removed: default-client-scopes
+PUT	/admin/realms/{realm}/clients/{client-uuid}/default-client-scopes/{clientScopeId}	PASS 204	PASS 204	PASS 204	PASS 204	Client scope relationship persisted: default-client-scopes
+DELETE	/admin/realms/{realm}/clients/{client-uuid}/default-client-scopes/{clientScopeId}	PASS 204	PASS 204	PASS 204	PASS 204	Client scope relationship removed: default-client-scopes
+GET	/admin/realms/{realm}/clients/{client-uuid}/installation/providers/{providerId}	PASS 200	PASS 200	PASS 200	PASS 200	Installation output embeds actual client and realm configuration
+GET	/admin/realms/{realm}/clients/{client-uuid}/management/permissions	EXCLUDED: FGAP v1 compatibility only; select fgap-v1-compat explicitly	EXCLUDED: FGAP v1 compatibility only; select fgap-v1-compat explicitly	PASS 200	PASS 200	Disabling legacy permissions changes persisted state: clients/{client-uuid}/management/permissions
+PUT	/admin/realms/{realm}/clients/{client-uuid}/management/permissions	EXCLUDED: FGAP v1 compatibility only; select fgap-v1-compat explicitly	EXCLUDED: FGAP v1 compatibility only; select fgap-v1-compat explicitly	PASS 200	PASS 200	Disabling legacy permissions changes persisted state: clients/{client-uuid}/management/permissions
+POST	/admin/realms/{realm}/clients/{client-uuid}/nodes	PASS 204	PASS 204	PASS 204	PASS 204	Cluster node registration persists host and registration timestamp
+DELETE	/admin/realms/{realm}/clients/{client-uuid}/nodes/{node}	PASS 204	PASS 204	PASS 204	PASS 204	Unregistering cluster node removes persisted host
+GET	/admin/realms/{realm}/clients/{client-uuid}/offline-session-count	PASS 200	PASS 200	PASS 200	PASS 200	Offline grant persists user/client offline session and count
+GET	/admin/realms/{realm}/clients/{client-uuid}/offline-sessions	PASS 200	PASS 200	PASS 200	PASS 200	Offline grant persists user/client offline session and count
+GET	/admin/realms/{realm}/clients/{client-uuid}/optional-client-scopes	PASS 200	PASS 200	PASS 200	PASS 200	Client scope relationship removed: optional-client-scopes
+PUT	/admin/realms/{realm}/clients/{client-uuid}/optional-client-scopes/{clientScopeId}	PASS 204	PASS 204	PASS 204	PASS 204	Client scope relationship persisted: optional-client-scopes
+DELETE	/admin/realms/{realm}/clients/{client-uuid}/optional-client-scopes/{clientScopeId}	PASS 204	PASS 204	PASS 204	PASS 204	Client scope relationship removed: optional-client-scopes
+POST	/admin/realms/{realm}/clients/{client-uuid}/push-revocation	PASS 200	PASS 200	PASS 200	PASS 200	Client revocation propagates actual signed not-before adapter request
+POST	/admin/realms/{realm}/clients/{client-uuid}/registration-access-token	PASS 200	PASS 200	PASS 200	PASS 200	Regenerated registration access token authorizes real dynamic-registration read
+GET	/admin/realms/{realm}/clients/{client-uuid}/service-account-user	PASS 200	PASS 200	PASS 200	PASS 200	Service-account endpoint returns persisted client service user
+GET	/admin/realms/{realm}/clients/{client-uuid}/session-count	PASS 200	PASS 200	PASS 200	PASS 200	Real password grant creates persisted user/client session and counted client statistics
+GET	/admin/realms/{realm}/clients/{client-uuid}/test-nodes-available	PASS 200	PASS 200	PASS 200	PASS 200	Node availability sends actual signed adapter action over HTTP
+GET	/admin/realms/{realm}/clients/{client-uuid}/user-sessions	PASS 200	PASS 200	PASS 200	PASS 200	Real password grant creates persisted user/client session and counted client statistics
+GET	/admin/realms/{realm}/clients/{client-uuid}/certificates/{attr}	PASS 200	PASS 200	PASS 200	PASS 200	Generate-and-download returns usable private-key PKCS12 while persisting only the new public certificate
+POST	/admin/realms/{realm}/clients/{client-uuid}/certificates/{attr}/download	PASS 200	PASS 200	PASS 200	PASS 200	Downloaded PKCS12 contains exact persisted public certificate without private key
+POST	/admin/realms/{realm}/clients/{client-uuid}/certificates/{attr}/generate	PASS 200	PASS 200	PASS 200	PASS 200	Generated keypair returns private key once and persists public certificate only
+POST	/admin/realms/{realm}/clients/{client-uuid}/certificates/{attr}/generate-and-download	PASS 200	PASS 200	PASS 200	PASS 200	Generate-and-download returns usable private-key PKCS12 while persisting only the new public certificate
+POST	/admin/realms/{realm}/clients/{client-uuid}/certificates/{attr}/upload	PASS 200	PASS 200	PASS 200	PASS 200	Multipart upload persists exact uploaded X509 certificate
+POST	/admin/realms/{realm}/clients/{client-uuid}/certificates/{attr}/upload-certificate	PASS 200	PASS 200	PASS 200	PASS 200	Multipart upload-certificate persists exact uploaded X509 certificate
+GET	/admin/realms/{realm}/clients-initial-access	PASS 200	PASS 200	PASS 200	PASS 200	Initial access token deletion persisted
+POST	/admin/realms/{realm}/clients-initial-access	PASS 201	PASS 201	PASS 201	PASS 201	Initial access token is issued and persisted
+DELETE	/admin/realms/{realm}/clients-initial-access/{id}	PASS 204	PASS 204	PASS 204	PASS 204	Initial access token deletion persisted
+GET	/admin/realms/{realm}/client-policies/policies	PASS 200	PASS 200	PASS 200	PASS 200	Client policy persists enabled condition and profile association
+PUT	/admin/realms/{realm}/client-policies/policies	PASS 204	PASS 204	PASS 204	PASS 204	Client policy persists enabled condition and profile association
+GET	/admin/realms/{realm}/client-policies/profiles	PASS 200	PASS 200	PASS 200	PASS 200	Client policy profile persists rotation executor settings
+PUT	/admin/realms/{realm}/client-policies/profiles	PASS 204	PASS 204	PASS 204	PASS 204	Client policy profile persists rotation executor settings
+GET	/admin/realms/{realm}/client-registration-policy/providers	PASS 200	PASS 200	PASS 200	PASS 200	Registration policy discovery exposes installed provider
+GET	/admin/realms/{realm}/groups/{group-id}/role-mappings/clients/{client-id}	PASS 200	PASS 200	PASS 200	PASS 200	UI bulk mapping deletion removes actual direct client role for groups
+POST	/admin/realms/{realm}/groups/{group-id}/role-mappings/clients/{client-id}	PASS 204	PASS 204	PASS 204	PASS 204	Assigned roles and effective composite mappings persist: groups/{group-id}/role-mappings
+DELETE	/admin/realms/{realm}/groups/{group-id}/role-mappings/clients/{client-id}	PASS 204	PASS 204	PASS 204	PASS 204	Deleting mappings removes direct role relationships: groups/{group-id}/role-mappings
+GET	/admin/realms/{realm}/groups/{group-id}/role-mappings/clients/{client-id}/available	PASS 200	PASS 200	PASS 200	PASS 200	Available mappings contain unassigned real realm and client roles: groups/{group-id}/role-mappings
+GET	/admin/realms/{realm}/groups/{group-id}/role-mappings/clients/{client-id}/composite	PASS 200	PASS 200	PASS 200	PASS 200	Assigned roles and effective composite mappings persist: groups/{group-id}/role-mappings
+GET	/admin/realms/{realm}/organizations/{org-id}/groups/{group-id}/role-mappings/clients/{client-id}	PASS 200	PASS 200	PASS 200	PASS 200	Deleting mappings removes direct role relationships: organizations/{org-id}/groups/{group-id}/role-mappings
+POST	/admin/realms/{realm}/organizations/{org-id}/groups/{group-id}/role-mappings/clients/{client-id}	PASS 204	PASS 204	PASS 204	PASS 204	Assigned roles and effective composite mappings persist: organizations/{org-id}/groups/{group-id}/role-mappings
+DELETE	/admin/realms/{realm}/organizations/{org-id}/groups/{group-id}/role-mappings/clients/{client-id}	PASS 204	PASS 204	PASS 204	PASS 204	Deleting mappings removes direct role relationships: organizations/{org-id}/groups/{group-id}/role-mappings
+GET	/admin/realms/{realm}/organizations/{org-id}/groups/{group-id}/role-mappings/clients/{client-id}/available	PASS 200	PASS 200	PASS 200	PASS 200	Available mappings contain unassigned real realm and client roles: organizations/{org-id}/groups/{group-id}/role-mappings
+GET	/admin/realms/{realm}/organizations/{org-id}/groups/{group-id}/role-mappings/clients/{client-id}/composite	PASS 200	PASS 200	PASS 200	PASS 200	Assigned roles and effective composite mappings persist: organizations/{org-id}/groups/{group-id}/role-mappings
+GET	/admin/realms/{realm}/users/{user-id}/role-mappings/clients/{client-id}	PASS 200	PASS 200	PASS 200	PASS 200	UI bulk mapping deletion removes actual direct client role for users
+POST	/admin/realms/{realm}/users/{user-id}/role-mappings/clients/{client-id}	PASS 204	PASS 204	PASS 204	PASS 204	Assigned roles and effective composite mappings persist: users/{user-id}/role-mappings
+DELETE	/admin/realms/{realm}/users/{user-id}/role-mappings/clients/{client-id}	PASS 204	PASS 204	PASS 204	PASS 204	Deleting mappings removes direct role relationships: users/{user-id}/role-mappings
+GET	/admin/realms/{realm}/users/{user-id}/role-mappings/clients/{client-id}/available	PASS 200	PASS 200	PASS 200	PASS 200	Available mappings contain unassigned real realm and client roles: users/{user-id}/role-mappings
+GET	/admin/realms/{realm}/users/{user-id}/role-mappings/clients/{client-id}/composite	PASS 200	PASS 200	PASS 200	PASS 200	Assigned roles and effective composite mappings persist: users/{user-id}/role-mappings
+GET	/admin/realms/{realm}/client-scopes/{client-scope-id}	PASS 200	PASS 200	PASS 200	PASS 200	Scope update changes persisted description
+PUT	/admin/realms/{realm}/client-scopes/{client-scope-id}	PASS 204	PASS 204	PASS 204	PASS 204	Scope update changes persisted description
+DELETE	/admin/realms/{realm}/client-scopes/{client-scope-id}	PASS 204	PASS 204	PASS 204	PASS 204	Deleting client scope removes actual scope and its configuration
+GET	/admin/realms/{realm}/client-templates/{client-scope-id}	PASS 200	PASS 200	PASS 200	PASS 200	Scope update changes persisted description
+PUT	/admin/realms/{realm}/client-templates/{client-scope-id}	PASS 204	PASS 204	PASS 204	PASS 204	Scope update changes persisted description
+DELETE	/admin/realms/{realm}/client-templates/{client-scope-id}	PASS 204	PASS 204	PASS 204	PASS 204	Legacy template deletion removes scope
+GET	/admin/realms/{realm}/clients/{client-uuid}/evaluate-scopes/generate-example-access-token	PASS 200	PASS 200	PASS 200	PASS 200	Evaluated access-token contains actual user ID and claim emitted by persisted mapper
+GET	/admin/realms/{realm}/clients/{client-uuid}/evaluate-scopes/generate-example-id-token	PASS 200	PASS 200	PASS 200	PASS 200	Evaluated id-token contains actual user ID and claim emitted by persisted mapper
+GET	/admin/realms/{realm}/clients/{client-uuid}/evaluate-scopes/generate-example-saml-response	PASS 200	PASS 200	PASS 200	PASS 200	SAML evaluation builds an assertion for the actual persisted user
+GET	/admin/realms/{realm}/clients/{client-uuid}/evaluate-scopes/generate-example-userinfo	PASS 200	PASS 200	PASS 200	PASS 200	Evaluated userinfo contains actual user ID and claim emitted by persisted mapper
+GET	/admin/realms/{realm}/clients/{client-uuid}/evaluate-scopes/protocol-mappers	PASS 200	PASS 200	PASS 200	PASS 200	Effective mapper evaluation includes persisted client mapper
+GET	/admin/realms/{realm}/clients/{client-uuid}/evaluate-scopes/scope-mappings/{roleContainerId}/granted	PASS 200	PASS 200	PASS 200	PASS 200	Adding client scope mapping changes effective granted roles
+GET	/admin/realms/{realm}/clients/{client-uuid}/evaluate-scopes/scope-mappings/{roleContainerId}/not-granted	PASS 200	PASS 200	PASS 200	PASS 200	Evaluation identifies a real realm role outside client scope
+GET	/admin/realms/{realm}/client-scopes	PASS 200	PASS 200	PASS 200	PASS 200	Scope collection lists created scope
+POST	/admin/realms/{realm}/client-scopes	PASS 201	PASS 201	PASS 201	PASS 201	Client scope creation persists through its collection alias
+GET	/admin/realms/{realm}/client-templates	PASS 200	PASS 200	PASS 200	PASS 200	Scope collection lists created scope
+POST	/admin/realms/{realm}/client-templates	PASS 201	PASS 201	PASS 201	PASS 201	Client scope creation persists through its collection alias
+GET	/admin/realms/{realm}/client-types	EXCLUDED: client-types (EXPERIMENTAL; excluded by release support policy)	EXCLUDED: client-types (EXPERIMENTAL; excluded by release support policy)	EXCLUDED: client-types (EXPERIMENTAL; excluded by release support policy)	EXCLUDED: client-types (EXPERIMENTAL; excluded by release support policy)	Outside both declared support routes
+PUT	/admin/realms/{realm}/client-types	EXCLUDED: client-types (EXPERIMENTAL; excluded by release support policy)	EXCLUDED: client-types (EXPERIMENTAL; excluded by release support policy)	EXCLUDED: client-types (EXPERIMENTAL; excluded by release support policy)	EXCLUDED: client-types (EXPERIMENTAL; excluded by release support policy)	Outside both declared support routes
+GET	/admin/realms/{realm}/clients	PASS 200	PASS 200	PASS 200	PASS 200	Client query resolves created internal ID
+POST	/admin/realms/{realm}/clients	PASS 201	PASS 201	PASS 201	PASS 201	Client creation persisted internal ID and public client ID
+GET	/admin/realms/{realm}/components	PASS 200	PASS 200	PASS 200	PASS 200	LDAP component creation persists provider, parent and discoverable storage name
+POST	/admin/realms/{realm}/components	PASS 201	PASS 201	PASS 201	PASS 201	LDAP component creation persists provider, parent and discoverable storage name
+GET	/admin/realms/{realm}/components/{id}	PASS 200	PASS 200	PASS 200	PASS 200	Component update persists renamed LDAP provider
+PUT	/admin/realms/{realm}/components/{id}	PASS 204	PASS 204	PASS 204	PASS 204	Component update persists renamed LDAP provider
+DELETE	/admin/realms/{realm}/components/{id}	PASS 204	PASS 204	PASS 204	PASS 204	Deleting LDAP component removes its persisted provider configuration
+GET	/admin/realms/{realm}/components/{id}/sub-component-types	PASS 200	PASS 200	PASS 200	PASS 200	Subcomponent discovery exposes installed LDAP group mapper
+GET	/admin/realms/{realm}/groups/{group-id}	PASS 200	PASS 200	PASS 200	PASS 200	Group attribute update persists multivalue data
+PUT	/admin/realms/{realm}/groups/{group-id}	PASS 204	PASS 204	PASS 204	PASS 204	Group attribute update persists multivalue data
+DELETE	/admin/realms/{realm}/groups/{group-id}	PASS 204	PASS 204	PASS 204	PASS 204	Deleting group removes actual imported group
+GET	/admin/realms/{realm}/groups/{group-id}/children	PASS 200	PASS 200	PASS 200	PASS 200	Child creation persists parent-child relationship
+POST	/admin/realms/{realm}/groups/{group-id}/children	PASS 201	PASS 201	PASS 201	PASS 201	Child creation persists parent-child relationship
+GET	/admin/realms/{realm}/groups/{group-id}/management/permissions	EXCLUDED: FGAP v1 compatibility only; select fgap-v1-compat explicitly	EXCLUDED: FGAP v1 compatibility only; select fgap-v1-compat explicitly	PASS 200	PASS 200	Disabling legacy permissions changes persisted state: groups/{group-id}/management/permissions
+PUT	/admin/realms/{realm}/groups/{group-id}/management/permissions	EXCLUDED: FGAP v1 compatibility only; select fgap-v1-compat explicitly	EXCLUDED: FGAP v1 compatibility only; select fgap-v1-compat explicitly	PASS 200	PASS 200	Disabling legacy permissions changes persisted state: groups/{group-id}/management/permissions
+GET	/admin/realms/{realm}/groups/{group-id}/members	PASS 200	PASS 200	PASS 200	PASS 200	Joining group updates member listing and user membership count
+GET	/admin/realms/{realm}/groups	PASS 200	PASS 200	PASS 200	PASS 200	LDAP group mapper sync imports actual directory group
+POST	/admin/realms/{realm}/groups	PASS 201	PASS 201	PASS 201	PASS 201	Group creation persists name
+GET	/admin/realms/{realm}/groups/count	PASS 200	PASS 200	PASS 200	PASS 200	Group search and count reflect two created groups
+GET	/admin/realms/{realm}/identity-provider/instances/{alias}	PASS 200	PASS 200	PASS 200	PASS 200	Provider update persists display name
+PUT	/admin/realms/{realm}/identity-provider/instances/{alias}	PASS 204	PASS 204	PASS 204	PASS 204	Provider update persists display name
+DELETE	/admin/realms/{realm}/identity-provider/instances/{alias}	PASS 204	PASS 204	PASS 204	PASS 204	Identity provider deletion removes its configuration
+GET	/admin/realms/{realm}/identity-provider/instances/{alias}/export	PASS 200	PASS 200	PASS 200	PASS 200	Provider export generates broker-specific SAML metadata
+GET	/admin/realms/{realm}/identity-provider/instances/{alias}/management/permissions	EXCLUDED: FGAP v1 compatibility only; select fgap-v1-compat explicitly	EXCLUDED: FGAP v1 compatibility only; select fgap-v1-compat explicitly	PASS 200	PASS 200	Disabling legacy permissions changes persisted state: identity-provider/instances/{alias}/management/permissions
+PUT	/admin/realms/{realm}/identity-provider/instances/{alias}/management/permissions	EXCLUDED: FGAP v1 compatibility only; select fgap-v1-compat explicitly	EXCLUDED: FGAP v1 compatibility only; select fgap-v1-compat explicitly	PASS 200	PASS 200	Disabling legacy permissions changes persisted state: identity-provider/instances/{alias}/management/permissions
+GET	/admin/realms/{realm}/identity-provider/instances/{alias}/mapper-types	PASS 200	PASS 200	PASS 200	PASS 200	Mapper-type discovery exposes installed SAML attribute mapper
+GET	/admin/realms/{realm}/identity-provider/instances/{alias}/mappers	PASS 200	PASS 200	PASS 200	PASS 200	Provider mapper deletion removes stored model
+POST	/admin/realms/{realm}/identity-provider/instances/{alias}/mappers	PASS 201	PASS 201	PASS 201	PASS 201	Identity-provider mapper persists config and provider association
+GET	/admin/realms/{realm}/identity-provider/instances/{alias}/mappers/{id}	PASS 200	PASS 200	PASS 200	PASS 200	Identity-provider mapper update changes stored attribute target
+PUT	/admin/realms/{realm}/identity-provider/instances/{alias}/mappers/{id}	PASS 204	PASS 204	PASS 204	PASS 204	Identity-provider mapper update changes stored attribute target
+DELETE	/admin/realms/{realm}/identity-provider/instances/{alias}/mappers/{id}	PASS 204	PASS 204	PASS 204	PASS 204	Provider mapper deletion removes stored model
+GET	/admin/realms/{realm}/identity-provider/instances/{alias}/reload-keys	PASS 200	PASS 200	PASS 200	PASS 200	Reload refetches changed remote key set
+POST	/admin/realms/{realm}/identity-provider/import-config	PASS 200	PASS 200	PASS 200	PASS 200	JSON metadata import performs a real HTTP fetch and parses metadata
+GET	/admin/realms/{realm}/identity-provider/instances	PASS 200	PASS 200	PASS 200	PASS 200	Identity-provider creation persists real provider configurations
+POST	/admin/realms/{realm}/identity-provider/instances	PASS 201	PASS 201	PASS 201	PASS 201	Identity-provider creation persists real provider configurations
+GET	/admin/realms/{realm}/identity-provider/providers/{provider_id}	PASS 200	PASS 200	PASS 200	PASS 200	Provider discovery returns installed OIDC implementation
+POST	/admin/realms/{realm}/identity-provider/upload-certificate	PASS 200	PASS 200	PASS 200	PASS 200	Certificate upload parses actual X509 certificate and extracts its public key
+GET	/admin/realms/{realm}/keys	PASS 200	PASS 200	PASS 200	PASS 200	Realm key metadata contains active RSA signing key
+POST	/admin/realms/{realm}/ldap-server-capabilities	PASS 200	PASS 200	PASS 200	PASS 200	Keycloak binds to actual OpenLDAP and discovers root-DSE supported capabilities
+GET	/admin/realms/{realm}/organizations/{org-id}	PASS 200	PASS 200	PASS 200	PASS 200	Organization update persists description
+PUT	/admin/realms/{realm}/organizations/{org-id}	PASS 204	PASS 204	PASS 204	PASS 204	Organization update persists description
+DELETE	/admin/realms/{realm}/organizations/{org-id}	PASS 204	PASS 204	PASS 204	PASS 204	Deleting organization removes persisted entity
+GET	/admin/realms/{realm}/organizations/{org-id}/groups/{group-id}	PASS 200	PASS 200	PASS 200	PASS 200	Organization group update persists description
+PUT	/admin/realms/{realm}/organizations/{org-id}/groups/{group-id}	PASS 204	PASS 204	PASS 204	PASS 204	Organization group update persists description
+DELETE	/admin/realms/{realm}/organizations/{org-id}/groups/{group-id}	PASS 204	PASS 204	PASS 204	PASS 204	Deleting organization group removes group subtree
+GET	/admin/realms/{realm}/organizations/{org-id}/groups/{group-id}/children	PASS 200	PASS 200	PASS 200	PASS 200	Organization nested group creation and path lookup agree on persisted child
+POST	/admin/realms/{realm}/organizations/{org-id}/groups/{group-id}/children	PASS 201	PASS 201	PASS 201	PASS 201	Organization nested group creation and path lookup agree on persisted child
+GET	/admin/realms/{realm}/organizations/{org-id}/groups/{group-id}/members	PASS 200	PASS 200	PASS 200	PASS 200	Organization group leave removes persisted membership
+PUT	/admin/realms/{realm}/organizations/{org-id}/groups/{group-id}/members/{userId}	PASS 204	PASS 204	PASS 204	PASS 204	Organization member/group and linked provider group queries reflect actual membership
+DELETE	/admin/realms/{realm}/organizations/{org-id}/groups/{group-id}/members/{userId}	PASS 204	PASS 204	PASS 204	PASS 204	Organization group leave removes persisted membership
+GET	/admin/realms/{realm}/organizations/{org-id}/groups	PASS 200	PASS 200	PASS 200	PASS 200	Deleting organization group removes group subtree
+POST	/admin/realms/{realm}/organizations/{org-id}/groups	PASS 201	PASS 201	PASS 201	PASS 201	Organization group creation persists within its organization
+GET	/admin/realms/{realm}/organizations/{org-id}/groups/group-by-path/{path}	PASS 200	PASS 200	PASS 200	PASS 200	Organization nested group creation and path lookup agree on persisted child
+GET	/admin/realms/{realm}/organizations/{org-id}/identity-providers	PASS 200	PASS 200	PASS 200	PASS 200	Organization unlink removes identity-provider association
+POST	/admin/realms/{realm}/organizations/{org-id}/identity-providers	PASS 204	PASS 204	PASS 204	PASS 204	Organization identity-provider association persists
+GET	/admin/realms/{realm}/organizations/{org-id}/identity-providers/{alias}	PASS 200	PASS 200	PASS 200	PASS 200	Per-organization identity-provider link stores auto-membership setting
+PUT	/admin/realms/{realm}/organizations/{org-id}/identity-providers/{alias}	PASS 204	PASS 204	PASS 204	PASS 204	Per-organization identity-provider link stores auto-membership setting
+DELETE	/admin/realms/{realm}/organizations/{org-id}/identity-providers/{alias}	PASS 204	PASS 204	PASS 204	PASS 204	Organization unlink removes identity-provider association
+GET	/admin/realms/{realm}/organizations/{org-id}/identity-providers/{alias}/groups	PASS 200	PASS 200	PASS 200	PASS 200	Organization member/group and linked provider group queries reflect actual membership
+GET	/admin/realms/{realm}/organizations/{org-id}/invitations	PASS 200	PASS 200	PASS 200	PASS 200	Existing-user invitation sends actual user email and persists pending membership invitation
+GET	/admin/realms/{realm}/organizations/{org-id}/invitations/{id}	PASS 200	PASS 200	PASS 200	PASS 200	New-user invitation sends email and persists pending invitation with organization/expiry
+DELETE	/admin/realms/{realm}/organizations/{org-id}/invitations/{id}	PASS 204	PASS 204	PASS 204	PASS 204	Deleting invitation removes pending invitation record
+POST	/admin/realms/{realm}/organizations/{org-id}/invitations/{id}/resend	PASS 204	PASS 204	PASS 204	PASS 204	Resending sends a second actual email and replaces invitation ID as released source specifies
+GET	/admin/realms/{realm}/organizations/{org-id}/members	PASS 200	PASS 200	PASS 200	PASS 200	Unmanaged member removal preserves underlying user
+POST	/admin/realms/{realm}/organizations/{org-id}/members	PASS 201	PASS 201	PASS 201	PASS 201	Organization membership is visible through member, count and reverse-organization queries
+GET	/admin/realms/{realm}/organizations/{org-id}/members/count	PASS 200	PASS 200	PASS 200	PASS 200	Organization membership is visible through member, count and reverse-organization queries
+POST	/admin/realms/{realm}/organizations/{org-id}/members/invite-existing-user	PASS 204	PASS 204	PASS 204	PASS 204	Existing-user invitation sends actual user email and persists pending membership invitation
+POST	/admin/realms/{realm}/organizations/{org-id}/members/invite-user	PASS 204	PASS 204	PASS 204	PASS 204	New-user invitation sends email and persists pending invitation with organization/expiry
+GET	/admin/realms/{realm}/organizations/{org-id}/members/{member-id}	PASS 200	PASS 200	PASS 200	PASS 200	Changing membership type restores unmanaged state
+DELETE	/admin/realms/{realm}/organizations/{org-id}/members/{member-id}	PASS 204	PASS 204	PASS 204	PASS 204	Unmanaged member removal preserves underlying user
+GET	/admin/realms/{realm}/organizations/{org-id}/members/{member-id}/groups	PASS 200	PASS 200	PASS 200	PASS 200	Organization member/group and linked provider group queries reflect actual membership
+PUT	/admin/realms/{realm}/organizations/{org-id}/members/{member-id}/membership-type	PASS 204	PASS 204	PASS 204	PASS 204	Changing membership type restores unmanaged state
+GET	/admin/realms/{realm}/organizations/{org-id}/members/{member-id}/organizations	PASS 200	PASS 200	PASS 200	PASS 200	Organization membership is visible through member, count and reverse-organization queries
+GET	/admin/realms/{realm}/organizations	PASS 200	PASS 200	PASS 200	PASS 200	Organization creation persists and participates in search/count
+POST	/admin/realms/{realm}/organizations	PASS 201	PASS 201	PASS 201	PASS 201	Organization creation persists and participates in search/count
+GET	/admin/realms/{realm}/organizations/count	PASS 200	PASS 200	PASS 200	PASS 200	Organization creation persists and participates in search/count
+GET	/admin/realms/{realm}/organizations/members/{member-id}/organizations	PASS 200	PASS 200	PASS 200	PASS 200	Organization membership is visible through member, count and reverse-organization queries
+GET	/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/permission	PASS 200	PASS 200	PASS 200	PASS 200	Policy/permission creation persists actual user policy and resource/scope permission
+POST	/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/permission	PASS 201	PASS 201	PASS 201	PASS 201	Policy/permission creation persists actual user policy and resource/scope permission
+GET	/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/permission/providers	PASS 200	PASS 200	PASS 200	PASS 200	Authorization provider discovery exposes installed provider for permission
+GET	/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/permission/search	PASS 200	PASS 200	PASS 200	PASS 200	Policy/permission creation persists actual user policy and resource/scope permission
+GET	/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/policy	PASS 200	PASS 200	PASS 200	PASS 200	Policy/permission creation persists actual user policy and resource/scope permission
+POST	/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/policy	PASS 201	PASS 201	PASS 201	PASS 201	Policy/permission creation persists actual user policy and resource/scope permission
+GET	/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/policy/providers	PASS 200	PASS 200	PASS 200	PASS 200	Authorization provider discovery exposes installed provider for policy
+GET	/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/policy/search	PASS 200	PASS 200	PASS 200	PASS 200	Policy/permission creation persists actual user policy and resource/scope permission
+DELETE	/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/permission/{type}	PASS 204	PASS 204	PASS 204	PASS 204	Root policy deletion removes persisted permission
+GET	/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/permission/{type}	PASS 200	PASS 200	PASS 200	PASS 200	Policy update persists through root or provider-specific ID route
+POST	/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/permission/{type}	PASS 201	PASS 201	PASS 201	PASS 201	Provider-specific creation and ID dispatch persist typed policies
+PUT	/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/permission/{type}	PASS 201	PASS 201	PASS 201	PASS 201	Policy update persists through root or provider-specific ID route
+GET	/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/permission/{type}/associatedPolicies	PASS 200	PASS 200	PASS 200	PASS 200	Policy ID lookup and resource/scope/associated-policy links reflect stored dependency graph
+GET	/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/permission/{type}/dependentPolicies	PASS 200	PASS 200	PASS 200	PASS 200	Dependent policy query follows persisted permission-to-user-policy edge
+GET	/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/permission/{type}/providers	PASS 200	PASS 200	PASS 200	PASS 200	Provider-type listing/search/paging and provider discovery operate on real data
+GET	/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/permission/{type}/resources	PASS 200	PASS 200	PASS 200	PASS 200	Policy ID lookup and resource/scope/associated-policy links reflect stored dependency graph
+GET	/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/permission/{type}/scopes	PASS 200	PASS 200	PASS 200	PASS 200	Policy ID lookup and resource/scope/associated-policy links reflect stored dependency graph
+GET	/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/permission/{type}/search	PASS 200	PASS 200	PASS 200	PASS 200	Provider-type listing/search/paging and provider discovery operate on real data
+DELETE	/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/permission/{type}/{policy-id}	PASS 204	PASS 204	PASS 204	PASS 204	Typed policy deletion removes persisted permission
+GET	/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/permission/{type}/{policy-id}	PASS 200	PASS 200	PASS 200	PASS 200	Policy update persists through root or provider-specific ID route
+PUT	/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/permission/{type}/{policy-id}	PASS 201	PASS 201	PASS 201	PASS 201	Policy update persists through root or provider-specific ID route
+GET	/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/permission/{type}/{policy-id}/associatedPolicies	PASS 200	PASS 200	PASS 200	PASS 200	Policy ID lookup and resource/scope/associated-policy links reflect stored dependency graph
+GET	/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/permission/{type}/{policy-id}/dependentPolicies	PASS 200	PASS 200	PASS 200	PASS 200	Provider-specific dependent-policy lookup follows persisted edge
+GET	/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/permission/{type}/{policy-id}/resources	PASS 200	PASS 200	PASS 200	PASS 200	Policy ID lookup and resource/scope/associated-policy links reflect stored dependency graph
+GET	/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/permission/{type}/{policy-id}/scopes	PASS 200	PASS 200	PASS 200	PASS 200	Policy ID lookup and resource/scope/associated-policy links reflect stored dependency graph
+DELETE	/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/policy/{type}	PASS 204	PASS 204	PASS 204	PASS 204	Revoking FGAP policy restores actual 403 and prevents unauthorized data change
+GET	/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/policy/{type}	PASS 200	PASS 200	PASS 200	PASS 200	Policy update persists through root or provider-specific ID route
+POST	/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/policy/{type}	PASS 201	PASS 201	PASS 201	PASS 201	Declared FGAP v2 policy grants real delegated admin read/write after an initial 403
+PUT	/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/policy/{type}	PASS 201	PASS 201	PASS 201	PASS 201	Policy update persists through root or provider-specific ID route
+GET	/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/policy/{type}/associatedPolicies	PASS 200	PASS 200	PASS 200	PASS 200	Policy ID lookup and resource/scope/associated-policy links reflect stored dependency graph
+GET	/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/policy/{type}/dependentPolicies	PASS 200	PASS 200	PASS 200	PASS 200	Dependent policy query follows persisted permission-to-user-policy edge
+GET	/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/policy/{type}/providers	PASS 200	PASS 200	PASS 200	PASS 200	Provider-type listing/search/paging and provider discovery operate on real data
+GET	/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/policy/{type}/resources	PASS 200	PASS 200	PASS 200	PASS 200	Policy ID lookup and resource/scope/associated-policy links reflect stored dependency graph
+GET	/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/policy/{type}/scopes	PASS 200	PASS 200	PASS 200	PASS 200	Policy ID lookup and resource/scope/associated-policy links reflect stored dependency graph
+GET	/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/policy/{type}/search	PASS 200	PASS 200	PASS 200	PASS 200	Provider-type listing/search/paging and provider discovery operate on real data
+DELETE	/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/policy/{type}/{policy-id}	PASS 204	PASS 204	PASS 204	PASS 204	Typed policy deletion removes persisted permission
+GET	/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/policy/{type}/{policy-id}	PASS 200	PASS 200	PASS 200	PASS 200	Policy update persists through root or provider-specific ID route
+PUT	/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/policy/{type}/{policy-id}	PASS 201	PASS 201	PASS 201	PASS 201	Policy update persists through root or provider-specific ID route
+GET	/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/policy/{type}/{policy-id}/associatedPolicies	PASS 200	PASS 200	PASS 200	PASS 200	Policy ID lookup and resource/scope/associated-policy links reflect stored dependency graph
+GET	/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/policy/{type}/{policy-id}/dependentPolicies	PASS 200	PASS 200	PASS 200	PASS 200	Provider-specific dependent-policy lookup follows persisted edge
+GET	/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/policy/{type}/{policy-id}/resources	PASS 200	PASS 200	PASS 200	PASS 200	Policy ID lookup and resource/scope/associated-policy links reflect stored dependency graph
+GET	/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/policy/{type}/{policy-id}/scopes	PASS 200	PASS 200	PASS 200	PASS 200	Policy ID lookup and resource/scope/associated-policy links reflect stored dependency graph
+POST	/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/permission/evaluate	PASS 200	PASS 200	PASS 200	PASS 200	Changing persisted user-policy logic from POSITIVE to NEGATIVE changes real authorization result from PERMIT to DENY
+POST	/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/policy/evaluate	PASS 200	PASS 200	PASS 200	PASS 200	Authorization engine evaluates persisted user/resource/scope policies as PERMIT
+POST	/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/permission/{type}/evaluate	PASS 200	PASS 200	PASS 200	PASS 200	Authorization engine evaluates persisted user/resource/scope policies as PERMIT
+POST	/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/policy/{type}/evaluate	PASS 200	PASS 200	PASS 200	PASS 200	Authorization engine evaluates persisted user/resource/scope policies as PERMIT
+POST	/admin/realms/{realm}/client-scopes/{client-scope-id}/protocol-mappers/add-models	PASS 204	PASS 204	PASS 204	PASS 204	Bulk mapper creation persists both model definitions
+GET	/admin/realms/{realm}/client-scopes/{client-scope-id}/protocol-mappers/models	PASS 200	PASS 200	PASS 200	PASS 200	Mapper deletion removes only selected persisted model
+POST	/admin/realms/{realm}/client-scopes/{client-scope-id}/protocol-mappers/models	PASS 201	PASS 201	PASS 201	PASS 201	Protocol mapper creation persists and is visible through ID/list/protocol queries: client-scopes/{client-scope-id}
+GET	/admin/realms/{realm}/client-scopes/{client-scope-id}/protocol-mappers/models/{id}	PASS 200	PASS 200	PASS 200	PASS 200	Protocol mapper update changes stored claim configuration
+PUT	/admin/realms/{realm}/client-scopes/{client-scope-id}/protocol-mappers/models/{id}	PASS 204	PASS 204	PASS 204	PASS 204	Protocol mapper update changes stored claim configuration
+DELETE	/admin/realms/{realm}/client-scopes/{client-scope-id}/protocol-mappers/models/{id}	PASS 204	PASS 204	PASS 204	PASS 204	Mapper deletion removes only selected persisted model
+GET	/admin/realms/{realm}/client-scopes/{client-scope-id}/protocol-mappers/protocol/{protocol}	PASS 200	PASS 200	PASS 200	PASS 200	Protocol mapper creation persists and is visible through ID/list/protocol queries: client-scopes/{client-scope-id}
+POST	/admin/realms/{realm}/client-templates/{client-scope-id}/protocol-mappers/add-models	PASS 204	PASS 204	PASS 204	PASS 204	Bulk mapper creation persists both model definitions
+GET	/admin/realms/{realm}/client-templates/{client-scope-id}/protocol-mappers/models	PASS 200	PASS 200	PASS 200	PASS 200	Mapper deletion removes only selected persisted model
+POST	/admin/realms/{realm}/client-templates/{client-scope-id}/protocol-mappers/models	PASS 201	PASS 201	PASS 201	PASS 201	Protocol mapper creation persists and is visible through ID/list/protocol queries: client-templates/{client-scope-id}
+GET	/admin/realms/{realm}/client-templates/{client-scope-id}/protocol-mappers/models/{id}	PASS 200	PASS 200	PASS 200	PASS 200	Protocol mapper update changes stored claim configuration
+PUT	/admin/realms/{realm}/client-templates/{client-scope-id}/protocol-mappers/models/{id}	PASS 204	PASS 204	PASS 204	PASS 204	Protocol mapper update changes stored claim configuration
+DELETE	/admin/realms/{realm}/client-templates/{client-scope-id}/protocol-mappers/models/{id}	PASS 204	PASS 204	PASS 204	PASS 204	Mapper deletion removes only selected persisted model
+GET	/admin/realms/{realm}/client-templates/{client-scope-id}/protocol-mappers/protocol/{protocol}	PASS 200	PASS 200	PASS 200	PASS 200	Protocol mapper creation persists and is visible through ID/list/protocol queries: client-templates/{client-scope-id}
+POST	/admin/realms/{realm}/clients/{client-uuid}/protocol-mappers/add-models	PASS 204	PASS 204	PASS 204	PASS 204	Bulk mapper creation persists both model definitions
+GET	/admin/realms/{realm}/clients/{client-uuid}/protocol-mappers/models	PASS 200	PASS 200	PASS 200	PASS 200	Mapper deletion removes only selected persisted model
+POST	/admin/realms/{realm}/clients/{client-uuid}/protocol-mappers/models	PASS 201	PASS 201	PASS 201	PASS 201	Protocol mapper creation persists and is visible through ID/list/protocol queries: clients/{client-uuid}
+GET	/admin/realms/{realm}/clients/{client-uuid}/protocol-mappers/models/{id}	PASS 200	PASS 200	PASS 200	PASS 200	Protocol mapper update changes stored claim configuration
+PUT	/admin/realms/{realm}/clients/{client-uuid}/protocol-mappers/models/{id}	PASS 204	PASS 204	PASS 204	PASS 204	Protocol mapper update changes stored claim configuration
+DELETE	/admin/realms/{realm}/clients/{client-uuid}/protocol-mappers/models/{id}	PASS 204	PASS 204	PASS 204	PASS 204	Mapper deletion removes only selected persisted model
+GET	/admin/realms/{realm}/clients/{client-uuid}/protocol-mappers/protocol/{protocol}	PASS 200	PASS 200	PASS 200	PASS 200	Protocol mapper creation persists and is visible through ID/list/protocol queries: clients/{client-uuid}
+GET	/admin/realms/{realm}	PASS 200	PASS 200	PASS 200	PASS 200	Clearing realm cache exposes actual out-of-band PostgreSQL mutation
+PUT	/admin/realms/{realm}	PASS 204	PASS 204	PASS 204	PASS 204	Realm configuration writes change persisted fields
+DELETE	/admin/realms/{realm}	PASS 204	PASS 204	PASS 204	PASS 204	Deleting the isolated realm removes its persisted state
+GET	/admin/realms/{realm}/admin-events	PASS 200	PASS 200	PASS 200	PASS 200	Deleting admin events removes preceding mutation history
+DELETE	/admin/realms/{realm}/admin-events	PASS 204	PASS 204	PASS 204	PASS 204	Deleting admin events removes preceding mutation history
+POST	/admin/realms/{realm}/client-description-converter	PASS 200	PASS 200	PASS 200	PASS 200	SAML metadata converter parses actual entity ID, protocol and assertion consumer URL
+GET	/admin/realms/{realm}/client-session-stats	PASS 200	PASS 200	PASS 200	PASS 200	Real password grant creates persisted user/client session and counted client statistics
+GET	/admin/realms/{realm}/credential-registrators	PASS 200	PASS 200	PASS 200	PASS 200	Credential registrar discovery contains installed WebAuthn provider
+GET	/admin/realms/{realm}/default-default-client-scopes	PASS 200	PASS 200	PASS 200	PASS 200	Realm default scope relationship removed: default-default-client-scopes
+PUT	/admin/realms/{realm}/default-default-client-scopes/{clientScopeId}	PASS 204	PASS 204	PASS 204	PASS 204	Realm default scope relationship persisted: default-default-client-scopes
+DELETE	/admin/realms/{realm}/default-default-client-scopes/{clientScopeId}	PASS 204	PASS 204	PASS 204	PASS 204	Realm default scope relationship removed: default-default-client-scopes
+GET	/admin/realms/{realm}/default-groups	PASS 200	PASS 200	PASS 200	PASS 200	Removing default group changes realm assignment
+PUT	/admin/realms/{realm}/default-groups/{groupId}	PASS 204	PASS 204	PASS 204	PASS 204	Realm default group assignment persisted
+DELETE	/admin/realms/{realm}/default-groups/{groupId}	PASS 204	PASS 204	PASS 204	PASS 204	Removing default group changes realm assignment
+GET	/admin/realms/{realm}/default-optional-client-scopes	PASS 200	PASS 200	PASS 200	PASS 200	Realm default scope relationship removed: default-optional-client-scopes
+PUT	/admin/realms/{realm}/default-optional-client-scopes/{clientScopeId}	PASS 204	PASS 204	PASS 204	PASS 204	Realm default scope relationship persisted: default-optional-client-scopes
+DELETE	/admin/realms/{realm}/default-optional-client-scopes/{clientScopeId}	PASS 204	PASS 204	PASS 204	PASS 204	Realm default scope relationship removed: default-optional-client-scopes
+GET	/admin/realms/{realm}/events	PASS 200	PASS 200	PASS 200	PASS 200	Deleting events removes persisted login history
+DELETE	/admin/realms/{realm}/events	PASS 204	PASS 204	PASS 204	PASS 204	Deleting events removes persisted login history
+GET	/admin/realms/{realm}/events/config	PASS 200	PASS 200	PASS 200	PASS 200	Event configuration persists retention and enabled event types
+PUT	/admin/realms/{realm}/events/config	PASS 204	PASS 204	PASS 204	PASS 204	Event configuration persists retention and enabled event types
+GET	/admin/realms/{realm}/group-by-path/{path}	PASS 200	PASS 200	PASS 200	PASS 200	Nested group path resolves actual persisted child
+POST	/admin/realms/{realm}/logout-all	PASS 200	PASS 200	PASS 200	PASS 200	Realm logout-all removes existing user sessions
+POST	/admin/realms/{realm}/partial-export	PASS 200	PASS 200	PASS 200	PASS 200	Partial export contains imported client, group and realm role
+POST	/admin/realms/{realm}/partialImport	PASS 200	PASS 200	PASS 200	PASS 200	Partial import persists all four real resource kinds with added count
+POST	/admin/realms/{realm}/push-revocation	PASS 200	PASS 200	PASS 200	PASS 200	Realm revocation reaches configured client adapter
+DELETE	/admin/realms/{realm}/sessions/{session}	PASS 204	PASS 204	PASS 204	PASS 204	Deleting session removes selected persisted user session
+POST	/admin/realms/{realm}/testSMTPConnection	PASS 204	PASS 204	PASS 204	PASS 204	JSON and form SMTP tests deliver actual messages to authenticated admin
+GET	/admin/realms/{realm}/users-management-permissions	EXCLUDED: FGAP v1 compatibility only; select fgap-v1-compat explicitly	EXCLUDED: FGAP v1 compatibility only; select fgap-v1-compat explicitly	PASS 200	PASS 200	Disabling legacy permissions changes persisted state: users-management-permissions
+PUT	/admin/realms/{realm}/users-management-permissions	EXCLUDED: FGAP v1 compatibility only; select fgap-v1-compat explicitly	EXCLUDED: FGAP v1 compatibility only; select fgap-v1-compat explicitly	PASS 200	PASS 200	Disabling legacy permissions changes persisted state: users-management-permissions
+GET	/admin/realms/{realm}/localization	PASS 200	PASS 200	PASS 200	PASS 200	Locale enumeration reflects persisted translations
+GET	/admin/realms/{realm}/localization/{locale}	PASS 200	PASS 200	PASS 200	PASS 200	Multipart localization import persists UTF8 message
+POST	/admin/realms/{realm}/localization/{locale}	PASS 204	PASS 204	PASS 204	PASS 204	Multipart localization import persists UTF8 message
+DELETE	/admin/realms/{realm}/localization/{locale}	PASS 204	PASS 204	PASS 204	PASS 204	Locale deletion removes all persisted translations
+GET	/admin/realms/{realm}/localization/{locale}/{key}	PASS 200	PASS 200	PASS 200	PASS 200	Localization key write is readable
+PUT	/admin/realms/{realm}/localization/{locale}/{key}	PASS 204	PASS 204	PASS 204	PASS 204	Localization key write is readable
+DELETE	/admin/realms/{realm}/localization/{locale}/{key}	PASS 204	PASS 204	PASS 204	PASS 204	Deleting a localization key preserves its sibling
+GET	/admin/realms	PASS 200	PASS 200	PASS 200	PASS 200	Realm listing includes the newly persisted realm
+POST	/admin/realms	PASS 201	PASS 201	PASS 201	PASS 201	Created realm is persisted and readable by its unique name
+GET	/admin/realms/{realm}/roles-by-id/{role-id}	PASS 200	PASS 200	PASS 200	PASS 200	Role-by-ID update persists
+PUT	/admin/realms/{realm}/roles-by-id/{role-id}	PASS 204	PASS 204	PASS 204	PASS 204	Role-by-ID update persists
+DELETE	/admin/realms/{realm}/roles-by-id/{role-id}	PASS 204	PASS 204	PASS 204	PASS 204	Role deletion by ID removes persisted role
+GET	/admin/realms/{realm}/roles-by-id/{role-id}/composites	PASS 200	PASS 200	PASS 200	PASS 200	Role-by-ID composite deletion removes persisted children
+POST	/admin/realms/{realm}/roles-by-id/{role-id}/composites	PASS 204	PASS 204	PASS 204	PASS 204	Role-by-ID composite filters expose actual child roles
+DELETE	/admin/realms/{realm}/roles-by-id/{role-id}/composites	PASS 204	PASS 204	PASS 204	PASS 204	Role-by-ID composite deletion removes persisted children
+GET	/admin/realms/{realm}/roles-by-id/{role-id}/composites/clients/{clientUuid}	PASS 200	PASS 200	PASS 200	PASS 200	Role-by-ID composite filters expose actual child roles
+GET	/admin/realms/{realm}/roles-by-id/{role-id}/composites/realm	PASS 200	PASS 200	PASS 200	PASS 200	Role-by-ID composite filters expose actual child roles
+GET	/admin/realms/{realm}/roles-by-id/{role-id}/management/permissions	EXCLUDED: FGAP v1 compatibility only; select fgap-v1-compat explicitly	EXCLUDED: FGAP v1 compatibility only; select fgap-v1-compat explicitly	PASS 200	PASS 200	Disabling legacy permissions changes persisted state: roles-by-id/{role-id}/management/permissions
+PUT	/admin/realms/{realm}/roles-by-id/{role-id}/management/permissions	EXCLUDED: FGAP v1 compatibility only; select fgap-v1-compat explicitly	EXCLUDED: FGAP v1 compatibility only; select fgap-v1-compat explicitly	PASS 200	PASS 200	Disabling legacy permissions changes persisted state: roles-by-id/{role-id}/management/permissions
+GET	/admin/realms/{realm}/clients/{client-uuid}/roles	PASS 200	PASS 200	PASS 200	PASS 200	Role listing contains newly created role
+POST	/admin/realms/{realm}/clients/{client-uuid}/roles	PASS 201	PASS 201	PASS 201	PASS 201	Role creation persists a unique role and ID
+GET	/admin/realms/{realm}/clients/{client-uuid}/roles/{role-name}	PASS 200	PASS 200	PASS 200	PASS 200	Role update changes persisted description
+PUT	/admin/realms/{realm}/clients/{client-uuid}/roles/{role-name}	PASS 204	PASS 204	PASS 204	PASS 204	Role update changes persisted description
+DELETE	/admin/realms/{realm}/clients/{client-uuid}/roles/{role-name}	PASS 204	PASS 204	PASS 204	PASS 204	Role deletion by name removes persisted role
+GET	/admin/realms/{realm}/clients/{client-uuid}/roles/{role-name}/composites	PASS 200	PASS 200	PASS 200	PASS 200	Removing composites removes both child role relationships
+POST	/admin/realms/{realm}/clients/{client-uuid}/roles/{role-name}/composites	PASS 204	PASS 204	PASS 204	PASS 204	Composite role writes and realm/client filters reflect real child relationships
+DELETE	/admin/realms/{realm}/clients/{client-uuid}/roles/{role-name}/composites	PASS 204	PASS 204	PASS 204	PASS 204	Removing composites removes both child role relationships
+GET	/admin/realms/{realm}/clients/{client-uuid}/roles/{role-name}/composites/clients/{targetClientUuid}	PASS 200	PASS 200	PASS 200	PASS 200	Composite role writes and realm/client filters reflect real child relationships
+GET	/admin/realms/{realm}/clients/{client-uuid}/roles/{role-name}/composites/realm	PASS 200	PASS 200	PASS 200	PASS 200	Composite role writes and realm/client filters reflect real child relationships
+GET	/admin/realms/{realm}/clients/{client-uuid}/roles/{role-name}/groups	PASS 200	PASS 200	PASS 200	PASS 200	Role-centric member listing reflects assigned user/group
+GET	/admin/realms/{realm}/clients/{client-uuid}/roles/{role-name}/management/permissions	EXCLUDED: FGAP v1 compatibility only; select fgap-v1-compat explicitly	EXCLUDED: FGAP v1 compatibility only; select fgap-v1-compat explicitly	PASS 200	PASS 200	Disabling legacy permissions changes persisted state: clients/{client-uuid}/roles/{role-name}/management/permissions
+PUT	/admin/realms/{realm}/clients/{client-uuid}/roles/{role-name}/management/permissions	EXCLUDED: FGAP v1 compatibility only; select fgap-v1-compat explicitly	EXCLUDED: FGAP v1 compatibility only; select fgap-v1-compat explicitly	PASS 200	PASS 200	Disabling legacy permissions changes persisted state: clients/{client-uuid}/roles/{role-name}/management/permissions
+GET	/admin/realms/{realm}/clients/{client-uuid}/roles/{role-name}/users	PASS 200	PASS 200	PASS 200	PASS 200	Role-centric member listing reflects assigned user/group
+GET	/admin/realms/{realm}/roles	PASS 200	PASS 200	PASS 200	PASS 200	Role listing contains newly created role
+POST	/admin/realms/{realm}/roles	PASS 201	PASS 201	PASS 201	PASS 201	Role creation persists a unique role and ID
+GET	/admin/realms/{realm}/roles/{role-name}	PASS 200	PASS 200	PASS 200	PASS 200	Role update changes persisted description
+PUT	/admin/realms/{realm}/roles/{role-name}	PASS 204	PASS 204	PASS 204	PASS 204	Role update changes persisted description
+DELETE	/admin/realms/{realm}/roles/{role-name}	PASS 204	PASS 204	PASS 204	PASS 204	Role deletion by name removes persisted role
+GET	/admin/realms/{realm}/roles/{role-name}/composites	PASS 200	PASS 200	PASS 200	PASS 200	UI bulk mapping deletion removes actual direct client role for roles
+POST	/admin/realms/{realm}/roles/{role-name}/composites	PASS 204	PASS 204	PASS 204	PASS 204	Composite role writes and realm/client filters reflect real child relationships
+DELETE	/admin/realms/{realm}/roles/{role-name}/composites	PASS 204	PASS 204	PASS 204	PASS 204	Removing composites removes both child role relationships
+GET	/admin/realms/{realm}/roles/{role-name}/composites/clients/{targetClientUuid}	PASS 200	PASS 200	PASS 200	PASS 200	Composite role writes and realm/client filters reflect real child relationships
+GET	/admin/realms/{realm}/roles/{role-name}/composites/realm	PASS 200	PASS 200	PASS 200	PASS 200	Composite role writes and realm/client filters reflect real child relationships
+GET	/admin/realms/{realm}/roles/{role-name}/groups	PASS 200	PASS 200	PASS 200	PASS 200	Role-centric member listing reflects assigned user/group
+GET	/admin/realms/{realm}/roles/{role-name}/management/permissions	EXCLUDED: FGAP v1 compatibility only; select fgap-v1-compat explicitly	EXCLUDED: FGAP v1 compatibility only; select fgap-v1-compat explicitly	PASS 200	PASS 200	Disabling legacy permissions changes persisted state: roles/{role-name}/management/permissions
+PUT	/admin/realms/{realm}/roles/{role-name}/management/permissions	EXCLUDED: FGAP v1 compatibility only; select fgap-v1-compat explicitly	EXCLUDED: FGAP v1 compatibility only; select fgap-v1-compat explicitly	PASS 200	PASS 200	Disabling legacy permissions changes persisted state: roles/{role-name}/management/permissions
+GET	/admin/realms/{realm}/roles/{role-name}/users	PASS 200	PASS 200	PASS 200	PASS 200	Role-centric member listing reflects assigned user/group
+GET	/admin/realms/{realm}/groups/{group-id}/role-mappings	PASS 200	PASS 200	PASS 200	PASS 200	Assigned roles and effective composite mappings persist: groups/{group-id}/role-mappings
+GET	/admin/realms/{realm}/groups/{group-id}/role-mappings/realm	PASS 200	PASS 200	PASS 200	PASS 200	Deleting mappings removes direct role relationships: groups/{group-id}/role-mappings
+POST	/admin/realms/{realm}/groups/{group-id}/role-mappings/realm	PASS 204	PASS 204	PASS 204	PASS 204	Assigned roles and effective composite mappings persist: groups/{group-id}/role-mappings
+DELETE	/admin/realms/{realm}/groups/{group-id}/role-mappings/realm	PASS 204	PASS 204	PASS 204	PASS 204	Deleting mappings removes direct role relationships: groups/{group-id}/role-mappings
+GET	/admin/realms/{realm}/groups/{group-id}/role-mappings/realm/available	PASS 200	PASS 200	PASS 200	PASS 200	Available mappings contain unassigned real realm and client roles: groups/{group-id}/role-mappings
+GET	/admin/realms/{realm}/groups/{group-id}/role-mappings/realm/composite	PASS 200	PASS 200	PASS 200	PASS 200	Assigned roles and effective composite mappings persist: groups/{group-id}/role-mappings
+GET	/admin/realms/{realm}/organizations/{org-id}/groups/{group-id}/role-mappings	PASS 200	PASS 200	PASS 200	PASS 200	Assigned roles and effective composite mappings persist: organizations/{org-id}/groups/{group-id}/role-mappings
+GET	/admin/realms/{realm}/organizations/{org-id}/groups/{group-id}/role-mappings/realm	PASS 200	PASS 200	PASS 200	PASS 200	Deleting mappings removes direct role relationships: organizations/{org-id}/groups/{group-id}/role-mappings
+POST	/admin/realms/{realm}/organizations/{org-id}/groups/{group-id}/role-mappings/realm	PASS 204	PASS 204	PASS 204	PASS 204	Assigned roles and effective composite mappings persist: organizations/{org-id}/groups/{group-id}/role-mappings
+DELETE	/admin/realms/{realm}/organizations/{org-id}/groups/{group-id}/role-mappings/realm	PASS 204	PASS 204	PASS 204	PASS 204	Deleting mappings removes direct role relationships: organizations/{org-id}/groups/{group-id}/role-mappings
+GET	/admin/realms/{realm}/organizations/{org-id}/groups/{group-id}/role-mappings/realm/available	PASS 200	PASS 200	PASS 200	PASS 200	Available mappings contain unassigned real realm and client roles: organizations/{org-id}/groups/{group-id}/role-mappings
+GET	/admin/realms/{realm}/organizations/{org-id}/groups/{group-id}/role-mappings/realm/composite	PASS 200	PASS 200	PASS 200	PASS 200	Assigned roles and effective composite mappings persist: organizations/{org-id}/groups/{group-id}/role-mappings
+GET	/admin/realms/{realm}/users/{user-id}/role-mappings	PASS 200	PASS 200	PASS 200	PASS 200	Assigned roles and effective composite mappings persist: users/{user-id}/role-mappings
+GET	/admin/realms/{realm}/users/{user-id}/role-mappings/realm	PASS 200	PASS 200	PASS 200	PASS 200	Deleting mappings removes direct role relationships: users/{user-id}/role-mappings
+POST	/admin/realms/{realm}/users/{user-id}/role-mappings/realm	PASS 204	PASS 204	PASS 204	PASS 204	Assigned roles and effective composite mappings persist: users/{user-id}/role-mappings
+DELETE	/admin/realms/{realm}/users/{user-id}/role-mappings/realm	PASS 204	PASS 204	PASS 204	PASS 204	Deleting mappings removes direct role relationships: users/{user-id}/role-mappings
+GET	/admin/realms/{realm}/users/{user-id}/role-mappings/realm/available	PASS 200	PASS 200	PASS 200	PASS 200	Available mappings contain unassigned real realm and client roles: users/{user-id}/role-mappings
+GET	/admin/realms/{realm}/users/{user-id}/role-mappings/realm/composite	PASS 200	PASS 200	PASS 200	PASS 200	Assigned roles and effective composite mappings persist: users/{user-id}/role-mappings
+GET	/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/scope	PASS 200	PASS 200	PASS 200	PASS 200	Authorization scope persists and exact search returns its single model
+POST	/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/scope	PASS 201	PASS 201	PASS 201	PASS 201	Authorization scope persists and exact search returns its single model
+GET	/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/scope/search	PASS 200	PASS 200	PASS 200	PASS 200	Authorization scope persists and exact search returns its single model
+GET	/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/scope/{scope-id}	PASS 200	PASS 200	PASS 200	PASS 200	Scope update persists display name
+PUT	/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/scope/{scope-id}	PASS 204	PASS 204	PASS 204	PASS 204	Scope update persists display name
+DELETE	/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/scope/{scope-id}	PASS 204	PASS 204	PASS 204	PASS 204	Scope deletion persists
+GET	/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/scope/{scope-id}/permissions	PASS 200	PASS 200	PASS 200	PASS 200	Resource and scope permission queries reflect actual linked permissions
+GET	/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/scope/{scope-id}/resources	PASS 200	PASS 200	PASS 200	PASS 200	Resource CRUD/search/attributes and bidirectional scope relationship persist
+GET	/admin/realms/{realm}/client-scopes/{client-scope-id}/scope-mappings	PASS 200	PASS 200	PASS 200	PASS 200	Assigned roles and effective composite mappings persist: client-scopes/{client-scope-id}/scope-mappings
+GET	/admin/realms/{realm}/client-scopes/{client-scope-id}/scope-mappings/realm	PASS 200	PASS 200	PASS 200	PASS 200	Deleting mappings removes direct role relationships: client-scopes/{client-scope-id}/scope-mappings
+POST	/admin/realms/{realm}/client-scopes/{client-scope-id}/scope-mappings/realm	PASS 204	PASS 204	PASS 204	PASS 204	Assigned roles and effective composite mappings persist: client-scopes/{client-scope-id}/scope-mappings
+DELETE	/admin/realms/{realm}/client-scopes/{client-scope-id}/scope-mappings/realm	PASS 204	PASS 204	PASS 204	PASS 204	Deleting mappings removes direct role relationships: client-scopes/{client-scope-id}/scope-mappings
+GET	/admin/realms/{realm}/client-scopes/{client-scope-id}/scope-mappings/realm/available	PASS 200	PASS 200	PASS 200	PASS 200	Available mappings contain unassigned real realm and client roles: client-scopes/{client-scope-id}/scope-mappings
+GET	/admin/realms/{realm}/client-scopes/{client-scope-id}/scope-mappings/realm/composite	PASS 200	PASS 200	PASS 200	PASS 200	Assigned roles and effective composite mappings persist: client-scopes/{client-scope-id}/scope-mappings
+GET	/admin/realms/{realm}/client-templates/{client-scope-id}/scope-mappings	PASS 200	PASS 200	PASS 200	PASS 200	Assigned roles and effective composite mappings persist: client-templates/{client-scope-id}/scope-mappings
+GET	/admin/realms/{realm}/client-templates/{client-scope-id}/scope-mappings/realm	PASS 200	PASS 200	PASS 200	PASS 200	Deleting mappings removes direct role relationships: client-templates/{client-scope-id}/scope-mappings
+POST	/admin/realms/{realm}/client-templates/{client-scope-id}/scope-mappings/realm	PASS 204	PASS 204	PASS 204	PASS 204	Assigned roles and effective composite mappings persist: client-templates/{client-scope-id}/scope-mappings
+DELETE	/admin/realms/{realm}/client-templates/{client-scope-id}/scope-mappings/realm	PASS 204	PASS 204	PASS 204	PASS 204	Deleting mappings removes direct role relationships: client-templates/{client-scope-id}/scope-mappings
+GET	/admin/realms/{realm}/client-templates/{client-scope-id}/scope-mappings/realm/available	PASS 200	PASS 200	PASS 200	PASS 200	Available mappings contain unassigned real realm and client roles: client-templates/{client-scope-id}/scope-mappings
+GET	/admin/realms/{realm}/client-templates/{client-scope-id}/scope-mappings/realm/composite	PASS 200	PASS 200	PASS 200	PASS 200	Assigned roles and effective composite mappings persist: client-templates/{client-scope-id}/scope-mappings
+GET	/admin/realms/{realm}/clients/{client-uuid}/scope-mappings	PASS 200	PASS 200	PASS 200	PASS 200	Assigned roles and effective composite mappings persist: clients/{client-uuid}/scope-mappings
+GET	/admin/realms/{realm}/clients/{client-uuid}/scope-mappings/realm	PASS 200	PASS 200	PASS 200	PASS 200	Deleting mappings removes direct role relationships: clients/{client-uuid}/scope-mappings
+POST	/admin/realms/{realm}/clients/{client-uuid}/scope-mappings/realm	PASS 204	PASS 204	PASS 204	PASS 204	Assigned roles and effective composite mappings persist: clients/{client-uuid}/scope-mappings
+DELETE	/admin/realms/{realm}/clients/{client-uuid}/scope-mappings/realm	PASS 204	PASS 204	PASS 204	PASS 204	Deleting mappings removes direct role relationships: clients/{client-uuid}/scope-mappings
+GET	/admin/realms/{realm}/clients/{client-uuid}/scope-mappings/realm/available	PASS 200	PASS 200	PASS 200	PASS 200	Available mappings contain unassigned real realm and client roles: clients/{client-uuid}/scope-mappings
+GET	/admin/realms/{realm}/clients/{client-uuid}/scope-mappings/realm/composite	PASS 200	PASS 200	PASS 200	PASS 200	Assigned roles and effective composite mappings persist: clients/{client-uuid}/scope-mappings
+GET	/admin/realms/{realm}/client-scopes/{client-scope-id}/scope-mappings/clients/{client}	PASS 200	PASS 200	PASS 200	PASS 200	UI bulk mapping deletion removes actual direct client role for clientScopes
+POST	/admin/realms/{realm}/client-scopes/{client-scope-id}/scope-mappings/clients/{client}	PASS 204	PASS 204	PASS 204	PASS 204	Assigned roles and effective composite mappings persist: client-scopes/{client-scope-id}/scope-mappings
+DELETE	/admin/realms/{realm}/client-scopes/{client-scope-id}/scope-mappings/clients/{client}	PASS 204	PASS 204	PASS 204	PASS 204	Deleting mappings removes direct role relationships: client-scopes/{client-scope-id}/scope-mappings
+GET	/admin/realms/{realm}/client-scopes/{client-scope-id}/scope-mappings/clients/{client}/available	PASS 200	PASS 200	PASS 200	PASS 200	Available mappings contain unassigned real realm and client roles: client-scopes/{client-scope-id}/scope-mappings
+GET	/admin/realms/{realm}/client-scopes/{client-scope-id}/scope-mappings/clients/{client}/composite	PASS 200	PASS 200	PASS 200	PASS 200	Assigned roles and effective composite mappings persist: client-scopes/{client-scope-id}/scope-mappings
+GET	/admin/realms/{realm}/client-templates/{client-scope-id}/scope-mappings/clients/{client}	PASS 200	PASS 200	PASS 200	PASS 200	Deleting mappings removes direct role relationships: client-templates/{client-scope-id}/scope-mappings
+POST	/admin/realms/{realm}/client-templates/{client-scope-id}/scope-mappings/clients/{client}	PASS 204	PASS 204	PASS 204	PASS 204	Assigned roles and effective composite mappings persist: client-templates/{client-scope-id}/scope-mappings
+DELETE	/admin/realms/{realm}/client-templates/{client-scope-id}/scope-mappings/clients/{client}	PASS 204	PASS 204	PASS 204	PASS 204	Deleting mappings removes direct role relationships: client-templates/{client-scope-id}/scope-mappings
+GET	/admin/realms/{realm}/client-templates/{client-scope-id}/scope-mappings/clients/{client}/available	PASS 200	PASS 200	PASS 200	PASS 200	Available mappings contain unassigned real realm and client roles: client-templates/{client-scope-id}/scope-mappings
+GET	/admin/realms/{realm}/client-templates/{client-scope-id}/scope-mappings/clients/{client}/composite	PASS 200	PASS 200	PASS 200	PASS 200	Assigned roles and effective composite mappings persist: client-templates/{client-scope-id}/scope-mappings
+GET	/admin/realms/{realm}/clients/{client-uuid}/scope-mappings/clients/{client}	PASS 200	PASS 200	PASS 200	PASS 200	UI bulk mapping deletion removes actual direct client role for clients
+POST	/admin/realms/{realm}/clients/{client-uuid}/scope-mappings/clients/{client}	PASS 204	PASS 204	PASS 204	PASS 204	Assigned roles and effective composite mappings persist: clients/{client-uuid}/scope-mappings
+DELETE	/admin/realms/{realm}/clients/{client-uuid}/scope-mappings/clients/{client}	PASS 204	PASS 204	PASS 204	PASS 204	Deleting mappings removes direct role relationships: clients/{client-uuid}/scope-mappings
+GET	/admin/realms/{realm}/clients/{client-uuid}/scope-mappings/clients/{client}/available	PASS 200	PASS 200	PASS 200	PASS 200	Available mappings contain unassigned real realm and client roles: clients/{client-uuid}/scope-mappings
+GET	/admin/realms/{realm}/clients/{client-uuid}/scope-mappings/clients/{client}/composite	PASS 200	PASS 200	PASS 200	PASS 200	Assigned roles and effective composite mappings persist: clients/{client-uuid}/scope-mappings
+GET	/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server	PASS 200	PASS 200	PASS 200	PASS 200	FGAP v2 uses the released admin-permissions authorization schema
+PUT	/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server	PASS 204	PASS 204	PASS 204	PASS 204	Resource-server policy mode change persists
+POST	/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/import	PASS 204	PASS 204	PASS 204	PASS 204	Import changes persisted authorization resources
+GET	/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/settings	PASS 200	PASS 200	PASS 200	PASS 200	Portable settings export contains created resource/scope names (server strips internal IDs)
+GET	/admin/serverinfo	PASS 200	PASS 200	PASS 200	PASS 200	Authenticated serverinfo reports actual pinned server version
+GET	/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/resource	PASS 200	PASS 200	PASS 200	PASS 200	Import changes persisted authorization resources
+POST	/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/resource	PASS 201	PASS 201	PASS 201	PASS 201	Resource CRUD/search/attributes and bidirectional scope relationship persist
+GET	/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/resource/search	PASS 200	PASS 200	PASS 200	PASS 200	Resource CRUD/search/attributes and bidirectional scope relationship persist
+GET	/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/resource/{resource-id}	PASS 200	PASS 200	PASS 200	PASS 200	Resource update persists display name
+PUT	/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/resource/{resource-id}	PASS 204	PASS 204	PASS 204	PASS 204	Resource update persists display name
+DELETE	/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/resource/{resource-id}	PASS 204	PASS 204	PASS 204	PASS 204	Resource deletion persists
+GET	/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/resource/{resource-id}/attributes	PASS 200	PASS 200	PASS 200	PASS 200	Resource CRUD/search/attributes and bidirectional scope relationship persist
+GET	/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/resource/{resource-id}/permissions	PASS 200	PASS 200	PASS 200	PASS 200	Resource and scope permission queries reflect actual linked permissions
+GET	/admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/resource/{resource-id}/scopes	PASS 200	PASS 200	PASS 200	PASS 200	Resource CRUD/search/attributes and bidirectional scope relationship persist
+DELETE	/admin/realms/{realm}/ssf/clients/{clientId}/events	EXCLUDED: ssf (EXPERIMENTAL; excluded by release support policy)	EXCLUDED: ssf (EXPERIMENTAL; excluded by release support policy)	EXCLUDED: ssf (EXPERIMENTAL; excluded by release support policy)	EXCLUDED: ssf (EXPERIMENTAL; excluded by release support policy)	Outside both declared support routes
+POST	/admin/realms/{realm}/ssf/clients/{clientId}/events/emit	EXCLUDED: ssf (EXPERIMENTAL; excluded by release support policy)	EXCLUDED: ssf (EXPERIMENTAL; excluded by release support policy)	EXCLUDED: ssf (EXPERIMENTAL; excluded by release support policy)	EXCLUDED: ssf (EXPERIMENTAL; excluded by release support policy)	Outside both declared support routes
+DELETE	/admin/realms/{realm}/ssf/clients/{clientId}/events/queued	EXCLUDED: ssf (EXPERIMENTAL; excluded by release support policy)	EXCLUDED: ssf (EXPERIMENTAL; excluded by release support policy)	EXCLUDED: ssf (EXPERIMENTAL; excluded by release support policy)	EXCLUDED: ssf (EXPERIMENTAL; excluded by release support policy)	Outside both declared support routes
+GET	/admin/realms/{realm}/ssf/clients/{clientId}/events/stats	EXCLUDED: ssf (EXPERIMENTAL; excluded by release support policy)	EXCLUDED: ssf (EXPERIMENTAL; excluded by release support policy)	EXCLUDED: ssf (EXPERIMENTAL; excluded by release support policy)	EXCLUDED: ssf (EXPERIMENTAL; excluded by release support policy)	Outside both declared support routes
+GET	/admin/realms/{realm}/ssf/clients/{clientId}/pending-events/{jti}	EXCLUDED: ssf (EXPERIMENTAL; excluded by release support policy)	EXCLUDED: ssf (EXPERIMENTAL; excluded by release support policy)	EXCLUDED: ssf (EXPERIMENTAL; excluded by release support policy)	EXCLUDED: ssf (EXPERIMENTAL; excluded by release support policy)	Outside both declared support routes
+DELETE	/admin/realms/{realm}/ssf/clients/{clientId}/stream	EXCLUDED: ssf (EXPERIMENTAL; excluded by release support policy)	EXCLUDED: ssf (EXPERIMENTAL; excluded by release support policy)	EXCLUDED: ssf (EXPERIMENTAL; excluded by release support policy)	EXCLUDED: ssf (EXPERIMENTAL; excluded by release support policy)	Outside both declared support routes
+GET	/admin/realms/{realm}/ssf/clients/{clientId}/stream	EXCLUDED: ssf (EXPERIMENTAL; excluded by release support policy)	EXCLUDED: ssf (EXPERIMENTAL; excluded by release support policy)	EXCLUDED: ssf (EXPERIMENTAL; excluded by release support policy)	EXCLUDED: ssf (EXPERIMENTAL; excluded by release support policy)	Outside both declared support routes
+PATCH	/admin/realms/{realm}/ssf/clients/{clientId}/stream	EXCLUDED: ssf (EXPERIMENTAL; excluded by release support policy)	EXCLUDED: ssf (EXPERIMENTAL; excluded by release support policy)	EXCLUDED: ssf (EXPERIMENTAL; excluded by release support policy)	EXCLUDED: ssf (EXPERIMENTAL; excluded by release support policy)	Outside both declared support routes
+POST	/admin/realms/{realm}/ssf/clients/{clientId}/stream	EXCLUDED: ssf (EXPERIMENTAL; excluded by release support policy)	EXCLUDED: ssf (EXPERIMENTAL; excluded by release support policy)	EXCLUDED: ssf (EXPERIMENTAL; excluded by release support policy)	EXCLUDED: ssf (EXPERIMENTAL; excluded by release support policy)	Outside both declared support routes
+POST	/admin/realms/{realm}/ssf/clients/{clientId}/stream/status	EXCLUDED: ssf (EXPERIMENTAL; excluded by release support policy)	EXCLUDED: ssf (EXPERIMENTAL; excluded by release support policy)	EXCLUDED: ssf (EXPERIMENTAL; excluded by release support policy)	EXCLUDED: ssf (EXPERIMENTAL; excluded by release support policy)	Outside both declared support routes
+POST	/admin/realms/{realm}/ssf/clients/{clientId}/stream/verify	EXCLUDED: ssf (EXPERIMENTAL; excluded by release support policy)	EXCLUDED: ssf (EXPERIMENTAL; excluded by release support policy)	EXCLUDED: ssf (EXPERIMENTAL; excluded by release support policy)	EXCLUDED: ssf (EXPERIMENTAL; excluded by release support policy)	Outside both declared support routes
+POST	/admin/realms/{realm}/ssf/clients/{clientId}/subjects/add	EXCLUDED: ssf (EXPERIMENTAL; excluded by release support policy)	EXCLUDED: ssf (EXPERIMENTAL; excluded by release support policy)	EXCLUDED: ssf (EXPERIMENTAL; excluded by release support policy)	EXCLUDED: ssf (EXPERIMENTAL; excluded by release support policy)	Outside both declared support routes
+POST	/admin/realms/{realm}/ssf/clients/{clientId}/subjects/check	EXCLUDED: ssf (EXPERIMENTAL; excluded by release support policy)	EXCLUDED: ssf (EXPERIMENTAL; excluded by release support policy)	EXCLUDED: ssf (EXPERIMENTAL; excluded by release support policy)	EXCLUDED: ssf (EXPERIMENTAL; excluded by release support policy)	Outside both declared support routes
+POST	/admin/realms/{realm}/ssf/clients/{clientId}/subjects/ignore	EXCLUDED: ssf (EXPERIMENTAL; excluded by release support policy)	EXCLUDED: ssf (EXPERIMENTAL; excluded by release support policy)	EXCLUDED: ssf (EXPERIMENTAL; excluded by release support policy)	EXCLUDED: ssf (EXPERIMENTAL; excluded by release support policy)	Outside both declared support routes
+POST	/admin/realms/{realm}/ssf/clients/{clientId}/subjects/remove	EXCLUDED: ssf (EXPERIMENTAL; excluded by release support policy)	EXCLUDED: ssf (EXPERIMENTAL; excluded by release support policy)	EXCLUDED: ssf (EXPERIMENTAL; excluded by release support policy)	EXCLUDED: ssf (EXPERIMENTAL; excluded by release support policy)	Outside both declared support routes
+GET	/admin/realms/{realm}/ssf/config	EXCLUDED: ssf (EXPERIMENTAL; excluded by release support policy)	EXCLUDED: ssf (EXPERIMENTAL; excluded by release support policy)	EXCLUDED: ssf (EXPERIMENTAL; excluded by release support policy)	EXCLUDED: ssf (EXPERIMENTAL; excluded by release support policy)	Outside both declared support routes
+DELETE	/admin/realms/{realm}/ssf/events	EXCLUDED: ssf (EXPERIMENTAL; excluded by release support policy)	EXCLUDED: ssf (EXPERIMENTAL; excluded by release support policy)	EXCLUDED: ssf (EXPERIMENTAL; excluded by release support policy)	EXCLUDED: ssf (EXPERIMENTAL; excluded by release support policy)	Outside both declared support routes
+DELETE	/admin/realms/{realm}/ssf/events/queued	EXCLUDED: ssf (EXPERIMENTAL; excluded by release support policy)	EXCLUDED: ssf (EXPERIMENTAL; excluded by release support policy)	EXCLUDED: ssf (EXPERIMENTAL; excluded by release support policy)	EXCLUDED: ssf (EXPERIMENTAL; excluded by release support policy)	Outside both declared support routes
+GET	/admin/realms/{realm}/ssf/events/stats	EXCLUDED: ssf (EXPERIMENTAL; excluded by release support policy)	EXCLUDED: ssf (EXPERIMENTAL; excluded by release support policy)	EXCLUDED: ssf (EXPERIMENTAL; excluded by release support policy)	EXCLUDED: ssf (EXPERIMENTAL; excluded by release support policy)	Outside both declared support routes
+POST	/admin/realms/{realm}/testLDAPConnection	PASS 204	PASS 204	PASS 204	PASS 204	Keycloak binds to actual OpenLDAP and discovers root-DSE supported capabilities
+GET	/admin/realms/{realm}/ui-ext/effective-roles-all/clientScopes/{id}	PASS 200	PASS 200	PASS 200	PASS 200	UI effective-role projections resolve actual composite child for clientScopes
+GET	/admin/realms/{realm}/ui-ext/effective-roles-all/clients/{id}	PASS 200	PASS 200	PASS 200	PASS 200	UI effective-role projections resolve actual composite child for clients
+GET	/admin/realms/{realm}/ui-ext/effective-roles-all/groups/{id}	PASS 200	PASS 200	PASS 200	PASS 200	UI effective-role projections resolve actual composite child for groups
+GET	/admin/realms/{realm}/ui-ext/effective-roles-all/users/{id}	PASS 200	PASS 200	PASS 200	PASS 200	UI effective-role projections resolve actual composite child for users
+GET	/admin/realms/{realm}/ui-ext/effective-roles-all/roles/{id}	PASS 200	PASS 200	PASS 200	PASS 200	UI effective-role projections resolve actual composite child for roles (legacy endpoint uses realm default role in released source)
+GET	/admin/realms/{realm}/ui-ext/authentication-management/flows	PASS 200	PASS 200	PASS 200	PASS 200	UI authentication graph lists actual built-in browser flow
+GET	/admin/realms/{realm}/ui-ext/authentication-management/{type}/{id}	PASS 200	PASS 200	PASS 200	PASS 200	UI flow usage resolves real client binding override
+GET	/admin/realms/{realm}/ui-ext/authentication-management/required-actions	PASS 200	PASS 200	PASS 200	PASS 200	UI required actions contain configured password action
+GET	/admin/realms/{realm}/ui-ext/available-event-listeners/	PASS 200	PASS 200	PASS 200	PASS 200	UI event-listener discovery exposes installed logging listener
+GET	/admin/realms/{realm}/ui-ext/available-roles/clientScopes/{id}	PASS 200	PASS 200	PASS 200	PASS 200	UI available-role search exposes removed client role for clientScopes
+GET	/admin/realms/{realm}/ui-ext/available-roles/clients/{id}	PASS 200	PASS 200	PASS 200	PASS 200	UI available-role search exposes removed client role for clients
+GET	/admin/realms/{realm}/ui-ext/available-roles/groups/{id}	PASS 200	PASS 200	PASS 200	PASS 200	UI available-role search exposes removed client role for groups
+GET	/admin/realms/{realm}/ui-ext/available-roles/users/{id}	PASS 200	PASS 200	PASS 200	PASS 200	UI available-role search exposes removed client role for users
+GET	/admin/realms/{realm}/ui-ext/available-roles/roles/{id}	PASS 200	PASS 200	PASS 200	PASS 200	UI available-role search exposes removed client role for roles
+GET	/admin/realms/{realm}/ui-ext/brute-force-user	PASS 200	PASS 200	PASS 200	PASS 200	UI brute-force search resolves actual failed-login user
+GET	/admin/realms/{realm}/ui-ext/effective-roles/clientScopes/{id}	PASS 200	PASS 200	PASS 200	PASS 200	UI effective-role projections resolve actual composite child for clientScopes
+GET	/admin/realms/{realm}/ui-ext/effective-roles/clients/{id}	PASS 200	PASS 200	PASS 200	PASS 200	UI effective-role projections resolve actual composite child for clients
+GET	/admin/realms/{realm}/ui-ext/effective-roles/groups/{id}	PASS 200	PASS 200	PASS 200	PASS 200	UI effective-role projections resolve actual composite child for groups
+GET	/admin/realms/{realm}/ui-ext/effective-roles/users/{id}	PASS 200	PASS 200	PASS 200	PASS 200	UI effective-role projections resolve actual composite child for users
+GET	/admin/realms/{realm}/ui-ext/effective-roles/roles/{id}	PASS 200	PASS 200	PASS 200	PASS 200	UI effective-role projections resolve actual composite child for roles (legacy endpoint uses realm default role in released source)
+GET	/admin/realms/{realm}/ui-ext/role-mappings/roles/{id}	PASS 200	PASS 200	PASS 200	PASS 200	UI composite mapping groups persisted client role under owning client
+POST	/admin/realms/{realm}/ui-ext/role-mapping-delete/groups/{id}	PASS 204	PASS 204	PASS 204	PASS 204	UI bulk mapping deletion removes actual direct client role for groups
+POST	/admin/realms/{realm}/ui-ext/role-mapping-delete/users/{id}	PASS 204	PASS 204	PASS 204	PASS 204	UI bulk mapping deletion removes actual direct client role for users
+POST	/admin/realms/{realm}/ui-ext/role-mapping-delete/clientScopes/{id}	PASS 204	PASS 204	PASS 204	PASS 204	UI bulk mapping deletion removes actual direct client role for clientScopes
+POST	/admin/realms/{realm}/ui-ext/role-mapping-delete/clients/{id}	PASS 204	PASS 204	PASS 204	PASS 204	UI bulk mapping deletion removes actual direct client role for clients
+POST	/admin/realms/{realm}/ui-ext/role-mapping-delete/roles/{id}	PASS 204	PASS 204	PASS 204	PASS 204	UI bulk mapping deletion removes actual direct client role for roles
+GET	/admin/realms/{realm}/ui-ext/sessions	PASS 200	PASS 200	PASS 200	PASS 200	UI session projections filter real regular/offline sessions
+GET	/admin/realms/{realm}/ui-ext/sessions/client	PASS 200	PASS 200	PASS 200	PASS 200	UI session projections filter real regular/offline sessions
+PUT	/admin/realms/{realm}/ui-ext/	PASS 204	PASS 204	PASS 204	PASS 204	UI realm update changes actual realm display name
+GET	/admin/realms/{realm}/ui-ext/info	PASS 200	PASS 200	PASS 200	PASS 200	UI realm info reports no configured external user provider
+GET	/admin/realms/{realm}/ui-ext/realms/names	PASS 200	PASS 200	PASS 200	PASS 200	UI realm names includes isolated persisted realm
+GET	/admin/realms/{realm}/users/{user-id}	PASS 200	PASS 200	PASS 200	PASS 200	Revoking FGAP policy restores actual 403 and prevents unauthorized data change
+PUT	/admin/realms/{realm}/users/{user-id}	PASS 204	PASS 204	PASS 204	PASS 204	User profile update persisted
+DELETE	/admin/realms/{realm}/users/{user-id}	PASS 204	PASS 204	PASS 204	PASS 204	Deleting temporary user removes persisted user
+GET	/admin/realms/{realm}/users/{user-id}/configured-user-storage-credential-types	PASS 200	PASS 200	PASS 200	PASS 200	Local user has stored password and no federated credential provider
+GET	/admin/realms/{realm}/users/{user-id}/consents	PASS 200	PASS 200	PASS 200	PASS 200	Consent revocation removes persisted client grant
+DELETE	/admin/realms/{realm}/users/{user-id}/consents/{client}	PASS 204	PASS 204	PASS 204	PASS 204	Consent revocation removes persisted client grant
+GET	/admin/realms/{realm}/users/{user-id}/credentials	PASS 200	PASS 200	PASS 200	PASS 200	disable-credential-types delegates to storage updaters; released local OTP provider preserves local OTP (UserCredentialManager.disableCredentialType)
+DELETE	/admin/realms/{realm}/users/{user-id}/credentials/{credentialId}	PASS 204	PASS 204	PASS 204	PASS 204	Credential deletion removes selected credential only
+POST	/admin/realms/{realm}/users/{user-id}/credentials/{credentialId}/moveAfter/{newPreviousCredentialId}	PASS 204	PASS 204	PASS 204	PASS 204	Move-after restores persisted OTP order
+POST	/admin/realms/{realm}/users/{user-id}/credentials/{credentialId}/moveToFirst	PASS 204	PASS 204	PASS 204	PASS 204	Move-to-first changes order of two stored OTP credentials
+PUT	/admin/realms/{realm}/users/{user-id}/credentials/{credentialId}/userLabel	PASS 204	PASS 204	PASS 204	PASS 204	Credential user label is persisted
+PUT	/admin/realms/{realm}/users/{user-id}/disable-credential-types	PASS 204	PASS 204	PASS 204	PASS 204	disable-credential-types delegates to storage updaters; released local OTP provider preserves local OTP (UserCredentialManager.disableCredentialType)
+PUT	/admin/realms/{realm}/users/{user-id}/execute-actions-email	PASS 204	PASS 204	PASS 204	PASS 204	User execute-actions-email delivers action-link email to actual persisted user's address
+GET	/admin/realms/{realm}/users/{user-id}/federated-identity	PASS 200	PASS 200	PASS 200	PASS 200	Federated identity removal persists
+POST	/admin/realms/{realm}/users/{user-id}/federated-identity/{provider}	PASS 204	PASS 204	PASS 204	PASS 204	Federated identity link persists provider and external subject
+DELETE	/admin/realms/{realm}/users/{user-id}/federated-identity/{provider}	PASS 204	PASS 204	PASS 204	PASS 204	Federated identity removal persists
+GET	/admin/realms/{realm}/users/{user-id}/groups	PASS 200	PASS 200	PASS 200	PASS 200	Leaving group removes membership
+GET	/admin/realms/{realm}/users/{user-id}/groups/count	PASS 200	PASS 200	PASS 200	PASS 200	Joining group updates member listing and user membership count
+PUT	/admin/realms/{realm}/users/{user-id}/groups/{groupId}	PASS 204	PASS 204	PASS 204	PASS 204	Joining group updates member listing and user membership count
+DELETE	/admin/realms/{realm}/users/{user-id}/groups/{groupId}	PASS 204	PASS 204	PASS 204	PASS 204	Leaving group removes membership
+POST	/admin/realms/{realm}/users/{user-id}/impersonation	PASS 200	PASS 200	PASS 200	PASS 200	Impersonation creates actual target-user session and realm redirect
+POST	/admin/realms/{realm}/users/{user-id}/logout	PASS 204	PASS 204	PASS 204	PASS 204	User logout invalidates all regular sessions for that user
+GET	/admin/realms/{realm}/users/{user-id}/offline-sessions/{clientUuid}	PASS 200	PASS 200	PASS 200	PASS 200	Offline grant persists user/client offline session and count
+PUT	/admin/realms/{realm}/users/{user-id}/reset-password	PASS 204	PASS 204	PASS 204	PASS 204	Password reset allows real OIDC authentication with new password
+PUT	/admin/realms/{realm}/users/{user-id}/reset-password-email	PASS 204	PASS 204	PASS 204	PASS 204	User reset-password-email delivers action-link email to actual persisted user's address
+PUT	/admin/realms/{realm}/users/{user-id}/send-verify-email	PASS 204	PASS 204	PASS 204	PASS 204	User send-verify-email delivers action-link email to actual persisted user's address
+GET	/admin/realms/{realm}/users/{user-id}/sessions	PASS 200	PASS 200	PASS 200	PASS 200	Realm logout-all removes existing user sessions
+GET	/admin/realms/{realm}/users/{user-id}/unmanagedAttributes	PASS 200	PASS 200	PASS 200	PASS 200	Unmanaged attributes expose actual persisted admin attribute
+GET	/admin/realms/{realm}/users/profile	PASS 200	PASS 200	PASS 200	PASS 200	User-profile configuration persists and metadata describes required username
+PUT	/admin/realms/{realm}/users/profile	PASS 200	PASS 200	PASS 200	PASS 200	User-profile configuration persists and metadata describes required username
+GET	/admin/realms/{realm}/users/profile/metadata	PASS 200	PASS 200	PASS 200	PASS 200	User-profile configuration persists and metadata describes required username
+GET	/admin/realms/{realm}/user-storage/{id}/name	PASS 200	PASS 200	PASS 200	PASS 200	LDAP component creation persists provider, parent and discoverable storage name
+POST	/admin/realms/{realm}/user-storage/{id}/remove-imported-users	PASS 204	PASS 204	PASS 204	PASS 204	Remove-imported-users deletes previously imported local user
+POST	/admin/realms/{realm}/user-storage/{id}/sync	PASS 200	PASS 200	PASS 200	PASS 200	Full LDAP sync imports actual directory user with provider link
+POST	/admin/realms/{realm}/user-storage/{id}/unlink-users	PASS 204	PASS 204	PASS 204	PASS 204	Unlink-users preserves imported user while removing federation link
+POST	/admin/realms/{realm}/user-storage/{parentId}/mappers/{id}/sync	PASS 200	PASS 200	PASS 200	PASS 200	LDAP group mapper sync imports actual directory group
+GET	/admin/realms/{realm}/users/{user-id}/vc/credentials	EXCLUDED: oid4vc-vci (PREVIEW; excluded by release support policy)	EXCLUDED: oid4vc-vci (PREVIEW; excluded by release support policy)	EXCLUDED: oid4vc-vci (PREVIEW; excluded by release support policy)	EXCLUDED: oid4vc-vci (PREVIEW; excluded by release support policy)	Outside both declared support routes
+POST	/admin/realms/{realm}/users/{user-id}/vc/credentials	EXCLUDED: oid4vc-vci (PREVIEW; excluded by release support policy)	EXCLUDED: oid4vc-vci (PREVIEW; excluded by release support policy)	EXCLUDED: oid4vc-vci (PREVIEW; excluded by release support policy)	EXCLUDED: oid4vc-vci (PREVIEW; excluded by release support policy)	Outside both declared support routes
+PUT	/admin/realms/{realm}/users/{user-id}/vc/credentials/send-credential-offer	EXCLUDED: oid4vc-vci (PREVIEW; excluded by release support policy)	EXCLUDED: oid4vc-vci (PREVIEW; excluded by release support policy)	EXCLUDED: oid4vc-vci (PREVIEW; excluded by release support policy)	EXCLUDED: oid4vc-vci (PREVIEW; excluded by release support policy)	Outside both declared support routes
+DELETE	/admin/realms/{realm}/users/{user-id}/vc/credentials/{credentialScopeName}	EXCLUDED: oid4vc-vci (PREVIEW; excluded by release support policy)	EXCLUDED: oid4vc-vci (PREVIEW; excluded by release support policy)	EXCLUDED: oid4vc-vci (PREVIEW; excluded by release support policy)	EXCLUDED: oid4vc-vci (PREVIEW; excluded by release support policy)	Outside both declared support routes
+PUT	/admin/realms/{realm}/users/{user-id}/vc/credentials/{credentialScopeName}	EXCLUDED: oid4vc-vci (PREVIEW; excluded by release support policy)	EXCLUDED: oid4vc-vci (PREVIEW; excluded by release support policy)	EXCLUDED: oid4vc-vci (PREVIEW; excluded by release support policy)	EXCLUDED: oid4vc-vci (PREVIEW; excluded by release support policy)	Outside both declared support routes
+GET	/admin/realms/{realm}/users/{user-id}/vc/issued-credentials	EXCLUDED: oid4vc-vci (PREVIEW; excluded by release support policy)	EXCLUDED: oid4vc-vci (PREVIEW; excluded by release support policy)	EXCLUDED: oid4vc-vci (PREVIEW; excluded by release support policy)	EXCLUDED: oid4vc-vci (PREVIEW; excluded by release support policy)	Outside both declared support routes
+DELETE	/admin/realms/{realm}/users/{user-id}/vc/issued-credentials/{id}	EXCLUDED: oid4vc-vci (PREVIEW; excluded by release support policy)	EXCLUDED: oid4vc-vci (PREVIEW; excluded by release support policy)	EXCLUDED: oid4vc-vci (PREVIEW; excluded by release support policy)	EXCLUDED: oid4vc-vci (PREVIEW; excluded by release support policy)	Outside both declared support routes
+GET	/admin/realms/{realm}/users	PASS 200	PASS 200	PASS 200	PASS 200	Full LDAP sync imports actual directory user with provider link
+POST	/admin/realms/{realm}/users	PASS 201	PASS 201	PASS 201	PASS 201	User creation persists profile
+GET	/admin/realms/{realm}/users/count	PASS 200	PASS 200	PASS 200	PASS 200	Exact user search and count select the created user
+GET	/admin/realms/{realm}/workflows/{id}	PASS 200	PASS 200	PASS 200	PASS 200	Workflow representation excludes workflow/step IDs when requested
+PUT	/admin/realms/{realm}/workflows/{id}	PASS 204	PASS 204	PASS 204	PASS 204	Workflow update changes persisted definition
+DELETE	/admin/realms/{realm}/workflows/{id}	PASS 204	PASS 204	PASS 204	PASS 204	Workflow deletion removes persisted definition
+POST	/admin/realms/{realm}/workflows/{id}/activate/{type}/{resourceId}	PASS 204	PASS 204	PASS 204	PASS 204	Activation creates a persisted future schedule for the actual user
+POST	/admin/realms/{realm}/workflows/{id}/deactivate/{type}/{resourceId}	PASS 204	PASS 204	PASS 204	PASS 204	Deactivation removes the user schedule
+GET	/admin/realms/{realm}/workflows	PASS 200	PASS 200	PASS 200	PASS 200	Workflow creation persists two real steps and is found in exact list
+POST	/admin/realms/{realm}/workflows	PASS 201	PASS 201	PASS 201	PASS 201	Workflow creation persists two real steps and is found in exact list
+POST	/admin/realms/{realm}/workflows/migrate	PASS 204	PASS 204	PASS 204	PASS 204	Migration changes the resource's persisted scheduled step
+GET	/admin/realms/{realm}/workflows/scheduled/{resource-id}	PASS 200	PASS 200	PASS 200	PASS 200	Deactivation removes the user schedule

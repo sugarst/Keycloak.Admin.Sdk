@@ -24,7 +24,7 @@ public sealed class RealmLocalizationApi(KeycloakAdminClient transport)
     public Task<AdminResponse> GetRealmLocalizationTextAsync(string @realm, string @locale, string @key, CancellationToken cancellationToken = default) =>
         transport.SendAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/localization/{1}/{2}", [@realm, @locale, @key]), AdminUri.Query([]), null, cancellationToken);
 
-    /// <summary>SaveRealmLocalizationText</summary>
+    /// <summary>SaveRealmLocalizationText Supply HttpContent with the desired server-supported Content-Type; the request consumes and disposes it.</summary>
     public Task<AdminResponse> SaveRealmLocalizationTextAsync(string @realm, string @locale, string @key, HttpContent? body = null, CancellationToken cancellationToken = default) =>
         transport.SendAsync(HttpMethod.Put, AdminUri.Path("/admin/realms/{0}/localization/{1}/{2}", [@realm, @locale, @key]), AdminUri.Query([]), body, cancellationToken);
 

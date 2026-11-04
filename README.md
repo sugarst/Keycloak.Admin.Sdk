@@ -2,11 +2,13 @@
 
 面向 **.NET 10 / Native AOT** 的 Keycloak 26.8.1 Admin REST API 客户端。固定 SDK **10.0.403**，核心库无运行时 NuGet 包依赖，JSON 使用源生成元数据，默认关闭反射序列化。
 
-当前为开发预览：已从固定源码建立 520 个端点的路由清单并生成对应方法，覆盖官方 OpenAPI、用户存储/LDAP/缓存、授权策略动态路由、组织、工作流、SSF 和管理控制台扩展。119 个 OpenAPI schema 按 wire 类型处理，可扩展枚举保留为字符串。源码独有、动态或文档不完整的契约提供 `HttpContent` / `JsonElement` 访问。**路由覆盖不等于全部端点已通过真实服务端业务验证**；详见 [验证记录](docs/contracts/verification.md)。
+当前为 SDK 开发版本：从固定源码建立 520 个端点的 wire 清单并生成对应方法，包含官方 OpenAPI、用户存储/LDAP/缓存、授权、组织、工作流和控制台扩展。119 个 OpenAPI schema 按 wire 类型处理，动态契约提供 `HttpContent` / `JsonElement`。服务器支持范围通过 [JSON 路线声明](contracts/admin-api-routes.json) 明确选择：默认 `fgap-v2-stable` 只支持 26.8.1 正式功能；`fgap-v1-compat` 提供 v1 兼容支持，两条路线均不启用预览/实验功能。
 
 独立源码审计确认官方 415 个操作及 105 个源码补充操作均有路由。此前发现的 6 个路径契约缺口已修复：保留 526 个源码分派变体，补齐动态查询参数与媒体类型分支，修正工作流列表响应；新增六组独立测试并通过托管与 Native AOT 真实容器验证。完整分组及逐项对照见 [对齐审计](docs/contracts/keycloak-26.8.1-alignment-audit.md)，变更及验证场景见 [六路径修复记录](docs/contracts/six-path-fixes.md)。
 
-全部 **520/520 Admin API SDK 操作已有功能契约单元测试**，每个操作有独立的 MSTest 入口；当前 **536/536** 通过。矩阵检查完整查询/载荷、默认与边界值、成功及空响应、HTTP 错误、取消和网络失败，JSON 响应另测格式错误。SDK 自有源码（含生成 API/DTO）方法和分支覆盖率均为 **100%**，行覆盖率 **99.9583%**。`Verify.cs` 强制执行 [覆盖率门槛](tests/coverage-policy.json)，遗漏、跳过、失败或未达标均阻断 CI。详见 [520 项测试矩阵](docs/contracts/admin-api-test-matrix.md) 和 [覆盖率报告](docs/contracts/test-coverage.md)。
+全部 **520/520 Admin API SDK 操作已有功能契约单元测试**，每个操作有独立的 MSTest 入口；当前 **538/538** 通过。SDK 自有源码（含生成 API/DTO）方法和分支覆盖率均为 **100%**，行覆盖率 **99.9583%**；[覆盖率门槛](tests/coverage-policy.json) 阻断缺失、跳过、失败与未达标。详见 [520 项测试矩阵](docs/contracts/admin-api-test-matrix.md) 和 [覆盖率报告](docs/contracts/test-coverage.md)。
+
+**真实 Keycloak 26.8.1 + PostgreSQL 18.0 业务验收**：v2 正式路线 **478/478**、v1 兼容路线 **492/492**，托管和 .NET 10 Native AOT 均通过。每项有业务结果或数据状态断言，包含委派管理员 403 → 授权读写 → 撤销 403、LDAP 同步、SMTP 投递、OIDC 会话/同意、JWKS 轮换、X509 CRL 吊销与数据库缓存失效。28 项预览/实验 API 政策排除；v2 另排除 14 项 v1 专用接口，均不计为成功。逐接口证据见 [全功能验收](docs/contracts/full-live-acceptance.md)。
 
 ## 使用
 
@@ -56,7 +58,7 @@ Console.WriteLine(created.Location);
 dotnet run --file local/keycloak/Service.cs
 ```
 
-管理控制台为 <http://127.0.0.1:18080/admin/>；默认用户 `admin`，随机密码保存在该目录生成的 `.env`。数据库使用命名卷持久化；托管/原生真实测试可用该入口的 `test` / `test-native` 命令直接复用此 PostgreSQL 环境。
+管理控制台为 <http://127.0.0.1:18080/admin/>；默认用户 `admin`，随机密码保存在该目录生成的 `.env`。数据库使用命名卷持久化；全功能真实测试使用 `test-full` / `test-full-native`。路线可由 `KEYCLOAK_ADMIN_API_ROUTE` 环境变量或 `.env` 显式声明，启动时核验服务器实际功能开关，详见 [路线规则](docs/contracts/admin-api-routing.md)。
 
 常规测试已接入 MSTest，使用你允许的固定版本测试 SDK、MSTest 和 coverlet。完整的测试包清单、依赖边界及报告位置见 [测试说明](docs/testing.md)。
 
@@ -71,6 +73,10 @@ dotnet run --file tools/Update-Verification.cs    # 将本地测试证据更新�
 dotnet run --file tools/Audit-Contracts.cs -- --online # 独立比对发布源码；发现契约缺口返回非零
 dotnet run --file tools/Generate-TestMatrix.cs -- --check # 核对冻结契约与全部强类型单测入口
 dotnet run --file tools/Check-Coverage.cs -- --results=artifacts/test-results/<run> # 核验该次 TRX 与覆盖率
+dotnet run --file local/keycloak/Service.cs -- test-full # 当前声明路线的全部真实业务验收
+dotnet run --file local/keycloak/Service.cs -- test-full-native # 同一套业务场景的 Native AOT 实跑
+dotnet run --file tools/Check-FullAcceptance.cs -- --update-docs # 两路线、两模式的全量门禁和逐项报告
+dotnet run --file tools/Test-AllAdminRoutes.cs -- --update-docs # 一条命令重跑四套业务验收并恢复普通 v2 服务
 ```
 
 Native AOT 需要目标平台编译工具。Windows 需 Visual Studio C++ 桌面工具链和 Windows SDK；Linux 可用仓库中的隔离编译方式：
@@ -93,7 +99,7 @@ Docker 构建会使用 10.0.403 实际编译并运行全部端点的原生测试
 - [端点与源码对照](docs/contracts/endpoint-inventory.md)
 - [验证结果、未完成项和动态扩展边界](docs/contracts/verification.md)
 
-当前不承诺旧 SDK API 兼容，不把单一版本测试扩展为全部 26.x 兼容。稳定发布仍需逐端点完成真实业务、权限及 feature flag 验证。
+当前不承诺旧 SDK API 兼容，不把 26.8.1 的结果扩展为全部 26.x 兼容。逐接口验收覆盖声明范围内的业务场景，未穷尽所有权限组合、策略提供方类型和第三方 SPI 扩展。
 
 ## 许可证
 

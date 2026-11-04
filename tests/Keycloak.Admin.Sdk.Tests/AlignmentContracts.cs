@@ -6,6 +6,25 @@ using Keycloak.Admin.Sdk;
 // Hand-written wire expectations from the Java implementations, independent of OpenAPI/generator fixtures.
 public static class AlignmentContracts
 {
+    public static async Task CertificateUploadHasBodyAsync()
+    {
+        using var handler = new WireHandler(async (request, ct) =>
+        {
+            await Multipart(request, ["keystoreFormat", "Certificate PEM", "file", "certificate.pem", "certificate bytes"], ct);
+            return Json("{\"certificate\":\"encoded\",\"publicKey\":\"key\"}");
+        });
+        using var http = new HttpClient(handler);
+        var body = new MultipartFormDataContent(); body.Add(new StringContent("Certificate PEM"), "keystoreFormat"); body.Add(new StringContent("certificate bytes"), "file", "certificate.pem");
+        var response = await Client(http).IdentityProviders.UploadCertificateAsync("realm", body);
+        Require(response.Body?.Certificate == "encoded", "Implicit multipart request and certificate response contract");
+    }
+    public static async Task SamlExampleStringAsync()
+    {
+        using var handler = new WireHandler((_, _) => Task.FromResult(Json("\"<samlp:Response xmlns:samlp='urn:oasis:names:tc:SAML:2.0:protocol'/>\"")));
+        using var http = new HttpClient(handler);
+        var reply = await Client(http).ClientScopeEvaluate.GenerateExampleSamlResponseAsync("realm", "client", userId: "user");
+        Require(reply.Body is not null && reply.Body.StartsWith("<samlp:Response", StringComparison.Ordinal), "@JsonValue SAML wrapper is read as a JSON string");
+    }
     public static async Task WorkflowArraysAsync()
     {
         using var handler = new WireHandler((r, _) =>
@@ -131,6 +150,8 @@ public static class AlignmentContracts
 
     public static async Task RunAsync()
     {
+        await SamlExampleStringAsync();
+        await CertificateUploadHasBodyAsync();
         await WorkflowArraysAsync(); await PolicyQueriesAsync(); await PermissionQueriesAsync();
         await IdentityProviderMediaAsync(); await LocalizationMediaAsync(); await SmtpMediaAsync();
         Console.WriteLine("PASS: six independent source-based contract cases (arrays, branch queries, multipart, JSON and form).");

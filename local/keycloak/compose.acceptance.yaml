@@ -1,0 +1,9 @@
+# Only loaded by test-full/test-full-native. Certificate forwarding exercises
+# the released X509 authenticator and CRL cache over the isolated local network.
+services:
+  keycloak:
+    command:
+      - start-dev
+      - --spi-x509cert-lookup--provider=haproxy
+      - --spi-x509cert-lookup--haproxy--ssl-client-cert=Client-Cert
+      - --spi-x509cert-lookup--haproxy--certificate-chain-length=0

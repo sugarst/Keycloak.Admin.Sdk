@@ -13,8 +13,8 @@ public sealed class ClientScopeEvaluateApi(KeycloakAdminClient transport)
         transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/clients/{1}/evaluate-scopes/generate-example-id-token", [@realm, @clientUuid]), AdminUri.Query([new("audience", @audience), new("scope", @scope), new("userId", @userId)]), null, AdminJson.TypeInfo<IDToken>(), cancellationToken);
 
     /// <summary>Create JSON with an example SAML response as payload</summary>
-    public Task<AdminResponse<SamlExampleResponse>> GenerateExampleSamlResponseAsync(string @realm, string @clientUuid, string? @audience = null, string? @scope = null, string? @userId = null, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/clients/{1}/evaluate-scopes/generate-example-saml-response", [@realm, @clientUuid]), AdminUri.Query([new("audience", @audience), new("scope", @scope), new("userId", @userId)]), null, AdminJson.TypeInfo<SamlExampleResponse>(), cancellationToken);
+    public Task<AdminResponse<string>> GenerateExampleSamlResponseAsync(string @realm, string @clientUuid, string? @audience = null, string? @scope = null, string? @userId = null, CancellationToken cancellationToken = default) =>
+        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/clients/{1}/evaluate-scopes/generate-example-saml-response", [@realm, @clientUuid]), AdminUri.Query([new("audience", @audience), new("scope", @scope), new("userId", @userId)]), null, AdminJson.TypeInfo<string>(), cancellationToken);
 
     /// <summary>Create JSON with payload of example user info</summary>
     public Task<AdminResponse<JsonElement>> GenerateExampleUserinfoAsync(string @realm, string @clientUuid, string? @scope = null, string? @userId = null, CancellationToken cancellationToken = default) =>

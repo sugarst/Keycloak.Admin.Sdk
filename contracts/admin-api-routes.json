@@ -1,0 +1,30 @@
+{
+  "keycloakVersion": "26.8.1",
+  "defaultRoute": "fgap-v2-stable",
+  "environmentVariable": "KEYCLOAK_ADMIN_API_ROUTE",
+  "routes": {
+    "fgap-v2-stable": {
+      "fgapVersion": 2,
+      "compatibilityOnly": false,
+      "features": ["admin-fine-grained-authz:v2"],
+      "allowPreview": false,
+      "allowExperimental": false
+    },
+    "fgap-v1-compat": {
+      "fgapVersion": 1,
+      "compatibilityOnly": true,
+      "features": ["admin-fine-grained-authz:v1"],
+      "allowPreview": false,
+      "allowExperimental": false
+    }
+  },
+  "excludedFeatures": [
+    { "feature": "ssf", "type": "EXPERIMENTAL", "pathPattern": "^/admin/realms/[^/]+/ssf(?:/|$)" },
+    { "feature": "oid4vc-vci", "type": "PREVIEW", "pathPattern": "^/admin/realms/[^/]+/users/[^/]+/vc(?:/|$)" },
+    { "feature": "client-types", "type": "EXPERIMENTAL", "pathPattern": "^/admin/realms/[^/]+/client-types(?:/|$)" }
+  ],
+  "fgapV1OnlyPathPatterns": [
+    "/management/permissions$",
+    "^/admin/realms/[^/]+/users-management-permissions$"
+  ]
+}

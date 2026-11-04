@@ -3157,7 +3157,7 @@
       200
     ],
     "requestJson": "{\u0022raw\u0022:\u0022\\u4E2D \\u002B\\u0026\u0022}",
-    "responseJson": "{\u0022samlResponse\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022futureField\u0022:{\u0022nested\u0022:\u0022preserved\u0022}}",
+    "responseJson": "\u0022value \\u4E2D \\u002B\\u0026\u0022",
     "mediaTypes": [],
     "sources": [
       "services/src/main/java/org/keycloak/services/resources/admin/ClientScopeEvaluateResource.java:302"

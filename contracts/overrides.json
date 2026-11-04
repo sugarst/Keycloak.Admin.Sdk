@@ -42,5 +42,12 @@
     "responseSchema": { "type": "array", "items": { "$ref": "#/components/schemas/WorkflowRepresentation" } },
     "reason": "WorkflowsResource.getScheduledWorkflows declares List<WorkflowRepresentation> and returns toList(); the OpenAPI annotation incorrectly describes a single entity.",
     "source": "services/src/main/java/org/keycloak/workflow/admin/resource/WorkflowsResource.java"
+  },
+  {
+    "method": "GET",
+    "path": "/admin/realms/{realm}/clients/{client-uuid}/evaluate-scopes/generate-example-saml-response",
+    "responseSchema": { "type": "string" },
+    "reason": "ClientScopeEvaluateResource.SamlExampleResponse#getSamlResponse is annotated @JsonValue; the actual response is a JSON string containing XML, not a JSON object.",
+    "source": "services/src/main/java/org/keycloak/services/resources/admin/ClientScopeEvaluateResource.java"
   }
 ]

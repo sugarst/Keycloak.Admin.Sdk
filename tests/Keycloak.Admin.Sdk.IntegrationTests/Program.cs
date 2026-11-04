@@ -16,6 +16,11 @@ using var tokenResponse = await http.SendAsync(tokenRequest);
 tokenResponse.EnsureSuccessStatusCode();
 var token = JsonSerializer.Deserialize(await tokenResponse.Content.ReadAsStringAsync(), KeycloakJsonContext.Default.TokenResponse)!;
 var sdk = new KeycloakAdminClient(http, server, new StaticAccessTokenProvider(token.AccessToken!));
+if (Environment.GetEnvironmentVariable("KC_TEST_FULL_ADMIN") == "1")
+{
+    await FullAdminSuite.RunAsync(http, server);
+    return;
+}
 string realm = "sdk-test-" + Guid.NewGuid().ToString("N");
 try
 {
@@ -133,6 +138,13 @@ sealed class RecordingHandler(HttpMessageHandler inner) : DelegatingHandler(inne
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
         var response = await base.SendAsync(request, cancellationToken);
+        if (!response.IsSuccessStatusCode && Environment.GetEnvironmentVariable("KC_TEST_FULL_ADMIN") == "1")
+        {
+            string error = await response.Content.ReadAsStringAsync(cancellationToken);
+            string? secret = Environment.GetEnvironmentVariable("KC_TEST_PASSWORD");
+            if (!string.IsNullOrEmpty(secret)) error = error.Replace(secret, "[redacted]", StringComparison.Ordinal);
+            Console.Error.WriteLine($"HTTP {(int)response.StatusCode}: {request.Method} {request.RequestUri!.AbsolutePath}: {error[..Math.Min(error.Length, 1500)]}");
+        }
         var endpoint = AdminEndpointCatalog.All.Where(x => x.Method == request.Method.Method)
             .OrderByDescending(x => Regex.Replace(x.Path, @"\{[^}]+\}", "").Length)
             .FirstOrDefault(x => Regex.IsMatch(request.RequestUri!.AbsolutePath, "^" + Regex.Replace(Regex.Escape(x.Path), @"\\\{[^}]+\}", "[^/]+") + "/?$"));
