@@ -10,29 +10,31 @@ internal static class FullAdminSuite
     {
         using var tokens = new LivePasswordTokens(http, server);
         var declared = KeycloakRoute.Load(Directory.GetCurrentDirectory());
+        bool bootstrap = Environment.GetEnvironmentVariable("KC_TEST_RELEASE_BOOTSTRAP") == "1";
+        KeycloakAdminClient sdk;
 #if KEYCLOAK_FEATURE_MANAGEMENT
         using var flags = FullFeatureManagement.CreateHost();
-        var sdk = await Keycloak.Admin.Sdk.FeatureManagement.KeycloakFeatureManagedClient.CreateAsync(http, server, tokens, new KeycloakSupportConfiguration("26.8.1",
+        sdk = bootstrap ? new(http, server, tokens) : await Keycloak.Admin.Sdk.FeatureManagement.KeycloakFeatureManagedClient.CreateAsync(http, server, tokens, new KeycloakSupportConfiguration(KeycloakTarget.Version,
             declared.FgapVersion == 1 ? KeycloakAdminRoute.FgapV1Compatibility : KeycloakAdminRoute.FgapV2Stable), flags.Manager);
-        await FullFeatureManagement.VerifyAsync(sdk, flags.Configuration);
+        if (!bootstrap) await FullFeatureManagement.VerifyAsync(sdk, flags.Configuration);
 #else
-        var sdk = await KeycloakSupportedClient.CreateAsync(http, server, tokens, new KeycloakSupportConfiguration("26.8.1",
+        sdk = bootstrap ? new(http, server, tokens) : await KeycloakSupportedClient.CreateAsync(http, server, tokens, new KeycloakSupportConfiguration(KeycloakTarget.Version,
             declared.FgapVersion == 1 ? KeycloakAdminRoute.FgapV1Compatibility : KeycloakAdminRoute.FgapV2Stable));
 #endif
         var ledger = new LiveLedger();
         string realm = "sdk-full-" + Guid.NewGuid().ToString("N");
         var c = new LiveContext(sdk, realm, ledger);
-        c.Evidence("supportPolicy", System.Text.Json.Nodes.JsonValue.Create("catalog-conjunctive-v1"));
+        c.Evidence("supportPolicy", System.Text.Json.Nodes.JsonValue.Create(bootstrap ? "bootstrap-wire" : "catalog-conjunctive-v1"));
 #if KEYCLOAK_FEATURE_MANAGEMENT
-        c.Evidence("featureManagement", System.Text.Json.Nodes.JsonValue.Create("microsoft-4.8.0"));
-        c.Evidence("featureManagementBusinessGuards", System.Text.Json.Nodes.JsonValue.Create(true));
+        c.Evidence("featureManagement", System.Text.Json.Nodes.JsonValue.Create(bootstrap ? "not-loaded-bootstrap" : "microsoft-4.8.0"));
+        c.Evidence("featureManagementBusinessGuards", System.Text.Json.Nodes.JsonValue.Create(!bootstrap));
 #else
         c.Evidence("featureManagement", System.Text.Json.Nodes.JsonValue.Create("not-loaded-native-aot"));
         c.Evidence("featureManagementBusinessGuards", System.Text.Json.Nodes.JsonValue.Create(false));
 #endif
         var serverInfo = await sdk.ServerInfoAdmin.GetInfoAsync();
-        await FullCapabilities.VerifyAsync(http, server, tokens, declared.FgapVersion == 1 ? KeycloakAdminRoute.FgapV1Compatibility : KeycloakAdminRoute.FgapV2Stable, serverInfo.Content);
-        c.Evidence("supportPolicyLocalGuards", System.Text.Json.Nodes.JsonValue.Create(true));
+        if (!bootstrap) await FullCapabilities.VerifyAsync(http, server, tokens, declared.FgapVersion == 1 ? KeycloakAdminRoute.FgapV1Compatibility : KeycloakAdminRoute.FgapV2Stable, serverInfo.Content);
+        c.Evidence("supportPolicyLocalGuards", System.Text.Json.Nodes.JsonValue.Create(!bootstrap));
         using (var actual = JsonDocument.Parse(serverInfo.Content))
         {
             c.Route.ValidateServer(actual.RootElement);

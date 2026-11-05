@@ -2,8 +2,7 @@
   <PropertyGroup>
     <IsAotCompatible>true</IsAotCompatible>
     <PackageId>Keycloak.Admin.Sdk</PackageId>
-    <Version>0.1.0-preview.1</Version>
-    <Description>Dependency-free Native AOT compatible .NET 10 client for Keycloak 26.8.1 Admin REST API.</Description>
+    <Description>Dependency-free Native AOT compatible .NET 10 client for Keycloak $(KeycloakTargetVersion) Admin REST API.</Description>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>

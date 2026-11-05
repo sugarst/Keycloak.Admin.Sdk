@@ -2,14 +2,15 @@ using System.Text.Json;
 using System.Text.RegularExpressions;
 
 // Shared by the deployment script and actual managed/AOT acceptance executable.
-internal sealed record KeycloakRoute(string Id, int FgapVersion, bool CompatibilityOnly, string[] Features,
+internal sealed record KeycloakRoute(string TargetVersion, string Id, int FgapVersion, bool CompatibilityOnly, string[] Features,
     (string Feature, string Type, string Pattern)[] ExcludedFeatures, string[] LegacyPatterns)
 {
     public static KeycloakRoute Load(string root, string? id = null)
     {
         using var config = JsonDocument.Parse(File.ReadAllText(Path.Combine(root, "contracts/admin-api-routes.json")));
         var policy = config.RootElement;
-        if (policy.GetProperty("keycloakVersion").GetString() != "26.8.1") throw new InvalidDataException("Only release 26.8.1 route definitions are supported.");
+        var target = TargetBaseline.Load(root);
+        if (policy.GetProperty("keycloakVersion").GetString() != target.Version) throw new InvalidDataException("Route definitions differ from target baseline.");
         id ??= Environment.GetEnvironmentVariable("KEYCLOAK_ADMIN_API_ROUTE") ?? policy.GetProperty("defaultRoute").GetString()!;
         if (!policy.GetProperty("routes").TryGetProperty(id, out var route)) throw new InvalidDataException("Unknown KEYCLOAK_ADMIN_API_ROUTE: " + id);
         if (route.GetProperty("allowPreview").GetBoolean() || route.GetProperty("allowExperimental").GetBoolean()) throw new InvalidDataException("Preview/experimental capabilities are outside this support policy.");
@@ -17,7 +18,7 @@ internal sealed record KeycloakRoute(string Id, int FgapVersion, bool Compatibil
         if (route.GetProperty("compatibilityOnly").GetBoolean() != (version == 1)) throw new InvalidDataException("FGAP v1 must be explicitly declared compatibility-only; v2 is the stable route.");
         string[] features = route.GetProperty("features").EnumerateArray().Select(f => f.GetString()!).ToArray();
         if (version is not (1 or 2) || !features.SequenceEqual(new[] { "admin-fine-grained-authz:v" + version })) throw new InvalidDataException("Route must declare exactly one FGAP version, with no additional preview feature switches.");
-        return new(id, version, route.GetProperty("compatibilityOnly").GetBoolean(), features,
+        return new(target.Version, id, version, route.GetProperty("compatibilityOnly").GetBoolean(), features,
             policy.GetProperty("excludedFeatures").EnumerateArray().Select(f => (f.GetProperty("feature").GetString()!, f.GetProperty("type").GetString()!, f.GetProperty("pathPattern").GetString()!)).ToArray(),
             policy.GetProperty("fgapV1OnlyPathPatterns").EnumerateArray().Select(f => f.GetString()!).ToArray());
     }
@@ -30,7 +31,7 @@ internal sealed record KeycloakRoute(string Id, int FgapVersion, bool Compatibil
     }
     public void ValidateServer(JsonElement info)
     {
-        if (info.GetProperty("systemInfo").GetProperty("version").GetString() != "26.8.1") throw new InvalidDataException("Server version differs from declared route release.");
+        if (info.GetProperty("systemInfo").GetProperty("version").GetString() != TargetVersion) throw new InvalidDataException("Server version differs from declared route release.");
         var profile = info.GetProperty("profileInfo");
         // profileInfo.previewFeatures/experimentalFeatures enumerate the entire catalog.
         // FeatureRepresentation.enabled reports actual runtime enablement.

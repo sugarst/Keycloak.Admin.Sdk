@@ -2,6 +2,7 @@
 #:property TargetFramework=net10.0
 #:property PublishAot=false
 #:include ScriptSupport.cs
+#:include TargetBaseline.cs
 #:include JavaAuditIndex.cs
 #:project ../src/Keycloak.Admin.Sdk/Keycloak.Admin.Sdk.csproj
 
@@ -15,7 +16,7 @@ using Keycloak.Admin.Sdk;
 return await ScriptHost.ExecuteAsync(args, "dotnet run --file tools/Audit-Contracts.cs -- [--online]", ["--online"], async ct =>
 {
     string root = ScriptHost.RepositoryRoot();
-    string source = Path.Combine(root, ".cache/keycloak/pinned-source");
+    string source = TargetBaseline.Load(root).Source(root);
     using var baseline = ScriptHost.Baseline(root);
     string commit = baseline.RootElement.GetProperty("commit").GetString()!;
     string version = baseline.RootElement.GetProperty("keycloakVersion").GetString()!;
@@ -29,7 +30,7 @@ return await ScriptHost.ExecuteAsync(args, "dotnet run --file tools/Audit-Contra
         if (Convert.ToHexStringLower(SHA256.HashData(currentSpec)) != baseline.RootElement.GetProperty("openApiSha256").GetString()) throw new InvalidDataException("Published OpenAPI differs from the pinned snapshot.");
         Console.WriteLine("Online release tag and official OpenAPI: MATCH");
     }
-    await using (var archive = File.OpenRead(Path.Combine(root, ".cache/keycloak/source.tar.gz")))
+    await using (var archive = File.OpenRead(TargetBaseline.Load(root).Archive(root)))
         if (Convert.ToHexStringLower(await SHA256.HashDataAsync(archive, ct)) != baseline.RootElement.GetProperty("sourceArchiveSha256").GetString()) throw new InvalidDataException("Source archive hash mismatch.");
     foreach (string line in await File.ReadAllLinesAsync(Path.Combine(root, "contracts/source-files.sha256"), ct))
     {
@@ -37,7 +38,7 @@ return await ScriptHost.ExecuteAsync(args, "dotnet run --file tools/Audit-Contra
         byte[] bytes = await File.ReadAllBytesAsync(Path.Combine(source, line[(space + 2)..]), ct);
         if (Convert.ToHexStringLower(SHA256.HashData(bytes)) != line[..space]) throw new InvalidDataException("Source file hash mismatch: " + line[(space + 2)..]);
     }
-    using var openapi = JsonDocument.Parse(await File.ReadAllTextAsync(Path.Combine(root, "contracts/keycloak-26.8.1.openapi.json"), ct));
+    using var openapi = JsonDocument.Parse(await File.ReadAllTextAsync(Path.Combine(root, "contracts/openapi.json"), ct));
     var documented = new Dictionary<string, (string Verb, string Path, string Tag, JsonElement Op)>(StringComparer.Ordinal);
     foreach (var path in openapi.RootElement.GetProperty("paths").EnumerateObject())
     foreach (var operation in path.Value.EnumerateObject().Where(p => p.Name is "get" or "post" or "put" or "delete" or "patch" or "head" or "options"))
@@ -173,7 +174,7 @@ return await ScriptHost.ExecuteAsync(args, "dotnet run --file tools/Audit-Contra
     report.AppendLine($"基线为 [发布 tag](https://github.com/keycloak/keycloak/releases/tag/{version})，完整提交 `{commit}`。[官方 API 定义](https://www.keycloak.org/docs-api/{version}/rest-api/index.html) 仍标记为预览。远端 tag 和 OpenAPI 本次在线核验：**{(args.Contains("--online") ? "一致" : "未执行；可加 --online") }**；本地源码归档 SHA256 和源码文件清单校验通过。\n");
     report.AppendLine("## 数量与口径\n\n| 检查项 | 结果 |\n| --- | --- |");
     report.AppendLine($"| 官方 OpenAPI 方法＋路径 | {documented.Count}（{openapi.RootElement.GetProperty("paths").EnumerateObject().Count()} 个路径模板） |\n| 独立源码扫描方法＋路径 | {actual.Count} |\n| 源码处理分支 | {index.Variants.Count}，包含同路径的动态/媒体类型分派 |\n| SDK / Markdown 清单 / 源码清单 | {sdk.Count} / {inventoryKeys.Count} / {listedSource.Count} |\n| 官方接口遗漏 / 源码路径遗漏 / SDK 无来源路径 | {missingDocs.Length} / {missingSource.Length} / {sdkWithoutSource.Length} |\n| 查询参数缺口 | {queryFindings.Count} 项，涉及 {queryFindings.Select(f => f.Split('\t')[0]).Distinct().Count()} 个路径 |\n| 媒体类型变体缺口 | {mediaFindings.Count} 个路径 |\n| 可比返回类型差异 | {responseFindings.Count} / {comparableResponses} 项 |\n");
-    report.AppendLine("计数单位是 HTTP 方法＋路径模板；仅规范化路径参数名称与末尾斜杠。520 不是官方文档的接口数量，而是 415 个文档操作加 105 个源码补充操作。三个动态 SPI 入口和可选功能仍有边界，见后文。\n");
+    report.AppendLine($"计数单位是 HTTP 方法＋路径模板；SDK 共 {sdk.Count} 项，官方文档 {documented.Count} 项，发布源码补充 {sdk.Count-documented.Count} 项。动态 SPI 和可选功能边界需逐版复核。\n");
     report.AppendLine("## 官方清单分组\n\n| 官方分组 | 操作数 | SDK 路由缺失 |\n| --- | --- | --- |");
     foreach (var group in documented.Values.GroupBy(o => o.Tag).OrderBy(g => g.Key, StringComparer.Ordinal))
         report.AppendLine($"| {group.Key} | {group.Count()} | {group.Count(o => !sdk.ContainsKey(Key(o.Verb, o.Path)))} |");
@@ -217,7 +218,7 @@ return await ScriptHost.ExecuteAsync(args, "dotnet run --file tools/Audit-Contra
         var variant = index.Variants.First(r => Key(r.Verb, r.Path) == fields[0] && r.Method.Annotations.Any(a => a.Name == "Consumes" && a.Arguments.Any(t => Media(t.Text) == fields[1])));
         report.AppendLine($"| `{endpoint.Method} {endpoint.Path}` | `{fields[1]}` | `{endpoint.Operation}` | {Source(variant.Method, version)} |");
     }
-    report.AppendLine("\n身份提供方文件导入需要 multipart 的 `providerId`、`file`；本地化文件导入需要 multipart 的 `file`。SMTP 表单分支使用 `config`，在 26.8.1 已标记废弃但仍存在。表中被标出的资源方法固定构造 application/json；原始 `SendAsync` 可手工传其他媒体类型，但不等同于生成方法已完整覆盖。\n");
+    report.AppendLine("\n身份提供方文件导入需要 multipart 的 `providerId`、`file`；本地化文件导入需要 multipart 的 `file`。SMTP 表单分支使用 `config`，应依据当前发布源码复核是否仍存在。表中被标出的资源方法固定构造 application/json；原始 `SendAsync` 可手工传其他媒体类型，但不等同于生成方法已完整覆盖。\n");
     report.AppendLine("源码另有 `testLDAPConnection` 的 JSON/表单双分支。该 SDK 方法接收 `HttpContent`，可保留调用方选择的媒体类型，因此未计为缺口。\n");
     }
     using var overrides = JsonDocument.Parse(await File.ReadAllTextAsync(Path.Combine(root, "contracts/overrides.json"), ct));
@@ -232,16 +233,16 @@ return await ScriptHost.ExecuteAsync(args, "dotnet run --file tools/Audit-Contra
         report.AppendLine($"- 本地 `{mode}` 六路径真实容器证据：{(passed ? "6 / 6 通过" : "未提供完整的本地通过记录")}。");
     }
     report.AppendLine();
-    report.AppendLine("## 全操作功能契约单元测试\n\n全部 Admin API SDK 操作的独立用例与适用场景见 [520 项测试矩阵](admin-api-test-matrix.md)，覆盖率及强制门槛见 [门禁报告](test-coverage.md)。期望值来自独立 Java token 索引和固定发布定义，与 SDK 请求构造及原有冒烟生成逻辑分离；每个操作检查查询/载荷/响应、错误、取消和网络失败。`Verify.cs` 要求编译后目录、冻结矩阵与本次 TRX 一一对应，拒绝缺失、重复、跳过、失败或低覆盖率。该结论是 SDK 功能契约单测覆盖，不是全部服务端业务和权限场景的实测声明。\n");
+    report.AppendLine("## 全操作功能契约单元测试\n\n全部 Admin API SDK 操作的独立用例与适用场景见 [完整测试矩阵](admin-api-test-matrix.md)，覆盖率及强制门槛见 [门禁报告](test-coverage.md)。期望值来自独立 Java token 索引和固定发布定义，与 SDK 请求构造及原有冒烟生成逻辑分离；每个操作检查查询/载荷/响应、错误、取消和网络失败。`Verify.cs` 要求编译后目录、冻结矩阵与本次 TRX 一一对应，拒绝缺失、重复、跳过、失败或低覆盖率。该结论是 SDK 功能契约单测覆盖，不是全部服务端业务和权限场景的实测声明。\n");
     report.AppendLine("## 审计边界与验证证据\n");
     report.AppendLine("独立扫描器按 Java token 解析声明、导入、继承与资源定位器，不复用生成器的 JavaRoutes；使用已知的 PolicyService 动态分派规则并保留媒体类型变体。它不是完整 Java/JAX-RS 编译器，也不能穷举第三方 SPI 或任意递归策略类型 URI。控制台静态资源、CORS、独立 Admin API v2、Account/SCIM/OIDC 协议不纳入本表。\n");
     foreach (string locator in index.Unresolved) report.AppendLine("- `" + locator + "`");
     var liveRows = (await File.ReadAllLinesAsync(Path.Combine(root, "docs/contracts/live-endpoints.tsv"), ct)).Select(line => line.Split('\t')).ToArray();
     var live = liveRows.GroupBy(fields => Key(fields[0], fields[1])).ToDictionary(g => g.Key, g => string.Join(',', g.Select(f => f[2]).Distinct().Order()), StringComparer.Ordinal);
     report.AppendLine($"\n这是三个已知的动态扩展边界。内置 realm providers 已枚举；自定义 provider、feature flag、授权/FGAP 及响应模型字段的全部运行时语义仍需专门验收。现有 {sdk.Count} 次路由冒烟、全操作功能契约单测和 {live.Count} 条真实方法/路径（{liveRows.Length} 条状态观测）不能证明全部服务端业务场景对齐。原有冒烟与 SDK 共用生成逻辑，全操作矩阵、六路径手写专项和真实测试分别提供额外证据。\n");
-    report.AppendLine("完整逐项对照见 [520 项清单](keycloak-26.8.1-alignment.tsv)，包含官方分组、SDK 方法、源码、已观测状态与本次缺口。后续新增分派变体或契约差异时，应同步修复生成器并增加独立断言和真实服务器测试。\n");
+    report.AppendLine($"完整逐项对照见 [当前版本清单](keycloak-{version}-alignment.tsv)，包含官方分组、SDK 方法、源码、已观测状态与本次缺口。后续新增分派变体或契约差异时，应同步修复生成器并增加独立断言和真实服务器测试。\n");
     report.AppendLine("## 复现\n\n```shell\ndotnet run --file tools/Audit-Contracts.cs -- --online\n```\n\n工具总是先输出报告；发现路由、参数、媒体类型或未知定位器差异时返回非零退出码。离线可省略 --online。工具仅执行静态比对和来源校验，不覆盖完整 DTO 字段/状态码、权限与业务验收。");
-    await File.WriteAllTextAsync(Path.Combine(root, "docs/contracts/keycloak-26.8.1-alignment-audit.md"), report.ToString().TrimEnd() + "\n", ct);
+    await File.WriteAllTextAsync(Path.Combine(root, $"docs/contracts/keycloak-{version}-alignment-audit.md"), report.ToString().TrimEnd() + "\n", ct);
     var rows = new List<string> { "method\tpath\tofficialGroup\tsdkMethod\tsource\tline\tresponse\tliveStatuses\tqueryGaps\tmediaGaps\tresponseGaps" };
     foreach (var (key, endpoint) in sdk.OrderBy(p => p.Value.Path, StringComparer.Ordinal).ThenBy(p => p.Value.Method, StringComparer.Ordinal))
         rows.Add(string.Join('\t', endpoint.Method, endpoint.Path, documented.TryGetValue(key, out var doc) ? doc.Tag : "source-only", endpoint.Operation,
@@ -249,8 +250,8 @@ return await ScriptHost.ExecuteAsync(args, "dotnet run --file tools/Audit-Contra
             string.Join(',', queryFindings.Where(f => f.Split('\t')[0] == key).Select(f => f.Split('\t')[2])),
             string.Join(',', mediaFindings.Where(f => f.Split('\t')[0] == key).Select(f => f.Split('\t')[1])),
             string.Join(',', responseFindings.Where(f => f.Split('\t')[0] == key).Select(f => f.Split('\t')[1] + " expected"))));
-    await File.WriteAllLinesAsync(Path.Combine(root, "docs/contracts/keycloak-26.8.1-alignment.tsv"), rows, ct);
-    Console.WriteLine("Report: docs/contracts/keycloak-26.8.1-alignment-audit.md");
+    await File.WriteAllLinesAsync(Path.Combine(root, $"docs/contracts/keycloak-{version}-alignment.tsv"), rows, ct);
+    Console.WriteLine($"Report: docs/contracts/keycloak-{version}-alignment-audit.md");
     if (hasGaps
         || index.Unresolved.Any(s => !s.StartsWith("dynamic SPI:", StringComparison.Ordinal) && !s.StartsWith("policy provider SPI:", StringComparison.Ordinal)))
         throw new InvalidDataException("Alignment audit found contract gaps; see the generated report.");

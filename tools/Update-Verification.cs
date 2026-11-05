@@ -2,6 +2,7 @@
 #:property TargetFramework=net10.0
 #:property PublishAot=false
 #:include ScriptSupport.cs
+#:include TargetBaseline.cs
 
 return await ScriptHost.ExecuteAsync(args, "dotnet run --file tools/Update-Verification.cs", [], async ct =>
 {

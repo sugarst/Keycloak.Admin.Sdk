@@ -6,8 +6,8 @@ using Keycloak.Admin.Sdk.Capabilities;
 public static class CapabilityContracts
 {
     private static readonly Uri Server = new("https://keycloak.invalid/auth/");
-    private const string Config = """{"schemaVersion":1,"serverVersion":"26.8.1","route":"fgap-v2-stable","allowPreview":false,"allowExperimental":false,"disabledCapabilities":[]}""";
-    public static byte[] ServerInfo(string version = "26.8.1", int route = 2, string? missing = null, string? disabled = null)
+    private static string Config => $$"""{"schemaVersion":1,"serverVersion":"{{KeycloakTarget.Version}}","route":"fgap-v2-stable","allowPreview":false,"allowExperimental":false,"disabledCapabilities":[]}""";
+    public static byte[] ServerInfo(string version = KeycloakTarget.Version, int route = 2, string? missing = null, string? disabled = null)
     {
         var features = new Dictionary<string, bool> { ["ADMIN_API"] = true, ["AUTHORIZATION"] = true, ["ORGANIZATION"] = true,
             ["ADMIN_V2"] = true, ["WORKFLOWS"] = true, ["CLIENT_POLICIES"] = true, ["IMPERSONATION"] = true, ["ADMIN_FINE_GRAINED_AUTHZ"] = route == 1,
@@ -17,7 +17,7 @@ public static class CapabilityContracts
         return Encoding.UTF8.GetBytes("{\"systemInfo\":{\"version\":\"" + version + "\"},\"features\":[" + string.Join(',', features.Select(f => "{\"name\":\"" + f.Key + "\",\"enabled\":" + (f.Value ? "true" : "false") + "}")) + "]}");
     }
     private static KeycloakCapabilityPolicy Policy(KeycloakSupportConfiguration? configuration = null, byte[]? server = null) => new(Server,
-        configuration ?? new("26.8.1"), KeycloakServerCapabilities.FromServerInfo(server ?? ServerInfo()));
+        configuration ?? new(KeycloakTarget.Version), KeycloakServerCapabilities.FromServerInfo(server ?? ServerInfo()));
     private static Uri Target(string path) => new(Server, path.TrimStart('/'));
     private static void Check(bool condition) { if (!condition) throw new InvalidOperationException("Capability contract assertion failed."); }
     private static void Throws<T>(Action action) where T : Exception
@@ -30,21 +30,21 @@ public static class CapabilityContracts
         Check(hostDenied.Reason == KeycloakCapabilityReason.DisabledByHost && hostDenied.Capability == allowedDecision.Capability
             && hostDenied.Route == allowedDecision.Route && hostDenied.ServerVersion == allowedDecision.ServerVersion);
         Check(ReferenceEquals(hostDenied, hostDenied.DisableByHost()));
-        var release = KeycloakCapabilityCatalog.Find("26.8.1")!;
-        Check(KeycloakCapabilityCatalog.Releases.Count == 1 && KeycloakCapabilityCatalog.Find("26.8.2") is null);
-        Check(release.SourceCommit == "24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b" && release.ServerVersion == "26.8.1");
-        Check(release.Endpoints.Count == 520 && release.Endpoints.Select(e => e.Operation).Distinct().Count() == 520);
+        var release = KeycloakCapabilityCatalog.Find(KeycloakTarget.Version)!;
+        Check(KeycloakCapabilityCatalog.Current.ServerVersion == KeycloakTarget.Version && KeycloakCapabilityCatalog.Find("unsupported-release") is null);
+        Check(release.SourceCommit == KeycloakTarget.SourceCommit && release.ServerVersion == KeycloakTarget.Version);
+        Check(release.Endpoints.Count == KeycloakTarget.EndpointCount && release.Endpoints.Select(e => e.Operation).Distinct().Count() == KeycloakTarget.EndpointCount);
         Check(release.Endpoints.Count(e => e.Stage == KeycloakFeatureStage.Preview) == 7 && release.Endpoints.Count(e => e.Stage == KeycloakFeatureStage.Experimental) == 21);
         Check(release.Endpoints.Count(e => e.Support == KeycloakSupportStatus.Compatibility) == 14);
         foreach (int route in new[] { 1, 2 })
         {
-            var policy = Policy(new("26.8.1", route == 1 ? KeycloakAdminRoute.FgapV1Compatibility : KeycloakAdminRoute.FgapV2Stable), ServerInfo(route: route));
+            var policy = Policy(new(KeycloakTarget.Version, route == 1 ? KeycloakAdminRoute.FgapV1Compatibility : KeycloakAdminRoute.FgapV2Stable), ServerInfo(route: route));
             int allowed = 0;
             foreach (var endpoint in release.Endpoints)
             {
                 string path = System.Text.RegularExpressions.Regex.Replace(endpoint.Path, "\\{[^}]+\\}", "fixture%2Fid");
                 var decision = policy.Evaluate(new HttpMethod(endpoint.Method), Target(path), endpoint.Operation);
-                Check(decision.Capability == endpoint && decision.ServerVersion == "26.8.1" && decision.Route == (route == 1 ? KeycloakAdminRoute.FgapV1Compatibility : KeycloakAdminRoute.FgapV2Stable));
+                Check(decision.Capability == endpoint && decision.ServerVersion == KeycloakTarget.Version && decision.Route == (route == 1 ? KeycloakAdminRoute.FgapV1Compatibility : KeycloakAdminRoute.FgapV2Stable));
                 Check(endpoint.FeatureId.StartsWith("KeycloakSdk.", StringComparison.Ordinal) && endpoint.Evidence.Length > 0 && endpoint.Implementation == KeycloakImplementationStatus.Implemented && endpoint.RequiredServerFeatures.Contains("ADMIN_API"));
                 Check(endpoint.Routes.Contains(KeycloakAdminRoute.FgapV1Compatibility));
                 if (decision.IsAllowed) { allowed++; Check(endpoint.Verification == (KeycloakVerification.Contract | KeycloakVerification.Managed | KeycloakVerification.NativeAot)); }
@@ -56,7 +56,7 @@ public static class CapabilityContracts
     public static void Configuration()
     {
         var config = KeycloakSupportConfiguration.Parse(Config);
-        Check(config.ServerVersion == "26.8.1" && config.Route == KeycloakAdminRoute.FgapV2Stable && !config.AllowPreview && !config.AllowExperimental && config.DisabledCapabilities.Count == 0);
+        Check(config.ServerVersion == KeycloakTarget.Version && config.Route == KeycloakAdminRoute.FgapV2Stable && !config.AllowPreview && !config.AllowExperimental && config.DisabledCapabilities.Count == 0);
         var environment = new Dictionary<string, string?> { ["KEYCLOAK_ADMIN_API_ROUTE"] = "fgap-v1-compat", ["KEYCLOAK_ADMIN_SERVER_VERSION"] = "future",
             ["KEYCLOAK_ADMIN_ALLOW_PREVIEW"] = "true", ["KEYCLOAK_ADMIN_ALLOW_EXPERIMENTAL"] = "true", ["KEYCLOAK_ADMIN_DISABLED_CAPABILITIES"] = " KeycloakSdk.Ssf,KeycloakSdk.Oid4vcVci," };
         config = KeycloakSupportConfiguration.Parse(Config, name => environment.GetValueOrDefault(name));
@@ -65,32 +65,32 @@ public static class CapabilityContracts
         config = KeycloakSupportConfiguration.Parse(Config.Replace("[]", "[\"KeycloakSdk.AdminApi\"]", StringComparison.Ordinal));
         Check(config.DisabledCapabilities.Contains("KeycloakSdk.AdminApi"));
         Throws<ArgumentException>(() => new KeycloakSupportConfiguration(" "));
-        Throws<ArgumentOutOfRangeException>(() => new KeycloakSupportConfiguration("26.8.1", (KeycloakAdminRoute)99));
+        Throws<ArgumentOutOfRangeException>(() => new KeycloakSupportConfiguration(KeycloakTarget.Version, (KeycloakAdminRoute)99));
         Throws<System.Text.Json.JsonException>(() => KeycloakSupportConfiguration.Parse(Config.Replace("\"schemaVersion\":1", "\"schemaVersion\":2", StringComparison.Ordinal)));
         Throws<System.Text.Json.JsonException>(() => KeycloakSupportConfiguration.Parse(Config.Replace("\"schemaVersion\":1", "\"unknown\":1", StringComparison.Ordinal)));
         Throws<System.Text.Json.JsonException>(() => KeycloakSupportConfiguration.Parse(Config.Replace("\"schemaVersion\":1", "\"schemaVersion\":1,\"schemaVersion\":1", StringComparison.Ordinal)));
         Throws<System.Text.Json.JsonException>(() => KeycloakSupportConfiguration.Parse(Config.Replace("fgap-v2-stable", "guessed-route", StringComparison.Ordinal)));
         Throws<FormatException>(() => KeycloakSupportConfiguration.Parse(Config, n => n == "KEYCLOAK_ADMIN_ALLOW_PREVIEW" ? "invalid" : null));
-        Throws<ArgumentException>(() => new KeycloakCapabilityPolicy(Server, new("26.8.1", disabledCapabilities: ["typo"]), KeycloakServerCapabilities.FromServerInfo(ServerInfo())));
-        Throws<ArgumentException>(() => new KeycloakCapabilityPolicy(new Uri("ftp://example.invalid/"), new("26.8.1"), KeycloakServerCapabilities.FromServerInfo(ServerInfo())));
-        Throws<ArgumentException>(() => new KeycloakCapabilityPolicy(new Uri("https://example.invalid/?x"), new("26.8.1"), KeycloakServerCapabilities.FromServerInfo(ServerInfo())));
-        Throws<ArgumentException>(() => new KeycloakCapabilityPolicy(new Uri("https://example.invalid/#x"), new("26.8.1"), KeycloakServerCapabilities.FromServerInfo(ServerInfo())));
-        Throws<ArgumentException>(() => new KeycloakCapabilityPolicy(new Uri("https://u@example.invalid/"), new("26.8.1"), KeycloakServerCapabilities.FromServerInfo(ServerInfo())));
-        Throws<ArgumentException>(() => new KeycloakCapabilityPolicy(new Uri("relative", UriKind.Relative), new("26.8.1"), KeycloakServerCapabilities.FromServerInfo(ServerInfo())));
-        Check(new KeycloakCapabilityPolicy(new Uri("http://keycloak.invalid/auth"), new("26.8.1"), KeycloakServerCapabilities.FromServerInfo(ServerInfo()))
+        Throws<ArgumentException>(() => new KeycloakCapabilityPolicy(Server, new(KeycloakTarget.Version, disabledCapabilities: ["typo"]), KeycloakServerCapabilities.FromServerInfo(ServerInfo())));
+        Throws<ArgumentException>(() => new KeycloakCapabilityPolicy(new Uri("ftp://example.invalid/"), new(KeycloakTarget.Version), KeycloakServerCapabilities.FromServerInfo(ServerInfo())));
+        Throws<ArgumentException>(() => new KeycloakCapabilityPolicy(new Uri("https://example.invalid/?x"), new(KeycloakTarget.Version), KeycloakServerCapabilities.FromServerInfo(ServerInfo())));
+        Throws<ArgumentException>(() => new KeycloakCapabilityPolicy(new Uri("https://example.invalid/#x"), new(KeycloakTarget.Version), KeycloakServerCapabilities.FromServerInfo(ServerInfo())));
+        Throws<ArgumentException>(() => new KeycloakCapabilityPolicy(new Uri("https://u@example.invalid/"), new(KeycloakTarget.Version), KeycloakServerCapabilities.FromServerInfo(ServerInfo())));
+        Throws<ArgumentException>(() => new KeycloakCapabilityPolicy(new Uri("relative", UriKind.Relative), new(KeycloakTarget.Version), KeycloakServerCapabilities.FromServerInfo(ServerInfo())));
+        Check(new KeycloakCapabilityPolicy(new Uri("http://keycloak.invalid/auth"), new(KeycloakTarget.Version), KeycloakServerCapabilities.FromServerInfo(ServerInfo()))
             .Evaluate(HttpMethod.Get, new Uri("http://keycloak.invalid/auth/admin/serverinfo")).IsAllowed);
-        Throws<ArgumentNullException>(() => new KeycloakCapabilityPolicy(null!, new("26.8.1"), KeycloakServerCapabilities.FromServerInfo(ServerInfo())));
+        Throws<ArgumentNullException>(() => new KeycloakCapabilityPolicy(null!, new(KeycloakTarget.Version), KeycloakServerCapabilities.FromServerInfo(ServerInfo())));
         Throws<ArgumentNullException>(() => new KeycloakCapabilityPolicy(Server, null!, KeycloakServerCapabilities.FromServerInfo(ServerInfo())));
-        Throws<ArgumentNullException>(() => new KeycloakCapabilityPolicy(Server, new("26.8.1"), null!));
+        Throws<ArgumentNullException>(() => new KeycloakCapabilityPolicy(Server, new(KeycloakTarget.Version), null!));
         Throws<ArgumentException>(() => KeycloakServerCapabilities.FromServerInfo(ServerInfo(version: " ")));
-        Throws<ArgumentException>(() => KeycloakServerCapabilities.FromServerInfo(Encoding.UTF8.GetBytes("""{"systemInfo":{"version":"26.8.1"},"features":[{"name":"DUP","enabled":true},{"name":"DUP","enabled":false}]}""")));
+        Throws<ArgumentException>(() => KeycloakServerCapabilities.FromServerInfo(Encoding.UTF8.GetBytes($$"""{"systemInfo":{"version":"{{KeycloakTarget.Version}}"},"features":[{"name":"DUP","enabled":true},{"name":"DUP","enabled":false}]}""")));
     }
     public static void Decisions()
     {
         var target = Target("/admin/realms/demo/users");
         void Reason(KeycloakCapabilityPolicy p, KeycloakCapabilityReason reason, Uri? uri = null, string? operation = null, HttpMethod? method = null) => Check(p.Evaluate(method ?? HttpMethod.Get, uri ?? target, operation).Reason == reason);
         Reason(Policy(new("future")), KeycloakCapabilityReason.UnknownVersion);
-        Reason(Policy(server: ServerInfo(version: "26.8.2")), KeycloakCapabilityReason.VersionMismatch);
+        Reason(Policy(server: ServerInfo(version: "unsupported-release")), KeycloakCapabilityReason.VersionMismatch);
         Reason(Policy(), KeycloakCapabilityReason.WrongServer, new Uri("https://other.invalid/auth/admin/realms/demo/users"));
         Reason(Policy(), KeycloakCapabilityReason.WrongServer, new Uri("https://keycloak.invalid/other/admin/serverinfo"));
         Reason(Policy(), KeycloakCapabilityReason.WrongServer, new Uri("relative", UriKind.Relative));
@@ -107,9 +107,9 @@ public static class CapabilityContracts
         Reason(Policy(server: both), KeycloakCapabilityReason.RouteMismatch);
         Reason(Policy(server: ServerInfo(missing: "ADMIN_API")), KeycloakCapabilityReason.ServerFeatureUnknown);
         Reason(Policy(server: ServerInfo(disabled: "ADMIN_API")), KeycloakCapabilityReason.ServerFeatureDisabled);
-        Reason(Policy(new("26.8.1", disabledCapabilities: ["KeycloakSdk.AdminApi"])), KeycloakCapabilityReason.DisabledByHost);
-        Reason(Policy(new("26.8.1", disabledCapabilities: ["KeycloakSdk.AdminApi"])), KeycloakCapabilityReason.DisabledByHost, Target("/admin/realms/demo/workflows"));
-        Reason(Policy(new("26.8.1", disabledCapabilities: ["KeycloakSdk.Workflows"])), KeycloakCapabilityReason.DisabledByHost, Target("/admin/realms/demo/workflows"));
+        Reason(Policy(new(KeycloakTarget.Version, disabledCapabilities: ["KeycloakSdk.AdminApi"])), KeycloakCapabilityReason.DisabledByHost);
+        Reason(Policy(new(KeycloakTarget.Version, disabledCapabilities: ["KeycloakSdk.AdminApi"])), KeycloakCapabilityReason.DisabledByHost, Target("/admin/realms/demo/workflows"));
+        Reason(Policy(new(KeycloakTarget.Version, disabledCapabilities: ["KeycloakSdk.Workflows"])), KeycloakCapabilityReason.DisabledByHost, Target("/admin/realms/demo/workflows"));
         Reason(Policy(server: ServerInfo(disabled: "CLIENT_POLICIES")), KeycloakCapabilityReason.ServerFeatureDisabled, Target("/admin/realms/demo/client-policies/policies"));
         Reason(Policy(server: ServerInfo(disabled: "IMPERSONATION")), KeycloakCapabilityReason.ServerFeatureDisabled, Target("/admin/realms/demo/users/user/impersonation"), method: HttpMethod.Post);
         Reason(Policy(), KeycloakCapabilityReason.Allowed, Target("/admin/realms/demo/users/count?x=1"));
@@ -120,9 +120,9 @@ public static class CapabilityContracts
         Throws<ArgumentNullException>(() => Policy().Evaluate(HttpMethod.Get, null!));
         foreach (var stage in new[] { KeycloakFeatureStage.Preview, KeycloakFeatureStage.Experimental })
         {
-            var endpoint = KeycloakCapabilityCatalog.Find("26.8.1")!.Endpoints.First(e => e.Stage == stage);
+            var endpoint = KeycloakCapabilityCatalog.Find(KeycloakTarget.Version)!.Endpoints.First(e => e.Stage == stage);
             Check(Policy().EvaluateEndpoint(endpoint).Reason == KeycloakCapabilityReason.StageNotAllowed);
-            Check(Policy(new("26.8.1", allowPreview: true, allowExperimental: true)).EvaluateEndpoint(endpoint).Reason == KeycloakCapabilityReason.NotSupported);
+            Check(Policy(new(KeycloakTarget.Version, allowPreview: true, allowExperimental: true)).EvaluateEndpoint(endpoint).Reason == KeycloakCapabilityReason.NotSupported);
         }
         KeycloakEndpointCapability Entry(KeycloakFeatureStage stage = KeycloakFeatureStage.Stable, KeycloakImplementationStatus impl = KeycloakImplementationStatus.Implemented,
             KeycloakSupportStatus support = KeycloakSupportStatus.Supported, KeycloakVerification verification = KeycloakVerification.Contract | KeycloakVerification.Managed | KeycloakVerification.NativeAot)
@@ -139,7 +139,7 @@ public static class CapabilityContracts
         using var handler = new Handler(_ => { calls++; return new(HttpStatusCode.OK) { Content = new StringContent("[]") }; });
         using var http = new HttpClient(handler);
         var token = new Token(() => tokens++);
-        var sdk = new KeycloakAdminClient(http, Server, token, new() { RequestPolicy = Policy(new("26.8.1", disabledCapabilities: ["KeycloakSdk.AdminApi"])) });
+        var sdk = new KeycloakAdminClient(http, Server, token, new() { RequestPolicy = Policy(new(KeycloakTarget.Version, disabledCapabilities: ["KeycloakSdk.AdminApi"])) });
         async Task Denied(Func<Task> action)
         {
             try { await action(); } catch (KeycloakCapabilityDeniedException e) { Check(e.Decision.Reason == KeycloakCapabilityReason.DisabledByHost && !e.ToString().Contains("sensitive-user", StringComparison.Ordinal)); return; }
@@ -171,12 +171,12 @@ public static class CapabilityContracts
         using var handler = new Handler(request => { calls++; Check(request.Headers.Authorization?.Parameter == "token"); return new(HttpStatusCode.OK) { Content = new ByteArrayContent(ServerInfo()) }; });
         using var http = new HttpClient(handler);
         var token = new Token(() => { });
-        var sdk = await KeycloakSupportedClient.CreateAsync(http, Server, token, new("26.8.1"), true);
+        var sdk = await KeycloakSupportedClient.CreateAsync(http, Server, token, new(KeycloakTarget.Version), true);
         Check(calls == 1);
         try { await sdk.SendAsync(HttpMethod.Get, "/admin/vendor/unknown"); throw new Exception("Expected deny"); } catch (KeycloakCapabilityDeniedException e) { Check(e.Decision.Reason == KeycloakCapabilityReason.UnknownEndpoint); }
         Check(calls == 1);
         try { await KeycloakSupportedClient.CreateAsync(http, Server, token, new("future")); throw new Exception("Expected unknown version"); } catch (KeycloakCapabilityDeniedException e) { Check(e.Decision.Reason == KeycloakCapabilityReason.UnknownVersion); }
-        try { await KeycloakSupportedClient.CreateAsync(http, Server, null!, new("26.8.1")); throw new Exception("Expected null"); } catch (ArgumentNullException) { }
+        try { await KeycloakSupportedClient.CreateAsync(http, Server, null!, new(KeycloakTarget.Version)); throw new Exception("Expected null"); } catch (ArgumentNullException) { }
         try { await KeycloakSupportedClient.CreateAsync(http, Server, token, null!); throw new Exception("Expected null"); } catch (ArgumentNullException) { }
         Check(calls == 2);
     }

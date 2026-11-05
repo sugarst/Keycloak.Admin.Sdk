@@ -36,7 +36,7 @@ internal static class FullWorkflows
             c.Prove(!Has(scheduled.J, "id", id), "Deactivation removes the user schedule", deactivate, scheduled);
             var delete = await c.Delete("workflows/{id}", ("id", id));
             c.Prove(await c.Missing("workflows/{id}", ("id", id)), "Workflow deletion removes persisted definition", delete);
-            Console.WriteLine("PASS full workflows (DEFAULT/stable in 26.8.1): definitions, activation, step migration and schedule removal.");
+            Console.WriteLine("PASS full workflows (current target stable feature): definitions, activation, step migration and schedule removal.");
         }
         finally { http.DefaultRequestHeaders.Accept.Clear(); foreach (var accept in previous) http.DefaultRequestHeaders.Accept.Add(accept); }
     }

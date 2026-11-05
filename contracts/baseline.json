@@ -1,4 +1,6 @@
 {
+  "schemaVersion": 1,
+  "packageVersion": "0.1.0-preview.1",
   "keycloakVersion": "26.8.1",
   "commit": "24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b",
   "sourceArchiveSha256": "1e2ff1d7dc008515e15ed072eccd32c2c836e0ca0eb251591018f334ade60794",
@@ -6,5 +8,9 @@
   "serverImage": "quay.io/keycloak/keycloak@sha256:79c623a22abacf3fe6c00a5fb30f5b7843d717b234033b80995891c06116d244",
   "testedServerPlatform": "linux/amd64",
   "sdk": "10.0.403",
-  "discoveredEndpoints": 520
+  "discoveredEndpoints": 520,
+  "postgresImage": "postgres:18.0-alpine3.22",
+  "postgresVersionNumber": "180000",
+  "nativeSdkImage": "mcr.microsoft.com/dotnet/sdk:10.0.403-alpine3.24",
+  "nativeRuntimeImage": "mcr.microsoft.com/dotnet/aspnet:10.0.14-alpine3.24"
 }

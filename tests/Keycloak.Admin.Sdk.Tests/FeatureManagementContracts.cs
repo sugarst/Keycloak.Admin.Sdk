@@ -20,10 +20,10 @@ using TelemetryConfiguration = Microsoft.ApplicationInsights.Extensibility.Telem
 public static class FeatureManagementContracts
 {
     private static readonly Uri Server = new("https://keycloak.invalid/auth/");
-    private static readonly string[] Ids = KeycloakCapabilityCatalog.Find("26.8.1")!.Endpoints.Select(e => e.FeatureId).Distinct().Order().ToArray();
+    private static readonly string[] Ids = KeycloakCapabilityCatalog.Find(KeycloakTarget.Version)!.Endpoints.Select(e => e.FeatureId).Distinct().Order().ToArray();
     private static Uri Target(string path) => new(Server, path.TrimStart('/'));
     private static KeycloakCapabilityPolicy Catalog(int route = 2, KeycloakSupportConfiguration? configuration = null) => new(Server,
-        configuration ?? new("26.8.1", route == 1 ? KeycloakAdminRoute.FgapV1Compatibility : KeycloakAdminRoute.FgapV2Stable),
+        configuration ?? new(KeycloakTarget.Version, route == 1 ? KeycloakAdminRoute.FgapV1Compatibility : KeycloakAdminRoute.FgapV2Stable),
         KeycloakServerCapabilities.FromServerInfo(CapabilityContracts.ServerInfo(route: route)));
     private static void Check(bool condition, string message) { if (!condition) throw new InvalidOperationException(message); }
     private static async Task<T> Throws<T>(Func<Task> action) where T : Exception
@@ -61,7 +61,7 @@ public static class FeatureManagementContracts
         {
             var catalog = Catalog(route); var policy = new KeycloakFeatureManagementPolicy(catalog, host.Manager);
             int allowed = 0;
-            foreach (var endpoint in KeycloakCapabilityCatalog.Find("26.8.1")!.Endpoints)
+            foreach (var endpoint in KeycloakCapabilityCatalog.Find(KeycloakTarget.Version)!.Endpoints)
             {
                 var uri = Target(Regex.Replace(endpoint.Path, "\\{[^}]+\\}", "fixture%2Fid"));
                 var expected = catalog.Evaluate(new HttpMethod(endpoint.Method), uri, endpoint.Operation);
@@ -80,9 +80,9 @@ public static class FeatureManagementContracts
             var off = Host(disabled: missing ? null : id, omitted: missing ? id : null);
             using var offServices = off.Services; using var offConfig = off.Config;
             var decision = await new KeycloakFeatureManagementPolicy(Catalog(), off.Manager).EvaluateAsync(HttpMethod.Get, Target("admin/realms/master/organizations"));
-            Check(decision.Reason == KeycloakCapabilityReason.DisabledByHost && decision.Capability!.FeatureId == "KeycloakSdk.Organizations" && decision.ServerVersion == "26.8.1" && decision.Route == KeycloakAdminRoute.FgapV2Stable, "Missing and false flags deny with identity preserved");
+            Check(decision.Reason == KeycloakCapabilityReason.DisabledByHost && decision.Capability!.FeatureId == "KeycloakSdk.Organizations" && decision.ServerVersion == KeycloakTarget.Version && decision.Route == KeycloakAdminRoute.FgapV2Stable, "Missing and false flags deny with identity preserved");
         }
-        var blocked = new KeycloakFeatureManagementPolicy(Catalog(configuration: new("26.8.1", disabledCapabilities: ["KeycloakSdk.AdminApi"])), host.Manager);
+        var blocked = new KeycloakFeatureManagementPolicy(Catalog(configuration: new(KeycloakTarget.Version, disabledCapabilities: ["KeycloakSdk.AdminApi"])), host.Manager);
         host.Manager.Calls.Clear();
         Check((await blocked.EvaluateAsync(HttpMethod.Get, Target("admin/serverinfo"))).Reason == KeycloakCapabilityReason.DisabledByHost && host.Manager.Calls.IsEmpty, "Static disable has priority");
         using var cancellation = new CancellationTokenSource(); cancellation.Cancel();
@@ -135,17 +135,17 @@ public static class FeatureManagementContracts
     {
         var host = Host(); using var services = host.Services; using var config = host.Config;
         using var handler = new Handler(); using var http = new HttpClient(handler); var tokens = new Tokens();
-        await Throws<ArgumentNullException>(async () => await KeycloakFeatureManagedClient.CreateAsync(http, Server, null!, new("26.8.1"), host.Manager));
+        await Throws<ArgumentNullException>(async () => await KeycloakFeatureManagedClient.CreateAsync(http, Server, null!, new(KeycloakTarget.Version), host.Manager));
         await Throws<ArgumentNullException>(async () => await KeycloakFeatureManagedClient.CreateAsync(http, Server, tokens, null!, host.Manager));
-        await Throws<ArgumentNullException>(async () => await KeycloakFeatureManagedClient.CreateAsync(http, Server, tokens, new("26.8.1"), null!));
-        var client = await KeycloakFeatureManagedClient.CreateAsync(http, Server, tokens, new("26.8.1"), host.Manager, enableUnauthorizedRecovery: true);
+        await Throws<ArgumentNullException>(async () => await KeycloakFeatureManagedClient.CreateAsync(http, Server, tokens, new(KeycloakTarget.Version), null!));
+        var client = await KeycloakFeatureManagedClient.CreateAsync(http, Server, tokens, new(KeycloakTarget.Version), host.Manager, enableUnauthorizedRecovery: true);
         Check(handler.Sends == 1, "Only authenticated metadata read during bootstrap");
         await client.Users.GetUsersAsync("master");
         Check(handler.Sends == 2, "Guarded client works");
-        var error = await Throws<KeycloakCapabilityDeniedException>(async () => await KeycloakFeatureManagedClient.CreateAsync(http, Server, tokens, new("26.8.2"), host.Manager));
+        var error = await Throws<KeycloakCapabilityDeniedException>(async () => await KeycloakFeatureManagedClient.CreateAsync(http, Server, tokens, new("unsupported-release"), host.Manager));
         Check(error.Decision.Reason == KeycloakCapabilityReason.UnknownVersion && handler.Sends == 3, "Unknown release rejected after metadata read");
         var off = Host(disabled: "KeycloakSdk.AdminApi"); using var offServices = off.Services; using var offConfig = off.Config;
-        await Denied(async () => await KeycloakFeatureManagedClient.CreateAsync(http, Server, tokens, new("26.8.1"), off.Manager));
+        await Denied(async () => await KeycloakFeatureManagedClient.CreateAsync(http, Server, tokens, new(KeycloakTarget.Version), off.Manager));
         Check(handler.Sends == 4, "Host off permits bootstrap metadata read only");
     }
 

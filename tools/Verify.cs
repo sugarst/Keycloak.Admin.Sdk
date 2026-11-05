@@ -2,6 +2,7 @@
 #:property TargetFramework=net10.0
 #:property PublishAot=false
 #:include ScriptSupport.cs
+#:include TargetBaseline.cs
 
 using System.IO.Compression;
 using System.Runtime.InteropServices;
@@ -11,11 +12,13 @@ return await ScriptHost.ExecuteAsync(args,
     "dotnet run --file tools/Verify.cs -- [--skip-native-publish | --native-container]", ["--skip-native-publish", "--native-container"], async ct =>
 {
     string root = ScriptHost.RepositoryRoot();
+    await ScriptHost.RunCheckedAsync(root, "dotnet", ["run", "--file", "tools/Check-Baseline.cs"], ct);
+    await ScriptHost.RunCheckedAsync(root, "dotnet", ["run", "--file", "tools/Check-Baseline.cs", "--", "--self-test"], ct);
     if (args.Length > 1) throw new ArgumentException("Choose only one native verification option.");
     var legacyYaml = ScriptHost.RepositoryFiles(root).Where(file => Path.GetExtension(file).Equals(".yml", StringComparison.OrdinalIgnoreCase)).ToArray();
     if (legacyYaml.Length != 0)
         throw new InvalidDataException("Use .yaml for repository YAML files:\n" + string.Join('\n', legacyYaml.Select(file => Path.GetRelativePath(root, file))));
-    foreach (string script in new[] { "Test-Integration.cs", "Update-Contracts.cs", "Update-Verification.cs", "Audit-Contracts.cs", "Generate-TestMatrix.cs", "Check-Coverage.cs", "Generate-LiveRoutes.cs", "Check-AdminRoutes.cs", "Check-FullAcceptance.cs", "Test-AcceptanceGate.cs", "Test-AllAdminRoutes.cs", "Generate-CapabilityCatalog.cs" })
+    foreach (string script in new[] { "Release.cs", "Upgrade.cs", "Test-Workflow.cs", "Generate-ValidationList.cs", "Test-Integration.cs", "Update-Contracts.cs", "Update-Verification.cs", "Audit-Contracts.cs", "Generate-TestMatrix.cs", "Check-Coverage.cs", "Generate-LiveRoutes.cs", "Check-AdminRoutes.cs", "Check-FullAcceptance.cs", "Test-AcceptanceGate.cs", "Test-AllAdminRoutes.cs", "Generate-CapabilityCatalog.cs" })
         await ScriptHost.RunCheckedAsync(root, "dotnet", ["build", "tools/" + script], ct);
     await ScriptHost.RunCheckedAsync(root, "dotnet", ["build", "local/keycloak/Service.cs"], ct);
     await ScriptHost.RunCheckedAsync(root, "dotnet", ["build", "Keycloak.Admin.Sdk.slnx", "-c", "Release"], ct);
@@ -46,7 +49,7 @@ return await ScriptHost.ExecuteAsync(args,
     await ScriptHost.RunCheckedAsync(root, "dotnet", ["pack", "src/Keycloak.Admin.Sdk.FeatureManagement", "-c", "Release", "--no-build", "-o", "artifacts/packages"], ct);
     await ScriptHost.RunCheckedAsync(root, "dotnet", ["pack", "src/Keycloak.Admin.Sdk.FeatureManagement.ApplicationInsights", "-c", "Release", "--no-build", "-o", "artifacts/packages"], ct);
     if (args.Contains("--native-container"))
-        await ScriptHost.RunCheckedAsync(root, "docker", ["build", "-f", "tests/Keycloak.Admin.Sdk.AotSmoke/Dockerfile", "--target", "export",
+        await ScriptHost.RunCheckedAsync(root, "docker", ["build", .. TargetBaseline.Load(root).DockerBuildArgs, "-f", "tests/Keycloak.Admin.Sdk.AotSmoke/Dockerfile", "--target", "export",
             "--output", "type=local,dest=artifacts/aot/linux-musl-x64", "."], ct);
     else if (!args.Contains("--skip-native-publish"))
     {

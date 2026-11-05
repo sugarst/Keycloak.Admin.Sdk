@@ -5,12 +5,15 @@ internal static class LiveEvidence
 {
     public static string Fingerprint(string root)
     {
-        string[] roots = ["src", "tests/Keycloak.Admin.Sdk.IntegrationTests", "local/keycloak"];
+        string[] roots = ["src", "tests/Keycloak.Admin.Sdk.IntegrationTests", "local/keycloak", "tools"];
         var paths = roots.SelectMany(p => Directory.EnumerateFiles(Path.Combine(root, p), "*", SearchOption.AllDirectories))
             .Where(p => !p.Split(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar).Any(s => s is "bin" or "obj") && Path.GetExtension(p) is ".cs" or ".csproj" or ".yaml")
             .Concat(new[] { "global.json", "Directory.Build.props", "contracts/admin-api-routes.json", "contracts/baseline.json", "tests/Keycloak.Admin.Sdk.AotSmoke/Dockerfile", "tools/ScriptSupport.cs" }.Select(p => Path.Combine(root, p)))
-            .Concat(Directory.EnumerateFiles(Path.Combine(root, "contracts/capabilities"), "*.json"))
-            .Append(Path.Combine(root, "contracts/feature-management.example.json"))
+            .Concat(new[] { "contracts/capabilities.json", "contracts/capability-rules.json", "Target.props", "tools/TargetBaseline.cs" }.Select(p => Path.Combine(root, p)))
+            .Concat(Directory.EnumerateFiles(Path.Combine(root, "contracts"), "*.json"))
+            .Append(Path.Combine(root, "contracts/source-files.sha256"))
+            .Select(Path.GetFullPath)
+            .Distinct(StringComparer.Ordinal)
             .OrderBy(p => Path.GetRelativePath(root, p).Replace('\\', '/'), StringComparer.Ordinal);
         using var hash = IncrementalHash.CreateHash(HashAlgorithmName.SHA256);
         foreach (string path in paths)

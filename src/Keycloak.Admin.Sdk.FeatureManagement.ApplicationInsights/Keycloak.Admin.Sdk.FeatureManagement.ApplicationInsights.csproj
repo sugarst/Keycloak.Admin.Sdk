@@ -1,6 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Version>0.1.0-preview.1</Version>
     <Description>Explicit opt-in Application Insights feature evaluation telemetry for Keycloak Admin SDK.</Description>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
   </PropertyGroup>

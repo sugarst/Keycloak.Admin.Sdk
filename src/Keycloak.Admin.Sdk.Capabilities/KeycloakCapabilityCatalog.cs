@@ -2,15 +2,15 @@ using System.Text.Json;
 
 namespace Keycloak.Admin.Sdk.Capabilities;
 
-/// <summary>Immutable release snapshots. Adding a release never changes the meaning of an older snapshot.</summary>
+/// <summary>Exactly one immutable target per SDK build. Historical targets belong to historical packages.</summary>
 public static class KeycloakCapabilityCatalog
 {
-    public static IReadOnlyList<KeycloakReleaseCapabilities> Releases { get; } = Array.AsReadOnly(new[] { Load("26.8.1") });
-    public static KeycloakReleaseCapabilities? Find(string version) => Releases.SingleOrDefault(r => r.ServerVersion == version);
+    public static KeycloakReleaseCapabilities Current { get; } = Load();
+    public static KeycloakReleaseCapabilities? Find(string version) => Current.ServerVersion == version ? Current : null;
 
-    private static KeycloakReleaseCapabilities Load(string version)
+    private static KeycloakReleaseCapabilities Load()
     {
-        using var stream = typeof(KeycloakCapabilityCatalog).Assembly.GetManifestResourceStream("Keycloak.Capabilities." + version + ".json")!;
+        using var stream = typeof(KeycloakCapabilityCatalog).Assembly.GetManifestResourceStream("Keycloak.Capabilities.Current.json")!;
         using var document = JsonDocument.Parse(stream);
         var root = document.RootElement;
         var endpoints = root.GetProperty("endpoints").EnumerateArray().Select(e => new KeycloakEndpointCapability(

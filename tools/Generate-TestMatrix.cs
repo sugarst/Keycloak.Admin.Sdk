@@ -2,6 +2,7 @@
 #:property TargetFramework=net10.0
 #:property PublishAot=false
 #:include ScriptSupport.cs
+#:include TargetBaseline.cs
 #:include JavaAuditIndex.cs
 #:project ../src/Keycloak.Admin.Sdk/Keycloak.Admin.Sdk.csproj
 
@@ -18,7 +19,7 @@ return await ScriptHost.ExecuteAsync(args, "dotnet run --file tools/Generate-Tes
     string root = ScriptHost.RepositoryRoot();
     string matrixPath = Path.Combine(root, "contracts/admin-api-test-matrix.json");
     using var baseline = ScriptHost.Baseline(root);
-    byte[] specBytes = await File.ReadAllBytesAsync(Path.Combine(root, "contracts/keycloak-26.8.1.openapi.json"), ct);
+    byte[] specBytes = await File.ReadAllBytesAsync(Path.Combine(root, "contracts/openapi.json"), ct);
     if (Convert.ToHexStringLower(SHA256.HashData(specBytes)) != baseline.RootElement.GetProperty("openApiSha256").GetString())
         throw new InvalidDataException("Test oracle OpenAPI differs from the pinned publication.");
     var spec = JsonNode.Parse(specBytes)!;
@@ -30,7 +31,7 @@ return await ScriptHost.ExecuteAsync(args, "dotnet run --file tools/Generate-Tes
     {
         // Expectations come from a separate token-level Java index and published definitions,
         // never the SDK generator's JavaRoutes, request builder, or generated smoke fixtures.
-        string sourceRoot = Path.Combine(root, ".cache/keycloak/pinned-source");
+        string sourceRoot = TargetBaseline.Load(root).Source(root);
         foreach (string line in await File.ReadAllLinesAsync(Path.Combine(root, "contracts/source-files.sha256"), ct))
         {
             int separator = line.IndexOf("  ", StringComparison.Ordinal);

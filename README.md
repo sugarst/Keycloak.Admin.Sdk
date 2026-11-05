@@ -12,6 +12,8 @@
 
 ## 使用
 
+项目采用单一目标版本：基线驱动当前 SDK、生成器和容器环境，升级时完整替换实现。标准入口为 `tools/Upgrade.cs`（准备/替换）及 `tools/Release.cs`（发布前全量验收和候选包）。操作、证据晋升及数据库边界见 [单基线流程](docs/single-target-workflow.md)。
+
 需要按 Keycloak 版本、真实服务端能力和声明路线控制可用接口时，使用可选 `Keycloak.Admin.Sdk.Capabilities` 扩展及 `KeycloakSupportedClient.CreateAsync`。它在请求发送前统一检查支持状态；原有构造方式继续提供 wire 传输。配置、拒绝原因、升级流程和示例见 [版本能力与开放策略](docs/capability-policy.md)。
 
 托管宿主可以使用独立的 `Keycloak.Admin.Sdk.FeatureManagement` 扩展（Microsoft.FeatureManagement 4.8.0），在能力判断通过后再检查总开关和目标功能开关。Microsoft.FeatureManagement.Telemetry.ApplicationInsights 4.8.0 另有可选遥测适配包，默认关闭。**核心零运行时 NuGet 依赖并坚持 Native AOT；这两个托管扩展不要求 AOT**。完整配置、生命周期及遥测范围见 [接入指南](docs/feature-management.md)。

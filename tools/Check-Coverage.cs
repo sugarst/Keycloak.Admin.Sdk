@@ -2,6 +2,7 @@
 #:property TargetFramework=net10.0
 #:property PublishAot=false
 #:include ScriptSupport.cs
+#:include TargetBaseline.cs
 #:project ../src/Keycloak.Admin.Sdk/Keycloak.Admin.Sdk.csproj
 
 using System.Globalization;

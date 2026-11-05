@@ -40,7 +40,7 @@ var users = await sdk.Users.GetUsersAsync("example", first: 0, max: 20);
 
 ## 四个独立维度
 
-[26.8.1 目录](../contracts/capabilities/26.8.1.json) 为全部 520 个方法/路径保存以下属性：
+[26.8.1 目录](../contracts/capabilities.json) 为全部 520 个方法/路径保存以下属性：
 
 | 属性 | 含义 |
 | --- | --- |
@@ -72,9 +72,9 @@ var users = await sdk.Users.GetUsersAsync("example", first: 0, max: 20);
 
 ## 升级与晋升流程
 
-每个新 Keycloak 版本新增独立目录文件，不覆盖 26.8.1。升级时比较发布源码路由、请求/响应、所属功能阶段、服务端 feature 名称/版本及 FGAP 路线；新增项先记录真实实现和验证状态。上游转正式不自动晋升 SDK 支持，必须完成独立单测、真实托管/AOT 验收，再审定支持状态。
+每个 SDK 构建只支持基线声明的一个目标版本，活跃目录是 `contracts/capabilities.json`，通过 `KeycloakCapabilityCatalog.Current` 访问。升级时完整替换该目录，旧版本通过历史 Git tag 和包追溯。升级需比较发布源码路由、请求/响应、功能阶段、服务端 feature 及 FGAP 路线；上游转正式仍需完成独立单测、真实托管/AOT 验收才能晋升 SDK 支持。
 
-当前生成入口为 `dotnet run --file tools/Generate-CapabilityCatalog.cs`，`-- --check` 校验快照一致性，已接入 Verify。生成器明确固定 26.8.1，升级时应新增经过审阅的映射和目录加载登记；不能只改 baseline 版本号便覆盖历史。
+生成入口的 `--check` 核验当前规则一致性，`--seed` 只登记契约验证，`--promote` 依据当前源码的真实验收晋升；规则位于 `contracts/capability-rules.json`，并核验上游源码阶段。完整替换与首次验收流程见 [单基线流程](single-target-workflow.md)。
 
 可选的 `Keycloak.Admin.Sdk.FeatureManagement` 现已实现 `IKeycloakAdminRequestPolicy`：先调用目录策略，再通过 `IVariantFeatureManager` 检查总开关及能力开关，以 AND 组合收紧结果。Application Insights 使用独立可选包，默认关闭；遥测不作为开放判断或业务验收证据。两者仅面向托管宿主，不要求 AOT，不进入核心或本能力包的依赖。配置及范围见 [接入指南](feature-management.md)。
 

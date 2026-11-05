@@ -19,7 +19,7 @@ services:
       retries: 30
 
   postgres:
-    image: postgres:18.0-alpine3.22
+    image: ${POSTGRES_IMAGE:?Run Service.cs to load the pinned baseline}
     pull_policy: missing
     restart: unless-stopped
     environment:
@@ -40,7 +40,7 @@ services:
     stop_grace_period: 30s
 
   keycloak:
-    image: quay.io/keycloak/keycloak:26.8.1
+    image: ${KEYCLOAK_SERVER_IMAGE:?Run Service.cs to load the pinned baseline}
     pull_policy: missing
     restart: unless-stopped
     command: ["start-dev"]
@@ -58,7 +58,7 @@ services:
       KC_FEATURES: ${KEYCLOAK_FEATURES:-admin-fine-grained-authz:v2}
     labels:
       io.keycloak-admin-sdk.route: ${KEYCLOAK_ADMIN_API_ROUTE:-fgap-v2-stable}
-      io.keycloak-admin-sdk.release: "26.8.1"
+      io.keycloak-admin-sdk.release: ${KEYCLOAK_TARGET_VERSION:?Run Service.cs}
     ports:
       - "127.0.0.1:${KEYCLOAK_HTTP_PORT:-18080}:8080"
       - "127.0.0.1:${KEYCLOAK_MANAGEMENT_PORT:-19000}:9000"

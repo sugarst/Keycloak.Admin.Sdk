@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "keycloakVersion": "26.8.1",
+  "rules": [
+    { "pattern": "/ssf/", "featureId": "KeycloakSdk.Ssf", "stage": "Experimental", "serverFeature": "SSF", "sourceType": "EXPERIMENTAL", "routes": ["FgapV2Stable", "FgapV1Compatibility"] },
+    { "pattern": "/vc/", "featureId": "KeycloakSdk.Oid4vcVci", "stage": "Preview", "serverFeature": "OID4VC_VCI", "sourceType": "PREVIEW", "routes": ["FgapV2Stable", "FgapV1Compatibility"] },
+    { "pattern": "/client-types$", "featureId": "KeycloakSdk.ClientTypes", "stage": "Experimental", "serverFeature": "CLIENT_TYPES", "sourceType": "EXPERIMENTAL", "routes": ["FgapV2Stable", "FgapV1Compatibility"] },
+    { "pattern": "/management/permissions$|/users-management-permissions$", "featureId": "KeycloakSdk.FgapV1", "stage": "Deprecated", "serverFeature": "ADMIN_FINE_GRAINED_AUTHZ", "sourceType": "DEPRECATED", "routes": ["FgapV1Compatibility"] },
+    { "pattern": "/authz/", "featureId": "KeycloakSdk.Authorization", "stage": "Stable", "serverFeature": "AUTHORIZATION", "sourceType": "DEFAULT", "routes": ["FgapV2Stable", "FgapV1Compatibility"] },
+    { "pattern": "/organizations", "featureId": "KeycloakSdk.Organizations", "stage": "Stable", "serverFeature": "ORGANIZATION", "sourceType": "DEFAULT", "routes": ["FgapV2Stable", "FgapV1Compatibility"] },
+    { "pattern": "/workflows", "featureId": "KeycloakSdk.Workflows", "stage": "Stable", "serverFeature": "WORKFLOWS", "sourceType": "DEFAULT", "routes": ["FgapV2Stable", "FgapV1Compatibility"] },
+    { "pattern": "/ui-ext", "featureId": "KeycloakSdk.AdminUi", "stage": "Stable", "serverFeature": "ADMIN_V2", "sourceType": "DEFAULT", "routes": ["FgapV2Stable", "FgapV1Compatibility"] },
+    { "pattern": "/client-policies/", "featureId": "KeycloakSdk.ClientPolicies", "stage": "Stable", "serverFeature": "CLIENT_POLICIES", "sourceType": "DEFAULT", "routes": ["FgapV2Stable", "FgapV1Compatibility"] },
+    { "pattern": "/impersonation$", "featureId": "KeycloakSdk.Impersonation", "stage": "Stable", "serverFeature": "IMPERSONATION", "sourceType": "DEFAULT", "routes": ["FgapV2Stable", "FgapV1Compatibility"] },
+    { "pattern": "^/admin/", "featureId": "KeycloakSdk.AdminApi", "stage": "Stable", "serverFeature": "ADMIN_API", "sourceType": "DEFAULT", "routes": ["FgapV2Stable", "FgapV1Compatibility"] }
+  ]
+}

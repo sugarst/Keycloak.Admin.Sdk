@@ -2,6 +2,7 @@
 #:property TargetFramework=net10.0
 #:property PublishAot=false
 #:include ../../tools/ScriptSupport.cs
+#:include ../../tools/TargetBaseline.cs
 #:include ../../tests/Keycloak.Admin.Sdk.IntegrationTests/KeycloakRouteSupport.cs
 
 using System.Diagnostics;
@@ -20,11 +21,18 @@ return await ScriptHost.ExecuteAsync(args,
     if (action == "reset" ? args.Length != 2 || args[1] != "--delete-data" : args.Length > 1 || action == "--delete-data")
         throw new ArgumentException("reset requires --delete-data; other commands accept no extra arguments.");
     string root = ScriptHost.RepositoryRoot();
+    var target = TargetBaseline.Load(root);
+    Environment.SetEnvironmentVariable("KEYCLOAK_SERVER_IMAGE", target.ServerImage);
+    Environment.SetEnvironmentVariable("KEYCLOAK_TARGET_VERSION", target.Version);
+    Environment.SetEnvironmentVariable("POSTGRES_IMAGE", target.PostgresImage);
     string directory = Path.Combine(root, "local/keycloak");
     string envPath = Path.Combine(directory, ".env");
     if (action is "up" or "test" or "test-native" or "test-full" or "test-full-native" or "reset") await InitializeAsync();
     if (!File.Exists(envPath)) throw new FileNotFoundException("Run Service.cs up first to initialize local credentials.");
     var settings = ReadSettings(envPath);
+    string? dataTarget = ReadEnvironmentValue(envPath, "KEYCLOAK_DATA_TARGET_VERSION");
+    if ((action is "up" or "check" || action.StartsWith("test", StringComparison.Ordinal)) && dataTarget is not null && dataTarget != target.Version)
+        throw new InvalidDataException("Local database belongs to target " + dataTarget + "; choose an explicit backup/migration or reset --delete-data before using " + target.Version + ".");
     var route = KeycloakRoute.Load(root, Environment.GetEnvironmentVariable("KEYCLOAK_ADMIN_API_ROUTE") ?? ReadEnvironmentValue(envPath, "KEYCLOAK_ADMIN_API_ROUTE"));
     string declaredFeatures = string.Join(',', route.Features);
     string? manualFeatures = Environment.GetEnvironmentVariable("KEYCLOAK_FEATURES");
@@ -52,6 +60,12 @@ return await ScriptHost.ExecuteAsync(args,
     }
     if (action != "check") await ComposeAsync([.. action.StartsWith("test-full", StringComparison.Ordinal) ? new[] { "--profile", "acceptance" } : [], "up", "--detach", "--wait", "--wait-timeout", "180"]);
     await CheckAsync();
+    if (action is "up" or "reset" || action.StartsWith("test", StringComparison.Ordinal))
+    {
+        var lines = File.ReadAllLines(envPath).Where(l => !l.StartsWith("KEYCLOAK_DATA_TARGET_VERSION=", StringComparison.Ordinal)).ToList();
+        lines.Add("KEYCLOAK_DATA_TARGET_VERSION='" + target.Version + "'");
+        await File.WriteAllTextAsync(envPath, string.Join('\n', lines) + "\n", ct);
+    }
     if (action.StartsWith("test", StringComparison.Ordinal)) await TestAsync(action.EndsWith("native", StringComparison.Ordinal));
 
     async Task InitializeAsync()
@@ -124,15 +138,15 @@ return await ScriptHost.ExecuteAsync(args,
         serverReply.EnsureSuccessStatusCode();
         using var info = JsonDocument.Parse(await serverReply.Content.ReadAsStringAsync(ct));
         string? version = info.RootElement.GetProperty("systemInfo").GetProperty("version").GetString();
-        if (version != "26.8.1") throw new InvalidDataException("Expected actual Keycloak server version 26.8.1, got " + version);
+        if (version != target.Version) throw new InvalidDataException("Expected actual Keycloak server version " + target.Version + ", got " + version);
         route.ValidateServer(info.RootElement);
         var sql = await ComposeAsync(["exec", "-T", "postgres", "psql", "--no-psqlrc", "--username", settings.DbUser, "--dbname", settings.DbName,
             "--tuples-only", "--no-align", "--set", "ON_ERROR_STOP=1", "--command",
             "SELECT current_setting('server_version_num') || '|' || current_setting('data_directory') || '|' || (to_regclass('public.realm') IS NOT NULL)::text;"], capture: true);
         string[] fields = sql.StandardOutput.Trim().Split('|');
-        if (fields.Length != 3 || fields[0] != "180000" || !fields[1].StartsWith("/var/lib/postgresql/18/", StringComparison.Ordinal) || fields[2] != "true")
+        if (fields.Length != 3 || fields[0] != target.PostgresVersionNumber || !fields[1].StartsWith("/var/lib/postgresql/18/", StringComparison.Ordinal) || fields[2] != "true")
             throw new InvalidDataException("Expected PostgreSQL 18.0, versioned PGDATA and an initialized Keycloak realm table.");
-        Console.WriteLine("PASS: Keycloak 26.8.1 ready; PostgreSQL 18.0 and persisted Keycloak schema verified; admin login and Admin API succeeded.");
+        Console.WriteLine($"PASS: Keycloak {target.Version} ready; PostgreSQL {target.PostgresVersionNumber} and persisted Keycloak schema verified; admin login and Admin API succeeded.");
         Console.WriteLine($"Admin console: {settings.Server}admin/  (user: {settings.Admin}; password: local/keycloak/.env)");
         Console.WriteLine($"Readiness: {settings.Health}");
     }
@@ -159,7 +173,7 @@ return await ScriptHost.ExecuteAsync(args,
             await ScriptHost.RunCheckedAsync(root, "dotnet", ["run", "--project", "tests/Keycloak.Admin.Sdk.IntegrationTests", "-c", "Release"], ct, environment: environment);
             return;
         }
-        await ScriptHost.RunCheckedAsync(root, "docker", ["build", "-f", "tests/Keycloak.Admin.Sdk.AotSmoke/Dockerfile", "--target", "integration-export",
+        await ScriptHost.RunCheckedAsync(root, "docker", ["build", .. target.DockerBuildArgs, "-f", "tests/Keycloak.Admin.Sdk.AotSmoke/Dockerfile", "--target", "integration-export",
             "--output", "type=local,dest=artifacts/aot/integration", "."], ct);
         var server = await ComposeAsync(["ps", "--quiet", "keycloak"], capture: true);
         string container = "keycloak-sdk-local-test-" + Guid.NewGuid().ToString("N");
@@ -172,8 +186,8 @@ return await ScriptHost.ExecuteAsync(args,
         try
         {
             await ScriptHost.RunCheckedAsync(root, "docker", ["run", "--rm", "--name", container, "--network", "container:" + server.StandardOutput.Trim(),
-                "-v", root + ":/workspace", "-w", "/workspace", "-e", "KC_TEST_URL", "-e", "KC_TEST_USERNAME", "-e", "KC_TEST_PASSWORD", "-e", "KC_TEST_CALLBACK_HOST", "-e", "KC_TEST_FULL_ADMIN", "-e", "KEYCLOAK_ADMIN_API_ROUTE", "-e", "KC_TEST_LDAP_HOST", "-e", "KC_TEST_LDAP_PORT", "-e", "KC_TEST_LDAP_PASSWORD", "-e", "KC_TEST_PG_HOST", "-e", "KC_TEST_PG_PORT", "-e", "KC_TEST_PG_USER", "-e", "KC_TEST_PG_DATABASE", "-e", "KC_TEST_PG_PASSWORD",
-                "mcr.microsoft.com/dotnet/aspnet:10.0.14-alpine3.24", "/workspace/artifacts/aot/integration/Keycloak.Admin.Sdk.IntegrationTests"], ct, environment: environment);
+                "-v", root + ":/workspace", "-w", "/workspace", "-e", "KC_TEST_RELEASE_BOOTSTRAP", "-e", "KC_TEST_URL", "-e", "KC_TEST_USERNAME", "-e", "KC_TEST_PASSWORD", "-e", "KC_TEST_CALLBACK_HOST", "-e", "KC_TEST_FULL_ADMIN", "-e", "KEYCLOAK_ADMIN_API_ROUTE", "-e", "KC_TEST_LDAP_HOST", "-e", "KC_TEST_LDAP_PORT", "-e", "KC_TEST_LDAP_PASSWORD", "-e", "KC_TEST_PG_HOST", "-e", "KC_TEST_PG_PORT", "-e", "KC_TEST_PG_USER", "-e", "KC_TEST_PG_DATABASE", "-e", "KC_TEST_PG_PASSWORD",
+                target.NativeRuntimeImage, "/workspace/artifacts/aot/integration/Keycloak.Admin.Sdk.IntegrationTests"], ct, environment: environment);
         }
         finally
         {

@@ -4,6 +4,8 @@ using System.Text.Json;
 using System.Text.RegularExpressions;
 using Keycloak.Admin.Sdk;
 
+if (args is ["--fingerprint"]) { Console.WriteLine(LiveEvidence.Fingerprint(Directory.GetCurrentDirectory())); return; }
+
 var server = new Uri(Environment.GetEnvironmentVariable("KC_TEST_URL") ?? throw new InvalidOperationException("KC_TEST_URL is required. Run dotnet run --file tools/Test-Integration.cs."));
 string password = Environment.GetEnvironmentVariable("KC_TEST_PASSWORD") ?? throw new InvalidOperationException("KC_TEST_PASSWORD is required. Run dotnet run --file tools/Test-Integration.cs.");
 using var handler = new RecordingHandler(new SocketsHttpHandler { AllowAutoRedirect = false });
@@ -127,7 +129,7 @@ try
 finally { await sdk.RealmAdmin.DeleteRealmAsync(realm); }
 Directory.CreateDirectory("artifacts");
 await File.WriteAllLinesAsync("artifacts/live-endpoints.tsv", handler.Results.Order());
-Console.WriteLine($"PASS: isolated Keycloak 26.8.1 CRUD, credentials, membership, authorization scopes, organizations and permission boundaries; {handler.Results.Count} HTTP method/path/status observations. Realm cleaned up.");
+Console.WriteLine($"PASS: isolated Keycloak {KeycloakTarget.Version} CRUD, credentials, membership, authorization scopes, organizations and permission boundaries; {handler.Results.Count} HTTP method/path/status observations. Realm cleaned up.");
 
 static void Check(bool condition, string message) { if (!condition) throw new Exception(message); }
 static string LastId(AdminResponse response) => Uri.UnescapeDataString(response.Location!.OriginalString.TrimEnd('/').Split('/').Last());

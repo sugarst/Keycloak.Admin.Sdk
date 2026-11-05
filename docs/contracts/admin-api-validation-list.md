@@ -1,22 +1,20 @@
 # Keycloak 26.8.1 已落地接口与验证清单
 
-计数单位：HTTP 方法 + 路径模板，共 520 项（官方 OpenAPI 415 项、发布源码补充 105 项）。每项均有 SDK 方法和独立契约单测。
-
-本表整理已有验收证据，不代表本次重新执行全部容器测试。真实验收环境为 Keycloak 26.8.1 + PostgreSQL 18.0，.NET SDK 10.0.403，Native AOT 目标 linux-musl-x64。
+计数单位：HTTP 方法 + 路径模板，共 520 项。SDK 10.0.403；Native AOT linux-musl-x64。仅声明当前目标版本。
 
 | 路线 | 托管已验证 | AOT 已验证 | 未完成 | 政策排除 |
 | --- | --- | --- | --- | --- |
-| v2 正式（默认） | 478 | 478 | 0 | 42 |
-| v1 兼容（显式启用） | 492 | 492 | 0 | 28 |
+| v2 正式 | 478 | 478 | 0 | 42 |
+| v1 兼容 | 492 | 492 | 0 | 28 |
 
-两条路线的已验证集合有重叠：合计 492 个不同接口已有真实业务验证；28 个接口没有真实容器验收。v2 的 42 项排除 = 28 项预览/实验 + 14 项仅供 v1 兼容的接口。排除不能记为通过。
+排除项不计入成功，具体原因逐项列明。
 
 ## 实跑时间（北京时间）
 
-- `fgap-v2-stable` / `managed`：2026-11-05 12:06:48（UTC+08:00）
-- `fgap-v2-stable` / `native-aot`：2026-11-05 12:07:12（UTC+08:00）
-- `fgap-v1-compat` / `managed`：2026-11-05 12:05:05（UTC+08:00）
-- `fgap-v1-compat` / `native-aot`：2026-11-05 12:06:00（UTC+08:00）
+- `fgap-v2-stable` / `managed`：2026-11-05 13:34:25（UTC+08:00）
+- `fgap-v2-stable` / `native-aot`：2026-11-05 13:34:51（UTC+08:00）
+- `fgap-v1-compat` / `managed`：2026-11-05 13:33:15（UTC+08:00）
+- `fgap-v1-compat` / `native-aot`：2026-11-05 13:33:40（UTC+08:00）
 
 ## 没有真实容器验收的 28 项
 
@@ -24,34 +22,34 @@
 
 | 方法 | 路径 | 未验证原因 |
 | --- | --- | --- |
-| GET | `/client-types` | Client Types：26.8.1 为 EXPERIMENTAL，按要求不做真实验收 |
-| PUT | `/client-types` | Client Types：26.8.1 为 EXPERIMENTAL，按要求不做真实验收 |
-| DELETE | `/ssf/clients/{clientId}/events` | SSF：26.8.1 为 EXPERIMENTAL，按要求不做真实验收 |
-| POST | `/ssf/clients/{clientId}/events/emit` | SSF：26.8.1 为 EXPERIMENTAL，按要求不做真实验收 |
-| DELETE | `/ssf/clients/{clientId}/events/queued` | SSF：26.8.1 为 EXPERIMENTAL，按要求不做真实验收 |
-| GET | `/ssf/clients/{clientId}/events/stats` | SSF：26.8.1 为 EXPERIMENTAL，按要求不做真实验收 |
-| GET | `/ssf/clients/{clientId}/pending-events/{jti}` | SSF：26.8.1 为 EXPERIMENTAL，按要求不做真实验收 |
-| DELETE | `/ssf/clients/{clientId}/stream` | SSF：26.8.1 为 EXPERIMENTAL，按要求不做真实验收 |
-| GET | `/ssf/clients/{clientId}/stream` | SSF：26.8.1 为 EXPERIMENTAL，按要求不做真实验收 |
-| PATCH | `/ssf/clients/{clientId}/stream` | SSF：26.8.1 为 EXPERIMENTAL，按要求不做真实验收 |
-| POST | `/ssf/clients/{clientId}/stream` | SSF：26.8.1 为 EXPERIMENTAL，按要求不做真实验收 |
-| POST | `/ssf/clients/{clientId}/stream/status` | SSF：26.8.1 为 EXPERIMENTAL，按要求不做真实验收 |
-| POST | `/ssf/clients/{clientId}/stream/verify` | SSF：26.8.1 为 EXPERIMENTAL，按要求不做真实验收 |
-| POST | `/ssf/clients/{clientId}/subjects/add` | SSF：26.8.1 为 EXPERIMENTAL，按要求不做真实验收 |
-| POST | `/ssf/clients/{clientId}/subjects/check` | SSF：26.8.1 为 EXPERIMENTAL，按要求不做真实验收 |
-| POST | `/ssf/clients/{clientId}/subjects/ignore` | SSF：26.8.1 为 EXPERIMENTAL，按要求不做真实验收 |
-| POST | `/ssf/clients/{clientId}/subjects/remove` | SSF：26.8.1 为 EXPERIMENTAL，按要求不做真实验收 |
-| GET | `/ssf/config` | SSF：26.8.1 为 EXPERIMENTAL，按要求不做真实验收 |
-| DELETE | `/ssf/events` | SSF：26.8.1 为 EXPERIMENTAL，按要求不做真实验收 |
-| DELETE | `/ssf/events/queued` | SSF：26.8.1 为 EXPERIMENTAL，按要求不做真实验收 |
-| GET | `/ssf/events/stats` | SSF：26.8.1 为 EXPERIMENTAL，按要求不做真实验收 |
-| GET | `/users/{user-id}/vc/credentials` | OID4VC：26.8.1 为 PREVIEW，按要求不做真实验收 |
-| POST | `/users/{user-id}/vc/credentials` | OID4VC：26.8.1 为 PREVIEW，按要求不做真实验收 |
-| PUT | `/users/{user-id}/vc/credentials/send-credential-offer` | OID4VC：26.8.1 为 PREVIEW，按要求不做真实验收 |
-| DELETE | `/users/{user-id}/vc/credentials/{credentialScopeName}` | OID4VC：26.8.1 为 PREVIEW，按要求不做真实验收 |
-| PUT | `/users/{user-id}/vc/credentials/{credentialScopeName}` | OID4VC：26.8.1 为 PREVIEW，按要求不做真实验收 |
-| GET | `/users/{user-id}/vc/issued-credentials` | OID4VC：26.8.1 为 PREVIEW，按要求不做真实验收 |
-| DELETE | `/users/{user-id}/vc/issued-credentials/{id}` | OID4VC：26.8.1 为 PREVIEW，按要求不做真实验收 |
+| GET | `/client-types` | client-types (EXPERIMENTAL; excluded by release support policy) |
+| PUT | `/client-types` | client-types (EXPERIMENTAL; excluded by release support policy) |
+| DELETE | `/ssf/clients/{clientId}/events` | ssf (EXPERIMENTAL; excluded by release support policy) |
+| POST | `/ssf/clients/{clientId}/events/emit` | ssf (EXPERIMENTAL; excluded by release support policy) |
+| DELETE | `/ssf/clients/{clientId}/events/queued` | ssf (EXPERIMENTAL; excluded by release support policy) |
+| GET | `/ssf/clients/{clientId}/events/stats` | ssf (EXPERIMENTAL; excluded by release support policy) |
+| GET | `/ssf/clients/{clientId}/pending-events/{jti}` | ssf (EXPERIMENTAL; excluded by release support policy) |
+| DELETE | `/ssf/clients/{clientId}/stream` | ssf (EXPERIMENTAL; excluded by release support policy) |
+| GET | `/ssf/clients/{clientId}/stream` | ssf (EXPERIMENTAL; excluded by release support policy) |
+| PATCH | `/ssf/clients/{clientId}/stream` | ssf (EXPERIMENTAL; excluded by release support policy) |
+| POST | `/ssf/clients/{clientId}/stream` | ssf (EXPERIMENTAL; excluded by release support policy) |
+| POST | `/ssf/clients/{clientId}/stream/status` | ssf (EXPERIMENTAL; excluded by release support policy) |
+| POST | `/ssf/clients/{clientId}/stream/verify` | ssf (EXPERIMENTAL; excluded by release support policy) |
+| POST | `/ssf/clients/{clientId}/subjects/add` | ssf (EXPERIMENTAL; excluded by release support policy) |
+| POST | `/ssf/clients/{clientId}/subjects/check` | ssf (EXPERIMENTAL; excluded by release support policy) |
+| POST | `/ssf/clients/{clientId}/subjects/ignore` | ssf (EXPERIMENTAL; excluded by release support policy) |
+| POST | `/ssf/clients/{clientId}/subjects/remove` | ssf (EXPERIMENTAL; excluded by release support policy) |
+| GET | `/ssf/config` | ssf (EXPERIMENTAL; excluded by release support policy) |
+| DELETE | `/ssf/events` | ssf (EXPERIMENTAL; excluded by release support policy) |
+| DELETE | `/ssf/events/queued` | ssf (EXPERIMENTAL; excluded by release support policy) |
+| GET | `/ssf/events/stats` | ssf (EXPERIMENTAL; excluded by release support policy) |
+| GET | `/users/{user-id}/vc/credentials` | oid4vc-vci (PREVIEW; excluded by release support policy) |
+| POST | `/users/{user-id}/vc/credentials` | oid4vc-vci (PREVIEW; excluded by release support policy) |
+| PUT | `/users/{user-id}/vc/credentials/send-credential-offer` | oid4vc-vci (PREVIEW; excluded by release support policy) |
+| DELETE | `/users/{user-id}/vc/credentials/{credentialScopeName}` | oid4vc-vci (PREVIEW; excluded by release support policy) |
+| PUT | `/users/{user-id}/vc/credentials/{credentialScopeName}` | oid4vc-vci (PREVIEW; excluded by release support policy) |
+| GET | `/users/{user-id}/vc/issued-credentials` | oid4vc-vci (PREVIEW; excluded by release support policy) |
+| DELETE | `/users/{user-id}/vc/issued-credentials/{id}` | oid4vc-vci (PREVIEW; excluded by release support policy) |
 
 ## 仅在 v1 兼容路线验证的 14 项
 
@@ -285,8 +283,8 @@
 
 | 方法 | 完整路径 | SDK 方法 | v2 托管 | v2 AOT | v1 托管 | v1 AOT | 业务证明或排除原因 |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| GET | `/admin/realms/{realm}/client-types` | `ClientTypes.GetClientTypesAsync` | 政策排除 | 政策排除 | 政策排除 | 政策排除 | Client Types：26.8.1 为 EXPERIMENTAL，按要求不做真实验收 |
-| PUT | `/admin/realms/{realm}/client-types` | `ClientTypes.UpdateClientTypesAsync` | 政策排除 | 政策排除 | 政策排除 | 政策排除 | Client Types：26.8.1 为 EXPERIMENTAL，按要求不做真实验收 |
+| GET | `/admin/realms/{realm}/client-types` | `ClientTypes.GetClientTypesAsync` | 政策排除 | 政策排除 | 政策排除 | 政策排除 | client-types (EXPERIMENTAL; excluded by release support policy) |
+| PUT | `/admin/realms/{realm}/client-types` | `ClientTypes.UpdateClientTypesAsync` | 政策排除 | 政策排除 | 政策排除 | 政策排除 | client-types (EXPERIMENTAL; excluded by release support policy) |
 
 ### Clients（2 项）
 
@@ -736,25 +734,25 @@
 
 | 方法 | 完整路径 | SDK 方法 | v2 托管 | v2 AOT | v1 托管 | v1 AOT | 业务证明或排除原因 |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| DELETE | `/admin/realms/{realm}/ssf/clients/{clientId}/events` | `SsfAdmin.DeleteClientEventsAsync` | 政策排除 | 政策排除 | 政策排除 | 政策排除 | SSF：26.8.1 为 EXPERIMENTAL，按要求不做真实验收 |
-| POST | `/admin/realms/{realm}/ssf/clients/{clientId}/events/emit` | `SsfAdmin.EmitEventAsync` | 政策排除 | 政策排除 | 政策排除 | 政策排除 | SSF：26.8.1 为 EXPERIMENTAL，按要求不做真实验收 |
-| DELETE | `/admin/realms/{realm}/ssf/clients/{clientId}/events/queued` | `SsfAdmin.DeleteClientQueuedEventsAsync` | 政策排除 | 政策排除 | 政策排除 | 政策排除 | SSF：26.8.1 为 EXPERIMENTAL，按要求不做真实验收 |
-| GET | `/admin/realms/{realm}/ssf/clients/{clientId}/events/stats` | `SsfAdmin.GetClientEventStatsAsync` | 政策排除 | 政策排除 | 政策排除 | 政策排除 | SSF：26.8.1 为 EXPERIMENTAL，按要求不做真实验收 |
-| GET | `/admin/realms/{realm}/ssf/clients/{clientId}/pending-events/{jti}` | `SsfAdmin.GetPendingEventAsync` | 政策排除 | 政策排除 | 政策排除 | 政策排除 | SSF：26.8.1 为 EXPERIMENTAL，按要求不做真实验收 |
-| DELETE | `/admin/realms/{realm}/ssf/clients/{clientId}/stream` | `SsfAdmin.DeleteClientStreamAsync` | 政策排除 | 政策排除 | 政策排除 | 政策排除 | SSF：26.8.1 为 EXPERIMENTAL，按要求不做真实验收 |
-| GET | `/admin/realms/{realm}/ssf/clients/{clientId}/stream` | `SsfAdmin.GetClientStreamAsync` | 政策排除 | 政策排除 | 政策排除 | 政策排除 | SSF：26.8.1 为 EXPERIMENTAL，按要求不做真实验收 |
-| PATCH | `/admin/realms/{realm}/ssf/clients/{clientId}/stream` | `SsfAdmin.UpdateClientStreamAsync` | 政策排除 | 政策排除 | 政策排除 | 政策排除 | SSF：26.8.1 为 EXPERIMENTAL，按要求不做真实验收 |
-| POST | `/admin/realms/{realm}/ssf/clients/{clientId}/stream` | `SsfAdmin.CreateClientStreamAsync` | 政策排除 | 政策排除 | 政策排除 | 政策排除 | SSF：26.8.1 为 EXPERIMENTAL，按要求不做真实验收 |
-| POST | `/admin/realms/{realm}/ssf/clients/{clientId}/stream/status` | `SsfAdmin.UpdateClientStreamStatusAsync` | 政策排除 | 政策排除 | 政策排除 | 政策排除 | SSF：26.8.1 为 EXPERIMENTAL，按要求不做真实验收 |
-| POST | `/admin/realms/{realm}/ssf/clients/{clientId}/stream/verify` | `SsfAdmin.VerifyClientStreamAsync` | 政策排除 | 政策排除 | 政策排除 | 政策排除 | SSF：26.8.1 为 EXPERIMENTAL，按要求不做真实验收 |
-| POST | `/admin/realms/{realm}/ssf/clients/{clientId}/subjects/add` | `SsfAdmin.AddSubjectAsync` | 政策排除 | 政策排除 | 政策排除 | 政策排除 | SSF：26.8.1 为 EXPERIMENTAL，按要求不做真实验收 |
-| POST | `/admin/realms/{realm}/ssf/clients/{clientId}/subjects/check` | `SsfAdmin.CheckSubjectAsync` | 政策排除 | 政策排除 | 政策排除 | 政策排除 | SSF：26.8.1 为 EXPERIMENTAL，按要求不做真实验收 |
-| POST | `/admin/realms/{realm}/ssf/clients/{clientId}/subjects/ignore` | `SsfAdmin.IgnoreSubjectAsync` | 政策排除 | 政策排除 | 政策排除 | 政策排除 | SSF：26.8.1 为 EXPERIMENTAL，按要求不做真实验收 |
-| POST | `/admin/realms/{realm}/ssf/clients/{clientId}/subjects/remove` | `SsfAdmin.RemoveSubjectAsync` | 政策排除 | 政策排除 | 政策排除 | 政策排除 | SSF：26.8.1 为 EXPERIMENTAL，按要求不做真实验收 |
-| GET | `/admin/realms/{realm}/ssf/config` | `SsfAdmin.GetConfigAsync` | 政策排除 | 政策排除 | 政策排除 | 政策排除 | SSF：26.8.1 为 EXPERIMENTAL，按要求不做真实验收 |
-| DELETE | `/admin/realms/{realm}/ssf/events` | `SsfAdmin.DeleteEventsAsync` | 政策排除 | 政策排除 | 政策排除 | 政策排除 | SSF：26.8.1 为 EXPERIMENTAL，按要求不做真实验收 |
-| DELETE | `/admin/realms/{realm}/ssf/events/queued` | `SsfAdmin.DeleteQueuedEventsAsync` | 政策排除 | 政策排除 | 政策排除 | 政策排除 | SSF：26.8.1 为 EXPERIMENTAL，按要求不做真实验收 |
-| GET | `/admin/realms/{realm}/ssf/events/stats` | `SsfAdmin.GetEventStatsAsync` | 政策排除 | 政策排除 | 政策排除 | 政策排除 | SSF：26.8.1 为 EXPERIMENTAL，按要求不做真实验收 |
+| DELETE | `/admin/realms/{realm}/ssf/clients/{clientId}/events` | `SsfAdmin.DeleteClientEventsAsync` | 政策排除 | 政策排除 | 政策排除 | 政策排除 | ssf (EXPERIMENTAL; excluded by release support policy) |
+| POST | `/admin/realms/{realm}/ssf/clients/{clientId}/events/emit` | `SsfAdmin.EmitEventAsync` | 政策排除 | 政策排除 | 政策排除 | 政策排除 | ssf (EXPERIMENTAL; excluded by release support policy) |
+| DELETE | `/admin/realms/{realm}/ssf/clients/{clientId}/events/queued` | `SsfAdmin.DeleteClientQueuedEventsAsync` | 政策排除 | 政策排除 | 政策排除 | 政策排除 | ssf (EXPERIMENTAL; excluded by release support policy) |
+| GET | `/admin/realms/{realm}/ssf/clients/{clientId}/events/stats` | `SsfAdmin.GetClientEventStatsAsync` | 政策排除 | 政策排除 | 政策排除 | 政策排除 | ssf (EXPERIMENTAL; excluded by release support policy) |
+| GET | `/admin/realms/{realm}/ssf/clients/{clientId}/pending-events/{jti}` | `SsfAdmin.GetPendingEventAsync` | 政策排除 | 政策排除 | 政策排除 | 政策排除 | ssf (EXPERIMENTAL; excluded by release support policy) |
+| DELETE | `/admin/realms/{realm}/ssf/clients/{clientId}/stream` | `SsfAdmin.DeleteClientStreamAsync` | 政策排除 | 政策排除 | 政策排除 | 政策排除 | ssf (EXPERIMENTAL; excluded by release support policy) |
+| GET | `/admin/realms/{realm}/ssf/clients/{clientId}/stream` | `SsfAdmin.GetClientStreamAsync` | 政策排除 | 政策排除 | 政策排除 | 政策排除 | ssf (EXPERIMENTAL; excluded by release support policy) |
+| PATCH | `/admin/realms/{realm}/ssf/clients/{clientId}/stream` | `SsfAdmin.UpdateClientStreamAsync` | 政策排除 | 政策排除 | 政策排除 | 政策排除 | ssf (EXPERIMENTAL; excluded by release support policy) |
+| POST | `/admin/realms/{realm}/ssf/clients/{clientId}/stream` | `SsfAdmin.CreateClientStreamAsync` | 政策排除 | 政策排除 | 政策排除 | 政策排除 | ssf (EXPERIMENTAL; excluded by release support policy) |
+| POST | `/admin/realms/{realm}/ssf/clients/{clientId}/stream/status` | `SsfAdmin.UpdateClientStreamStatusAsync` | 政策排除 | 政策排除 | 政策排除 | 政策排除 | ssf (EXPERIMENTAL; excluded by release support policy) |
+| POST | `/admin/realms/{realm}/ssf/clients/{clientId}/stream/verify` | `SsfAdmin.VerifyClientStreamAsync` | 政策排除 | 政策排除 | 政策排除 | 政策排除 | ssf (EXPERIMENTAL; excluded by release support policy) |
+| POST | `/admin/realms/{realm}/ssf/clients/{clientId}/subjects/add` | `SsfAdmin.AddSubjectAsync` | 政策排除 | 政策排除 | 政策排除 | 政策排除 | ssf (EXPERIMENTAL; excluded by release support policy) |
+| POST | `/admin/realms/{realm}/ssf/clients/{clientId}/subjects/check` | `SsfAdmin.CheckSubjectAsync` | 政策排除 | 政策排除 | 政策排除 | 政策排除 | ssf (EXPERIMENTAL; excluded by release support policy) |
+| POST | `/admin/realms/{realm}/ssf/clients/{clientId}/subjects/ignore` | `SsfAdmin.IgnoreSubjectAsync` | 政策排除 | 政策排除 | 政策排除 | 政策排除 | ssf (EXPERIMENTAL; excluded by release support policy) |
+| POST | `/admin/realms/{realm}/ssf/clients/{clientId}/subjects/remove` | `SsfAdmin.RemoveSubjectAsync` | 政策排除 | 政策排除 | 政策排除 | 政策排除 | ssf (EXPERIMENTAL; excluded by release support policy) |
+| GET | `/admin/realms/{realm}/ssf/config` | `SsfAdmin.GetConfigAsync` | 政策排除 | 政策排除 | 政策排除 | 政策排除 | ssf (EXPERIMENTAL; excluded by release support policy) |
+| DELETE | `/admin/realms/{realm}/ssf/events` | `SsfAdmin.DeleteEventsAsync` | 政策排除 | 政策排除 | 政策排除 | 政策排除 | ssf (EXPERIMENTAL; excluded by release support policy) |
+| DELETE | `/admin/realms/{realm}/ssf/events/queued` | `SsfAdmin.DeleteQueuedEventsAsync` | 政策排除 | 政策排除 | 政策排除 | 政策排除 | ssf (EXPERIMENTAL; excluded by release support policy) |
+| GET | `/admin/realms/{realm}/ssf/events/stats` | `SsfAdmin.GetEventStatsAsync` | 政策排除 | 政策排除 | 政策排除 | 政策排除 | ssf (EXPERIMENTAL; excluded by release support policy) |
 
 ### TestLdapConnection（1 项）
 
@@ -903,13 +901,13 @@
 
 | 方法 | 完整路径 | SDK 方法 | v2 托管 | v2 AOT | v1 托管 | v1 AOT | 业务证明或排除原因 |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| GET | `/admin/realms/{realm}/users/{user-id}/vc/credentials` | `UserVerifiableCredential.GetCredentialsAsync` | 政策排除 | 政策排除 | 政策排除 | 政策排除 | OID4VC：26.8.1 为 PREVIEW，按要求不做真实验收 |
-| POST | `/admin/realms/{realm}/users/{user-id}/vc/credentials` | `UserVerifiableCredential.CreateCredentialAsync` | 政策排除 | 政策排除 | 政策排除 | 政策排除 | OID4VC：26.8.1 为 PREVIEW，按要求不做真实验收 |
-| PUT | `/admin/realms/{realm}/users/{user-id}/vc/credentials/send-credential-offer` | `UserVerifiableCredential.SendCredentialOfferAsync` | 政策排除 | 政策排除 | 政策排除 | 政策排除 | OID4VC：26.8.1 为 PREVIEW，按要求不做真实验收 |
-| DELETE | `/admin/realms/{realm}/users/{user-id}/vc/credentials/{credentialScopeName}` | `UserVerifiableCredential.RevokeCredentialAsync` | 政策排除 | 政策排除 | 政策排除 | 政策排除 | OID4VC：26.8.1 为 PREVIEW，按要求不做真实验收 |
-| PUT | `/admin/realms/{realm}/users/{user-id}/vc/credentials/{credentialScopeName}` | `UserVerifiableCredential.UpdateCredentialAsync` | 政策排除 | 政策排除 | 政策排除 | 政策排除 | OID4VC：26.8.1 为 PREVIEW，按要求不做真实验收 |
-| GET | `/admin/realms/{realm}/users/{user-id}/vc/issued-credentials` | `UserVerifiableCredential.GetIssuedCredentialsAsync` | 政策排除 | 政策排除 | 政策排除 | 政策排除 | OID4VC：26.8.1 为 PREVIEW，按要求不做真实验收 |
-| DELETE | `/admin/realms/{realm}/users/{user-id}/vc/issued-credentials/{id}` | `UserVerifiableCredential.RevokeIssuedCredentialAsync` | 政策排除 | 政策排除 | 政策排除 | 政策排除 | OID4VC：26.8.1 为 PREVIEW，按要求不做真实验收 |
+| GET | `/admin/realms/{realm}/users/{user-id}/vc/credentials` | `UserVerifiableCredential.GetCredentialsAsync` | 政策排除 | 政策排除 | 政策排除 | 政策排除 | oid4vc-vci (PREVIEW; excluded by release support policy) |
+| POST | `/admin/realms/{realm}/users/{user-id}/vc/credentials` | `UserVerifiableCredential.CreateCredentialAsync` | 政策排除 | 政策排除 | 政策排除 | 政策排除 | oid4vc-vci (PREVIEW; excluded by release support policy) |
+| PUT | `/admin/realms/{realm}/users/{user-id}/vc/credentials/send-credential-offer` | `UserVerifiableCredential.SendCredentialOfferAsync` | 政策排除 | 政策排除 | 政策排除 | 政策排除 | oid4vc-vci (PREVIEW; excluded by release support policy) |
+| DELETE | `/admin/realms/{realm}/users/{user-id}/vc/credentials/{credentialScopeName}` | `UserVerifiableCredential.RevokeCredentialAsync` | 政策排除 | 政策排除 | 政策排除 | 政策排除 | oid4vc-vci (PREVIEW; excluded by release support policy) |
+| PUT | `/admin/realms/{realm}/users/{user-id}/vc/credentials/{credentialScopeName}` | `UserVerifiableCredential.UpdateCredentialAsync` | 政策排除 | 政策排除 | 政策排除 | 政策排除 | oid4vc-vci (PREVIEW; excluded by release support policy) |
+| GET | `/admin/realms/{realm}/users/{user-id}/vc/issued-credentials` | `UserVerifiableCredential.GetIssuedCredentialsAsync` | 政策排除 | 政策排除 | 政策排除 | 政策排除 | oid4vc-vci (PREVIEW; excluded by release support policy) |
+| DELETE | `/admin/realms/{realm}/users/{user-id}/vc/issued-credentials/{id}` | `UserVerifiableCredential.RevokeIssuedCredentialAsync` | 政策排除 | 政策排除 | 政策排除 | 政策排除 | oid4vc-vci (PREVIEW; excluded by release support policy) |
 
 ### Users（3 项）
 

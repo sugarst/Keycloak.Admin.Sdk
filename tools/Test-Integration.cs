@@ -2,6 +2,7 @@
 #:property TargetFramework=net10.0
 #:property PublishAot=false
 #:include ScriptSupport.cs
+#:include TargetBaseline.cs
 
 using System.Diagnostics;
 using System.Globalization;
@@ -16,7 +17,7 @@ return await ScriptHost.ExecuteAsync(args,
     bool skipBuild = args.Contains("--no-build-native");
     if (skipBuild && !native) throw new ArgumentException("--no-build-native requires --native-aot.");
     if (native && !skipBuild)
-        await ScriptHost.RunCheckedAsync(root, "docker", ["build", "-f", "tests/Keycloak.Admin.Sdk.AotSmoke/Dockerfile", "--target", "integration-export",
+        await ScriptHost.RunCheckedAsync(root, "docker", ["build", .. TargetBaseline.Load(root).DockerBuildArgs, "-f", "tests/Keycloak.Admin.Sdk.AotSmoke/Dockerfile", "--target", "integration-export",
             "--output", "type=local,dest=artifacts/aot/integration", "."], ct);
     if (native && !File.Exists(Path.Combine(root, "artifacts/aot/integration/Keycloak.Admin.Sdk.IntegrationTests")))
         throw new FileNotFoundException("Build the Native AOT integration executable before using --no-build-native.");
@@ -33,7 +34,7 @@ return await ScriptHost.ExecuteAsync(args,
     using (var localImage = JsonDocument.Parse(inspected.StandardOutput))
     {
         if (!localImage.RootElement.GetProperty("RepoDigests").EnumerateArray().Any(d => d.GetString() == image))
-            throw new InvalidDataException("The local Keycloak tag does not match the pinned 26.8.1 image digest.");
+            throw new InvalidDataException("The local Keycloak tag does not match the target image digest.");
         image = localImage.RootElement.GetProperty("Id").GetString()!;
     }
     Console.WriteLine($"Using verified local image {tag} ({image}).");
@@ -87,7 +88,7 @@ return await ScriptHost.ExecuteAsync(args,
             attemptedNative = true;
             await ScriptHost.RunCheckedAsync(root, "docker", ["run", "--rm", "--name", nativeContainer, "--network", "container:" + container,
                 "-v", root + ":/workspace", "-w", "/workspace", "-e", "KC_TEST_PASSWORD", "-e", "KC_TEST_URL", "-e", "KC_TEST_CALLBACK_HOST",
-                "mcr.microsoft.com/dotnet/aspnet:10.0.14-alpine3.24", "/workspace/artifacts/aot/integration/Keycloak.Admin.Sdk.IntegrationTests"], ct, environment: testEnvironment);
+                TargetBaseline.Load(root).NativeRuntimeImage, "/workspace/artifacts/aot/integration/Keycloak.Admin.Sdk.IntegrationTests"], ct, environment: testEnvironment);
         }
         else
             await ScriptHost.RunCheckedAsync(root, "dotnet", ["run", "--project", "tests/Keycloak.Admin.Sdk.IntegrationTests", "-c", "Release"], ct, environment: testEnvironment);

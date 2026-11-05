@@ -2,7 +2,6 @@
   <PropertyGroup>
     <IsAotCompatible>true</IsAotCompatible>
     <PackageId>Keycloak.Admin.Sdk.DependencyInjection</PackageId>
-    <Version>0.1.0-preview.1</Version>
     <Description>Optional dependency injection and HttpClientFactory integration for Keycloak.Admin.Sdk.</Description>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>

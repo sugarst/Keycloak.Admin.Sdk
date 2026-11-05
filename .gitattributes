@@ -2,3 +2,5 @@
 # Trailing tabs in TSV files preserve intentionally empty columns.
 *.tsv whitespace=-blank-at-eol
 *.nupkg binary
+# Preserve the byte-exact upstream snapshot used by the baseline SHA256 check.
+contracts/openapi.json -text

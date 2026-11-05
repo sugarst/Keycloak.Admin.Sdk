@@ -52,7 +52,7 @@ dotnet test tests/Keycloak.Admin.Sdk.Tests -c Release --logger 'trx;LogFileName=
 
 本次在真实 Keycloak 26.8.1 + PostgreSQL 18.0 上通过 v2 正式路线 478/478、v1 兼容路线 492/492，托管及 Native AOT 均通过。LDAP 使用真实 OpenLDAP；SMTP、元数据/JWKS、X509/CRL、OIDC 登录/同意和 PostgreSQL/SCRAM 全部实际通信。缓存验证观察外部数据变更、密钥轮换和证书吊销后的结果，不以空 204 响应作为全部证明。结果见 [逐接口业务矩阵](contracts/full-live-acceptance.md)。
 
-`Check-FullAcceptance.cs` 校验当前源码指纹、实际路线/版本、完整且唯一的成功记录和非空业务证明。`Test-AcceptanceGate.cs` 在独立 artifacts 副本上注入十二类缺陷，确认门禁拒绝缺失、重复、失败响应、空证明、额外操作、过期代码、未完成、错误执行方式、错误排除清单、缺失 FGAP 撤销证据、缺失本地支持策略拦截证明和缺失托管 FeatureManagement 业务证明；原始实测证据保留。CI 对两条声明路线分别执行真实 PostgreSQL 托管/AOT 场景及这些负向控制。
+`Check-FullAcceptance.cs` 校验当前源码指纹、实际路线/版本、完整且唯一的成功记录和非空业务证明。`Test-AcceptanceGate.cs` 在独立 artifacts 副本上注入十三类缺陷，确认门禁拒绝缺失、重复、失败响应、空证明、额外操作、过期代码、未完成、错误执行方式、错误排除清单、缺失 FGAP 撤销证据、缺失本地支持策略拦截证明和缺失托管 FeatureManagement 业务证明；原始实测证据保留。CI 对两条声明路线分别执行真实 PostgreSQL 托管/AOT 场景及这些负向控制。
 
 FeatureManagement 与 Application Insights 两个可选包仅面向托管宿主，不要求 AOT；它们的方法/行/分支有各自 100% 门槛。托管全量入口使用官方 FeatureManager 4.8.0，并在真实服务器核验关闭创建无数据、开启创建后持久化、关闭删除保留数据、刷新后删除成功及功能开关隔离。原生入口在编译时排除这些包，继续验证核心及能力策略。遥测使用实际官方 publisher 与本地内存通道，未验证 Azure 云端 ingestion。完整边界见 [接入指南](feature-management.md)。
 

@@ -2,6 +2,7 @@
 #:property TargetFramework=net10.0
 #:property PublishAot=false
 #:include ScriptSupport.cs
+#:include TargetBaseline.cs
 
 using System.Security.Cryptography;
 using System.Text.Json.Nodes;
@@ -24,6 +25,7 @@ return await ScriptHost.ExecuteAsync(args, "dotnet run --file tools/Test-Accepta
         ("bad-exclusions", (_, _) => { }, "Invalid exclusion ledger"),
         ("no-fgap-proof", (m, _) => m["evidence"]!["fgapDelegation"]!["revocationDenied"] = false, "FGAP delegation must be verified"),
         ("no-support-policy-proof", (m, _) => m["evidence"]!["supportPolicyLocalGuards"] = false, "Real acceptance must use the support policy"),
+        ("bootstrap-as-release", (m, _) => { m["evidence"]!["supportPolicy"] = "bootstrap-wire"; m["evidence"]!["supportPolicyLocalGuards"] = false; }, "Real acceptance must use the support policy"),
         ("no-feature-management-proof", (m, _) => m["evidence"]!["featureManagementBusinessGuards"] = false, "FeatureManagement evidence must match")
     };
     string parent = "acceptance-gate-selftest-" + Guid.NewGuid().ToString("N");

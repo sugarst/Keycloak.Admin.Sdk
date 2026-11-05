@@ -9,7 +9,7 @@ internal static class FullCore
         var realms = await c.Get("/admin/realms");
         c.Prove(Has(realms.J, "realm", c.Realm), "Realm listing includes the newly persisted realm", realms);
         var info = await c.Get("/admin/serverinfo");
-        c.Prove(S(info.J?["systemInfo"], "version") == "26.8.1", "Authenticated serverinfo reports actual pinned server version", info);
+        c.Prove(S(info.J?["systemInfo"], "version") == Keycloak.Admin.Sdk.KeycloakTarget.Version, "Authenticated serverinfo reports actual pinned server version", info);
         var update = await c.Put("", O("""{"displayName":"Full acceptance","accessTokenLifespan":123}"""));
         var realm = await c.Get("");
         c.Prove(S(realm.J, "displayName") == "Full acceptance" && realm.J?["accessTokenLifespan"]?.GetValue<int>() == 123, "Realm configuration writes change persisted fields", update, realm);
