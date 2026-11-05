@@ -6,18 +6,18 @@ public sealed class OrganizationInvitationApi(KeycloakAdminClient transport)
 {
     /// <summary>Get invitations for the organization</summary>
     public Task<AdminResponse<List<OrganizationInvitationRepresentation>>> GetInvitationsAsync(string @realm, string @orgId, string? @email = null, int? @first = null, string? @firstName = null, string? @lastName = null, int? @max = null, string? @search = null, string? @status = null, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/organizations/{1}/invitations", [@realm, @orgId]), AdminUri.Query([new("email", @email), new("first", @first), new("firstName", @firstName), new("lastName", @lastName), new("max", @max), new("search", @search), new("status", @status)]), null, AdminJson.TypeInfo<List<OrganizationInvitationRepresentation>>(), cancellationToken);
+        transport.SendJsonOperationAsync("OrganizationInvitation.GetInvitationsAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/organizations/{1}/invitations", [@realm, @orgId]), AdminUri.Query([new("email", @email), new("first", @first), new("firstName", @firstName), new("lastName", @lastName), new("max", @max), new("search", @search), new("status", @status)]), null, AdminJson.TypeInfo<List<OrganizationInvitationRepresentation>>(), cancellationToken);
 
     /// <summary>Get invitation by ID</summary>
     public Task<AdminResponse<OrganizationInvitationRepresentation>> GetInvitationAsync(string @realm, string @orgId, string @id, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/organizations/{1}/invitations/{2}", [@realm, @orgId, @id]), AdminUri.Query([]), null, AdminJson.TypeInfo<OrganizationInvitationRepresentation>(), cancellationToken);
+        transport.SendJsonOperationAsync("OrganizationInvitation.GetInvitationAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/organizations/{1}/invitations/{2}", [@realm, @orgId, @id]), AdminUri.Query([]), null, AdminJson.TypeInfo<OrganizationInvitationRepresentation>(), cancellationToken);
 
     /// <summary>Delete an invitation</summary>
     public Task<AdminResponse> DeleteInvitationAsync(string @realm, string @orgId, string @id, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Delete, AdminUri.Path("/admin/realms/{0}/organizations/{1}/invitations/{2}", [@realm, @orgId, @id]), AdminUri.Query([]), null, cancellationToken);
+        transport.SendOperationAsync("OrganizationInvitation.DeleteInvitationAsync", HttpMethod.Delete, AdminUri.Path("/admin/realms/{0}/organizations/{1}/invitations/{2}", [@realm, @orgId, @id]), AdminUri.Query([]), null, cancellationToken);
 
     /// <summary>Resend an invitation</summary>
     public Task<AdminResponse> ResendInvitationAsync(string @realm, string @orgId, string @id, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/organizations/{1}/invitations/{2}/resend", [@realm, @orgId, @id]), AdminUri.Query([]), null, cancellationToken);
+        transport.SendOperationAsync("OrganizationInvitation.ResendInvitationAsync", HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/organizations/{1}/invitations/{2}/resend", [@realm, @orgId, @id]), AdminUri.Query([]), null, cancellationToken);
 
 }

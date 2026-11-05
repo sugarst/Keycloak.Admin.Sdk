@@ -6,26 +6,26 @@ public sealed class ClientAttributeCertificateApi(KeycloakAdminClient transport)
 {
     /// <summary>Get key info</summary>
     public Task<AdminResponse<CertificateRepresentation>> GetKeyInfoAsync(string @realm, string @clientUuid, string @attr, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/clients/{1}/certificates/{2}", [@realm, @clientUuid, @attr]), AdminUri.Query([]), null, AdminJson.TypeInfo<CertificateRepresentation>(), cancellationToken);
+        transport.SendJsonOperationAsync("ClientAttributeCertificate.GetKeyInfoAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/clients/{1}/certificates/{2}", [@realm, @clientUuid, @attr]), AdminUri.Query([]), null, AdminJson.TypeInfo<CertificateRepresentation>(), cancellationToken);
 
     /// <summary>Get a keystore file for the client, containing the public certificate</summary>
     public Task<AdminResponse> GetKeystoreAsync(string @realm, string @clientUuid, string @attr, KeyStoreConfig? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/clients/{1}/certificates/{2}/download", [@realm, @clientUuid, @attr]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<KeyStoreConfig>()), cancellationToken);
+        transport.SendOperationAsync("ClientAttributeCertificate.GetKeystoreAsync", HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/clients/{1}/certificates/{2}/download", [@realm, @clientUuid, @attr]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<KeyStoreConfig>()), cancellationToken);
 
     /// <summary>Generate a new certificate with new key pair</summary>
     public Task<AdminResponse<CertificateRepresentation>> GenerateAsync(string @realm, string @clientUuid, string @attr, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/clients/{1}/certificates/{2}/generate", [@realm, @clientUuid, @attr]), AdminUri.Query([]), null, AdminJson.TypeInfo<CertificateRepresentation>(), cancellationToken);
+        transport.SendJsonOperationAsync("ClientAttributeCertificate.GenerateAsync", HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/clients/{1}/certificates/{2}/generate", [@realm, @clientUuid, @attr]), AdminUri.Query([]), null, AdminJson.TypeInfo<CertificateRepresentation>(), cancellationToken);
 
     /// <summary>Generate a new keypair and certificate, and get the private key file  Generates a keypair and certificate and serves the private key in a specified keystore format. Only generated public certificate is saved in Keycloak DB - the private key is not.</summary>
     public Task<AdminResponse> GenerateAndGetKeystoreAsync(string @realm, string @clientUuid, string @attr, KeyStoreConfig? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/clients/{1}/certificates/{2}/generate-and-download", [@realm, @clientUuid, @attr]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<KeyStoreConfig>()), cancellationToken);
+        transport.SendOperationAsync("ClientAttributeCertificate.GenerateAndGetKeystoreAsync", HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/clients/{1}/certificates/{2}/generate-and-download", [@realm, @clientUuid, @attr]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<KeyStoreConfig>()), cancellationToken);
 
     /// <summary>Upload only certificate, not private key Supply HttpContent with the desired server-supported Content-Type; the request consumes and disposes it.</summary>
     public Task<AdminResponse<CertificateRepresentation>> UploadJksAsync(string @realm, string @clientUuid, string @attr, HttpContent? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/clients/{1}/certificates/{2}/upload", [@realm, @clientUuid, @attr]), AdminUri.Query([]), body, AdminJson.TypeInfo<CertificateRepresentation>(), cancellationToken);
+        transport.SendJsonOperationAsync("ClientAttributeCertificate.UploadJksAsync", HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/clients/{1}/certificates/{2}/upload", [@realm, @clientUuid, @attr]), AdminUri.Query([]), body, AdminJson.TypeInfo<CertificateRepresentation>(), cancellationToken);
 
     /// <summary>Upload only certificate, not private key Supply HttpContent with the desired server-supported Content-Type; the request consumes and disposes it.</summary>
     public Task<AdminResponse<CertificateRepresentation>> UploadJksCertificateAsync(string @realm, string @clientUuid, string @attr, HttpContent? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/clients/{1}/certificates/{2}/upload-certificate", [@realm, @clientUuid, @attr]), AdminUri.Query([]), body, AdminJson.TypeInfo<CertificateRepresentation>(), cancellationToken);
+        transport.SendJsonOperationAsync("ClientAttributeCertificate.UploadJksCertificateAsync", HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/clients/{1}/certificates/{2}/upload-certificate", [@realm, @clientUuid, @attr]), AdminUri.Query([]), body, AdminJson.TypeInfo<CertificateRepresentation>(), cancellationToken);
 
 }

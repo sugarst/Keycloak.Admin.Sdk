@@ -6,14 +6,14 @@ public sealed class UiAuthenticationManagementApi(KeycloakAdminClient transport)
 {
     /// <summary>Source: UiAuthenticationManagementResource.listIdentityProviders</summary>
     public Task<AdminResponse<JsonElement>> ListIdentityProvidersAsync(string @realm, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/ui-ext/authentication-management/flows", [@realm]), AdminUri.Query([]), null, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
+        transport.SendJsonOperationAsync("UiAuthenticationManagement.ListIdentityProvidersAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/ui-ext/authentication-management/flows", [@realm]), AdminUri.Query([]), null, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
 
     /// <summary>Source: UiAuthenticationManagementResource.listUsed</summary>
     public Task<AdminResponse<JsonElement>> ListUsedAsync(string @realm, string @type, string @id, int? @first = null, int? @max = null, string? @search = null, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/ui-ext/authentication-management/{1}/{2}", [@realm, @type, @id]), AdminUri.Query([new("first", @first), new("max", @max), new("search", @search)]), null, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
+        transport.SendJsonOperationAsync("UiAuthenticationManagement.ListUsedAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/ui-ext/authentication-management/{1}/{2}", [@realm, @type, @id]), AdminUri.Query([new("first", @first), new("max", @max), new("search", @search)]), null, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
 
     /// <summary>Source: UiAuthenticationManagementResource.getRequiredActions</summary>
     public Task<AdminResponse<JsonElement>> GetRequiredActionsAsync(string @realm, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/ui-ext/authentication-management/required-actions", [@realm]), AdminUri.Query([]), null, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
+        transport.SendJsonOperationAsync("UiAuthenticationManagement.GetRequiredActionsAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/ui-ext/authentication-management/required-actions", [@realm]), AdminUri.Query([]), null, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
 
 }

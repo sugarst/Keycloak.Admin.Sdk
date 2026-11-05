@@ -183,7 +183,7 @@ foreach (var group in operations.GroupBy(x => x.Group).OrderBy(x => x.Key, Strin
         bool jsonResponse = response?.Key == "application/json" || sourceOnly;
         string? responseType = jsonResponse ? sourceOnly ? "JsonElement" : Type(response?.Value?["schema"]) : null;
         string returnType = responseType is null ? "AdminResponse" : $"AdminResponse<{responseType}>";
-        var argsList = new List<string> { $"HttpMethod.{Id(op.Verb.ToLowerInvariant())}", $"AdminUri.Path({Literal(route)}, [{string.Join(", ", pathParams.Select(Arg))}])" };
+        var argsList = new List<string> { Literal(Id(group.Key) + "." + name + "Async"), $"HttpMethod.{Id(op.Verb.ToLowerInvariant())}", $"AdminUri.Path({Literal(route)}, [{string.Join(", ", pathParams.Select(Arg))}])" };
         string query = "AdminUri.Query([" + string.Join(", ", parameters.Select(p => $"new({Literal(p!["name"]!.GetValue<string>())}, {QueryArg(p["name"]!.GetValue<string>())})")) + "])";
         argsList.Add(query);
         if (bodyType is null) argsList.Add("null");
@@ -196,7 +196,7 @@ foreach (var group in operations.GroupBy(x => x.Group).OrderBy(x => x.Key, Strin
             summary = "Get a policy by ID or list policies by provider type. Query filters apply to the provider-type branch; the JSON response is an object or array respectively.";
         if (op.Op["x-raw-request"]?.GetValue<bool>() == true) summary += " Supply HttpContent with the desired server-supported Content-Type; the request consumes and disposes it.";
         summary = System.Security.SecurityElement.Escape(summary.Replace('\n', ' '));
-        code.AppendLine($"    /// <summary>{summary}</summary>\n    public Task<{returnType}> {name}Async({string.Join(", ", decl)}) =>\n        transport.Send{(responseType is null ? "" : "Json")}Async({string.Join(", ", argsList)});\n");
+        code.AppendLine($"    /// <summary>{summary}</summary>\n    public Task<{returnType}> {name}Async({string.Join(", ", decl)}) =>\n        transport.Send{(responseType is null ? "" : "Json")}OperationAsync({string.Join(", ", argsList)});\n");
         var testArgs = pathParams.Select(p => Literal("value /%中")).ToList();
         if (bodyType is not null)
         {

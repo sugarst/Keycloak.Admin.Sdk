@@ -6,14 +6,14 @@ public sealed class OrganizationApi(KeycloakAdminClient transport)
 {
     /// <summary>Returns the organization representation</summary>
     public Task<AdminResponse<OrganizationRepresentation>> GetAsync(string @realm, string @orgId, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/organizations/{1}", [@realm, @orgId]), AdminUri.Query([]), null, AdminJson.TypeInfo<OrganizationRepresentation>(), cancellationToken);
+        transport.SendJsonOperationAsync("Organization.GetAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/organizations/{1}", [@realm, @orgId]), AdminUri.Query([]), null, AdminJson.TypeInfo<OrganizationRepresentation>(), cancellationToken);
 
     /// <summary>Updates the organization</summary>
     public Task<AdminResponse> UpdateAsync(string @realm, string @orgId, OrganizationRepresentation? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Put, AdminUri.Path("/admin/realms/{0}/organizations/{1}", [@realm, @orgId]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<OrganizationRepresentation>()), cancellationToken);
+        transport.SendOperationAsync("Organization.UpdateAsync", HttpMethod.Put, AdminUri.Path("/admin/realms/{0}/organizations/{1}", [@realm, @orgId]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<OrganizationRepresentation>()), cancellationToken);
 
     /// <summary>Deletes the organization</summary>
     public Task<AdminResponse> DeleteAsync(string @realm, string @orgId, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Delete, AdminUri.Path("/admin/realms/{0}/organizations/{1}", [@realm, @orgId]), AdminUri.Query([]), null, cancellationToken);
+        transport.SendOperationAsync("Organization.DeleteAsync", HttpMethod.Delete, AdminUri.Path("/admin/realms/{0}/organizations/{1}", [@realm, @orgId]), AdminUri.Query([]), null, cancellationToken);
 
 }

@@ -23,7 +23,7 @@
 dotnet test tests/Keycloak.Admin.Sdk.Tests -c Release --logger 'trx;LogFileName=contracts.trx' --results-directory artifacts/test-results --collect 'XPlat Code Coverage'
 ```
 
-当前共 **538 个测试方法**：520 个按操作独立发现的功能契约矩阵用例，原有 11 项基础/六路径回归检查，新增 2 项 SAML `@JsonValue` 字符串和隐式 multipart 请求体回归，1 项覆盖全部发布模型的 JSON 往返检查，以及 4 项 URI、token、构造参数/内容所有权、流异常检查。原有冒烟仍执行 520 次调用，另有独立矩阵逐项断言功能契约。路由检查通过后，在仓库根目录 `artifacts/routing-verified.tsv` 写入证据。
+当前共 **544 个测试方法**：520 个按操作独立发现的功能契约矩阵用例，原有 18 项基础、模型和六路径回归检查，新增 5 项结构化错误、401 重放、流所有权、并发刷新及失败/超时检查，以及 1 项 DI 生命周期和命名身份隔离检查。每个操作的错误矩阵同时核对固定 Operation 和 AdminApi 阶段。原有冒烟仍执行 520 次调用，另有独立矩阵逐项断言功能契约。路由检查通过后，在仓库根目录 `artifacts/routing-verified.tsv` 写入证据。
 
 矩阵期望值冻结在 `contracts/admin-api-test-matrix.json`，来源是独立 Java token 扫描器与发布 OpenAPI/已审定差异，不从 SDK 的 URI、请求序列化实现或原有生成冒烟样本计算期望值。每个操作测试声明的全部查询绑定（缺省、false/true、0/非零、Unicode、空串、重复/空列表）、不同路径参数的独立编码、完整/缺省请求体、成功状态/Location/header、完整/空集合/标量/空响应，以及 400/401/403/404/409/415/500、取消、网络失败和不重放。JSON 响应检查完整字段与非法 JSON；原始内容检查声明媒体类型及字节透传。服务端要求的具体文件/表单业务格式另由真实测试验证。
 
@@ -33,7 +33,7 @@ dotnet test tests/Keycloak.Admin.Sdk.Tests -c Release --logger 'trx;LogFileName=
 
 上述直接命令的 TRX 输出为 `artifacts/test-results/contracts.trx`；Cobertura 输出位于该目录的本次运行子目录。`Verify.cs` 每次使用新的 `artifacts/test-results/verify-<id>`，并把路径写入 `artifacts/test-results/latest.txt`。门禁只读取这次 TRX 引用的覆盖率附件，不能复用旧通过记录。
 
-`dotnet run --file tools/Verify.cs` 先执行矩阵生成一致性检查及门禁负向自检，再执行 MSTest、覆盖率门禁和 SDK 零运行时包依赖检查。策略位于 [coverage-policy.json](../tests/coverage-policy.json)：操作及可执行方法 100%；生成 API 行/分支与 DTO 行 100%；SDK 自有源码分支 100%、行至少 99.9%；含 .NET 框架源生成实现的原始报告行至少 94%、分支至少 59%。自有源码保留全部 SDK 生成 API/DTO，只把 `obj/` 中框架生成代码另列；原始报告不删减。当前自有源码行 2398/2399（唯一未命中为 token 方法结束括号的 PDB 序列点）、分支 314/314，详细结果见 [覆盖率报告](contracts/test-coverage.md)。
+`dotnet run --file tools/Verify.cs` 先执行矩阵生成一致性检查及门禁负向自检，再执行 MSTest、覆盖率门禁和 SDK 零运行时包依赖检查。策略位于 [coverage-policy.json](../tests/coverage-policy.json)：操作及可执行方法 100%；生成 API 行/分支与 DTO 行 100%；SDK 自有源码分支 100%、行至少 99.9%；含 .NET 框架源生成实现的原始报告行至少 94%、分支至少 59%。自有源码保留全部 SDK 生成 API/DTO，只把 `obj/` 中框架生成代码另列；原始报告不删减。最新计数见 [覆盖率报告](contracts/test-coverage.md)。可选 DI 程序集有独立依赖边界，其测试及原生运行与核心 SDK 一同验证，核心覆盖率门槛保持不变。
 
 每个操作必须有且仅有一个通过的矩阵测试；缺失、重复、跳过、失败、空覆盖率或指标不足都返回非零。`Check-Coverage.cs -- --self-test` 使用负向控制核验这些阻断条件；CI 同时上传 TRX、Cobertura 和门禁结果。`Generate-TestMatrix.cs -- --check` 检查冻结矩阵与强类型调用入口一致；审阅发布来源后可用 `-- --refresh-contracts` 更新期望，再提交契约及生成用例。该检查覆盖 SDK 功能契约，不等同于所有服务器业务/权限组合已实测。
 

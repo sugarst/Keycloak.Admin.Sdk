@@ -6,74 +6,74 @@ public sealed class ScopeMappedApi(KeycloakAdminClient transport)
 {
     /// <summary>Get all scope mappings for the client</summary>
     public Task<AdminResponse<MappingsRepresentation>> GetScopeMappingsAsync(string @realm, string @clientScopeId, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/client-scopes/{1}/scope-mappings", [@realm, @clientScopeId]), AdminUri.Query([]), null, AdminJson.TypeInfo<MappingsRepresentation>(), cancellationToken);
+        transport.SendJsonOperationAsync("ScopeMapped.GetScopeMappingsAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/client-scopes/{1}/scope-mappings", [@realm, @clientScopeId]), AdminUri.Query([]), null, AdminJson.TypeInfo<MappingsRepresentation>(), cancellationToken);
 
     /// <summary>Get realm-level roles associated with the client&apos;s scope</summary>
     public Task<AdminResponse<List<RoleRepresentation>>> GetRealmScopeMappingsAsync(string @realm, string @clientScopeId, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/client-scopes/{1}/scope-mappings/realm", [@realm, @clientScopeId]), AdminUri.Query([]), null, AdminJson.TypeInfo<List<RoleRepresentation>>(), cancellationToken);
+        transport.SendJsonOperationAsync("ScopeMapped.GetRealmScopeMappingsAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/client-scopes/{1}/scope-mappings/realm", [@realm, @clientScopeId]), AdminUri.Query([]), null, AdminJson.TypeInfo<List<RoleRepresentation>>(), cancellationToken);
 
     /// <summary>Add a set of realm-level roles to the client&apos;s scope</summary>
     public Task<AdminResponse> AddRealmScopeMappingsAsync(string @realm, string @clientScopeId, List<RoleRepresentation>? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/client-scopes/{1}/scope-mappings/realm", [@realm, @clientScopeId]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<List<RoleRepresentation>>()), cancellationToken);
+        transport.SendOperationAsync("ScopeMapped.AddRealmScopeMappingsAsync", HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/client-scopes/{1}/scope-mappings/realm", [@realm, @clientScopeId]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<List<RoleRepresentation>>()), cancellationToken);
 
     /// <summary>Remove a set of realm-level roles from the client&apos;s scope</summary>
     public Task<AdminResponse> DeleteRealmScopeMappingsAsync(string @realm, string @clientScopeId, List<RoleRepresentation>? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Delete, AdminUri.Path("/admin/realms/{0}/client-scopes/{1}/scope-mappings/realm", [@realm, @clientScopeId]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<List<RoleRepresentation>>()), cancellationToken);
+        transport.SendOperationAsync("ScopeMapped.DeleteRealmScopeMappingsAsync", HttpMethod.Delete, AdminUri.Path("/admin/realms/{0}/client-scopes/{1}/scope-mappings/realm", [@realm, @clientScopeId]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<List<RoleRepresentation>>()), cancellationToken);
 
     /// <summary>Get realm-level roles that are available to attach to this client&apos;s scope</summary>
     public Task<AdminResponse<List<RoleRepresentation>>> GetAvailableRealmScopeMappingsAsync(string @realm, string @clientScopeId, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/client-scopes/{1}/scope-mappings/realm/available", [@realm, @clientScopeId]), AdminUri.Query([]), null, AdminJson.TypeInfo<List<RoleRepresentation>>(), cancellationToken);
+        transport.SendJsonOperationAsync("ScopeMapped.GetAvailableRealmScopeMappingsAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/client-scopes/{1}/scope-mappings/realm/available", [@realm, @clientScopeId]), AdminUri.Query([]), null, AdminJson.TypeInfo<List<RoleRepresentation>>(), cancellationToken);
 
     /// <summary>Get effective realm-level roles associated with the client’s scope What this does is recurse any composite roles associated with the client’s scope and adds the roles to this lists.</summary>
     public Task<AdminResponse<List<RoleRepresentation>>> GetCompositeRealmScopeMappingsAsync(string @realm, string @clientScopeId, bool? @briefRepresentation = null, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/client-scopes/{1}/scope-mappings/realm/composite", [@realm, @clientScopeId]), AdminUri.Query([new("briefRepresentation", @briefRepresentation)]), null, AdminJson.TypeInfo<List<RoleRepresentation>>(), cancellationToken);
+        transport.SendJsonOperationAsync("ScopeMapped.GetCompositeRealmScopeMappingsAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/client-scopes/{1}/scope-mappings/realm/composite", [@realm, @clientScopeId]), AdminUri.Query([new("briefRepresentation", @briefRepresentation)]), null, AdminJson.TypeInfo<List<RoleRepresentation>>(), cancellationToken);
 
     /// <summary>Get all scope mappings for the client</summary>
     public Task<AdminResponse<MappingsRepresentation>> GetScopeMappingsGETAdminRealmsRealmClientTemplatesClientScopeIdScopeMappingsAsync(string @realm, string @clientScopeId, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/client-templates/{1}/scope-mappings", [@realm, @clientScopeId]), AdminUri.Query([]), null, AdminJson.TypeInfo<MappingsRepresentation>(), cancellationToken);
+        transport.SendJsonOperationAsync("ScopeMapped.GetScopeMappingsGETAdminRealmsRealmClientTemplatesClientScopeIdScopeMappingsAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/client-templates/{1}/scope-mappings", [@realm, @clientScopeId]), AdminUri.Query([]), null, AdminJson.TypeInfo<MappingsRepresentation>(), cancellationToken);
 
     /// <summary>Get realm-level roles associated with the client&apos;s scope</summary>
     public Task<AdminResponse<List<RoleRepresentation>>> GetRealmScopeMappingsGETAdminRealmsRealmClientTemplatesClientScopeIdScopeMappingsRealmAsync(string @realm, string @clientScopeId, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/client-templates/{1}/scope-mappings/realm", [@realm, @clientScopeId]), AdminUri.Query([]), null, AdminJson.TypeInfo<List<RoleRepresentation>>(), cancellationToken);
+        transport.SendJsonOperationAsync("ScopeMapped.GetRealmScopeMappingsGETAdminRealmsRealmClientTemplatesClientScopeIdScopeMappingsRealmAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/client-templates/{1}/scope-mappings/realm", [@realm, @clientScopeId]), AdminUri.Query([]), null, AdminJson.TypeInfo<List<RoleRepresentation>>(), cancellationToken);
 
     /// <summary>Add a set of realm-level roles to the client&apos;s scope</summary>
     public Task<AdminResponse> AddRealmScopeMappingsPOSTAdminRealmsRealmClientTemplatesClientScopeIdScopeMappingsRealmAsync(string @realm, string @clientScopeId, List<RoleRepresentation>? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/client-templates/{1}/scope-mappings/realm", [@realm, @clientScopeId]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<List<RoleRepresentation>>()), cancellationToken);
+        transport.SendOperationAsync("ScopeMapped.AddRealmScopeMappingsPOSTAdminRealmsRealmClientTemplatesClientScopeIdScopeMappingsRealmAsync", HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/client-templates/{1}/scope-mappings/realm", [@realm, @clientScopeId]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<List<RoleRepresentation>>()), cancellationToken);
 
     /// <summary>Remove a set of realm-level roles from the client&apos;s scope</summary>
     public Task<AdminResponse> DeleteRealmScopeMappingsDELETEAdminRealmsRealmClientTemplatesClientScopeIdScopeMappingsRealmAsync(string @realm, string @clientScopeId, List<RoleRepresentation>? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Delete, AdminUri.Path("/admin/realms/{0}/client-templates/{1}/scope-mappings/realm", [@realm, @clientScopeId]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<List<RoleRepresentation>>()), cancellationToken);
+        transport.SendOperationAsync("ScopeMapped.DeleteRealmScopeMappingsDELETEAdminRealmsRealmClientTemplatesClientScopeIdScopeMappingsRealmAsync", HttpMethod.Delete, AdminUri.Path("/admin/realms/{0}/client-templates/{1}/scope-mappings/realm", [@realm, @clientScopeId]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<List<RoleRepresentation>>()), cancellationToken);
 
     /// <summary>Get realm-level roles that are available to attach to this client&apos;s scope</summary>
     public Task<AdminResponse<List<RoleRepresentation>>> GetAvailableRealmScopeMappingsGETAdminRealmsRealmClientTemplatesClientScopeIdScopeMappingsRealmAvailableAsync(string @realm, string @clientScopeId, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/client-templates/{1}/scope-mappings/realm/available", [@realm, @clientScopeId]), AdminUri.Query([]), null, AdminJson.TypeInfo<List<RoleRepresentation>>(), cancellationToken);
+        transport.SendJsonOperationAsync("ScopeMapped.GetAvailableRealmScopeMappingsGETAdminRealmsRealmClientTemplatesClientScopeIdScopeMappingsRealmAvailableAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/client-templates/{1}/scope-mappings/realm/available", [@realm, @clientScopeId]), AdminUri.Query([]), null, AdminJson.TypeInfo<List<RoleRepresentation>>(), cancellationToken);
 
     /// <summary>Get effective realm-level roles associated with the client’s scope What this does is recurse any composite roles associated with the client’s scope and adds the roles to this lists.</summary>
     public Task<AdminResponse<List<RoleRepresentation>>> GetCompositeRealmScopeMappingsGETAdminRealmsRealmClientTemplatesClientScopeIdScopeMappingsRealmCompositeAsync(string @realm, string @clientScopeId, bool? @briefRepresentation = null, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/client-templates/{1}/scope-mappings/realm/composite", [@realm, @clientScopeId]), AdminUri.Query([new("briefRepresentation", @briefRepresentation)]), null, AdminJson.TypeInfo<List<RoleRepresentation>>(), cancellationToken);
+        transport.SendJsonOperationAsync("ScopeMapped.GetCompositeRealmScopeMappingsGETAdminRealmsRealmClientTemplatesClientScopeIdScopeMappingsRealmCompositeAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/client-templates/{1}/scope-mappings/realm/composite", [@realm, @clientScopeId]), AdminUri.Query([new("briefRepresentation", @briefRepresentation)]), null, AdminJson.TypeInfo<List<RoleRepresentation>>(), cancellationToken);
 
     /// <summary>Get all scope mappings for the client</summary>
     public Task<AdminResponse<MappingsRepresentation>> GetScopeMappingsGETAdminRealmsRealmClientsClientUuidScopeMappingsAsync(string @realm, string @clientUuid, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/clients/{1}/scope-mappings", [@realm, @clientUuid]), AdminUri.Query([]), null, AdminJson.TypeInfo<MappingsRepresentation>(), cancellationToken);
+        transport.SendJsonOperationAsync("ScopeMapped.GetScopeMappingsGETAdminRealmsRealmClientsClientUuidScopeMappingsAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/clients/{1}/scope-mappings", [@realm, @clientUuid]), AdminUri.Query([]), null, AdminJson.TypeInfo<MappingsRepresentation>(), cancellationToken);
 
     /// <summary>Get realm-level roles associated with the client&apos;s scope</summary>
     public Task<AdminResponse<List<RoleRepresentation>>> GetRealmScopeMappingsGETAdminRealmsRealmClientsClientUuidScopeMappingsRealmAsync(string @realm, string @clientUuid, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/clients/{1}/scope-mappings/realm", [@realm, @clientUuid]), AdminUri.Query([]), null, AdminJson.TypeInfo<List<RoleRepresentation>>(), cancellationToken);
+        transport.SendJsonOperationAsync("ScopeMapped.GetRealmScopeMappingsGETAdminRealmsRealmClientsClientUuidScopeMappingsRealmAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/clients/{1}/scope-mappings/realm", [@realm, @clientUuid]), AdminUri.Query([]), null, AdminJson.TypeInfo<List<RoleRepresentation>>(), cancellationToken);
 
     /// <summary>Add a set of realm-level roles to the client&apos;s scope</summary>
     public Task<AdminResponse> AddRealmScopeMappingsPOSTAdminRealmsRealmClientsClientUuidScopeMappingsRealmAsync(string @realm, string @clientUuid, List<RoleRepresentation>? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/clients/{1}/scope-mappings/realm", [@realm, @clientUuid]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<List<RoleRepresentation>>()), cancellationToken);
+        transport.SendOperationAsync("ScopeMapped.AddRealmScopeMappingsPOSTAdminRealmsRealmClientsClientUuidScopeMappingsRealmAsync", HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/clients/{1}/scope-mappings/realm", [@realm, @clientUuid]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<List<RoleRepresentation>>()), cancellationToken);
 
     /// <summary>Remove a set of realm-level roles from the client&apos;s scope</summary>
     public Task<AdminResponse> DeleteRealmScopeMappingsDELETEAdminRealmsRealmClientsClientUuidScopeMappingsRealmAsync(string @realm, string @clientUuid, List<RoleRepresentation>? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Delete, AdminUri.Path("/admin/realms/{0}/clients/{1}/scope-mappings/realm", [@realm, @clientUuid]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<List<RoleRepresentation>>()), cancellationToken);
+        transport.SendOperationAsync("ScopeMapped.DeleteRealmScopeMappingsDELETEAdminRealmsRealmClientsClientUuidScopeMappingsRealmAsync", HttpMethod.Delete, AdminUri.Path("/admin/realms/{0}/clients/{1}/scope-mappings/realm", [@realm, @clientUuid]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<List<RoleRepresentation>>()), cancellationToken);
 
     /// <summary>Get realm-level roles that are available to attach to this client&apos;s scope</summary>
     public Task<AdminResponse<List<RoleRepresentation>>> GetAvailableRealmScopeMappingsGETAdminRealmsRealmClientsClientUuidScopeMappingsRealmAvailableAsync(string @realm, string @clientUuid, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/clients/{1}/scope-mappings/realm/available", [@realm, @clientUuid]), AdminUri.Query([]), null, AdminJson.TypeInfo<List<RoleRepresentation>>(), cancellationToken);
+        transport.SendJsonOperationAsync("ScopeMapped.GetAvailableRealmScopeMappingsGETAdminRealmsRealmClientsClientUuidScopeMappingsRealmAvailableAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/clients/{1}/scope-mappings/realm/available", [@realm, @clientUuid]), AdminUri.Query([]), null, AdminJson.TypeInfo<List<RoleRepresentation>>(), cancellationToken);
 
     /// <summary>Get effective realm-level roles associated with the client’s scope What this does is recurse any composite roles associated with the client’s scope and adds the roles to this lists.</summary>
     public Task<AdminResponse<List<RoleRepresentation>>> GetCompositeRealmScopeMappingsGETAdminRealmsRealmClientsClientUuidScopeMappingsRealmCompositeAsync(string @realm, string @clientUuid, bool? @briefRepresentation = null, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/clients/{1}/scope-mappings/realm/composite", [@realm, @clientUuid]), AdminUri.Query([new("briefRepresentation", @briefRepresentation)]), null, AdminJson.TypeInfo<List<RoleRepresentation>>(), cancellationToken);
+        transport.SendJsonOperationAsync("ScopeMapped.GetCompositeRealmScopeMappingsGETAdminRealmsRealmClientsClientUuidScopeMappingsRealmCompositeAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/clients/{1}/scope-mappings/realm/composite", [@realm, @clientUuid]), AdminUri.Query([new("briefRepresentation", @briefRepresentation)]), null, AdminJson.TypeInfo<List<RoleRepresentation>>(), cancellationToken);
 
 }

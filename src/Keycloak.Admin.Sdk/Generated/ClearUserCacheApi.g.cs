@@ -6,6 +6,6 @@ public sealed class ClearUserCacheApi(KeycloakAdminClient transport)
 {
     /// <summary>Source: ClearUserCacheResource.clearUserCache</summary>
     public Task<AdminResponse<JsonElement>> ClearUserCacheAsync(string @realm, HttpContent? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/clear-user-cache", [@realm]), AdminUri.Query([]), body, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
+        transport.SendJsonOperationAsync("ClearUserCache.ClearUserCacheAsync", HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/clear-user-cache", [@realm]), AdminUri.Query([]), body, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
 
 }

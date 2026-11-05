@@ -6,10 +6,10 @@ public sealed class ClientTypesApi(KeycloakAdminClient transport)
 {
     /// <summary>List all client types available in the current realm</summary>
     public Task<AdminResponse<ClientTypesRepresentation>> GetClientTypesAsync(string @realm, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/client-types", [@realm]), AdminUri.Query([]), null, AdminJson.TypeInfo<ClientTypesRepresentation>(), cancellationToken);
+        transport.SendJsonOperationAsync("ClientTypes.GetClientTypesAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/client-types", [@realm]), AdminUri.Query([]), null, AdminJson.TypeInfo<ClientTypesRepresentation>(), cancellationToken);
 
     /// <summary>Update a client type</summary>
     public Task<AdminResponse> UpdateClientTypesAsync(string @realm, ClientTypesRepresentation? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Put, AdminUri.Path("/admin/realms/{0}/client-types", [@realm]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<ClientTypesRepresentation>()), cancellationToken);
+        transport.SendOperationAsync("ClientTypes.UpdateClientTypesAsync", HttpMethod.Put, AdminUri.Path("/admin/realms/{0}/client-types", [@realm]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<ClientTypesRepresentation>()), cancellationToken);
 
 }

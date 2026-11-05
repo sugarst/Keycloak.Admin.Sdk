@@ -7,6 +7,12 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 [TestClass]
 public sealed class ContractTests
 {
+    [TestMethod] public Task DependencyInjectionLifetimesAndIsolation() => DependencyInjectionContracts.RunAsync();
+    [TestMethod] public Task StructuredHttpErrors() => RecoveryContracts.ErrorsAsync();
+    [TestMethod] public Task UnauthorizedReplayPolicy() => RecoveryContracts.ReplayAsync();
+    [TestMethod] public Task StreamingRecoveryAndOwnership() => RecoveryContracts.StreamAsync();
+    [TestMethod] public Task ConditionalInvalidationAndSharedAcquisition() => RecoveryContracts.ConcurrencyAsync();
+    [TestMethod] public Task AcquisitionFailuresTimeoutAndLifetime() => RecoveryContracts.FailuresAsync();
     [TestMethod] public Task SamlExampleIsJsonString() => AlignmentContracts.SamlExampleStringAsync();
     [TestMethod] public Task CertificateUploadAcceptsMultipart() => AlignmentContracts.CertificateUploadHasBodyAsync();
     [TestMethod]

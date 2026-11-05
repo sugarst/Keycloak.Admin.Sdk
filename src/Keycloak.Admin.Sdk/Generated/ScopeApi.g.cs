@@ -6,34 +6,34 @@ public sealed class ScopeApi(KeycloakAdminClient transport)
 {
     /// <summary>FindAll</summary>
     public Task<AdminResponse<List<ScopeRepresentation>>> FindAllAsync(string @realm, string @clientUuid, int? @first = null, int? @max = null, string? @name = null, string? @scopeId = null, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/clients/{1}/authz/resource-server/scope", [@realm, @clientUuid]), AdminUri.Query([new("first", @first), new("max", @max), new("name", @name), new("scopeId", @scopeId)]), null, AdminJson.TypeInfo<List<ScopeRepresentation>>(), cancellationToken);
+        transport.SendJsonOperationAsync("Scope.FindAllAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/clients/{1}/authz/resource-server/scope", [@realm, @clientUuid]), AdminUri.Query([new("first", @first), new("max", @max), new("name", @name), new("scopeId", @scopeId)]), null, AdminJson.TypeInfo<List<ScopeRepresentation>>(), cancellationToken);
 
     /// <summary>Create</summary>
     public Task<AdminResponse> CreateAsync(string @realm, string @clientUuid, ScopeRepresentation? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/clients/{1}/authz/resource-server/scope", [@realm, @clientUuid]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<ScopeRepresentation>()), cancellationToken);
+        transport.SendOperationAsync("Scope.CreateAsync", HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/clients/{1}/authz/resource-server/scope", [@realm, @clientUuid]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<ScopeRepresentation>()), cancellationToken);
 
     /// <summary>Find</summary>
     public Task<AdminResponse<ScopeRepresentation>> FindAsync(string @realm, string @clientUuid, string? @name = null, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/clients/{1}/authz/resource-server/scope/search", [@realm, @clientUuid]), AdminUri.Query([new("name", @name)]), null, AdminJson.TypeInfo<ScopeRepresentation>(), cancellationToken);
+        transport.SendJsonOperationAsync("Scope.FindAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/clients/{1}/authz/resource-server/scope/search", [@realm, @clientUuid]), AdminUri.Query([new("name", @name)]), null, AdminJson.TypeInfo<ScopeRepresentation>(), cancellationToken);
 
     /// <summary>FindById</summary>
     public Task<AdminResponse<ScopeRepresentation>> FindByIdAsync(string @realm, string @clientUuid, string @scopeId, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/clients/{1}/authz/resource-server/scope/{2}", [@realm, @clientUuid, @scopeId]), AdminUri.Query([]), null, AdminJson.TypeInfo<ScopeRepresentation>(), cancellationToken);
+        transport.SendJsonOperationAsync("Scope.FindByIdAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/clients/{1}/authz/resource-server/scope/{2}", [@realm, @clientUuid, @scopeId]), AdminUri.Query([]), null, AdminJson.TypeInfo<ScopeRepresentation>(), cancellationToken);
 
     /// <summary>Update</summary>
     public Task<AdminResponse> UpdateAsync(string @realm, string @clientUuid, string @scopeId, ScopeRepresentation? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Put, AdminUri.Path("/admin/realms/{0}/clients/{1}/authz/resource-server/scope/{2}", [@realm, @clientUuid, @scopeId]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<ScopeRepresentation>()), cancellationToken);
+        transport.SendOperationAsync("Scope.UpdateAsync", HttpMethod.Put, AdminUri.Path("/admin/realms/{0}/clients/{1}/authz/resource-server/scope/{2}", [@realm, @clientUuid, @scopeId]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<ScopeRepresentation>()), cancellationToken);
 
     /// <summary>Delete</summary>
     public Task<AdminResponse> DeleteAsync(string @realm, string @clientUuid, string @scopeId, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Delete, AdminUri.Path("/admin/realms/{0}/clients/{1}/authz/resource-server/scope/{2}", [@realm, @clientUuid, @scopeId]), AdminUri.Query([]), null, cancellationToken);
+        transport.SendOperationAsync("Scope.DeleteAsync", HttpMethod.Delete, AdminUri.Path("/admin/realms/{0}/clients/{1}/authz/resource-server/scope/{2}", [@realm, @clientUuid, @scopeId]), AdminUri.Query([]), null, cancellationToken);
 
     /// <summary>GetPermissions</summary>
     public Task<AdminResponse<List<PolicyRepresentation>>> GetPermissionsAsync(string @realm, string @clientUuid, string @scopeId, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/clients/{1}/authz/resource-server/scope/{2}/permissions", [@realm, @clientUuid, @scopeId]), AdminUri.Query([]), null, AdminJson.TypeInfo<List<PolicyRepresentation>>(), cancellationToken);
+        transport.SendJsonOperationAsync("Scope.GetPermissionsAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/clients/{1}/authz/resource-server/scope/{2}/permissions", [@realm, @clientUuid, @scopeId]), AdminUri.Query([]), null, AdminJson.TypeInfo<List<PolicyRepresentation>>(), cancellationToken);
 
     /// <summary>GetResources</summary>
     public Task<AdminResponse<List<ResourceRepresentation>>> GetResourcesAsync(string @realm, string @clientUuid, string @scopeId, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/clients/{1}/authz/resource-server/scope/{2}/resources", [@realm, @clientUuid, @scopeId]), AdminUri.Query([]), null, AdminJson.TypeInfo<List<ResourceRepresentation>>(), cancellationToken);
+        transport.SendJsonOperationAsync("Scope.GetResourcesAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/clients/{1}/authz/resource-server/scope/{2}/resources", [@realm, @clientUuid, @scopeId]), AdminUri.Query([]), null, AdminJson.TypeInfo<List<ResourceRepresentation>>(), cancellationToken);
 
 }

@@ -6,18 +6,18 @@ public sealed class ClientScopesApi(KeycloakAdminClient transport)
 {
     /// <summary>Get client scopes belonging to the realm Returns a list of client scopes belonging to the realm</summary>
     public Task<AdminResponse<List<ClientScopeRepresentation>>> GetClientScopesAsync(string @realm, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/client-scopes", [@realm]), AdminUri.Query([]), null, AdminJson.TypeInfo<List<ClientScopeRepresentation>>(), cancellationToken);
+        transport.SendJsonOperationAsync("ClientScopes.GetClientScopesAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/client-scopes", [@realm]), AdminUri.Query([]), null, AdminJson.TypeInfo<List<ClientScopeRepresentation>>(), cancellationToken);
 
     /// <summary>Create a new client scope Client Scope’s name must be unique!</summary>
     public Task<AdminResponse> CreateClientScopeAsync(string @realm, ClientScopeRepresentation? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/client-scopes", [@realm]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<ClientScopeRepresentation>()), cancellationToken);
+        transport.SendOperationAsync("ClientScopes.CreateClientScopeAsync", HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/client-scopes", [@realm]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<ClientScopeRepresentation>()), cancellationToken);
 
     /// <summary>Get client scopes belonging to the realm Returns a list of client scopes belonging to the realm</summary>
     public Task<AdminResponse<List<ClientScopeRepresentation>>> GetClientScopesGETAdminRealmsRealmClientTemplatesAsync(string @realm, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/client-templates", [@realm]), AdminUri.Query([]), null, AdminJson.TypeInfo<List<ClientScopeRepresentation>>(), cancellationToken);
+        transport.SendJsonOperationAsync("ClientScopes.GetClientScopesGETAdminRealmsRealmClientTemplatesAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/client-templates", [@realm]), AdminUri.Query([]), null, AdminJson.TypeInfo<List<ClientScopeRepresentation>>(), cancellationToken);
 
     /// <summary>Create a new client scope Client Scope’s name must be unique!</summary>
     public Task<AdminResponse> CreateClientScopePOSTAdminRealmsRealmClientTemplatesAsync(string @realm, ClientScopeRepresentation? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/client-templates", [@realm]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<ClientScopeRepresentation>()), cancellationToken);
+        transport.SendOperationAsync("ClientScopes.CreateClientScopePOSTAdminRealmsRealmClientTemplatesAsync", HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/client-templates", [@realm]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<ClientScopeRepresentation>()), cancellationToken);
 
 }

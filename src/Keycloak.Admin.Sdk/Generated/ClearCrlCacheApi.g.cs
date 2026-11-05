@@ -6,6 +6,6 @@ public sealed class ClearCrlCacheApi(KeycloakAdminClient transport)
 {
     /// <summary>Source: ClearCrlCacheResource.clearCrlCache</summary>
     public Task<AdminResponse<JsonElement>> ClearCrlCacheAsync(string @realm, HttpContent? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/clear-crl-cache", [@realm]), AdminUri.Query([]), body, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
+        transport.SendJsonOperationAsync("ClearCrlCache.ClearCrlCacheAsync", HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/clear-crl-cache", [@realm]), AdminUri.Query([]), body, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
 
 }

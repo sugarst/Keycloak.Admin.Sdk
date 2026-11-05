@@ -6,22 +6,22 @@ public sealed class IdentityProvidersApi(KeycloakAdminClient transport)
 {
     /// <summary>Import identity provider from JSON body Supply HttpContent with the desired server-supported Content-Type; the request consumes and disposes it.</summary>
     public Task<AdminResponse<Dictionary<string, string>>> ImportFromAsync(string @realm, HttpContent? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/identity-provider/import-config", [@realm]), AdminUri.Query([]), body, AdminJson.TypeInfo<Dictionary<string, string>>(), cancellationToken);
+        transport.SendJsonOperationAsync("IdentityProviders.ImportFromAsync", HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/identity-provider/import-config", [@realm]), AdminUri.Query([]), body, AdminJson.TypeInfo<Dictionary<string, string>>(), cancellationToken);
 
     /// <summary>List identity providers</summary>
     public Task<AdminResponse<List<IdentityProviderRepresentation>>> GetIdentityProvidersAsync(string @realm, bool? @briefRepresentation = null, string? @capability = null, int? @first = null, int? @max = null, bool? @realmOnly = null, string? @search = null, string? @type = null, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/identity-provider/instances", [@realm]), AdminUri.Query([new("briefRepresentation", @briefRepresentation), new("capability", @capability), new("first", @first), new("max", @max), new("realmOnly", @realmOnly), new("search", @search), new("type", @type)]), null, AdminJson.TypeInfo<List<IdentityProviderRepresentation>>(), cancellationToken);
+        transport.SendJsonOperationAsync("IdentityProviders.GetIdentityProvidersAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/identity-provider/instances", [@realm]), AdminUri.Query([new("briefRepresentation", @briefRepresentation), new("capability", @capability), new("first", @first), new("max", @max), new("realmOnly", @realmOnly), new("search", @search), new("type", @type)]), null, AdminJson.TypeInfo<List<IdentityProviderRepresentation>>(), cancellationToken);
 
     /// <summary>Create a new identity provider</summary>
     public Task<AdminResponse> CreateAsync(string @realm, IdentityProviderRepresentation? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/identity-provider/instances", [@realm]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<IdentityProviderRepresentation>()), cancellationToken);
+        transport.SendOperationAsync("IdentityProviders.CreateAsync", HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/identity-provider/instances", [@realm]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<IdentityProviderRepresentation>()), cancellationToken);
 
     /// <summary>Get the identity provider factory for that provider id</summary>
     public Task<AdminResponse<JsonElement>> GetIdentityProviderFactoryAsync(string @realm, string @providerId, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/identity-provider/providers/{1}", [@realm, @providerId]), AdminUri.Query([]), null, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
+        transport.SendJsonOperationAsync("IdentityProviders.GetIdentityProviderFactoryAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/identity-provider/providers/{1}", [@realm, @providerId]), AdminUri.Query([]), null, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
 
     /// <summary>Uploads a certificate, prepares the jwks or public key associated, and returns the certificate representation. Supply HttpContent with the desired server-supported Content-Type; the request consumes and disposes it.</summary>
     public Task<AdminResponse<CertificateRepresentation>> UploadCertificateAsync(string @realm, HttpContent? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/identity-provider/upload-certificate", [@realm]), AdminUri.Query([]), body, AdminJson.TypeInfo<CertificateRepresentation>(), cancellationToken);
+        transport.SendJsonOperationAsync("IdentityProviders.UploadCertificateAsync", HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/identity-provider/upload-certificate", [@realm]), AdminUri.Query([]), body, AdminJson.TypeInfo<CertificateRepresentation>(), cancellationToken);
 
 }

@@ -6,22 +6,22 @@ public sealed class UiAllEffectiveRoleMappingApi(KeycloakAdminClient transport)
 {
     /// <summary>Source: UiAllEffectiveRoleMappingResource.listAllEffectiveClientScopeRoleMappings</summary>
     public Task<AdminResponse<JsonElement>> ListAllEffectiveClientScopeRoleMappingsAsync(string @realm, string @id, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/ui-ext/effective-roles-all/clientScopes/{1}", [@realm, @id]), AdminUri.Query([]), null, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
+        transport.SendJsonOperationAsync("UiAllEffectiveRoleMapping.ListAllEffectiveClientScopeRoleMappingsAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/ui-ext/effective-roles-all/clientScopes/{1}", [@realm, @id]), AdminUri.Query([]), null, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
 
     /// <summary>Source: UiAllEffectiveRoleMappingResource.listAllEffectiveClientsRoleMappings</summary>
     public Task<AdminResponse<JsonElement>> ListAllEffectiveClientsRoleMappingsAsync(string @realm, string @id, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/ui-ext/effective-roles-all/clients/{1}", [@realm, @id]), AdminUri.Query([]), null, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
+        transport.SendJsonOperationAsync("UiAllEffectiveRoleMapping.ListAllEffectiveClientsRoleMappingsAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/ui-ext/effective-roles-all/clients/{1}", [@realm, @id]), AdminUri.Query([]), null, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
 
     /// <summary>Source: UiAllEffectiveRoleMappingResource.listAllEffectiveGroupsRoleMappings</summary>
     public Task<AdminResponse<JsonElement>> ListAllEffectiveGroupsRoleMappingsAsync(string @realm, string @id, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/ui-ext/effective-roles-all/groups/{1}", [@realm, @id]), AdminUri.Query([]), null, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
+        transport.SendJsonOperationAsync("UiAllEffectiveRoleMapping.ListAllEffectiveGroupsRoleMappingsAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/ui-ext/effective-roles-all/groups/{1}", [@realm, @id]), AdminUri.Query([]), null, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
 
     /// <summary>Source: UiAllEffectiveRoleMappingResource.listAllEffectiveUsersRoleMappings</summary>
     public Task<AdminResponse<JsonElement>> ListAllEffectiveUsersRoleMappingsAsync(string @realm, string @id, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/ui-ext/effective-roles-all/users/{1}", [@realm, @id]), AdminUri.Query([]), null, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
+        transport.SendJsonOperationAsync("UiAllEffectiveRoleMapping.ListAllEffectiveUsersRoleMappingsAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/ui-ext/effective-roles-all/users/{1}", [@realm, @id]), AdminUri.Query([]), null, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
 
     /// <summary>Source: UiAllEffectiveRoleMappingResource.listAllEffectiveRealmRoleMappings</summary>
     public Task<AdminResponse<JsonElement>> ListAllEffectiveRealmRoleMappingsAsync(string @realm, string @id, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/ui-ext/effective-roles-all/roles/{1}", [@realm, @id]), AdminUri.Query([]), null, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
+        transport.SendJsonOperationAsync("UiAllEffectiveRoleMapping.ListAllEffectiveRealmRoleMappingsAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/ui-ext/effective-roles-all/roles/{1}", [@realm, @id]), AdminUri.Query([]), null, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
 
 }

@@ -6,18 +6,18 @@ public sealed class PolicyEvaluationApi(KeycloakAdminClient transport)
 {
     /// <summary>Evaluate</summary>
     public Task<AdminResponse<PolicyEvaluationResponse>> EvaluateAsync(string @realm, string @clientUuid, PolicyEvaluationRequest? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/clients/{1}/authz/resource-server/permission/evaluate", [@realm, @clientUuid]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<PolicyEvaluationRequest>()), AdminJson.TypeInfo<PolicyEvaluationResponse>(), cancellationToken);
+        transport.SendJsonOperationAsync("PolicyEvaluation.EvaluateAsync", HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/clients/{1}/authz/resource-server/permission/evaluate", [@realm, @clientUuid]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<PolicyEvaluationRequest>()), AdminJson.TypeInfo<PolicyEvaluationResponse>(), cancellationToken);
 
     /// <summary>EvaluatePOSTAdminRealmsRealmClientsClientUuidAuthzResourceServerPolicyEvaluate</summary>
     public Task<AdminResponse<PolicyEvaluationResponse>> EvaluatePOSTAdminRealmsRealmClientsClientUuidAuthzResourceServerPolicyEvaluateAsync(string @realm, string @clientUuid, PolicyEvaluationRequest? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/clients/{1}/authz/resource-server/policy/evaluate", [@realm, @clientUuid]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<PolicyEvaluationRequest>()), AdminJson.TypeInfo<PolicyEvaluationResponse>(), cancellationToken);
+        transport.SendJsonOperationAsync("PolicyEvaluation.EvaluatePOSTAdminRealmsRealmClientsClientUuidAuthzResourceServerPolicyEvaluateAsync", HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/clients/{1}/authz/resource-server/policy/evaluate", [@realm, @clientUuid]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<PolicyEvaluationRequest>()), AdminJson.TypeInfo<PolicyEvaluationResponse>(), cancellationToken);
 
     /// <summary>Source: PolicyEvaluationService.evaluate</summary>
     public Task<AdminResponse<JsonElement>> EvaluatePOSTAdminRealmsRealmClientsClientUuidAuthzResourceServerPermissionTypeEvaluateAsync(string @realm, string @clientUuid, string @type, HttpContent? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/clients/{1}/authz/resource-server/permission/{2}/evaluate", [@realm, @clientUuid, @type]), AdminUri.Query([]), body, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
+        transport.SendJsonOperationAsync("PolicyEvaluation.EvaluatePOSTAdminRealmsRealmClientsClientUuidAuthzResourceServerPermissionTypeEvaluateAsync", HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/clients/{1}/authz/resource-server/permission/{2}/evaluate", [@realm, @clientUuid, @type]), AdminUri.Query([]), body, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
 
     /// <summary>Source: PolicyEvaluationService.evaluate</summary>
     public Task<AdminResponse<JsonElement>> EvaluatePOSTAdminRealmsRealmClientsClientUuidAuthzResourceServerPolicyTypeEvaluateAsync(string @realm, string @clientUuid, string @type, HttpContent? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/clients/{1}/authz/resource-server/policy/{2}/evaluate", [@realm, @clientUuid, @type]), AdminUri.Query([]), body, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
+        transport.SendJsonOperationAsync("PolicyEvaluation.EvaluatePOSTAdminRealmsRealmClientsClientUuidAuthzResourceServerPolicyTypeEvaluateAsync", HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/clients/{1}/authz/resource-server/policy/{2}/evaluate", [@realm, @clientUuid, @type]), AdminUri.Query([]), body, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
 
 }

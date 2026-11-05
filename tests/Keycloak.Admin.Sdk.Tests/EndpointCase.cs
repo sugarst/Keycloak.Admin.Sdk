@@ -143,6 +143,7 @@ public sealed record EndpointCase(string Method, string Path, string Operation, 
         catch (KeycloakAdminException error)
         {
             Check(error.StatusCode == (HttpStatusCode)status && error.Method == Method, "HTTP failure preserves status and method");
+            Check(error.Stage == KeycloakFailureStage.AdminApi && error.Operation == Operation && error.ErrorCode is null, "fixed operation metadata for every generated API");
             Check(!error.ToString().Contains("secret-personal-data", StringComparison.Ordinal), "error content redacted");
         }
         Check(handler.Count == 1 && content.Disposed, "failed response disposed without retries");

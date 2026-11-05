@@ -6,10 +6,10 @@ public sealed class ClientPoliciesApi(KeycloakAdminClient transport)
 {
     /// <summary>GetPolicies</summary>
     public Task<AdminResponse<ClientPoliciesRepresentation>> GetPoliciesAsync(string @realm, bool? @includeGlobalPolicies = null, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/client-policies/policies", [@realm]), AdminUri.Query([new("include-global-policies", @includeGlobalPolicies)]), null, AdminJson.TypeInfo<ClientPoliciesRepresentation>(), cancellationToken);
+        transport.SendJsonOperationAsync("ClientPolicies.GetPoliciesAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/client-policies/policies", [@realm]), AdminUri.Query([new("include-global-policies", @includeGlobalPolicies)]), null, AdminJson.TypeInfo<ClientPoliciesRepresentation>(), cancellationToken);
 
     /// <summary>UpdatePolicies</summary>
     public Task<AdminResponse> UpdatePoliciesAsync(string @realm, ClientPoliciesRepresentation? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Put, AdminUri.Path("/admin/realms/{0}/client-policies/policies", [@realm]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<ClientPoliciesRepresentation>()), cancellationToken);
+        transport.SendOperationAsync("ClientPolicies.UpdatePoliciesAsync", HttpMethod.Put, AdminUri.Path("/admin/realms/{0}/client-policies/policies", [@realm]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<ClientPoliciesRepresentation>()), cancellationToken);
 
 }

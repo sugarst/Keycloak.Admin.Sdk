@@ -31,6 +31,7 @@ return await ScriptHost.ExecuteAsync(args,
     await File.WriteAllTextAsync(Path.Combine(root, "artifacts/test-results/latest.txt"), testResults, ct);
     await ScriptHost.RunCheckedAsync(root, "dotnet", ["pack", "src/Keycloak.Admin.Sdk", "-c", "Release", "--no-build", "-o", "artifacts/packages"], ct);
     string package = Directory.EnumerateFiles(Path.Combine(root, "artifacts/packages"), "Keycloak.Admin.Sdk.*.nupkg")
+        .Where(path => char.IsDigit(Path.GetFileName(path)["Keycloak.Admin.Sdk.".Length]))
         .OrderByDescending(File.GetLastWriteTimeUtc).First();
     using (var archive = ZipFile.OpenRead(package))
     {
@@ -39,6 +40,7 @@ return await ScriptHost.ExecuteAsync(args,
         if (manifest.Descendants().Any(element => element.Name.LocalName == "dependency"))
             throw new InvalidDataException("SDK package must not have runtime NuGet dependencies.");
     }
+    await ScriptHost.RunCheckedAsync(root, "dotnet", ["pack", "src/Keycloak.Admin.Sdk.DependencyInjection", "-c", "Release", "--no-build", "-o", "artifacts/packages"], ct);
     if (args.Contains("--native-container"))
         await ScriptHost.RunCheckedAsync(root, "docker", ["build", "-f", "tests/Keycloak.Admin.Sdk.AotSmoke/Dockerfile", "--target", "export",
             "--output", "type=local,dest=artifacts/aot/linux-musl-x64", "."], ct);

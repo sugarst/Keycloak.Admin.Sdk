@@ -95,7 +95,7 @@ public static class RuntimeContracts
         await UriAndMetadataAsync(); await ConstructorAndTransportAsync();
         await TokenFailuresAndRecoveryAsync(); await StreamFailuresAndOwnershipAsync();
     }
-    private static ClientCredentialsTokenProvider Provider(HttpClient http) => new(http, new Uri("https://keycloak.invalid/"), "master", "client", _ => ValueTask.FromResult("secret"));
+    private static ClientCredentialsTokenProvider Provider(HttpClient http) => new(http, new Uri("https://keycloak.invalid/"), "master", "client", _ => ValueTask.FromResult("secret"), null, new() { FailureCooldown = TimeSpan.Zero });
     private static HttpResponseMessage Token(string type, long expires) => new(HttpStatusCode.OK) { Content = new StringContent("{\"access_token\":\"recovered\",\"expires_in\":" + expires.ToString(System.Globalization.CultureInfo.InvariantCulture) + ",\"token_type\":\"" + type + "\"}") };
     private static void Check(bool value, string message) { if (!value) throw new InvalidOperationException(message); }
     private static void Throws<T>(Action action) where T : Exception

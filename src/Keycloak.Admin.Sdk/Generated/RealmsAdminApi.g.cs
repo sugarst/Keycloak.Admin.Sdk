@@ -6,10 +6,10 @@ public sealed class RealmsAdminApi(KeycloakAdminClient transport)
 {
     /// <summary>Get accessible realms Returns a list of accessible realms. The list is filtered based on what realms the caller is allowed to view.</summary>
     public Task<AdminResponse<List<RealmRepresentation>>> GetRealmsAsync(bool? @briefRepresentation = null, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms", []), AdminUri.Query([new("briefRepresentation", @briefRepresentation)]), null, AdminJson.TypeInfo<List<RealmRepresentation>>(), cancellationToken);
+        transport.SendJsonOperationAsync("RealmsAdmin.GetRealmsAsync", HttpMethod.Get, AdminUri.Path("/admin/realms", []), AdminUri.Query([new("briefRepresentation", @briefRepresentation)]), null, AdminJson.TypeInfo<List<RealmRepresentation>>(), cancellationToken);
 
     /// <summary>Import a realm. Imports a realm from a full representation of that realm.</summary>
     public Task<AdminResponse> ImportRealmAsync(HttpContent? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Post, AdminUri.Path("/admin/realms", []), AdminUri.Query([]), body, cancellationToken);
+        transport.SendOperationAsync("RealmsAdmin.ImportRealmAsync", HttpMethod.Post, AdminUri.Path("/admin/realms", []), AdminUri.Query([]), body, cancellationToken);
 
 }

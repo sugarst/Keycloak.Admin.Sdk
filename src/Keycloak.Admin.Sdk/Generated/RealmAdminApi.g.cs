@@ -6,122 +6,122 @@ public sealed class RealmAdminApi(KeycloakAdminClient transport)
 {
     /// <summary>Get the top-level representation of the realm It will not include nested information like User and Client representations.</summary>
     public Task<AdminResponse<RealmRepresentation>> GetRealmAsync(string @realm, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}", [@realm]), AdminUri.Query([]), null, AdminJson.TypeInfo<RealmRepresentation>(), cancellationToken);
+        transport.SendJsonOperationAsync("RealmAdmin.GetRealmAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}", [@realm]), AdminUri.Query([]), null, AdminJson.TypeInfo<RealmRepresentation>(), cancellationToken);
 
     /// <summary>Update the top-level information of the realm Any user, roles or client information in the representation will be ignored.</summary>
     public Task<AdminResponse> UpdateRealmAsync(string @realm, RealmRepresentation? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Put, AdminUri.Path("/admin/realms/{0}", [@realm]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<RealmRepresentation>()), cancellationToken);
+        transport.SendOperationAsync("RealmAdmin.UpdateRealmAsync", HttpMethod.Put, AdminUri.Path("/admin/realms/{0}", [@realm]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<RealmRepresentation>()), cancellationToken);
 
     /// <summary>Delete the realm</summary>
     public Task<AdminResponse> DeleteRealmAsync(string @realm, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Delete, AdminUri.Path("/admin/realms/{0}", [@realm]), AdminUri.Query([]), null, cancellationToken);
+        transport.SendOperationAsync("RealmAdmin.DeleteRealmAsync", HttpMethod.Delete, AdminUri.Path("/admin/realms/{0}", [@realm]), AdminUri.Query([]), null, cancellationToken);
 
     /// <summary>Get admin events Returns all admin events, or filters events based on URL query parameters listed here</summary>
     public Task<AdminResponse<List<AdminEventRepresentation>>> GetEventsAsync(string @realm, string? @authClient = null, string? @authIpAddress = null, string? @authRealm = null, string? @authUser = null, string? @dateFrom = null, string? @dateTo = null, string? @direction = null, int? @first = null, int? @max = null, List<string>? @operationTypes = null, string? @resourcePath = null, List<string>? @resourceTypes = null, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/admin-events", [@realm]), AdminUri.Query([new("authClient", @authClient), new("authIpAddress", @authIpAddress), new("authRealm", @authRealm), new("authUser", @authUser), new("dateFrom", @dateFrom), new("dateTo", @dateTo), new("direction", @direction), new("first", @first), new("max", @max), new("operationTypes", @operationTypes), new("resourcePath", @resourcePath), new("resourceTypes", @resourceTypes)]), null, AdminJson.TypeInfo<List<AdminEventRepresentation>>(), cancellationToken);
+        transport.SendJsonOperationAsync("RealmAdmin.GetEventsAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/admin-events", [@realm]), AdminUri.Query([new("authClient", @authClient), new("authIpAddress", @authIpAddress), new("authRealm", @authRealm), new("authUser", @authUser), new("dateFrom", @dateFrom), new("dateTo", @dateTo), new("direction", @direction), new("first", @first), new("max", @max), new("operationTypes", @operationTypes), new("resourcePath", @resourcePath), new("resourceTypes", @resourceTypes)]), null, AdminJson.TypeInfo<List<AdminEventRepresentation>>(), cancellationToken);
 
     /// <summary>Delete all admin events</summary>
     public Task<AdminResponse> ClearAdminEventsAsync(string @realm, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Delete, AdminUri.Path("/admin/realms/{0}/admin-events", [@realm]), AdminUri.Query([]), null, cancellationToken);
+        transport.SendOperationAsync("RealmAdmin.ClearAdminEventsAsync", HttpMethod.Delete, AdminUri.Path("/admin/realms/{0}/admin-events", [@realm]), AdminUri.Query([]), null, cancellationToken);
 
     /// <summary>Base path for importing clients under this realm. Supply HttpContent with the desired server-supported Content-Type; the request consumes and disposes it.</summary>
     public Task<AdminResponse<ClientRepresentation>> ConvertClientDescriptionAsync(string @realm, HttpContent? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/client-description-converter", [@realm]), AdminUri.Query([]), body, AdminJson.TypeInfo<ClientRepresentation>(), cancellationToken);
+        transport.SendJsonOperationAsync("RealmAdmin.ConvertClientDescriptionAsync", HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/client-description-converter", [@realm]), AdminUri.Query([]), body, AdminJson.TypeInfo<ClientRepresentation>(), cancellationToken);
 
     /// <summary>Get client session stats Returns a JSON map.</summary>
     public Task<AdminResponse<List<Dictionary<string, string>>>> GetClientSessionStatsAsync(string @realm, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/client-session-stats", [@realm]), AdminUri.Query([]), null, AdminJson.TypeInfo<List<Dictionary<string, string>>>(), cancellationToken);
+        transport.SendJsonOperationAsync("RealmAdmin.GetClientSessionStatsAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/client-session-stats", [@realm]), AdminUri.Query([]), null, AdminJson.TypeInfo<List<Dictionary<string, string>>>(), cancellationToken);
 
     /// <summary>GetCredentialRegistrators</summary>
     public Task<AdminResponse<List<string>>> GetCredentialRegistratorsAsync(string @realm, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/credential-registrators", [@realm]), AdminUri.Query([]), null, AdminJson.TypeInfo<List<string>>(), cancellationToken);
+        transport.SendJsonOperationAsync("RealmAdmin.GetCredentialRegistratorsAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/credential-registrators", [@realm]), AdminUri.Query([]), null, AdminJson.TypeInfo<List<string>>(), cancellationToken);
 
     /// <summary>Get realm default client scopes. Only name and ids are returned.</summary>
     public Task<AdminResponse<List<ClientScopeRepresentation>>> GetDefaultDefaultClientScopesAsync(string @realm, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/default-default-client-scopes", [@realm]), AdminUri.Query([]), null, AdminJson.TypeInfo<List<ClientScopeRepresentation>>(), cancellationToken);
+        transport.SendJsonOperationAsync("RealmAdmin.GetDefaultDefaultClientScopesAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/default-default-client-scopes", [@realm]), AdminUri.Query([]), null, AdminJson.TypeInfo<List<ClientScopeRepresentation>>(), cancellationToken);
 
     /// <summary>AddDefaultDefaultClientScope</summary>
     public Task<AdminResponse> AddDefaultDefaultClientScopeAsync(string @realm, string @clientScopeId, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Put, AdminUri.Path("/admin/realms/{0}/default-default-client-scopes/{1}", [@realm, @clientScopeId]), AdminUri.Query([]), null, cancellationToken);
+        transport.SendOperationAsync("RealmAdmin.AddDefaultDefaultClientScopeAsync", HttpMethod.Put, AdminUri.Path("/admin/realms/{0}/default-default-client-scopes/{1}", [@realm, @clientScopeId]), AdminUri.Query([]), null, cancellationToken);
 
     /// <summary>RemoveDefaultDefaultClientScope</summary>
     public Task<AdminResponse> RemoveDefaultDefaultClientScopeAsync(string @realm, string @clientScopeId, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Delete, AdminUri.Path("/admin/realms/{0}/default-default-client-scopes/{1}", [@realm, @clientScopeId]), AdminUri.Query([]), null, cancellationToken);
+        transport.SendOperationAsync("RealmAdmin.RemoveDefaultDefaultClientScopeAsync", HttpMethod.Delete, AdminUri.Path("/admin/realms/{0}/default-default-client-scopes/{1}", [@realm, @clientScopeId]), AdminUri.Query([]), null, cancellationToken);
 
     /// <summary>Get group hierarchy.  Only name and ids are returned.</summary>
     public Task<AdminResponse<List<GroupRepresentation>>> GetDefaultGroupsAsync(string @realm, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/default-groups", [@realm]), AdminUri.Query([]), null, AdminJson.TypeInfo<List<GroupRepresentation>>(), cancellationToken);
+        transport.SendJsonOperationAsync("RealmAdmin.GetDefaultGroupsAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/default-groups", [@realm]), AdminUri.Query([]), null, AdminJson.TypeInfo<List<GroupRepresentation>>(), cancellationToken);
 
     /// <summary>AddDefaultGroup</summary>
     public Task<AdminResponse> AddDefaultGroupAsync(string @realm, string @groupId, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Put, AdminUri.Path("/admin/realms/{0}/default-groups/{1}", [@realm, @groupId]), AdminUri.Query([]), null, cancellationToken);
+        transport.SendOperationAsync("RealmAdmin.AddDefaultGroupAsync", HttpMethod.Put, AdminUri.Path("/admin/realms/{0}/default-groups/{1}", [@realm, @groupId]), AdminUri.Query([]), null, cancellationToken);
 
     /// <summary>RemoveDefaultGroup</summary>
     public Task<AdminResponse> RemoveDefaultGroupAsync(string @realm, string @groupId, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Delete, AdminUri.Path("/admin/realms/{0}/default-groups/{1}", [@realm, @groupId]), AdminUri.Query([]), null, cancellationToken);
+        transport.SendOperationAsync("RealmAdmin.RemoveDefaultGroupAsync", HttpMethod.Delete, AdminUri.Path("/admin/realms/{0}/default-groups/{1}", [@realm, @groupId]), AdminUri.Query([]), null, cancellationToken);
 
     /// <summary>Get realm optional client scopes. Only name and ids are returned.</summary>
     public Task<AdminResponse<List<ClientScopeRepresentation>>> GetDefaultOptionalClientScopesAsync(string @realm, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/default-optional-client-scopes", [@realm]), AdminUri.Query([]), null, AdminJson.TypeInfo<List<ClientScopeRepresentation>>(), cancellationToken);
+        transport.SendJsonOperationAsync("RealmAdmin.GetDefaultOptionalClientScopesAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/default-optional-client-scopes", [@realm]), AdminUri.Query([]), null, AdminJson.TypeInfo<List<ClientScopeRepresentation>>(), cancellationToken);
 
     /// <summary>AddDefaultOptionalClientScope</summary>
     public Task<AdminResponse> AddDefaultOptionalClientScopeAsync(string @realm, string @clientScopeId, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Put, AdminUri.Path("/admin/realms/{0}/default-optional-client-scopes/{1}", [@realm, @clientScopeId]), AdminUri.Query([]), null, cancellationToken);
+        transport.SendOperationAsync("RealmAdmin.AddDefaultOptionalClientScopeAsync", HttpMethod.Put, AdminUri.Path("/admin/realms/{0}/default-optional-client-scopes/{1}", [@realm, @clientScopeId]), AdminUri.Query([]), null, cancellationToken);
 
     /// <summary>RemoveDefaultOptionalClientScope</summary>
     public Task<AdminResponse> RemoveDefaultOptionalClientScopeAsync(string @realm, string @clientScopeId, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Delete, AdminUri.Path("/admin/realms/{0}/default-optional-client-scopes/{1}", [@realm, @clientScopeId]), AdminUri.Query([]), null, cancellationToken);
+        transport.SendOperationAsync("RealmAdmin.RemoveDefaultOptionalClientScopeAsync", HttpMethod.Delete, AdminUri.Path("/admin/realms/{0}/default-optional-client-scopes/{1}", [@realm, @clientScopeId]), AdminUri.Query([]), null, cancellationToken);
 
     /// <summary>Get events Returns all events, or filters them based on URL query parameters listed here</summary>
     public Task<AdminResponse<List<EventRepresentation>>> GetEventsGETAdminRealmsRealmEventsAsync(string @realm, string? @client = null, string? @dateFrom = null, string? @dateTo = null, string? @direction = null, int? @first = null, string? @ipAddress = null, int? @max = null, List<string>? @type = null, string? @user = null, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/events", [@realm]), AdminUri.Query([new("client", @client), new("dateFrom", @dateFrom), new("dateTo", @dateTo), new("direction", @direction), new("first", @first), new("ipAddress", @ipAddress), new("max", @max), new("type", @type), new("user", @user)]), null, AdminJson.TypeInfo<List<EventRepresentation>>(), cancellationToken);
+        transport.SendJsonOperationAsync("RealmAdmin.GetEventsGETAdminRealmsRealmEventsAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/events", [@realm]), AdminUri.Query([new("client", @client), new("dateFrom", @dateFrom), new("dateTo", @dateTo), new("direction", @direction), new("first", @first), new("ipAddress", @ipAddress), new("max", @max), new("type", @type), new("user", @user)]), null, AdminJson.TypeInfo<List<EventRepresentation>>(), cancellationToken);
 
     /// <summary>Delete all events</summary>
     public Task<AdminResponse> ClearEventsAsync(string @realm, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Delete, AdminUri.Path("/admin/realms/{0}/events", [@realm]), AdminUri.Query([]), null, cancellationToken);
+        transport.SendOperationAsync("RealmAdmin.ClearEventsAsync", HttpMethod.Delete, AdminUri.Path("/admin/realms/{0}/events", [@realm]), AdminUri.Query([]), null, cancellationToken);
 
     /// <summary>Get the events provider configuration Returns JSON object with events provider configuration</summary>
     public Task<AdminResponse<RealmEventsConfigRepresentation>> GetRealmEventsConfigAsync(string @realm, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/events/config", [@realm]), AdminUri.Query([]), null, AdminJson.TypeInfo<RealmEventsConfigRepresentation>(), cancellationToken);
+        transport.SendJsonOperationAsync("RealmAdmin.GetRealmEventsConfigAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/events/config", [@realm]), AdminUri.Query([]), null, AdminJson.TypeInfo<RealmEventsConfigRepresentation>(), cancellationToken);
 
     /// <summary>UpdateRealmEventsConfig</summary>
     public Task<AdminResponse> UpdateRealmEventsConfigAsync(string @realm, RealmEventsConfigRepresentation? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Put, AdminUri.Path("/admin/realms/{0}/events/config", [@realm]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<RealmEventsConfigRepresentation>()), cancellationToken);
+        transport.SendOperationAsync("RealmAdmin.UpdateRealmEventsConfigAsync", HttpMethod.Put, AdminUri.Path("/admin/realms/{0}/events/config", [@realm]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<RealmEventsConfigRepresentation>()), cancellationToken);
 
     /// <summary>GetGroupByPath</summary>
     public Task<AdminResponse<GroupRepresentation>> GetGroupByPathAsync(string @realm, string @path, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/group-by-path/{1}", [@realm, @path]), AdminUri.Query([]), null, AdminJson.TypeInfo<GroupRepresentation>(), cancellationToken);
+        transport.SendJsonOperationAsync("RealmAdmin.GetGroupByPathAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/group-by-path/{1}", [@realm, @path]), AdminUri.Query([]), null, AdminJson.TypeInfo<GroupRepresentation>(), cancellationToken);
 
     /// <summary>Removes all user sessions.</summary>
     public Task<AdminResponse<GlobalRequestResult>> LogoutAllAsync(string @realm, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/logout-all", [@realm]), AdminUri.Query([]), null, AdminJson.TypeInfo<GlobalRequestResult>(), cancellationToken);
+        transport.SendJsonOperationAsync("RealmAdmin.LogoutAllAsync", HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/logout-all", [@realm]), AdminUri.Query([]), null, AdminJson.TypeInfo<GlobalRequestResult>(), cancellationToken);
 
     /// <summary>Partial export of existing realm into a JSON file.</summary>
     public Task<AdminResponse<RealmRepresentation>> PartialExportAsync(string @realm, bool? @exportClients = null, bool? @exportGroupsAndRoles = null, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/partial-export", [@realm]), AdminUri.Query([new("exportClients", @exportClients), new("exportGroupsAndRoles", @exportGroupsAndRoles)]), null, AdminJson.TypeInfo<RealmRepresentation>(), cancellationToken);
+        transport.SendJsonOperationAsync("RealmAdmin.PartialExportAsync", HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/partial-export", [@realm]), AdminUri.Query([new("exportClients", @exportClients), new("exportGroupsAndRoles", @exportGroupsAndRoles)]), null, AdminJson.TypeInfo<RealmRepresentation>(), cancellationToken);
 
     /// <summary>Partial import from a JSON file to an existing realm.</summary>
     public Task<AdminResponse<JsonElement>> PartialImportAsync(string @realm, HttpContent? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/partialImport", [@realm]), AdminUri.Query([]), body, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
+        transport.SendJsonOperationAsync("RealmAdmin.PartialImportAsync", HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/partialImport", [@realm]), AdminUri.Query([]), body, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
 
     /// <summary>Push the realm&apos;s revocation policy to any client that has an admin url associated with it.</summary>
     public Task<AdminResponse<GlobalRequestResult>> PushRevocationAsync(string @realm, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/push-revocation", [@realm]), AdminUri.Query([]), null, AdminJson.TypeInfo<GlobalRequestResult>(), cancellationToken);
+        transport.SendJsonOperationAsync("RealmAdmin.PushRevocationAsync", HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/push-revocation", [@realm]), AdminUri.Query([]), null, AdminJson.TypeInfo<GlobalRequestResult>(), cancellationToken);
 
     /// <summary>Remove a specific user session.</summary>
     public Task<AdminResponse> DeleteSessionAsync(string @realm, string @session, bool? @isOffline = null, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Delete, AdminUri.Path("/admin/realms/{0}/sessions/{1}", [@realm, @session]), AdminUri.Query([new("isOffline", @isOffline)]), null, cancellationToken);
+        transport.SendOperationAsync("RealmAdmin.DeleteSessionAsync", HttpMethod.Delete, AdminUri.Path("/admin/realms/{0}/sessions/{1}", [@realm, @session]), AdminUri.Query([new("isOffline", @isOffline)]), null, cancellationToken);
 
     /// <summary>Test SMTP connection with current logged in user Supply HttpContent with the desired server-supported Content-Type; the request consumes and disposes it.</summary>
     public Task<AdminResponse> TestSMTPConnectionAsync(string @realm, HttpContent? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/testSMTPConnection", [@realm]), AdminUri.Query([]), body, cancellationToken);
+        transport.SendOperationAsync("RealmAdmin.TestSMTPConnectionAsync", HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/testSMTPConnection", [@realm]), AdminUri.Query([]), body, cancellationToken);
 
     /// <summary>GetUserMgmtPermissions</summary>
     public Task<AdminResponse<ManagementPermissionReference>> GetUserMgmtPermissionsAsync(string @realm, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/users-management-permissions", [@realm]), AdminUri.Query([]), null, AdminJson.TypeInfo<ManagementPermissionReference>(), cancellationToken);
+        transport.SendJsonOperationAsync("RealmAdmin.GetUserMgmtPermissionsAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/users-management-permissions", [@realm]), AdminUri.Query([]), null, AdminJson.TypeInfo<ManagementPermissionReference>(), cancellationToken);
 
     /// <summary>SetUsersManagementPermissionsEnabled</summary>
     public Task<AdminResponse<ManagementPermissionReference>> SetUsersManagementPermissionsEnabledAsync(string @realm, ManagementPermissionReference? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Put, AdminUri.Path("/admin/realms/{0}/users-management-permissions", [@realm]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<ManagementPermissionReference>()), AdminJson.TypeInfo<ManagementPermissionReference>(), cancellationToken);
+        transport.SendJsonOperationAsync("RealmAdmin.SetUsersManagementPermissionsEnabledAsync", HttpMethod.Put, AdminUri.Path("/admin/realms/{0}/users-management-permissions", [@realm]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<ManagementPermissionReference>()), AdminJson.TypeInfo<ManagementPermissionReference>(), cancellationToken);
 
 }

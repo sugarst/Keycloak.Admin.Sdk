@@ -23,10 +23,40 @@ public sealed class AdminResponse<T>(AdminResponse response, T? body) : AdminRes
     public bool HasBody => !Content.IsEmpty;
 }
 
-/// <summary>HTTP failure. Response bodies and query values are deliberately excluded.</summary>
-public sealed class KeycloakAdminException(HttpStatusCode statusCode, string method) : HttpRequestException($"Keycloak Admin API returned {(int)statusCode} for {method}.", null, statusCode)
+public enum KeycloakFailureStage { Unknown = 0, AdminApi, TokenEndpoint }
+
+/// <summary>HTTP categories, not business reasons such as a duplicate username.</summary>
+public enum KeycloakErrorKind { Unknown = 0, BadRequest, Unauthorized, Forbidden, NotFound, Conflict }
+
+/// <summary>HTTP failure. Response bodies, URLs, credentials and query values are deliberately excluded.</summary>
+public sealed class KeycloakAdminException : HttpRequestException
 {
-    public string Method { get; } = method;
+    public KeycloakAdminException(HttpStatusCode statusCode, string method)
+        : this(statusCode, method, KeycloakFailureStage.Unknown, null) { }
+
+    internal KeycloakAdminException(HttpStatusCode statusCode, string method, KeycloakFailureStage stage, string? operation)
+        : base($"Keycloak Admin API returned {(int)statusCode} for {method}.", null, statusCode)
+    {
+        Method = method;
+        Stage = stage;
+        Operation = operation;
+        ErrorKind = statusCode switch
+        {
+            HttpStatusCode.BadRequest => KeycloakErrorKind.BadRequest,
+            HttpStatusCode.Unauthorized => KeycloakErrorKind.Unauthorized,
+            HttpStatusCode.Forbidden => KeycloakErrorKind.Forbidden,
+            HttpStatusCode.NotFound => KeycloakErrorKind.NotFound,
+            HttpStatusCode.Conflict => KeycloakErrorKind.Conflict,
+            _ => KeycloakErrorKind.Unknown
+        };
+    }
+
+    public string Method { get; }
+    public KeycloakFailureStage Stage { get; }
+    public KeycloakErrorKind ErrorKind { get; }
+    public string? Operation { get; }
+    /// <summary>Reserved for verified safe codes. Currently always null; error bodies are not read.</summary>
+    public string? ErrorCode => null;
 }
 
 public sealed class KeycloakResponseFormatException(HttpStatusCode statusCode, Exception inner) : Exception("Keycloak returned an unexpected JSON response.", inner)

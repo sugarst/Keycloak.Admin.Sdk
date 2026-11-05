@@ -6,14 +6,14 @@ public sealed class OrganizationGroupsApi(KeycloakAdminClient transport)
 {
     /// <summary>Get organization groups</summary>
     public Task<AdminResponse<List<GroupRepresentation>>> GetGroupsAsync(string @realm, string @orgId, bool? @briefRepresentation = null, bool? @exact = null, int? @first = null, int? @max = null, bool? @populateHierarchy = null, string? @q = null, string? @search = null, bool? @subGroupsCount = null, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/organizations/{1}/groups", [@realm, @orgId]), AdminUri.Query([new("briefRepresentation", @briefRepresentation), new("exact", @exact), new("first", @first), new("max", @max), new("populateHierarchy", @populateHierarchy), new("q", @q), new("search", @search), new("subGroupsCount", @subGroupsCount)]), null, AdminJson.TypeInfo<List<GroupRepresentation>>(), cancellationToken);
+        transport.SendJsonOperationAsync("OrganizationGroups.GetGroupsAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/organizations/{1}/groups", [@realm, @orgId]), AdminUri.Query([new("briefRepresentation", @briefRepresentation), new("exact", @exact), new("first", @first), new("max", @max), new("populateHierarchy", @populateHierarchy), new("q", @q), new("search", @search), new("subGroupsCount", @subGroupsCount)]), null, AdminJson.TypeInfo<List<GroupRepresentation>>(), cancellationToken);
 
     /// <summary>Creates a new top-level group or moves an existing group to top-level</summary>
     public Task<AdminResponse> AddTopLevelGroupAsync(string @realm, string @orgId, GroupRepresentation? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/organizations/{1}/groups", [@realm, @orgId]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<GroupRepresentation>()), cancellationToken);
+        transport.SendOperationAsync("OrganizationGroups.AddTopLevelGroupAsync", HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/organizations/{1}/groups", [@realm, @orgId]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<GroupRepresentation>()), cancellationToken);
 
     /// <summary>Get organization group by path</summary>
     public Task<AdminResponse<GroupRepresentation>> GetGroupByPathAsync(string @realm, string @orgId, string @path, bool? @briefRepresentation = null, bool? @subGroupsCount = null, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/organizations/{1}/groups/group-by-path/{2}", [@realm, @orgId, @path]), AdminUri.Query([new("briefRepresentation", @briefRepresentation), new("subGroupsCount", @subGroupsCount)]), null, AdminJson.TypeInfo<GroupRepresentation>(), cancellationToken);
+        transport.SendJsonOperationAsync("OrganizationGroups.GetGroupByPathAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/organizations/{1}/groups/group-by-path/{2}", [@realm, @orgId, @path]), AdminUri.Query([new("briefRepresentation", @briefRepresentation), new("subGroupsCount", @subGroupsCount)]), null, AdminJson.TypeInfo<GroupRepresentation>(), cancellationToken);
 
 }

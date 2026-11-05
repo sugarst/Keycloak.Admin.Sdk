@@ -6,6 +6,6 @@ public sealed class ClearRealmCacheApi(KeycloakAdminClient transport)
 {
     /// <summary>Source: ClearRealmCacheResource.clearRealmCache</summary>
     public Task<AdminResponse<JsonElement>> ClearRealmCacheAsync(string @realm, HttpContent? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/clear-realm-cache", [@realm]), AdminUri.Query([]), body, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
+        transport.SendJsonOperationAsync("ClearRealmCache.ClearRealmCacheAsync", HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/clear-realm-cache", [@realm]), AdminUri.Query([]), body, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
 
 }

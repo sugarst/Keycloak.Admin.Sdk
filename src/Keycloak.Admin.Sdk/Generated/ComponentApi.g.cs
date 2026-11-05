@@ -6,26 +6,26 @@ public sealed class ComponentApi(KeycloakAdminClient transport)
 {
     /// <summary>GetComponents</summary>
     public Task<AdminResponse<List<ComponentRepresentation>>> GetComponentsAsync(string @realm, string? @name = null, string? @parent = null, string? @providerId = null, string? @type = null, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/components", [@realm]), AdminUri.Query([new("name", @name), new("parent", @parent), new("providerId", @providerId), new("type", @type)]), null, AdminJson.TypeInfo<List<ComponentRepresentation>>(), cancellationToken);
+        transport.SendJsonOperationAsync("Component.GetComponentsAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/components", [@realm]), AdminUri.Query([new("name", @name), new("parent", @parent), new("providerId", @providerId), new("type", @type)]), null, AdminJson.TypeInfo<List<ComponentRepresentation>>(), cancellationToken);
 
     /// <summary>Create</summary>
     public Task<AdminResponse> CreateAsync(string @realm, ComponentRepresentation? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/components", [@realm]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<ComponentRepresentation>()), cancellationToken);
+        transport.SendOperationAsync("Component.CreateAsync", HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/components", [@realm]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<ComponentRepresentation>()), cancellationToken);
 
     /// <summary>GetComponent</summary>
     public Task<AdminResponse<ComponentRepresentation>> GetComponentAsync(string @realm, string @id, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/components/{1}", [@realm, @id]), AdminUri.Query([]), null, AdminJson.TypeInfo<ComponentRepresentation>(), cancellationToken);
+        transport.SendJsonOperationAsync("Component.GetComponentAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/components/{1}", [@realm, @id]), AdminUri.Query([]), null, AdminJson.TypeInfo<ComponentRepresentation>(), cancellationToken);
 
     /// <summary>UpdateComponent</summary>
     public Task<AdminResponse> UpdateComponentAsync(string @realm, string @id, ComponentRepresentation? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Put, AdminUri.Path("/admin/realms/{0}/components/{1}", [@realm, @id]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<ComponentRepresentation>()), cancellationToken);
+        transport.SendOperationAsync("Component.UpdateComponentAsync", HttpMethod.Put, AdminUri.Path("/admin/realms/{0}/components/{1}", [@realm, @id]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<ComponentRepresentation>()), cancellationToken);
 
     /// <summary>RemoveComponent</summary>
     public Task<AdminResponse> RemoveComponentAsync(string @realm, string @id, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Delete, AdminUri.Path("/admin/realms/{0}/components/{1}", [@realm, @id]), AdminUri.Query([]), null, cancellationToken);
+        transport.SendOperationAsync("Component.RemoveComponentAsync", HttpMethod.Delete, AdminUri.Path("/admin/realms/{0}/components/{1}", [@realm, @id]), AdminUri.Query([]), null, cancellationToken);
 
     /// <summary>List of subcomponent types that are available to configure for a particular parent component.</summary>
     public Task<AdminResponse<List<ComponentTypeRepresentation>>> GetSubcomponentConfigAsync(string @realm, string @id, string? @type = null, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/components/{1}/sub-component-types", [@realm, @id]), AdminUri.Query([new("type", @type)]), null, AdminJson.TypeInfo<List<ComponentTypeRepresentation>>(), cancellationToken);
+        transport.SendJsonOperationAsync("Component.GetSubcomponentConfigAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/components/{1}/sub-component-types", [@realm, @id]), AdminUri.Query([new("type", @type)]), null, AdminJson.TypeInfo<List<ComponentTypeRepresentation>>(), cancellationToken);
 
 }

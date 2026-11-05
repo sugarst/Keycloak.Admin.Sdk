@@ -6,6 +6,6 @@ public sealed class KeyApi(KeycloakAdminClient transport)
 {
     /// <summary>GetKeyMetadata</summary>
     public Task<AdminResponse<KeysMetadataRepresentation>> GetKeyMetadataAsync(string @realm, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/keys", [@realm]), AdminUri.Query([]), null, AdminJson.TypeInfo<KeysMetadataRepresentation>(), cancellationToken);
+        transport.SendJsonOperationAsync("Key.GetKeyMetadataAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/keys", [@realm]), AdminUri.Query([]), null, AdminJson.TypeInfo<KeysMetadataRepresentation>(), cancellationToken);
 
 }

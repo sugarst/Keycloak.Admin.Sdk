@@ -6,22 +6,22 @@ public sealed class UserStorageProviderApi(KeycloakAdminClient transport)
 {
     /// <summary>Source: UserStorageProviderResource.getSimpleName</summary>
     public Task<AdminResponse<JsonElement>> GetSimpleNameAsync(string @realm, string @id, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/user-storage/{1}/name", [@realm, @id]), AdminUri.Query([]), null, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
+        transport.SendJsonOperationAsync("UserStorageProvider.GetSimpleNameAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/user-storage/{1}/name", [@realm, @id]), AdminUri.Query([]), null, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
 
     /// <summary>Source: UserStorageProviderResource.removeImportedUsers</summary>
     public Task<AdminResponse<JsonElement>> RemoveImportedUsersAsync(string @realm, string @id, HttpContent? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/user-storage/{1}/remove-imported-users", [@realm, @id]), AdminUri.Query([]), body, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
+        transport.SendJsonOperationAsync("UserStorageProvider.RemoveImportedUsersAsync", HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/user-storage/{1}/remove-imported-users", [@realm, @id]), AdminUri.Query([]), body, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
 
     /// <summary>Source: UserStorageProviderResource.syncUsers</summary>
     public Task<AdminResponse<JsonElement>> SyncUsersAsync(string @realm, string @id, HttpContent? body = null, string? @action = null, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/user-storage/{1}/sync", [@realm, @id]), AdminUri.Query([new("action", @action)]), body, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
+        transport.SendJsonOperationAsync("UserStorageProvider.SyncUsersAsync", HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/user-storage/{1}/sync", [@realm, @id]), AdminUri.Query([new("action", @action)]), body, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
 
     /// <summary>Source: UserStorageProviderResource.unlinkUsers</summary>
     public Task<AdminResponse<JsonElement>> UnlinkUsersAsync(string @realm, string @id, HttpContent? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/user-storage/{1}/unlink-users", [@realm, @id]), AdminUri.Query([]), body, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
+        transport.SendJsonOperationAsync("UserStorageProvider.UnlinkUsersAsync", HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/user-storage/{1}/unlink-users", [@realm, @id]), AdminUri.Query([]), body, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
 
     /// <summary>Source: UserStorageProviderResource.syncMapperData</summary>
     public Task<AdminResponse<JsonElement>> SyncMapperDataAsync(string @realm, string @parentId, string @id, HttpContent? body = null, string? @direction = null, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/user-storage/{1}/mappers/{2}/sync", [@realm, @parentId, @id]), AdminUri.Query([new("direction", @direction)]), body, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
+        transport.SendJsonOperationAsync("UserStorageProvider.SyncMapperDataAsync", HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/user-storage/{1}/mappers/{2}/sync", [@realm, @parentId, @id]), AdminUri.Query([new("direction", @direction)]), body, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
 
 }

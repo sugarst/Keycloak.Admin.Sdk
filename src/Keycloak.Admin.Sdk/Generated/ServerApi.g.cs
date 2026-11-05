@@ -6,18 +6,18 @@ public sealed class ServerApi(KeycloakAdminClient transport)
 {
     /// <summary>FindById</summary>
     public Task<AdminResponse<ResourceServerRepresentation>> FindByIdAsync(string @realm, string @clientUuid, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/clients/{1}/authz/resource-server", [@realm, @clientUuid]), AdminUri.Query([]), null, AdminJson.TypeInfo<ResourceServerRepresentation>(), cancellationToken);
+        transport.SendJsonOperationAsync("Server.FindByIdAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/clients/{1}/authz/resource-server", [@realm, @clientUuid]), AdminUri.Query([]), null, AdminJson.TypeInfo<ResourceServerRepresentation>(), cancellationToken);
 
     /// <summary>Update</summary>
     public Task<AdminResponse> UpdateAsync(string @realm, string @clientUuid, ResourceServerRepresentation? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Put, AdminUri.Path("/admin/realms/{0}/clients/{1}/authz/resource-server", [@realm, @clientUuid]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<ResourceServerRepresentation>()), cancellationToken);
+        transport.SendOperationAsync("Server.UpdateAsync", HttpMethod.Put, AdminUri.Path("/admin/realms/{0}/clients/{1}/authz/resource-server", [@realm, @clientUuid]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<ResourceServerRepresentation>()), cancellationToken);
 
     /// <summary>ImportSettings</summary>
     public Task<AdminResponse> ImportSettingsAsync(string @realm, string @clientUuid, ResourceServerRepresentation? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/clients/{1}/authz/resource-server/import", [@realm, @clientUuid]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<ResourceServerRepresentation>()), cancellationToken);
+        transport.SendOperationAsync("Server.ImportSettingsAsync", HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/clients/{1}/authz/resource-server/import", [@realm, @clientUuid]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<ResourceServerRepresentation>()), cancellationToken);
 
     /// <summary>ExportSettings</summary>
     public Task<AdminResponse<ResourceServerRepresentation>> ExportSettingsAsync(string @realm, string @clientUuid, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/clients/{1}/authz/resource-server/settings", [@realm, @clientUuid]), AdminUri.Query([]), null, AdminJson.TypeInfo<ResourceServerRepresentation>(), cancellationToken);
+        transport.SendJsonOperationAsync("Server.ExportSettingsAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/clients/{1}/authz/resource-server/settings", [@realm, @clientUuid]), AdminUri.Query([]), null, AdminJson.TypeInfo<ResourceServerRepresentation>(), cancellationToken);
 
 }

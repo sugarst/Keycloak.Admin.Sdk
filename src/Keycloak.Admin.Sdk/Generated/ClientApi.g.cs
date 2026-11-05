@@ -6,106 +6,106 @@ public sealed class ClientApi(KeycloakAdminClient transport)
 {
     /// <summary>Get representation of the client</summary>
     public Task<AdminResponse<ClientRepresentation>> GetClientAsync(string @realm, string @clientUuid, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/clients/{1}", [@realm, @clientUuid]), AdminUri.Query([]), null, AdminJson.TypeInfo<ClientRepresentation>(), cancellationToken);
+        transport.SendJsonOperationAsync("Client.GetClientAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/clients/{1}", [@realm, @clientUuid]), AdminUri.Query([]), null, AdminJson.TypeInfo<ClientRepresentation>(), cancellationToken);
 
     /// <summary>Update the client</summary>
     public Task<AdminResponse> UpdateAsync(string @realm, string @clientUuid, ClientRepresentation? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Put, AdminUri.Path("/admin/realms/{0}/clients/{1}", [@realm, @clientUuid]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<ClientRepresentation>()), cancellationToken);
+        transport.SendOperationAsync("Client.UpdateAsync", HttpMethod.Put, AdminUri.Path("/admin/realms/{0}/clients/{1}", [@realm, @clientUuid]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<ClientRepresentation>()), cancellationToken);
 
     /// <summary>Delete the client</summary>
     public Task<AdminResponse> DeleteClientAsync(string @realm, string @clientUuid, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Delete, AdminUri.Path("/admin/realms/{0}/clients/{1}", [@realm, @clientUuid]), AdminUri.Query([]), null, cancellationToken);
+        transport.SendOperationAsync("Client.DeleteClientAsync", HttpMethod.Delete, AdminUri.Path("/admin/realms/{0}/clients/{1}", [@realm, @clientUuid]), AdminUri.Query([]), null, cancellationToken);
 
     /// <summary>Get the client secret</summary>
     public Task<AdminResponse<CredentialRepresentation>> GetClientSecretAsync(string @realm, string @clientUuid, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/clients/{1}/client-secret", [@realm, @clientUuid]), AdminUri.Query([]), null, AdminJson.TypeInfo<CredentialRepresentation>(), cancellationToken);
+        transport.SendJsonOperationAsync("Client.GetClientSecretAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/clients/{1}/client-secret", [@realm, @clientUuid]), AdminUri.Query([]), null, AdminJson.TypeInfo<CredentialRepresentation>(), cancellationToken);
 
     /// <summary>Generate a new secret for the client</summary>
     public Task<AdminResponse<CredentialRepresentation>> RegenerateSecretAsync(string @realm, string @clientUuid, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/clients/{1}/client-secret", [@realm, @clientUuid]), AdminUri.Query([]), null, AdminJson.TypeInfo<CredentialRepresentation>(), cancellationToken);
+        transport.SendJsonOperationAsync("Client.RegenerateSecretAsync", HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/clients/{1}/client-secret", [@realm, @clientUuid]), AdminUri.Query([]), null, AdminJson.TypeInfo<CredentialRepresentation>(), cancellationToken);
 
     /// <summary>Get the rotated client secret</summary>
     public Task<AdminResponse<CredentialRepresentation>> GetClientRotatedSecretAsync(string @realm, string @clientUuid, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/clients/{1}/client-secret/rotated", [@realm, @clientUuid]), AdminUri.Query([]), null, AdminJson.TypeInfo<CredentialRepresentation>(), cancellationToken);
+        transport.SendJsonOperationAsync("Client.GetClientRotatedSecretAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/clients/{1}/client-secret/rotated", [@realm, @clientUuid]), AdminUri.Query([]), null, AdminJson.TypeInfo<CredentialRepresentation>(), cancellationToken);
 
     /// <summary>Invalidate the rotated secret for the client</summary>
     public Task<AdminResponse> InvalidateRotatedSecretAsync(string @realm, string @clientUuid, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Delete, AdminUri.Path("/admin/realms/{0}/clients/{1}/client-secret/rotated", [@realm, @clientUuid]), AdminUri.Query([]), null, cancellationToken);
+        transport.SendOperationAsync("Client.InvalidateRotatedSecretAsync", HttpMethod.Delete, AdminUri.Path("/admin/realms/{0}/clients/{1}/client-secret/rotated", [@realm, @clientUuid]), AdminUri.Query([]), null, cancellationToken);
 
     /// <summary>Get default client scopes.  Only name and ids are returned.</summary>
     public Task<AdminResponse<List<ClientScopeRepresentation>>> GetDefaultClientScopesAsync(string @realm, string @clientUuid, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/clients/{1}/default-client-scopes", [@realm, @clientUuid]), AdminUri.Query([]), null, AdminJson.TypeInfo<List<ClientScopeRepresentation>>(), cancellationToken);
+        transport.SendJsonOperationAsync("Client.GetDefaultClientScopesAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/clients/{1}/default-client-scopes", [@realm, @clientUuid]), AdminUri.Query([]), null, AdminJson.TypeInfo<List<ClientScopeRepresentation>>(), cancellationToken);
 
     /// <summary>AddDefaultClientScope</summary>
     public Task<AdminResponse> AddDefaultClientScopeAsync(string @realm, string @clientUuid, string @clientScopeId, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Put, AdminUri.Path("/admin/realms/{0}/clients/{1}/default-client-scopes/{2}", [@realm, @clientUuid, @clientScopeId]), AdminUri.Query([]), null, cancellationToken);
+        transport.SendOperationAsync("Client.AddDefaultClientScopeAsync", HttpMethod.Put, AdminUri.Path("/admin/realms/{0}/clients/{1}/default-client-scopes/{2}", [@realm, @clientUuid, @clientScopeId]), AdminUri.Query([]), null, cancellationToken);
 
     /// <summary>RemoveDefaultClientScope</summary>
     public Task<AdminResponse> RemoveDefaultClientScopeAsync(string @realm, string @clientUuid, string @clientScopeId, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Delete, AdminUri.Path("/admin/realms/{0}/clients/{1}/default-client-scopes/{2}", [@realm, @clientUuid, @clientScopeId]), AdminUri.Query([]), null, cancellationToken);
+        transport.SendOperationAsync("Client.RemoveDefaultClientScopeAsync", HttpMethod.Delete, AdminUri.Path("/admin/realms/{0}/clients/{1}/default-client-scopes/{2}", [@realm, @clientUuid, @clientScopeId]), AdminUri.Query([]), null, cancellationToken);
 
     /// <summary>GetInstallationProvider</summary>
     public Task<AdminResponse> GetInstallationProviderAsync(string @realm, string @clientUuid, string @providerId, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/clients/{1}/installation/providers/{2}", [@realm, @clientUuid, @providerId]), AdminUri.Query([]), null, cancellationToken);
+        transport.SendOperationAsync("Client.GetInstallationProviderAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/clients/{1}/installation/providers/{2}", [@realm, @clientUuid, @providerId]), AdminUri.Query([]), null, cancellationToken);
 
     /// <summary>Return object stating whether client Authorization permissions have been initialized or not and a reference</summary>
     public Task<AdminResponse<ManagementPermissionReference>> GetManagementPermissionsAsync(string @realm, string @clientUuid, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/clients/{1}/management/permissions", [@realm, @clientUuid]), AdminUri.Query([]), null, AdminJson.TypeInfo<ManagementPermissionReference>(), cancellationToken);
+        transport.SendJsonOperationAsync("Client.GetManagementPermissionsAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/clients/{1}/management/permissions", [@realm, @clientUuid]), AdminUri.Query([]), null, AdminJson.TypeInfo<ManagementPermissionReference>(), cancellationToken);
 
     /// <summary>Return object stating whether client Authorization permissions have been initialized or not and a reference</summary>
     public Task<AdminResponse<ManagementPermissionReference>> SetManagementPermissionsEnabledAsync(string @realm, string @clientUuid, ManagementPermissionReference? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Put, AdminUri.Path("/admin/realms/{0}/clients/{1}/management/permissions", [@realm, @clientUuid]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<ManagementPermissionReference>()), AdminJson.TypeInfo<ManagementPermissionReference>(), cancellationToken);
+        transport.SendJsonOperationAsync("Client.SetManagementPermissionsEnabledAsync", HttpMethod.Put, AdminUri.Path("/admin/realms/{0}/clients/{1}/management/permissions", [@realm, @clientUuid]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<ManagementPermissionReference>()), AdminJson.TypeInfo<ManagementPermissionReference>(), cancellationToken);
 
     /// <summary>Register a cluster node with the client Manually register cluster node to this client - usually it’s not needed to call this directly as adapter should handle by sending registration request to Keycloak</summary>
     public Task<AdminResponse> RegisterNodeAsync(string @realm, string @clientUuid, Dictionary<string, string>? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/clients/{1}/nodes", [@realm, @clientUuid]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<Dictionary<string, string>>()), cancellationToken);
+        transport.SendOperationAsync("Client.RegisterNodeAsync", HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/clients/{1}/nodes", [@realm, @clientUuid]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<Dictionary<string, string>>()), cancellationToken);
 
     /// <summary>Unregister a cluster node from the client</summary>
     public Task<AdminResponse> UnregisterNodeAsync(string @realm, string @clientUuid, string @node, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Delete, AdminUri.Path("/admin/realms/{0}/clients/{1}/nodes/{2}", [@realm, @clientUuid, @node]), AdminUri.Query([]), null, cancellationToken);
+        transport.SendOperationAsync("Client.UnregisterNodeAsync", HttpMethod.Delete, AdminUri.Path("/admin/realms/{0}/clients/{1}/nodes/{2}", [@realm, @clientUuid, @node]), AdminUri.Query([]), null, cancellationToken);
 
     /// <summary>Get application offline session count Returns a number of offline user sessions associated with this client { &quot;count&quot;: number }</summary>
     public Task<AdminResponse<Dictionary<string, long>>> GetOfflineSessionCountAsync(string @realm, string @clientUuid, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/clients/{1}/offline-session-count", [@realm, @clientUuid]), AdminUri.Query([]), null, AdminJson.TypeInfo<Dictionary<string, long>>(), cancellationToken);
+        transport.SendJsonOperationAsync("Client.GetOfflineSessionCountAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/clients/{1}/offline-session-count", [@realm, @clientUuid]), AdminUri.Query([]), null, AdminJson.TypeInfo<Dictionary<string, long>>(), cancellationToken);
 
     /// <summary>Get offline sessions for client. Returns a list of offline user sessions associated with this client</summary>
     public Task<AdminResponse<List<UserSessionRepresentation>>> GetOfflineUserSessionsAsync(string @realm, string @clientUuid, int? @first = null, int? @max = null, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/clients/{1}/offline-sessions", [@realm, @clientUuid]), AdminUri.Query([new("first", @first), new("max", @max)]), null, AdminJson.TypeInfo<List<UserSessionRepresentation>>(), cancellationToken);
+        transport.SendJsonOperationAsync("Client.GetOfflineUserSessionsAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/clients/{1}/offline-sessions", [@realm, @clientUuid]), AdminUri.Query([new("first", @first), new("max", @max)]), null, AdminJson.TypeInfo<List<UserSessionRepresentation>>(), cancellationToken);
 
     /// <summary>Get optional client scopes.  Only name and ids are returned.</summary>
     public Task<AdminResponse<List<ClientScopeRepresentation>>> GetOptionalClientScopesAsync(string @realm, string @clientUuid, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/clients/{1}/optional-client-scopes", [@realm, @clientUuid]), AdminUri.Query([]), null, AdminJson.TypeInfo<List<ClientScopeRepresentation>>(), cancellationToken);
+        transport.SendJsonOperationAsync("Client.GetOptionalClientScopesAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/clients/{1}/optional-client-scopes", [@realm, @clientUuid]), AdminUri.Query([]), null, AdminJson.TypeInfo<List<ClientScopeRepresentation>>(), cancellationToken);
 
     /// <summary>AddOptionalClientScope</summary>
     public Task<AdminResponse> AddOptionalClientScopeAsync(string @realm, string @clientUuid, string @clientScopeId, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Put, AdminUri.Path("/admin/realms/{0}/clients/{1}/optional-client-scopes/{2}", [@realm, @clientUuid, @clientScopeId]), AdminUri.Query([]), null, cancellationToken);
+        transport.SendOperationAsync("Client.AddOptionalClientScopeAsync", HttpMethod.Put, AdminUri.Path("/admin/realms/{0}/clients/{1}/optional-client-scopes/{2}", [@realm, @clientUuid, @clientScopeId]), AdminUri.Query([]), null, cancellationToken);
 
     /// <summary>RemoveOptionalClientScope</summary>
     public Task<AdminResponse> RemoveOptionalClientScopeAsync(string @realm, string @clientUuid, string @clientScopeId, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Delete, AdminUri.Path("/admin/realms/{0}/clients/{1}/optional-client-scopes/{2}", [@realm, @clientUuid, @clientScopeId]), AdminUri.Query([]), null, cancellationToken);
+        transport.SendOperationAsync("Client.RemoveOptionalClientScopeAsync", HttpMethod.Delete, AdminUri.Path("/admin/realms/{0}/clients/{1}/optional-client-scopes/{2}", [@realm, @clientUuid, @clientScopeId]), AdminUri.Query([]), null, cancellationToken);
 
     /// <summary>Push the client&apos;s revocation policy to its admin URL If the client has an admin URL, push revocation policy to it.</summary>
     public Task<AdminResponse<GlobalRequestResult>> PushRevocationAsync(string @realm, string @clientUuid, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/clients/{1}/push-revocation", [@realm, @clientUuid]), AdminUri.Query([]), null, AdminJson.TypeInfo<GlobalRequestResult>(), cancellationToken);
+        transport.SendJsonOperationAsync("Client.PushRevocationAsync", HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/clients/{1}/push-revocation", [@realm, @clientUuid]), AdminUri.Query([]), null, AdminJson.TypeInfo<GlobalRequestResult>(), cancellationToken);
 
     /// <summary>Generate a new registration access token for the client</summary>
     public Task<AdminResponse<ClientRepresentation>> RegenerateRegistrationAccessTokenAsync(string @realm, string @clientUuid, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/clients/{1}/registration-access-token", [@realm, @clientUuid]), AdminUri.Query([]), null, AdminJson.TypeInfo<ClientRepresentation>(), cancellationToken);
+        transport.SendJsonOperationAsync("Client.RegenerateRegistrationAccessTokenAsync", HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/clients/{1}/registration-access-token", [@realm, @clientUuid]), AdminUri.Query([]), null, AdminJson.TypeInfo<ClientRepresentation>(), cancellationToken);
 
     /// <summary>Get a user dedicated to the service account</summary>
     public Task<AdminResponse<UserRepresentation>> GetServiceAccountUserAsync(string @realm, string @clientUuid, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/clients/{1}/service-account-user", [@realm, @clientUuid]), AdminUri.Query([]), null, AdminJson.TypeInfo<UserRepresentation>(), cancellationToken);
+        transport.SendJsonOperationAsync("Client.GetServiceAccountUserAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/clients/{1}/service-account-user", [@realm, @clientUuid]), AdminUri.Query([]), null, AdminJson.TypeInfo<UserRepresentation>(), cancellationToken);
 
     /// <summary>Get application session count Returns a number of user sessions associated with this client { &quot;count&quot;: number }</summary>
     public Task<AdminResponse<Dictionary<string, long>>> GetApplicationSessionCountAsync(string @realm, string @clientUuid, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/clients/{1}/session-count", [@realm, @clientUuid]), AdminUri.Query([]), null, AdminJson.TypeInfo<Dictionary<string, long>>(), cancellationToken);
+        transport.SendJsonOperationAsync("Client.GetApplicationSessionCountAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/clients/{1}/session-count", [@realm, @clientUuid]), AdminUri.Query([]), null, AdminJson.TypeInfo<Dictionary<string, long>>(), cancellationToken);
 
     /// <summary>Test if registered cluster nodes are available Tests availability by sending &apos;ping&apos; request to all cluster nodes.</summary>
     public Task<AdminResponse<GlobalRequestResult>> TestNodesAvailableAsync(string @realm, string @clientUuid, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/clients/{1}/test-nodes-available", [@realm, @clientUuid]), AdminUri.Query([]), null, AdminJson.TypeInfo<GlobalRequestResult>(), cancellationToken);
+        transport.SendJsonOperationAsync("Client.TestNodesAvailableAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/clients/{1}/test-nodes-available", [@realm, @clientUuid]), AdminUri.Query([]), null, AdminJson.TypeInfo<GlobalRequestResult>(), cancellationToken);
 
     /// <summary>Get user sessions for client. Returns a list of user sessions associated with this client. </summary>
     public Task<AdminResponse<List<UserSessionRepresentation>>> GetUserSessionsAsync(string @realm, string @clientUuid, int? @first = null, int? @max = null, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/clients/{1}/user-sessions", [@realm, @clientUuid]), AdminUri.Query([new("first", @first), new("max", @max)]), null, AdminJson.TypeInfo<List<UserSessionRepresentation>>(), cancellationToken);
+        transport.SendJsonOperationAsync("Client.GetUserSessionsAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/clients/{1}/user-sessions", [@realm, @clientUuid]), AdminUri.Query([new("first", @first), new("max", @max)]), null, AdminJson.TypeInfo<List<UserSessionRepresentation>>(), cancellationToken);
 
 }

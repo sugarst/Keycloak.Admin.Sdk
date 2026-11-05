@@ -6,10 +6,10 @@ public sealed class UiUIRealmApi(KeycloakAdminClient transport)
 {
     /// <summary>Source: UiUIRealmResource.updateRealm</summary>
     public Task<AdminResponse<JsonElement>> UpdateRealmAsync(string @realm, HttpContent? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Put, AdminUri.Path("/admin/realms/{0}/ui-ext/", [@realm]), AdminUri.Query([]), body, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
+        transport.SendJsonOperationAsync("UiUIRealm.UpdateRealmAsync", HttpMethod.Put, AdminUri.Path("/admin/realms/{0}/ui-ext/", [@realm]), AdminUri.Query([]), body, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
 
     /// <summary>Source: UiUIRealmResource.getInfo</summary>
     public Task<AdminResponse<JsonElement>> GetInfoAsync(string @realm, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/ui-ext/info", [@realm]), AdminUri.Query([]), null, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
+        transport.SendJsonOperationAsync("UiUIRealm.GetInfoAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/ui-ext/info", [@realm]), AdminUri.Query([]), null, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
 
 }

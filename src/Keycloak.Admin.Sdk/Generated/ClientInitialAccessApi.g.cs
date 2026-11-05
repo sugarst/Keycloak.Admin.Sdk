@@ -6,14 +6,14 @@ public sealed class ClientInitialAccessApi(KeycloakAdminClient transport)
 {
     /// <summary>List</summary>
     public Task<AdminResponse<List<ClientInitialAccessPresentation>>> ListAsync(string @realm, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/clients-initial-access", [@realm]), AdminUri.Query([]), null, AdminJson.TypeInfo<List<ClientInitialAccessPresentation>>(), cancellationToken);
+        transport.SendJsonOperationAsync("ClientInitialAccess.ListAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/clients-initial-access", [@realm]), AdminUri.Query([]), null, AdminJson.TypeInfo<List<ClientInitialAccessPresentation>>(), cancellationToken);
 
     /// <summary>Create a new initial access token.</summary>
     public Task<AdminResponse<ClientInitialAccessCreatePresentation>> CreateAsync(string @realm, ClientInitialAccessCreatePresentation? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/clients-initial-access", [@realm]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<ClientInitialAccessCreatePresentation>()), AdminJson.TypeInfo<ClientInitialAccessCreatePresentation>(), cancellationToken);
+        transport.SendJsonOperationAsync("ClientInitialAccess.CreateAsync", HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/clients-initial-access", [@realm]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<ClientInitialAccessCreatePresentation>()), AdminJson.TypeInfo<ClientInitialAccessCreatePresentation>(), cancellationToken);
 
     /// <summary>Delete</summary>
     public Task<AdminResponse> DeleteAsync(string @realm, string @id, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Delete, AdminUri.Path("/admin/realms/{0}/clients-initial-access/{1}", [@realm, @id]), AdminUri.Query([]), null, cancellationToken);
+        transport.SendOperationAsync("ClientInitialAccess.DeleteAsync", HttpMethod.Delete, AdminUri.Path("/admin/realms/{0}/clients-initial-access/{1}", [@realm, @id]), AdminUri.Query([]), null, cancellationToken);
 
 }

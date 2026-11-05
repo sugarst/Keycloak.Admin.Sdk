@@ -6,78 +6,78 @@ public sealed class SsfAdminApi(KeycloakAdminClient transport)
 {
     /// <summary>Source: SsfAdminResource.deleteClientEvents</summary>
     public Task<AdminResponse<JsonElement>> DeleteClientEventsAsync(string @realm, string @clientId, string? @status = null, string? @olderThan = null, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Delete, AdminUri.Path("/admin/realms/{0}/ssf/clients/{1}/events", [@realm, @clientId]), AdminUri.Query([new("status", @status), new("olderThan", @olderThan)]), null, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
+        transport.SendJsonOperationAsync("SsfAdmin.DeleteClientEventsAsync", HttpMethod.Delete, AdminUri.Path("/admin/realms/{0}/ssf/clients/{1}/events", [@realm, @clientId]), AdminUri.Query([new("status", @status), new("olderThan", @olderThan)]), null, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
 
     /// <summary>Source: SsfAdminResource.emitEvent</summary>
     public Task<AdminResponse<JsonElement>> EmitEventAsync(string @realm, string @clientId, HttpContent? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/ssf/clients/{1}/events/emit", [@realm, @clientId]), AdminUri.Query([]), body, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
+        transport.SendJsonOperationAsync("SsfAdmin.EmitEventAsync", HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/ssf/clients/{1}/events/emit", [@realm, @clientId]), AdminUri.Query([]), body, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
 
     /// <summary>Source: SsfAdminResource.deleteClientQueuedEvents</summary>
     public Task<AdminResponse<JsonElement>> DeleteClientQueuedEventsAsync(string @realm, string @clientId, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Delete, AdminUri.Path("/admin/realms/{0}/ssf/clients/{1}/events/queued", [@realm, @clientId]), AdminUri.Query([]), null, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
+        transport.SendJsonOperationAsync("SsfAdmin.DeleteClientQueuedEventsAsync", HttpMethod.Delete, AdminUri.Path("/admin/realms/{0}/ssf/clients/{1}/events/queued", [@realm, @clientId]), AdminUri.Query([]), null, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
 
     /// <summary>Source: SsfAdminResource.getClientEventStats</summary>
     public Task<AdminResponse<JsonElement>> GetClientEventStatsAsync(string @realm, string @clientId, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/ssf/clients/{1}/events/stats", [@realm, @clientId]), AdminUri.Query([]), null, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
+        transport.SendJsonOperationAsync("SsfAdmin.GetClientEventStatsAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/ssf/clients/{1}/events/stats", [@realm, @clientId]), AdminUri.Query([]), null, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
 
     /// <summary>Source: SsfAdminResource.getPendingEvent</summary>
     public Task<AdminResponse<JsonElement>> GetPendingEventAsync(string @realm, string @clientId, string @jti, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/ssf/clients/{1}/pending-events/{2}", [@realm, @clientId, @jti]), AdminUri.Query([]), null, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
+        transport.SendJsonOperationAsync("SsfAdmin.GetPendingEventAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/ssf/clients/{1}/pending-events/{2}", [@realm, @clientId, @jti]), AdminUri.Query([]), null, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
 
     /// <summary>Source: SsfAdminResource.deleteClientStream</summary>
     public Task<AdminResponse<JsonElement>> DeleteClientStreamAsync(string @realm, string @clientId, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Delete, AdminUri.Path("/admin/realms/{0}/ssf/clients/{1}/stream", [@realm, @clientId]), AdminUri.Query([]), null, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
+        transport.SendJsonOperationAsync("SsfAdmin.DeleteClientStreamAsync", HttpMethod.Delete, AdminUri.Path("/admin/realms/{0}/ssf/clients/{1}/stream", [@realm, @clientId]), AdminUri.Query([]), null, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
 
     /// <summary>Source: SsfAdminResource.getClientStream</summary>
     public Task<AdminResponse<JsonElement>> GetClientStreamAsync(string @realm, string @clientId, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/ssf/clients/{1}/stream", [@realm, @clientId]), AdminUri.Query([]), null, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
+        transport.SendJsonOperationAsync("SsfAdmin.GetClientStreamAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/ssf/clients/{1}/stream", [@realm, @clientId]), AdminUri.Query([]), null, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
 
     /// <summary>Source: SsfAdminResource.updateClientStream</summary>
     public Task<AdminResponse<JsonElement>> UpdateClientStreamAsync(string @realm, string @clientId, HttpContent? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Patch, AdminUri.Path("/admin/realms/{0}/ssf/clients/{1}/stream", [@realm, @clientId]), AdminUri.Query([]), body, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
+        transport.SendJsonOperationAsync("SsfAdmin.UpdateClientStreamAsync", HttpMethod.Patch, AdminUri.Path("/admin/realms/{0}/ssf/clients/{1}/stream", [@realm, @clientId]), AdminUri.Query([]), body, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
 
     /// <summary>Source: SsfAdminResource.createClientStream</summary>
     public Task<AdminResponse<JsonElement>> CreateClientStreamAsync(string @realm, string @clientId, HttpContent? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/ssf/clients/{1}/stream", [@realm, @clientId]), AdminUri.Query([]), body, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
+        transport.SendJsonOperationAsync("SsfAdmin.CreateClientStreamAsync", HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/ssf/clients/{1}/stream", [@realm, @clientId]), AdminUri.Query([]), body, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
 
     /// <summary>Source: SsfAdminResource.updateClientStreamStatus</summary>
     public Task<AdminResponse<JsonElement>> UpdateClientStreamStatusAsync(string @realm, string @clientId, HttpContent? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/ssf/clients/{1}/stream/status", [@realm, @clientId]), AdminUri.Query([]), body, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
+        transport.SendJsonOperationAsync("SsfAdmin.UpdateClientStreamStatusAsync", HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/ssf/clients/{1}/stream/status", [@realm, @clientId]), AdminUri.Query([]), body, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
 
     /// <summary>Source: SsfAdminResource.verifyClientStream</summary>
     public Task<AdminResponse<JsonElement>> VerifyClientStreamAsync(string @realm, string @clientId, HttpContent? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/ssf/clients/{1}/stream/verify", [@realm, @clientId]), AdminUri.Query([]), body, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
+        transport.SendJsonOperationAsync("SsfAdmin.VerifyClientStreamAsync", HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/ssf/clients/{1}/stream/verify", [@realm, @clientId]), AdminUri.Query([]), body, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
 
     /// <summary>Source: SsfAdminResource.addSubject</summary>
     public Task<AdminResponse<JsonElement>> AddSubjectAsync(string @realm, string @clientId, HttpContent? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/ssf/clients/{1}/subjects/add", [@realm, @clientId]), AdminUri.Query([]), body, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
+        transport.SendJsonOperationAsync("SsfAdmin.AddSubjectAsync", HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/ssf/clients/{1}/subjects/add", [@realm, @clientId]), AdminUri.Query([]), body, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
 
     /// <summary>Source: SsfAdminResource.checkSubject</summary>
     public Task<AdminResponse<JsonElement>> CheckSubjectAsync(string @realm, string @clientId, HttpContent? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/ssf/clients/{1}/subjects/check", [@realm, @clientId]), AdminUri.Query([]), body, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
+        transport.SendJsonOperationAsync("SsfAdmin.CheckSubjectAsync", HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/ssf/clients/{1}/subjects/check", [@realm, @clientId]), AdminUri.Query([]), body, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
 
     /// <summary>Source: SsfAdminResource.ignoreSubject</summary>
     public Task<AdminResponse<JsonElement>> IgnoreSubjectAsync(string @realm, string @clientId, HttpContent? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/ssf/clients/{1}/subjects/ignore", [@realm, @clientId]), AdminUri.Query([]), body, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
+        transport.SendJsonOperationAsync("SsfAdmin.IgnoreSubjectAsync", HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/ssf/clients/{1}/subjects/ignore", [@realm, @clientId]), AdminUri.Query([]), body, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
 
     /// <summary>Source: SsfAdminResource.removeSubject</summary>
     public Task<AdminResponse<JsonElement>> RemoveSubjectAsync(string @realm, string @clientId, HttpContent? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/ssf/clients/{1}/subjects/remove", [@realm, @clientId]), AdminUri.Query([]), body, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
+        transport.SendJsonOperationAsync("SsfAdmin.RemoveSubjectAsync", HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/ssf/clients/{1}/subjects/remove", [@realm, @clientId]), AdminUri.Query([]), body, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
 
     /// <summary>Source: SsfAdminResource.getConfig</summary>
     public Task<AdminResponse<JsonElement>> GetConfigAsync(string @realm, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/ssf/config", [@realm]), AdminUri.Query([]), null, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
+        transport.SendJsonOperationAsync("SsfAdmin.GetConfigAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/ssf/config", [@realm]), AdminUri.Query([]), null, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
 
     /// <summary>Source: SsfAdminResource.deleteEvents</summary>
     public Task<AdminResponse<JsonElement>> DeleteEventsAsync(string @realm, string? @status = null, string? @olderThan = null, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Delete, AdminUri.Path("/admin/realms/{0}/ssf/events", [@realm]), AdminUri.Query([new("status", @status), new("olderThan", @olderThan)]), null, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
+        transport.SendJsonOperationAsync("SsfAdmin.DeleteEventsAsync", HttpMethod.Delete, AdminUri.Path("/admin/realms/{0}/ssf/events", [@realm]), AdminUri.Query([new("status", @status), new("olderThan", @olderThan)]), null, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
 
     /// <summary>Source: SsfAdminResource.deleteQueuedEvents</summary>
     public Task<AdminResponse<JsonElement>> DeleteQueuedEventsAsync(string @realm, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Delete, AdminUri.Path("/admin/realms/{0}/ssf/events/queued", [@realm]), AdminUri.Query([]), null, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
+        transport.SendJsonOperationAsync("SsfAdmin.DeleteQueuedEventsAsync", HttpMethod.Delete, AdminUri.Path("/admin/realms/{0}/ssf/events/queued", [@realm]), AdminUri.Query([]), null, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
 
     /// <summary>Source: SsfAdminResource.getEventStats</summary>
     public Task<AdminResponse<JsonElement>> GetEventStatsAsync(string @realm, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/ssf/events/stats", [@realm]), AdminUri.Query([]), null, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
+        transport.SendJsonOperationAsync("SsfAdmin.GetEventStatsAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/ssf/events/stats", [@realm]), AdminUri.Query([]), null, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
 
 }

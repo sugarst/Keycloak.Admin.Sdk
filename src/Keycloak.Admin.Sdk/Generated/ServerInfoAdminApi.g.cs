@@ -6,6 +6,6 @@ public sealed class ServerInfoAdminApi(KeycloakAdminClient transport)
 {
     /// <summary>Source: ServerInfoAdminResource.getInfo</summary>
     public Task<AdminResponse<JsonElement>> GetInfoAsync(CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/serverinfo", []), AdminUri.Query([]), null, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
+        transport.SendJsonOperationAsync("ServerInfoAdmin.GetInfoAsync", HttpMethod.Get, AdminUri.Path("/admin/serverinfo", []), AdminUri.Query([]), null, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
 
 }

@@ -6,26 +6,26 @@ public sealed class ClientScopeApi(KeycloakAdminClient transport)
 {
     /// <summary>Get representation of the client scope</summary>
     public Task<AdminResponse<ClientScopeRepresentation>> GetClientScopeAsync(string @realm, string @clientScopeId, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/client-scopes/{1}", [@realm, @clientScopeId]), AdminUri.Query([]), null, AdminJson.TypeInfo<ClientScopeRepresentation>(), cancellationToken);
+        transport.SendJsonOperationAsync("ClientScope.GetClientScopeAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/client-scopes/{1}", [@realm, @clientScopeId]), AdminUri.Query([]), null, AdminJson.TypeInfo<ClientScopeRepresentation>(), cancellationToken);
 
     /// <summary>Update the client scope</summary>
     public Task<AdminResponse> UpdateAsync(string @realm, string @clientScopeId, ClientScopeRepresentation? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Put, AdminUri.Path("/admin/realms/{0}/client-scopes/{1}", [@realm, @clientScopeId]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<ClientScopeRepresentation>()), cancellationToken);
+        transport.SendOperationAsync("ClientScope.UpdateAsync", HttpMethod.Put, AdminUri.Path("/admin/realms/{0}/client-scopes/{1}", [@realm, @clientScopeId]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<ClientScopeRepresentation>()), cancellationToken);
 
     /// <summary>Delete the client scope</summary>
     public Task<AdminResponse> DeleteClientScopeAsync(string @realm, string @clientScopeId, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Delete, AdminUri.Path("/admin/realms/{0}/client-scopes/{1}", [@realm, @clientScopeId]), AdminUri.Query([]), null, cancellationToken);
+        transport.SendOperationAsync("ClientScope.DeleteClientScopeAsync", HttpMethod.Delete, AdminUri.Path("/admin/realms/{0}/client-scopes/{1}", [@realm, @clientScopeId]), AdminUri.Query([]), null, cancellationToken);
 
     /// <summary>Get representation of the client scope</summary>
     public Task<AdminResponse<ClientScopeRepresentation>> GetClientScopeGETAdminRealmsRealmClientTemplatesClientScopeIdAsync(string @realm, string @clientScopeId, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/client-templates/{1}", [@realm, @clientScopeId]), AdminUri.Query([]), null, AdminJson.TypeInfo<ClientScopeRepresentation>(), cancellationToken);
+        transport.SendJsonOperationAsync("ClientScope.GetClientScopeGETAdminRealmsRealmClientTemplatesClientScopeIdAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/client-templates/{1}", [@realm, @clientScopeId]), AdminUri.Query([]), null, AdminJson.TypeInfo<ClientScopeRepresentation>(), cancellationToken);
 
     /// <summary>Update the client scope</summary>
     public Task<AdminResponse> UpdatePUTAdminRealmsRealmClientTemplatesClientScopeIdAsync(string @realm, string @clientScopeId, ClientScopeRepresentation? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Put, AdminUri.Path("/admin/realms/{0}/client-templates/{1}", [@realm, @clientScopeId]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<ClientScopeRepresentation>()), cancellationToken);
+        transport.SendOperationAsync("ClientScope.UpdatePUTAdminRealmsRealmClientTemplatesClientScopeIdAsync", HttpMethod.Put, AdminUri.Path("/admin/realms/{0}/client-templates/{1}", [@realm, @clientScopeId]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<ClientScopeRepresentation>()), cancellationToken);
 
     /// <summary>Delete the client scope</summary>
     public Task<AdminResponse> DeleteClientScopeDELETEAdminRealmsRealmClientTemplatesClientScopeIdAsync(string @realm, string @clientScopeId, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Delete, AdminUri.Path("/admin/realms/{0}/client-templates/{1}", [@realm, @clientScopeId]), AdminUri.Query([]), null, cancellationToken);
+        transport.SendOperationAsync("ClientScope.DeleteClientScopeDELETEAdminRealmsRealmClientTemplatesClientScopeIdAsync", HttpMethod.Delete, AdminUri.Path("/admin/realms/{0}/client-templates/{1}", [@realm, @clientScopeId]), AdminUri.Query([]), null, cancellationToken);
 
 }

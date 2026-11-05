@@ -6,6 +6,6 @@ public sealed class ClientRegistrationPolicyApi(KeycloakAdminClient transport)
 {
     /// <summary>Base path for retrieve providers with the configProperties properly filled</summary>
     public Task<AdminResponse<List<ComponentTypeRepresentation>>> GetProvidersAsync(string @realm, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/client-registration-policy/providers", [@realm]), AdminUri.Query([]), null, AdminJson.TypeInfo<List<ComponentTypeRepresentation>>(), cancellationToken);
+        transport.SendJsonOperationAsync("ClientRegistrationPolicy.GetProvidersAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/client-registration-policy/providers", [@realm]), AdminUri.Query([]), null, AdminJson.TypeInfo<List<ComponentTypeRepresentation>>(), cancellationToken);
 
 }

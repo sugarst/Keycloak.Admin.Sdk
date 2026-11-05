@@ -6,114 +6,114 @@ public sealed class UserApi(KeycloakAdminClient transport)
 {
     /// <summary>Get representation of the user</summary>
     public Task<AdminResponse<UserRepresentation>> GetUserAsync(string @realm, string @userId, bool? @userProfileMetadata = null, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/users/{1}", [@realm, @userId]), AdminUri.Query([new("userProfileMetadata", @userProfileMetadata)]), null, AdminJson.TypeInfo<UserRepresentation>(), cancellationToken);
+        transport.SendJsonOperationAsync("User.GetUserAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/users/{1}", [@realm, @userId]), AdminUri.Query([new("userProfileMetadata", @userProfileMetadata)]), null, AdminJson.TypeInfo<UserRepresentation>(), cancellationToken);
 
     /// <summary>Update the user</summary>
     public Task<AdminResponse> UpdateUserAsync(string @realm, string @userId, UserRepresentation? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Put, AdminUri.Path("/admin/realms/{0}/users/{1}", [@realm, @userId]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<UserRepresentation>()), cancellationToken);
+        transport.SendOperationAsync("User.UpdateUserAsync", HttpMethod.Put, AdminUri.Path("/admin/realms/{0}/users/{1}", [@realm, @userId]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<UserRepresentation>()), cancellationToken);
 
     /// <summary>Delete the user</summary>
     public Task<AdminResponse> DeleteUserAsync(string @realm, string @userId, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Delete, AdminUri.Path("/admin/realms/{0}/users/{1}", [@realm, @userId]), AdminUri.Query([]), null, cancellationToken);
+        transport.SendOperationAsync("User.DeleteUserAsync", HttpMethod.Delete, AdminUri.Path("/admin/realms/{0}/users/{1}", [@realm, @userId]), AdminUri.Query([]), null, cancellationToken);
 
     /// <summary>Return credential types, which are provided by the user storage where user is stored.</summary>
     public Task<AdminResponse<List<string>>> GetConfiguredUserStorageCredentialTypesAsync(string @realm, string @userId, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/users/{1}/configured-user-storage-credential-types", [@realm, @userId]), AdminUri.Query([]), null, AdminJson.TypeInfo<List<string>>(), cancellationToken);
+        transport.SendJsonOperationAsync("User.GetConfiguredUserStorageCredentialTypesAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/users/{1}/configured-user-storage-credential-types", [@realm, @userId]), AdminUri.Query([]), null, AdminJson.TypeInfo<List<string>>(), cancellationToken);
 
     /// <summary>Get consents granted by the user</summary>
     public Task<AdminResponse<List<Dictionary<string, JsonElement>>>> GetConsentsAsync(string @realm, string @userId, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/users/{1}/consents", [@realm, @userId]), AdminUri.Query([]), null, AdminJson.TypeInfo<List<Dictionary<string, JsonElement>>>(), cancellationToken);
+        transport.SendJsonOperationAsync("User.GetConsentsAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/users/{1}/consents", [@realm, @userId]), AdminUri.Query([]), null, AdminJson.TypeInfo<List<Dictionary<string, JsonElement>>>(), cancellationToken);
 
     /// <summary>Revoke consent and offline tokens for particular client from user</summary>
     public Task<AdminResponse> RevokeConsentAsync(string @realm, string @userId, string @client, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Delete, AdminUri.Path("/admin/realms/{0}/users/{1}/consents/{2}", [@realm, @userId, @client]), AdminUri.Query([]), null, cancellationToken);
+        transport.SendOperationAsync("User.RevokeConsentAsync", HttpMethod.Delete, AdminUri.Path("/admin/realms/{0}/users/{1}/consents/{2}", [@realm, @userId, @client]), AdminUri.Query([]), null, cancellationToken);
 
     /// <summary>Credentials</summary>
     public Task<AdminResponse<List<CredentialRepresentation>>> CredentialsAsync(string @realm, string @userId, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/users/{1}/credentials", [@realm, @userId]), AdminUri.Query([]), null, AdminJson.TypeInfo<List<CredentialRepresentation>>(), cancellationToken);
+        transport.SendJsonOperationAsync("User.CredentialsAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/users/{1}/credentials", [@realm, @userId]), AdminUri.Query([]), null, AdminJson.TypeInfo<List<CredentialRepresentation>>(), cancellationToken);
 
     /// <summary>Remove a credential for a user</summary>
     public Task<AdminResponse> RemoveCredentialAsync(string @realm, string @userId, string @credentialId, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Delete, AdminUri.Path("/admin/realms/{0}/users/{1}/credentials/{2}", [@realm, @userId, @credentialId]), AdminUri.Query([]), null, cancellationToken);
+        transport.SendOperationAsync("User.RemoveCredentialAsync", HttpMethod.Delete, AdminUri.Path("/admin/realms/{0}/users/{1}/credentials/{2}", [@realm, @userId, @credentialId]), AdminUri.Query([]), null, cancellationToken);
 
     /// <summary>Move a credential to a position behind another credential</summary>
     public Task<AdminResponse> MoveCredentialAfterAsync(string @realm, string @userId, string @credentialId, string @newPreviousCredentialId, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/users/{1}/credentials/{2}/moveAfter/{3}", [@realm, @userId, @credentialId, @newPreviousCredentialId]), AdminUri.Query([]), null, cancellationToken);
+        transport.SendOperationAsync("User.MoveCredentialAfterAsync", HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/users/{1}/credentials/{2}/moveAfter/{3}", [@realm, @userId, @credentialId, @newPreviousCredentialId]), AdminUri.Query([]), null, cancellationToken);
 
     /// <summary>Move a credential to a first position in the credentials list of the user</summary>
     public Task<AdminResponse> MoveCredentialToFirstAsync(string @realm, string @userId, string @credentialId, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/users/{1}/credentials/{2}/moveToFirst", [@realm, @userId, @credentialId]), AdminUri.Query([]), null, cancellationToken);
+        transport.SendOperationAsync("User.MoveCredentialToFirstAsync", HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/users/{1}/credentials/{2}/moveToFirst", [@realm, @userId, @credentialId]), AdminUri.Query([]), null, cancellationToken);
 
     /// <summary>Update a credential label for a user Supply HttpContent with the desired server-supported Content-Type; the request consumes and disposes it.</summary>
     public Task<AdminResponse> SetCredentialUserLabelAsync(string @realm, string @userId, string @credentialId, HttpContent? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Put, AdminUri.Path("/admin/realms/{0}/users/{1}/credentials/{2}/userLabel", [@realm, @userId, @credentialId]), AdminUri.Query([]), body, cancellationToken);
+        transport.SendOperationAsync("User.SetCredentialUserLabelAsync", HttpMethod.Put, AdminUri.Path("/admin/realms/{0}/users/{1}/credentials/{2}/userLabel", [@realm, @userId, @credentialId]), AdminUri.Query([]), body, cancellationToken);
 
     /// <summary>Disable all credentials for a user of a specific type</summary>
     public Task<AdminResponse> DisableCredentialTypeAsync(string @realm, string @userId, List<string>? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Put, AdminUri.Path("/admin/realms/{0}/users/{1}/disable-credential-types", [@realm, @userId]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<List<string>>()), cancellationToken);
+        transport.SendOperationAsync("User.DisableCredentialTypeAsync", HttpMethod.Put, AdminUri.Path("/admin/realms/{0}/users/{1}/disable-credential-types", [@realm, @userId]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<List<string>>()), cancellationToken);
 
     /// <summary>Send an email to the user with a link they can click to execute particular actions.</summary>
     public Task<AdminResponse> ExecuteActionsEmailAsync(string @realm, string @userId, List<string>? body = null, string? @clientId = null, int? @lifespan = null, string? @redirectUri = null, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Put, AdminUri.Path("/admin/realms/{0}/users/{1}/execute-actions-email", [@realm, @userId]), AdminUri.Query([new("client_id", @clientId), new("lifespan", @lifespan), new("redirect_uri", @redirectUri)]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<List<string>>()), cancellationToken);
+        transport.SendOperationAsync("User.ExecuteActionsEmailAsync", HttpMethod.Put, AdminUri.Path("/admin/realms/{0}/users/{1}/execute-actions-email", [@realm, @userId]), AdminUri.Query([new("client_id", @clientId), new("lifespan", @lifespan), new("redirect_uri", @redirectUri)]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<List<string>>()), cancellationToken);
 
     /// <summary>Get social logins associated with the user</summary>
     public Task<AdminResponse<List<FederatedIdentityRepresentation>>> GetFederatedIdentityAsync(string @realm, string @userId, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/users/{1}/federated-identity", [@realm, @userId]), AdminUri.Query([]), null, AdminJson.TypeInfo<List<FederatedIdentityRepresentation>>(), cancellationToken);
+        transport.SendJsonOperationAsync("User.GetFederatedIdentityAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/users/{1}/federated-identity", [@realm, @userId]), AdminUri.Query([]), null, AdminJson.TypeInfo<List<FederatedIdentityRepresentation>>(), cancellationToken);
 
     /// <summary>Add a social login provider to the user</summary>
     public Task<AdminResponse> AddFederatedIdentityAsync(string @realm, string @userId, string @provider, FederatedIdentityRepresentation? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/users/{1}/federated-identity/{2}", [@realm, @userId, @provider]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<FederatedIdentityRepresentation>()), cancellationToken);
+        transport.SendOperationAsync("User.AddFederatedIdentityAsync", HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/users/{1}/federated-identity/{2}", [@realm, @userId, @provider]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<FederatedIdentityRepresentation>()), cancellationToken);
 
     /// <summary>Remove a social login provider from user</summary>
     public Task<AdminResponse> RemoveFederatedIdentityAsync(string @realm, string @userId, string @provider, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Delete, AdminUri.Path("/admin/realms/{0}/users/{1}/federated-identity/{2}", [@realm, @userId, @provider]), AdminUri.Query([]), null, cancellationToken);
+        transport.SendOperationAsync("User.RemoveFederatedIdentityAsync", HttpMethod.Delete, AdminUri.Path("/admin/realms/{0}/users/{1}/federated-identity/{2}", [@realm, @userId, @provider]), AdminUri.Query([]), null, cancellationToken);
 
     /// <summary>GroupMembership</summary>
     public Task<AdminResponse<List<GroupRepresentation>>> GroupMembershipAsync(string @realm, string @userId, bool? @briefRepresentation = null, int? @first = null, int? @max = null, string? @search = null, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/users/{1}/groups", [@realm, @userId]), AdminUri.Query([new("briefRepresentation", @briefRepresentation), new("first", @first), new("max", @max), new("search", @search)]), null, AdminJson.TypeInfo<List<GroupRepresentation>>(), cancellationToken);
+        transport.SendJsonOperationAsync("User.GroupMembershipAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/users/{1}/groups", [@realm, @userId]), AdminUri.Query([new("briefRepresentation", @briefRepresentation), new("first", @first), new("max", @max), new("search", @search)]), null, AdminJson.TypeInfo<List<GroupRepresentation>>(), cancellationToken);
 
     /// <summary>GetGroupMembershipCount</summary>
     public Task<AdminResponse<Dictionary<string, long>>> GetGroupMembershipCountAsync(string @realm, string @userId, string? @search = null, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/users/{1}/groups/count", [@realm, @userId]), AdminUri.Query([new("search", @search)]), null, AdminJson.TypeInfo<Dictionary<string, long>>(), cancellationToken);
+        transport.SendJsonOperationAsync("User.GetGroupMembershipCountAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/users/{1}/groups/count", [@realm, @userId]), AdminUri.Query([new("search", @search)]), null, AdminJson.TypeInfo<Dictionary<string, long>>(), cancellationToken);
 
     /// <summary>JoinGroup</summary>
     public Task<AdminResponse> JoinGroupAsync(string @realm, string @userId, string @groupId, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Put, AdminUri.Path("/admin/realms/{0}/users/{1}/groups/{2}", [@realm, @userId, @groupId]), AdminUri.Query([]), null, cancellationToken);
+        transport.SendOperationAsync("User.JoinGroupAsync", HttpMethod.Put, AdminUri.Path("/admin/realms/{0}/users/{1}/groups/{2}", [@realm, @userId, @groupId]), AdminUri.Query([]), null, cancellationToken);
 
     /// <summary>RemoveMembership</summary>
     public Task<AdminResponse> RemoveMembershipAsync(string @realm, string @userId, string @groupId, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Delete, AdminUri.Path("/admin/realms/{0}/users/{1}/groups/{2}", [@realm, @userId, @groupId]), AdminUri.Query([]), null, cancellationToken);
+        transport.SendOperationAsync("User.RemoveMembershipAsync", HttpMethod.Delete, AdminUri.Path("/admin/realms/{0}/users/{1}/groups/{2}", [@realm, @userId, @groupId]), AdminUri.Query([]), null, cancellationToken);
 
     /// <summary>Impersonate the user</summary>
     public Task<AdminResponse<Dictionary<string, JsonElement>>> ImpersonateAsync(string @realm, string @userId, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/users/{1}/impersonation", [@realm, @userId]), AdminUri.Query([]), null, AdminJson.TypeInfo<Dictionary<string, JsonElement>>(), cancellationToken);
+        transport.SendJsonOperationAsync("User.ImpersonateAsync", HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/users/{1}/impersonation", [@realm, @userId]), AdminUri.Query([]), null, AdminJson.TypeInfo<Dictionary<string, JsonElement>>(), cancellationToken);
 
     /// <summary>Remove all user sessions associated with the user Also send notification to all clients that have an admin URL to invalidate the sessions for the particular user.</summary>
     public Task<AdminResponse> LogoutAsync(string @realm, string @userId, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/users/{1}/logout", [@realm, @userId]), AdminUri.Query([]), null, cancellationToken);
+        transport.SendOperationAsync("User.LogoutAsync", HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/users/{1}/logout", [@realm, @userId]), AdminUri.Query([]), null, cancellationToken);
 
     /// <summary>Get offline sessions associated with the user and client</summary>
     public Task<AdminResponse<List<UserSessionRepresentation>>> GetOfflineSessionsAsync(string @realm, string @userId, string @clientUuid, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/users/{1}/offline-sessions/{2}", [@realm, @userId, @clientUuid]), AdminUri.Query([]), null, AdminJson.TypeInfo<List<UserSessionRepresentation>>(), cancellationToken);
+        transport.SendJsonOperationAsync("User.GetOfflineSessionsAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/users/{1}/offline-sessions/{2}", [@realm, @userId, @clientUuid]), AdminUri.Query([]), null, AdminJson.TypeInfo<List<UserSessionRepresentation>>(), cancellationToken);
 
     /// <summary>Set up a new password for the user.</summary>
     public Task<AdminResponse> ResetPasswordAsync(string @realm, string @userId, CredentialRepresentation? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Put, AdminUri.Path("/admin/realms/{0}/users/{1}/reset-password", [@realm, @userId]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<CredentialRepresentation>()), cancellationToken);
+        transport.SendOperationAsync("User.ResetPasswordAsync", HttpMethod.Put, AdminUri.Path("/admin/realms/{0}/users/{1}/reset-password", [@realm, @userId]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<CredentialRepresentation>()), cancellationToken);
 
     /// <summary>Send an email to the user with a link they can click to reset their password.</summary>
     public Task<AdminResponse> ResetPasswordEmailAsync(string @realm, string @userId, string? @clientId = null, string? @redirectUri = null, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Put, AdminUri.Path("/admin/realms/{0}/users/{1}/reset-password-email", [@realm, @userId]), AdminUri.Query([new("client_id", @clientId), new("redirect_uri", @redirectUri)]), null, cancellationToken);
+        transport.SendOperationAsync("User.ResetPasswordEmailAsync", HttpMethod.Put, AdminUri.Path("/admin/realms/{0}/users/{1}/reset-password-email", [@realm, @userId]), AdminUri.Query([new("client_id", @clientId), new("redirect_uri", @redirectUri)]), null, cancellationToken);
 
     /// <summary>Send an email-verification email to the user An email contains a link the user can click to verify their email address.</summary>
     public Task<AdminResponse> SendVerifyEmailAsync(string @realm, string @userId, string? @clientId = null, int? @lifespan = null, string? @redirectUri = null, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Put, AdminUri.Path("/admin/realms/{0}/users/{1}/send-verify-email", [@realm, @userId]), AdminUri.Query([new("client_id", @clientId), new("lifespan", @lifespan), new("redirect_uri", @redirectUri)]), null, cancellationToken);
+        transport.SendOperationAsync("User.SendVerifyEmailAsync", HttpMethod.Put, AdminUri.Path("/admin/realms/{0}/users/{1}/send-verify-email", [@realm, @userId]), AdminUri.Query([new("client_id", @clientId), new("lifespan", @lifespan), new("redirect_uri", @redirectUri)]), null, cancellationToken);
 
     /// <summary>Get sessions associated with the user</summary>
     public Task<AdminResponse<List<UserSessionRepresentation>>> GetSessionsAsync(string @realm, string @userId, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/users/{1}/sessions", [@realm, @userId]), AdminUri.Query([]), null, AdminJson.TypeInfo<List<UserSessionRepresentation>>(), cancellationToken);
+        transport.SendJsonOperationAsync("User.GetSessionsAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/users/{1}/sessions", [@realm, @userId]), AdminUri.Query([]), null, AdminJson.TypeInfo<List<UserSessionRepresentation>>(), cancellationToken);
 
     /// <summary>GetUnmanagedAttributes</summary>
     public Task<AdminResponse<Dictionary<string, List<string>>>> GetUnmanagedAttributesAsync(string @realm, string @userId, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/users/{1}/unmanagedAttributes", [@realm, @userId]), AdminUri.Query([]), null, AdminJson.TypeInfo<Dictionary<string, List<string>>>(), cancellationToken);
+        transport.SendJsonOperationAsync("User.GetUnmanagedAttributesAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/users/{1}/unmanagedAttributes", [@realm, @userId]), AdminUri.Query([]), null, AdminJson.TypeInfo<Dictionary<string, List<string>>>(), cancellationToken);
 
 }

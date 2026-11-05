@@ -6,22 +6,22 @@ public sealed class UiRoleMappingDeleteApi(KeycloakAdminClient transport)
 {
     /// <summary>Source: UiRoleMappingDeleteResource.deleteGroupRoleMappings</summary>
     public Task<AdminResponse<JsonElement>> DeleteGroupRoleMappingsAsync(string @realm, string @id, HttpContent? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/ui-ext/role-mapping-delete/groups/{1}", [@realm, @id]), AdminUri.Query([]), body, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
+        transport.SendJsonOperationAsync("UiRoleMappingDelete.DeleteGroupRoleMappingsAsync", HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/ui-ext/role-mapping-delete/groups/{1}", [@realm, @id]), AdminUri.Query([]), body, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
 
     /// <summary>Source: UiRoleMappingDeleteResource.deleteUserRoleMappings</summary>
     public Task<AdminResponse<JsonElement>> DeleteUserRoleMappingsAsync(string @realm, string @id, HttpContent? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/ui-ext/role-mapping-delete/users/{1}", [@realm, @id]), AdminUri.Query([]), body, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
+        transport.SendJsonOperationAsync("UiRoleMappingDelete.DeleteUserRoleMappingsAsync", HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/ui-ext/role-mapping-delete/users/{1}", [@realm, @id]), AdminUri.Query([]), body, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
 
     /// <summary>Source: UiRoleMappingDeleteResource.deleteClientScopeRoleMappings</summary>
     public Task<AdminResponse<JsonElement>> DeleteClientScopeRoleMappingsAsync(string @realm, string @id, HttpContent? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/ui-ext/role-mapping-delete/clientScopes/{1}", [@realm, @id]), AdminUri.Query([]), body, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
+        transport.SendJsonOperationAsync("UiRoleMappingDelete.DeleteClientScopeRoleMappingsAsync", HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/ui-ext/role-mapping-delete/clientScopes/{1}", [@realm, @id]), AdminUri.Query([]), body, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
 
     /// <summary>Source: UiRoleMappingDeleteResource.deleteClientRoleMappings</summary>
     public Task<AdminResponse<JsonElement>> DeleteClientRoleMappingsAsync(string @realm, string @id, HttpContent? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/ui-ext/role-mapping-delete/clients/{1}", [@realm, @id]), AdminUri.Query([]), body, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
+        transport.SendJsonOperationAsync("UiRoleMappingDelete.DeleteClientRoleMappingsAsync", HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/ui-ext/role-mapping-delete/clients/{1}", [@realm, @id]), AdminUri.Query([]), body, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
 
     /// <summary>Source: UiRoleMappingDeleteResource.deleteCompositeRoles</summary>
     public Task<AdminResponse<JsonElement>> DeleteCompositeRolesAsync(string @realm, string @id, HttpContent? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/ui-ext/role-mapping-delete/roles/{1}", [@realm, @id]), AdminUri.Query([]), body, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
+        transport.SendJsonOperationAsync("UiRoleMappingDelete.DeleteCompositeRolesAsync", HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/ui-ext/role-mapping-delete/roles/{1}", [@realm, @id]), AdminUri.Query([]), body, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
 
 }

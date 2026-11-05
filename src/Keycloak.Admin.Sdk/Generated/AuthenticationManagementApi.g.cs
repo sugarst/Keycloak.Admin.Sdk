@@ -6,158 +6,158 @@ public sealed class AuthenticationManagementApi(KeycloakAdminClient transport)
 {
     /// <summary>Get authenticator providers Returns a stream of authenticator providers.</summary>
     public Task<AdminResponse<List<Dictionary<string, JsonElement>>>> GetAuthenticatorProvidersAsync(string @realm, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/authentication/authenticator-providers", [@realm]), AdminUri.Query([]), null, AdminJson.TypeInfo<List<Dictionary<string, JsonElement>>>(), cancellationToken);
+        transport.SendJsonOperationAsync("AuthenticationManagement.GetAuthenticatorProvidersAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/authentication/authenticator-providers", [@realm]), AdminUri.Query([]), null, AdminJson.TypeInfo<List<Dictionary<string, JsonElement>>>(), cancellationToken);
 
     /// <summary>Get client authenticator providers Returns a stream of client authenticator providers.</summary>
     public Task<AdminResponse<List<Dictionary<string, JsonElement>>>> GetClientAuthenticatorProvidersAsync(string @realm, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/authentication/client-authenticator-providers", [@realm]), AdminUri.Query([]), null, AdminJson.TypeInfo<List<Dictionary<string, JsonElement>>>(), cancellationToken);
+        transport.SendJsonOperationAsync("AuthenticationManagement.GetClientAuthenticatorProvidersAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/authentication/client-authenticator-providers", [@realm]), AdminUri.Query([]), null, AdminJson.TypeInfo<List<Dictionary<string, JsonElement>>>(), cancellationToken);
 
     /// <summary>Create new authenticator configuration</summary>
     public Task<AdminResponse> CreateAuthenticatorConfigAsync(string @realm, AuthenticatorConfigRepresentation? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/authentication/config", [@realm]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<AuthenticatorConfigRepresentation>()), cancellationToken);
+        transport.SendOperationAsync("AuthenticationManagement.CreateAuthenticatorConfigAsync", HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/authentication/config", [@realm]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<AuthenticatorConfigRepresentation>()), cancellationToken);
 
     /// <summary>Get authenticator provider&apos;s configuration description</summary>
     public Task<AdminResponse<AuthenticatorConfigInfoRepresentation>> GetAuthenticatorConfigDescriptionAsync(string @realm, string @providerId, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/authentication/config-description/{1}", [@realm, @providerId]), AdminUri.Query([]), null, AdminJson.TypeInfo<AuthenticatorConfigInfoRepresentation>(), cancellationToken);
+        transport.SendJsonOperationAsync("AuthenticationManagement.GetAuthenticatorConfigDescriptionAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/authentication/config-description/{1}", [@realm, @providerId]), AdminUri.Query([]), null, AdminJson.TypeInfo<AuthenticatorConfigInfoRepresentation>(), cancellationToken);
 
     /// <summary>Get authenticator configuration</summary>
     public Task<AdminResponse<AuthenticatorConfigRepresentation>> GetAuthenticatorConfigAsync(string @realm, string @id, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/authentication/config/{1}", [@realm, @id]), AdminUri.Query([]), null, AdminJson.TypeInfo<AuthenticatorConfigRepresentation>(), cancellationToken);
+        transport.SendJsonOperationAsync("AuthenticationManagement.GetAuthenticatorConfigAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/authentication/config/{1}", [@realm, @id]), AdminUri.Query([]), null, AdminJson.TypeInfo<AuthenticatorConfigRepresentation>(), cancellationToken);
 
     /// <summary>Update authenticator configuration</summary>
     public Task<AdminResponse> UpdateAuthenticatorConfigAsync(string @realm, string @id, AuthenticatorConfigRepresentation? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Put, AdminUri.Path("/admin/realms/{0}/authentication/config/{1}", [@realm, @id]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<AuthenticatorConfigRepresentation>()), cancellationToken);
+        transport.SendOperationAsync("AuthenticationManagement.UpdateAuthenticatorConfigAsync", HttpMethod.Put, AdminUri.Path("/admin/realms/{0}/authentication/config/{1}", [@realm, @id]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<AuthenticatorConfigRepresentation>()), cancellationToken);
 
     /// <summary>Delete authenticator configuration</summary>
     public Task<AdminResponse> RemoveAuthenticatorConfigAsync(string @realm, string @id, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Delete, AdminUri.Path("/admin/realms/{0}/authentication/config/{1}", [@realm, @id]), AdminUri.Query([]), null, cancellationToken);
+        transport.SendOperationAsync("AuthenticationManagement.RemoveAuthenticatorConfigAsync", HttpMethod.Delete, AdminUri.Path("/admin/realms/{0}/authentication/config/{1}", [@realm, @id]), AdminUri.Query([]), null, cancellationToken);
 
     /// <summary>Add new authentication execution</summary>
     public Task<AdminResponse> AddExecutionAsync(string @realm, AuthenticationExecutionRepresentation? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/authentication/executions", [@realm]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<AuthenticationExecutionRepresentation>()), cancellationToken);
+        transport.SendOperationAsync("AuthenticationManagement.AddExecutionAsync", HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/authentication/executions", [@realm]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<AuthenticationExecutionRepresentation>()), cancellationToken);
 
     /// <summary>Get Single Execution</summary>
     public Task<AdminResponse<AuthenticationExecutionRepresentation>> GetExecutionAsync(string @realm, string @executionId, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/authentication/executions/{1}", [@realm, @executionId]), AdminUri.Query([]), null, AdminJson.TypeInfo<AuthenticationExecutionRepresentation>(), cancellationToken);
+        transport.SendJsonOperationAsync("AuthenticationManagement.GetExecutionAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/authentication/executions/{1}", [@realm, @executionId]), AdminUri.Query([]), null, AdminJson.TypeInfo<AuthenticationExecutionRepresentation>(), cancellationToken);
 
     /// <summary>Delete execution</summary>
     public Task<AdminResponse> RemoveExecutionAsync(string @realm, string @executionId, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Delete, AdminUri.Path("/admin/realms/{0}/authentication/executions/{1}", [@realm, @executionId]), AdminUri.Query([]), null, cancellationToken);
+        transport.SendOperationAsync("AuthenticationManagement.RemoveExecutionAsync", HttpMethod.Delete, AdminUri.Path("/admin/realms/{0}/authentication/executions/{1}", [@realm, @executionId]), AdminUri.Query([]), null, cancellationToken);
 
     /// <summary>Update execution with new configuration</summary>
     public Task<AdminResponse> NewExecutionConfigAsync(string @realm, string @executionId, AuthenticatorConfigRepresentation? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/authentication/executions/{1}/config", [@realm, @executionId]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<AuthenticatorConfigRepresentation>()), cancellationToken);
+        transport.SendOperationAsync("AuthenticationManagement.NewExecutionConfigAsync", HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/authentication/executions/{1}/config", [@realm, @executionId]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<AuthenticatorConfigRepresentation>()), cancellationToken);
 
     /// <summary>Get execution&apos;s configuration</summary>
     public Task<AdminResponse<AuthenticatorConfigRepresentation>> GetAuthenticatorConfigGETAdminRealmsRealmAuthenticationExecutionsExecutionIdConfigIdAsync(string @realm, string @executionId, string @id, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/authentication/executions/{1}/config/{2}", [@realm, @executionId, @id]), AdminUri.Query([]), null, AdminJson.TypeInfo<AuthenticatorConfigRepresentation>(), cancellationToken);
+        transport.SendJsonOperationAsync("AuthenticationManagement.GetAuthenticatorConfigGETAdminRealmsRealmAuthenticationExecutionsExecutionIdConfigIdAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/authentication/executions/{1}/config/{2}", [@realm, @executionId, @id]), AdminUri.Query([]), null, AdminJson.TypeInfo<AuthenticatorConfigRepresentation>(), cancellationToken);
 
     /// <summary>Lower execution&apos;s priority</summary>
     public Task<AdminResponse> LowerPriorityAsync(string @realm, string @executionId, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/authentication/executions/{1}/lower-priority", [@realm, @executionId]), AdminUri.Query([]), null, cancellationToken);
+        transport.SendOperationAsync("AuthenticationManagement.LowerPriorityAsync", HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/authentication/executions/{1}/lower-priority", [@realm, @executionId]), AdminUri.Query([]), null, cancellationToken);
 
     /// <summary>Raise execution&apos;s priority</summary>
     public Task<AdminResponse> RaisePriorityAsync(string @realm, string @executionId, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/authentication/executions/{1}/raise-priority", [@realm, @executionId]), AdminUri.Query([]), null, cancellationToken);
+        transport.SendOperationAsync("AuthenticationManagement.RaisePriorityAsync", HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/authentication/executions/{1}/raise-priority", [@realm, @executionId]), AdminUri.Query([]), null, cancellationToken);
 
     /// <summary>Get authentication flows Returns a stream of authentication flows.</summary>
     public Task<AdminResponse<List<AuthenticationFlowRepresentation>>> GetFlowsAsync(string @realm, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/authentication/flows", [@realm]), AdminUri.Query([]), null, AdminJson.TypeInfo<List<AuthenticationFlowRepresentation>>(), cancellationToken);
+        transport.SendJsonOperationAsync("AuthenticationManagement.GetFlowsAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/authentication/flows", [@realm]), AdminUri.Query([]), null, AdminJson.TypeInfo<List<AuthenticationFlowRepresentation>>(), cancellationToken);
 
     /// <summary>Create a new authentication flow</summary>
     public Task<AdminResponse> CreateFlowAsync(string @realm, AuthenticationFlowRepresentation? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/authentication/flows", [@realm]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<AuthenticationFlowRepresentation>()), cancellationToken);
+        transport.SendOperationAsync("AuthenticationManagement.CreateFlowAsync", HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/authentication/flows", [@realm]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<AuthenticationFlowRepresentation>()), cancellationToken);
 
     /// <summary>Copy existing authentication flow under a new name The new name is given as &apos;newName&apos; attribute of the passed JSON object</summary>
     public Task<AdminResponse> CopyAsync(string @realm, string @flowAlias, Dictionary<string, string>? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/authentication/flows/{1}/copy", [@realm, @flowAlias]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<Dictionary<string, string>>()), cancellationToken);
+        transport.SendOperationAsync("AuthenticationManagement.CopyAsync", HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/authentication/flows/{1}/copy", [@realm, @flowAlias]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<Dictionary<string, string>>()), cancellationToken);
 
     /// <summary>Get authentication executions for a flow</summary>
     public Task<AdminResponse<List<AuthenticationExecutionInfoRepresentation>>> GetExecutionsAsync(string @realm, string @flowAlias, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/authentication/flows/{1}/executions", [@realm, @flowAlias]), AdminUri.Query([]), null, AdminJson.TypeInfo<List<AuthenticationExecutionInfoRepresentation>>(), cancellationToken);
+        transport.SendJsonOperationAsync("AuthenticationManagement.GetExecutionsAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/authentication/flows/{1}/executions", [@realm, @flowAlias]), AdminUri.Query([]), null, AdminJson.TypeInfo<List<AuthenticationExecutionInfoRepresentation>>(), cancellationToken);
 
     /// <summary>Update authentication executions of a Flow</summary>
     public Task<AdminResponse> UpdateExecutionsAsync(string @realm, string @flowAlias, AuthenticationExecutionInfoRepresentation? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Put, AdminUri.Path("/admin/realms/{0}/authentication/flows/{1}/executions", [@realm, @flowAlias]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<AuthenticationExecutionInfoRepresentation>()), cancellationToken);
+        transport.SendOperationAsync("AuthenticationManagement.UpdateExecutionsAsync", HttpMethod.Put, AdminUri.Path("/admin/realms/{0}/authentication/flows/{1}/executions", [@realm, @flowAlias]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<AuthenticationExecutionInfoRepresentation>()), cancellationToken);
 
     /// <summary>Add new authentication execution to a flow</summary>
     public Task<AdminResponse> AddExecutionToFlowAsync(string @realm, string @flowAlias, Dictionary<string, JsonElement>? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/authentication/flows/{1}/executions/execution", [@realm, @flowAlias]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<Dictionary<string, JsonElement>>()), cancellationToken);
+        transport.SendOperationAsync("AuthenticationManagement.AddExecutionToFlowAsync", HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/authentication/flows/{1}/executions/execution", [@realm, @flowAlias]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<Dictionary<string, JsonElement>>()), cancellationToken);
 
     /// <summary>Add new flow with new execution to existing flow</summary>
     public Task<AdminResponse> AddExecutionFlowAsync(string @realm, string @flowAlias, Dictionary<string, JsonElement>? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/authentication/flows/{1}/executions/flow", [@realm, @flowAlias]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<Dictionary<string, JsonElement>>()), cancellationToken);
+        transport.SendOperationAsync("AuthenticationManagement.AddExecutionFlowAsync", HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/authentication/flows/{1}/executions/flow", [@realm, @flowAlias]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<Dictionary<string, JsonElement>>()), cancellationToken);
 
     /// <summary>Get authentication flow for id</summary>
     public Task<AdminResponse<AuthenticationFlowRepresentation>> GetFlowAsync(string @realm, string @id, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/authentication/flows/{1}", [@realm, @id]), AdminUri.Query([]), null, AdminJson.TypeInfo<AuthenticationFlowRepresentation>(), cancellationToken);
+        transport.SendJsonOperationAsync("AuthenticationManagement.GetFlowAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/authentication/flows/{1}", [@realm, @id]), AdminUri.Query([]), null, AdminJson.TypeInfo<AuthenticationFlowRepresentation>(), cancellationToken);
 
     /// <summary>Update an authentication flow</summary>
     public Task<AdminResponse> UpdateFlowAsync(string @realm, string @id, AuthenticationFlowRepresentation? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Put, AdminUri.Path("/admin/realms/{0}/authentication/flows/{1}", [@realm, @id]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<AuthenticationFlowRepresentation>()), cancellationToken);
+        transport.SendOperationAsync("AuthenticationManagement.UpdateFlowAsync", HttpMethod.Put, AdminUri.Path("/admin/realms/{0}/authentication/flows/{1}", [@realm, @id]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<AuthenticationFlowRepresentation>()), cancellationToken);
 
     /// <summary>Delete an authentication flow</summary>
     public Task<AdminResponse> DeleteFlowAsync(string @realm, string @id, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Delete, AdminUri.Path("/admin/realms/{0}/authentication/flows/{1}", [@realm, @id]), AdminUri.Query([]), null, cancellationToken);
+        transport.SendOperationAsync("AuthenticationManagement.DeleteFlowAsync", HttpMethod.Delete, AdminUri.Path("/admin/realms/{0}/authentication/flows/{1}", [@realm, @id]), AdminUri.Query([]), null, cancellationToken);
 
     /// <summary>Get form action providers Returns a stream of form action providers.</summary>
     public Task<AdminResponse<List<Dictionary<string, JsonElement>>>> GetFormActionProvidersAsync(string @realm, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/authentication/form-action-providers", [@realm]), AdminUri.Query([]), null, AdminJson.TypeInfo<List<Dictionary<string, JsonElement>>>(), cancellationToken);
+        transport.SendJsonOperationAsync("AuthenticationManagement.GetFormActionProvidersAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/authentication/form-action-providers", [@realm]), AdminUri.Query([]), null, AdminJson.TypeInfo<List<Dictionary<string, JsonElement>>>(), cancellationToken);
 
     /// <summary>Get form providers Returns a stream of form providers.</summary>
     public Task<AdminResponse<List<Dictionary<string, JsonElement>>>> GetFormProvidersAsync(string @realm, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/authentication/form-providers", [@realm]), AdminUri.Query([]), null, AdminJson.TypeInfo<List<Dictionary<string, JsonElement>>>(), cancellationToken);
+        transport.SendJsonOperationAsync("AuthenticationManagement.GetFormProvidersAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/authentication/form-providers", [@realm]), AdminUri.Query([]), null, AdminJson.TypeInfo<List<Dictionary<string, JsonElement>>>(), cancellationToken);
 
     /// <summary>Get configuration descriptions for all clients</summary>
     public Task<AdminResponse<Dictionary<string, List<ConfigPropertyRepresentation>>>> GetPerClientConfigDescriptionAsync(string @realm, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/authentication/per-client-config-description", [@realm]), AdminUri.Query([]), null, AdminJson.TypeInfo<Dictionary<string, List<ConfigPropertyRepresentation>>>(), cancellationToken);
+        transport.SendJsonOperationAsync("AuthenticationManagement.GetPerClientConfigDescriptionAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/authentication/per-client-config-description", [@realm]), AdminUri.Query([]), null, AdminJson.TypeInfo<Dictionary<string, List<ConfigPropertyRepresentation>>>(), cancellationToken);
 
     /// <summary>Register a new required actions</summary>
     public Task<AdminResponse> RegisterRequiredActionAsync(string @realm, Dictionary<string, string>? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/authentication/register-required-action", [@realm]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<Dictionary<string, string>>()), cancellationToken);
+        transport.SendOperationAsync("AuthenticationManagement.RegisterRequiredActionAsync", HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/authentication/register-required-action", [@realm]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<Dictionary<string, string>>()), cancellationToken);
 
     /// <summary>Get required actions Returns a stream of required actions.</summary>
     public Task<AdminResponse<List<RequiredActionProviderRepresentation>>> GetRequiredActionsAsync(string @realm, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/authentication/required-actions", [@realm]), AdminUri.Query([]), null, AdminJson.TypeInfo<List<RequiredActionProviderRepresentation>>(), cancellationToken);
+        transport.SendJsonOperationAsync("AuthenticationManagement.GetRequiredActionsAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/authentication/required-actions", [@realm]), AdminUri.Query([]), null, AdminJson.TypeInfo<List<RequiredActionProviderRepresentation>>(), cancellationToken);
 
     /// <summary>Get required action for alias</summary>
     public Task<AdminResponse<RequiredActionProviderRepresentation>> GetRequiredActionAsync(string @realm, string @alias, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/authentication/required-actions/{1}", [@realm, @alias]), AdminUri.Query([]), null, AdminJson.TypeInfo<RequiredActionProviderRepresentation>(), cancellationToken);
+        transport.SendJsonOperationAsync("AuthenticationManagement.GetRequiredActionAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/authentication/required-actions/{1}", [@realm, @alias]), AdminUri.Query([]), null, AdminJson.TypeInfo<RequiredActionProviderRepresentation>(), cancellationToken);
 
     /// <summary>Update required action</summary>
     public Task<AdminResponse> UpdateRequiredActionAsync(string @realm, string @alias, RequiredActionProviderRepresentation? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Put, AdminUri.Path("/admin/realms/{0}/authentication/required-actions/{1}", [@realm, @alias]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<RequiredActionProviderRepresentation>()), cancellationToken);
+        transport.SendOperationAsync("AuthenticationManagement.UpdateRequiredActionAsync", HttpMethod.Put, AdminUri.Path("/admin/realms/{0}/authentication/required-actions/{1}", [@realm, @alias]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<RequiredActionProviderRepresentation>()), cancellationToken);
 
     /// <summary>Delete required action</summary>
     public Task<AdminResponse> RemoveRequiredActionAsync(string @realm, string @alias, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Delete, AdminUri.Path("/admin/realms/{0}/authentication/required-actions/{1}", [@realm, @alias]), AdminUri.Query([]), null, cancellationToken);
+        transport.SendOperationAsync("AuthenticationManagement.RemoveRequiredActionAsync", HttpMethod.Delete, AdminUri.Path("/admin/realms/{0}/authentication/required-actions/{1}", [@realm, @alias]), AdminUri.Query([]), null, cancellationToken);
 
     /// <summary>Get RequiredAction configuration</summary>
     public Task<AdminResponse<RequiredActionConfigRepresentation>> GetRequiredActionConfigAsync(string @realm, string @alias, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/authentication/required-actions/{1}/config", [@realm, @alias]), AdminUri.Query([]), null, AdminJson.TypeInfo<RequiredActionConfigRepresentation>(), cancellationToken);
+        transport.SendJsonOperationAsync("AuthenticationManagement.GetRequiredActionConfigAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/authentication/required-actions/{1}/config", [@realm, @alias]), AdminUri.Query([]), null, AdminJson.TypeInfo<RequiredActionConfigRepresentation>(), cancellationToken);
 
     /// <summary>Update RequiredAction configuration</summary>
     public Task<AdminResponse> UpdateRequiredActionConfigAsync(string @realm, string @alias, RequiredActionConfigRepresentation? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Put, AdminUri.Path("/admin/realms/{0}/authentication/required-actions/{1}/config", [@realm, @alias]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<RequiredActionConfigRepresentation>()), cancellationToken);
+        transport.SendOperationAsync("AuthenticationManagement.UpdateRequiredActionConfigAsync", HttpMethod.Put, AdminUri.Path("/admin/realms/{0}/authentication/required-actions/{1}/config", [@realm, @alias]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<RequiredActionConfigRepresentation>()), cancellationToken);
 
     /// <summary>Delete RequiredAction configuration</summary>
     public Task<AdminResponse> RemoveRequiredActionConfigAsync(string @realm, string @alias, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Delete, AdminUri.Path("/admin/realms/{0}/authentication/required-actions/{1}/config", [@realm, @alias]), AdminUri.Query([]), null, cancellationToken);
+        transport.SendOperationAsync("AuthenticationManagement.RemoveRequiredActionConfigAsync", HttpMethod.Delete, AdminUri.Path("/admin/realms/{0}/authentication/required-actions/{1}/config", [@realm, @alias]), AdminUri.Query([]), null, cancellationToken);
 
     /// <summary>Get RequiredAction provider configuration description</summary>
     public Task<AdminResponse<RequiredActionConfigInfoRepresentation>> GetRequiredActionConfigDescriptionAsync(string @realm, string @alias, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/authentication/required-actions/{1}/config-description", [@realm, @alias]), AdminUri.Query([]), null, AdminJson.TypeInfo<RequiredActionConfigInfoRepresentation>(), cancellationToken);
+        transport.SendJsonOperationAsync("AuthenticationManagement.GetRequiredActionConfigDescriptionAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/authentication/required-actions/{1}/config-description", [@realm, @alias]), AdminUri.Query([]), null, AdminJson.TypeInfo<RequiredActionConfigInfoRepresentation>(), cancellationToken);
 
     /// <summary>Lower required action&apos;s priority</summary>
     public Task<AdminResponse> LowerRequiredActionPriorityAsync(string @realm, string @alias, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/authentication/required-actions/{1}/lower-priority", [@realm, @alias]), AdminUri.Query([]), null, cancellationToken);
+        transport.SendOperationAsync("AuthenticationManagement.LowerRequiredActionPriorityAsync", HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/authentication/required-actions/{1}/lower-priority", [@realm, @alias]), AdminUri.Query([]), null, cancellationToken);
 
     /// <summary>Raise required action&apos;s priority</summary>
     public Task<AdminResponse> RaiseRequiredActionPriorityAsync(string @realm, string @alias, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/authentication/required-actions/{1}/raise-priority", [@realm, @alias]), AdminUri.Query([]), null, cancellationToken);
+        transport.SendOperationAsync("AuthenticationManagement.RaiseRequiredActionPriorityAsync", HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/authentication/required-actions/{1}/raise-priority", [@realm, @alias]), AdminUri.Query([]), null, cancellationToken);
 
     /// <summary>Get unregistered required actions Returns a stream of unregistered required actions.</summary>
     public Task<AdminResponse<List<Dictionary<string, string>>>> GetUnregisteredRequiredActionsAsync(string @realm, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/authentication/unregistered-required-actions", [@realm]), AdminUri.Query([]), null, AdminJson.TypeInfo<List<Dictionary<string, string>>>(), cancellationToken);
+        transport.SendJsonOperationAsync("AuthenticationManagement.GetUnregisteredRequiredActionsAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/authentication/unregistered-required-actions", [@realm]), AdminUri.Query([]), null, AdminJson.TypeInfo<List<Dictionary<string, string>>>(), cancellationToken);
 
 }

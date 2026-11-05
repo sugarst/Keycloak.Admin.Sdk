@@ -6,6 +6,6 @@ public sealed class TestLdapConnectionApi(KeycloakAdminClient transport)
 {
     /// <summary>Source: TestLdapConnectionResource.testLDAPConnection Supply HttpContent with the desired server-supported Content-Type; the request consumes and disposes it.</summary>
     public Task<AdminResponse<JsonElement>> TestLDAPConnectionAsync(string @realm, HttpContent? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/testLDAPConnection", [@realm]), AdminUri.Query([]), body, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
+        transport.SendJsonOperationAsync("TestLdapConnection.TestLDAPConnectionAsync", HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/testLDAPConnection", [@realm]), AdminUri.Query([]), body, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
 
 }

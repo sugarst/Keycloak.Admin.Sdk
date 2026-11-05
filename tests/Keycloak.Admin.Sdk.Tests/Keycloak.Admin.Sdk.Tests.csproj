@@ -10,4 +10,5 @@
     <PackageReference Include="coverlet.collector" Version="10.1.0" PrivateAssets="all" />
   </ItemGroup>
   <ItemGroup><ProjectReference Include="../../src/Keycloak.Admin.Sdk/Keycloak.Admin.Sdk.csproj" /></ItemGroup>
+  <ItemGroup><ProjectReference Include="../../src/Keycloak.Admin.Sdk.DependencyInjection/Keycloak.Admin.Sdk.DependencyInjection.csproj" /></ItemGroup>
 </Project>

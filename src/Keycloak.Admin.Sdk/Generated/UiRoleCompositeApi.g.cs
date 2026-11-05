@@ -6,6 +6,6 @@ public sealed class UiRoleCompositeApi(KeycloakAdminClient transport)
 {
     /// <summary>Source: UiRoleCompositeResource.getCompositeRoleMappings</summary>
     public Task<AdminResponse<JsonElement>> GetCompositeRoleMappingsAsync(string @realm, string @id, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/ui-ext/role-mappings/roles/{1}", [@realm, @id]), AdminUri.Query([]), null, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
+        transport.SendJsonOperationAsync("UiRoleComposite.GetCompositeRoleMappingsAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/ui-ext/role-mappings/roles/{1}", [@realm, @id]), AdminUri.Query([]), null, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
 
 }

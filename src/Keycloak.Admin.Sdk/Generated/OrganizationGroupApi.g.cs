@@ -6,34 +6,34 @@ public sealed class OrganizationGroupApi(KeycloakAdminClient transport)
 {
     /// <summary>Get organization group representation</summary>
     public Task<AdminResponse<GroupRepresentation>> GetGroupAsync(string @realm, string @orgId, string @groupId, bool? @subGroupsCount = null, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/organizations/{1}/groups/{2}", [@realm, @orgId, @groupId]), AdminUri.Query([new("subGroupsCount", @subGroupsCount)]), null, AdminJson.TypeInfo<GroupRepresentation>(), cancellationToken);
+        transport.SendJsonOperationAsync("OrganizationGroup.GetGroupAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/organizations/{1}/groups/{2}", [@realm, @orgId, @groupId]), AdminUri.Query([new("subGroupsCount", @subGroupsCount)]), null, AdminJson.TypeInfo<GroupRepresentation>(), cancellationToken);
 
     /// <summary>Update organization group</summary>
     public Task<AdminResponse> UpdateGroupAsync(string @realm, string @orgId, string @groupId, GroupRepresentation? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Put, AdminUri.Path("/admin/realms/{0}/organizations/{1}/groups/{2}", [@realm, @orgId, @groupId]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<GroupRepresentation>()), cancellationToken);
+        transport.SendOperationAsync("OrganizationGroup.UpdateGroupAsync", HttpMethod.Put, AdminUri.Path("/admin/realms/{0}/organizations/{1}/groups/{2}", [@realm, @orgId, @groupId]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<GroupRepresentation>()), cancellationToken);
 
     /// <summary>Delete the organization group</summary>
     public Task<AdminResponse> DeleteGroupAsync(string @realm, string @orgId, string @groupId, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Delete, AdminUri.Path("/admin/realms/{0}/organizations/{1}/groups/{2}", [@realm, @orgId, @groupId]), AdminUri.Query([]), null, cancellationToken);
+        transport.SendOperationAsync("OrganizationGroup.DeleteGroupAsync", HttpMethod.Delete, AdminUri.Path("/admin/realms/{0}/organizations/{1}/groups/{2}", [@realm, @orgId, @groupId]), AdminUri.Query([]), null, cancellationToken);
 
     /// <summary>Get subgroups of this organization group</summary>
     public Task<AdminResponse<List<GroupRepresentation>>> GetSubGroupsAsync(string @realm, string @orgId, string @groupId, bool? @exact = null, int? @first = null, int? @max = null, string? @search = null, bool? @subGroupsCount = null, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/organizations/{1}/groups/{2}/children", [@realm, @orgId, @groupId]), AdminUri.Query([new("exact", @exact), new("first", @first), new("max", @max), new("search", @search), new("subGroupsCount", @subGroupsCount)]), null, AdminJson.TypeInfo<List<GroupRepresentation>>(), cancellationToken);
+        transport.SendJsonOperationAsync("OrganizationGroup.GetSubGroupsAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/organizations/{1}/groups/{2}/children", [@realm, @orgId, @groupId]), AdminUri.Query([new("exact", @exact), new("first", @first), new("max", @max), new("search", @search), new("subGroupsCount", @subGroupsCount)]), null, AdminJson.TypeInfo<List<GroupRepresentation>>(), cancellationToken);
 
     /// <summary>Create or move a subgroup</summary>
     public Task<AdminResponse> AddSubGroupAsync(string @realm, string @orgId, string @groupId, GroupRepresentation? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/organizations/{1}/groups/{2}/children", [@realm, @orgId, @groupId]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<GroupRepresentation>()), cancellationToken);
+        transport.SendOperationAsync("OrganizationGroup.AddSubGroupAsync", HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/organizations/{1}/groups/{2}/children", [@realm, @orgId, @groupId]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<GroupRepresentation>()), cancellationToken);
 
     /// <summary>Get members of this organization group</summary>
     public Task<AdminResponse<List<MemberRepresentation>>> GetMembersAsync(string @realm, string @orgId, string @groupId, bool? @briefRepresentation = null, int? @first = null, int? @max = null, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/organizations/{1}/groups/{2}/members", [@realm, @orgId, @groupId]), AdminUri.Query([new("briefRepresentation", @briefRepresentation), new("first", @first), new("max", @max)]), null, AdminJson.TypeInfo<List<MemberRepresentation>>(), cancellationToken);
+        transport.SendJsonOperationAsync("OrganizationGroup.GetMembersAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/organizations/{1}/groups/{2}/members", [@realm, @orgId, @groupId]), AdminUri.Query([new("briefRepresentation", @briefRepresentation), new("first", @first), new("max", @max)]), null, AdminJson.TypeInfo<List<MemberRepresentation>>(), cancellationToken);
 
     /// <summary>Add a user to this organization group</summary>
     public Task<AdminResponse> JoinGroupAsync(string @realm, string @orgId, string @groupId, string @userId, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Put, AdminUri.Path("/admin/realms/{0}/organizations/{1}/groups/{2}/members/{3}", [@realm, @orgId, @groupId, @userId]), AdminUri.Query([]), null, cancellationToken);
+        transport.SendOperationAsync("OrganizationGroup.JoinGroupAsync", HttpMethod.Put, AdminUri.Path("/admin/realms/{0}/organizations/{1}/groups/{2}/members/{3}", [@realm, @orgId, @groupId, @userId]), AdminUri.Query([]), null, cancellationToken);
 
     /// <summary>Remove a user from this organization group</summary>
     public Task<AdminResponse> LeaveGroupAsync(string @realm, string @orgId, string @groupId, string @userId, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Delete, AdminUri.Path("/admin/realms/{0}/organizations/{1}/groups/{2}/members/{3}", [@realm, @orgId, @groupId, @userId]), AdminUri.Query([]), null, cancellationToken);
+        transport.SendOperationAsync("OrganizationGroup.LeaveGroupAsync", HttpMethod.Delete, AdminUri.Path("/admin/realms/{0}/organizations/{1}/groups/{2}/members/{3}", [@realm, @orgId, @groupId, @userId]), AdminUri.Query([]), null, cancellationToken);
 
 }

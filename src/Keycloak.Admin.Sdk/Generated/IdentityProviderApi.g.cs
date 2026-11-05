@@ -6,54 +6,54 @@ public sealed class IdentityProviderApi(KeycloakAdminClient transport)
 {
     /// <summary>Get the identity provider</summary>
     public Task<AdminResponse<IdentityProviderRepresentation>> GetIdentityProviderAsync(string @realm, string @alias, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/identity-provider/instances/{1}", [@realm, @alias]), AdminUri.Query([]), null, AdminJson.TypeInfo<IdentityProviderRepresentation>(), cancellationToken);
+        transport.SendJsonOperationAsync("IdentityProvider.GetIdentityProviderAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/identity-provider/instances/{1}", [@realm, @alias]), AdminUri.Query([]), null, AdminJson.TypeInfo<IdentityProviderRepresentation>(), cancellationToken);
 
     /// <summary>Update the identity provider</summary>
     public Task<AdminResponse> UpdateAsync(string @realm, string @alias, IdentityProviderRepresentation? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Put, AdminUri.Path("/admin/realms/{0}/identity-provider/instances/{1}", [@realm, @alias]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<IdentityProviderRepresentation>()), cancellationToken);
+        transport.SendOperationAsync("IdentityProvider.UpdateAsync", HttpMethod.Put, AdminUri.Path("/admin/realms/{0}/identity-provider/instances/{1}", [@realm, @alias]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<IdentityProviderRepresentation>()), cancellationToken);
 
     /// <summary>Delete the identity provider</summary>
     public Task<AdminResponse> DeleteAsync(string @realm, string @alias, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Delete, AdminUri.Path("/admin/realms/{0}/identity-provider/instances/{1}", [@realm, @alias]), AdminUri.Query([]), null, cancellationToken);
+        transport.SendOperationAsync("IdentityProvider.DeleteAsync", HttpMethod.Delete, AdminUri.Path("/admin/realms/{0}/identity-provider/instances/{1}", [@realm, @alias]), AdminUri.Query([]), null, cancellationToken);
 
     /// <summary>Export public broker configuration for identity provider</summary>
     public Task<AdminResponse> ExportAsync(string @realm, string @alias, string? @format = null, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/identity-provider/instances/{1}/export", [@realm, @alias]), AdminUri.Query([new("format", @format)]), null, cancellationToken);
+        transport.SendOperationAsync("IdentityProvider.ExportAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/identity-provider/instances/{1}/export", [@realm, @alias]), AdminUri.Query([new("format", @format)]), null, cancellationToken);
 
     /// <summary>Return object stating whether client Authorization permissions have been initialized or not and a reference</summary>
     public Task<AdminResponse<ManagementPermissionReference>> GetManagementPermissionsAsync(string @realm, string @alias, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/identity-provider/instances/{1}/management/permissions", [@realm, @alias]), AdminUri.Query([]), null, AdminJson.TypeInfo<ManagementPermissionReference>(), cancellationToken);
+        transport.SendJsonOperationAsync("IdentityProvider.GetManagementPermissionsAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/identity-provider/instances/{1}/management/permissions", [@realm, @alias]), AdminUri.Query([]), null, AdminJson.TypeInfo<ManagementPermissionReference>(), cancellationToken);
 
     /// <summary>Return object stating whether client Authorization permissions have been initialized or not and a reference</summary>
     public Task<AdminResponse<ManagementPermissionReference>> SetManagementPermissionsEnabledAsync(string @realm, string @alias, ManagementPermissionReference? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Put, AdminUri.Path("/admin/realms/{0}/identity-provider/instances/{1}/management/permissions", [@realm, @alias]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<ManagementPermissionReference>()), AdminJson.TypeInfo<ManagementPermissionReference>(), cancellationToken);
+        transport.SendJsonOperationAsync("IdentityProvider.SetManagementPermissionsEnabledAsync", HttpMethod.Put, AdminUri.Path("/admin/realms/{0}/identity-provider/instances/{1}/management/permissions", [@realm, @alias]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<ManagementPermissionReference>()), AdminJson.TypeInfo<ManagementPermissionReference>(), cancellationToken);
 
     /// <summary>Get mapper types for identity provider</summary>
     public Task<AdminResponse> GetMapperTypesAsync(string @realm, string @alias, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/identity-provider/instances/{1}/mapper-types", [@realm, @alias]), AdminUri.Query([]), null, cancellationToken);
+        transport.SendOperationAsync("IdentityProvider.GetMapperTypesAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/identity-provider/instances/{1}/mapper-types", [@realm, @alias]), AdminUri.Query([]), null, cancellationToken);
 
     /// <summary>Get mappers for identity provider</summary>
     public Task<AdminResponse<List<IdentityProviderMapperRepresentation>>> GetMappersAsync(string @realm, string @alias, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/identity-provider/instances/{1}/mappers", [@realm, @alias]), AdminUri.Query([]), null, AdminJson.TypeInfo<List<IdentityProviderMapperRepresentation>>(), cancellationToken);
+        transport.SendJsonOperationAsync("IdentityProvider.GetMappersAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/identity-provider/instances/{1}/mappers", [@realm, @alias]), AdminUri.Query([]), null, AdminJson.TypeInfo<List<IdentityProviderMapperRepresentation>>(), cancellationToken);
 
     /// <summary>Add a mapper to identity provider</summary>
     public Task<AdminResponse> AddMapperAsync(string @realm, string @alias, IdentityProviderMapperRepresentation? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/identity-provider/instances/{1}/mappers", [@realm, @alias]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<IdentityProviderMapperRepresentation>()), cancellationToken);
+        transport.SendOperationAsync("IdentityProvider.AddMapperAsync", HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/identity-provider/instances/{1}/mappers", [@realm, @alias]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<IdentityProviderMapperRepresentation>()), cancellationToken);
 
     /// <summary>Get mapper by id for the identity provider</summary>
     public Task<AdminResponse<IdentityProviderMapperRepresentation>> GetMapperByIdAsync(string @realm, string @alias, string @id, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/identity-provider/instances/{1}/mappers/{2}", [@realm, @alias, @id]), AdminUri.Query([]), null, AdminJson.TypeInfo<IdentityProviderMapperRepresentation>(), cancellationToken);
+        transport.SendJsonOperationAsync("IdentityProvider.GetMapperByIdAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/identity-provider/instances/{1}/mappers/{2}", [@realm, @alias, @id]), AdminUri.Query([]), null, AdminJson.TypeInfo<IdentityProviderMapperRepresentation>(), cancellationToken);
 
     /// <summary>Update a mapper for the identity provider</summary>
     public Task<AdminResponse> UpdatePUTAdminRealmsRealmIdentityProviderInstancesAliasMappersIdAsync(string @realm, string @alias, string @id, IdentityProviderMapperRepresentation? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Put, AdminUri.Path("/admin/realms/{0}/identity-provider/instances/{1}/mappers/{2}", [@realm, @alias, @id]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<IdentityProviderMapperRepresentation>()), cancellationToken);
+        transport.SendOperationAsync("IdentityProvider.UpdatePUTAdminRealmsRealmIdentityProviderInstancesAliasMappersIdAsync", HttpMethod.Put, AdminUri.Path("/admin/realms/{0}/identity-provider/instances/{1}/mappers/{2}", [@realm, @alias, @id]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<IdentityProviderMapperRepresentation>()), cancellationToken);
 
     /// <summary>Delete a mapper for the identity provider</summary>
     public Task<AdminResponse> DeleteDELETEAdminRealmsRealmIdentityProviderInstancesAliasMappersIdAsync(string @realm, string @alias, string @id, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Delete, AdminUri.Path("/admin/realms/{0}/identity-provider/instances/{1}/mappers/{2}", [@realm, @alias, @id]), AdminUri.Query([]), null, cancellationToken);
+        transport.SendOperationAsync("IdentityProvider.DeleteDELETEAdminRealmsRealmIdentityProviderInstancesAliasMappersIdAsync", HttpMethod.Delete, AdminUri.Path("/admin/realms/{0}/identity-provider/instances/{1}/mappers/{2}", [@realm, @alias, @id]), AdminUri.Query([]), null, cancellationToken);
 
     /// <summary>Reaload keys for the identity provider if the provider supports it, &quot;true&quot; is returned if reload was performed, &quot;false&quot; if not.</summary>
     public Task<AdminResponse<bool>> ReloadKeysAsync(string @realm, string @alias, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/identity-provider/instances/{1}/reload-keys", [@realm, @alias]), AdminUri.Query([]), null, AdminJson.TypeInfo<bool>(), cancellationToken);
+        transport.SendJsonOperationAsync("IdentityProvider.ReloadKeysAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/identity-provider/instances/{1}/reload-keys", [@realm, @alias]), AdminUri.Query([]), null, AdminJson.TypeInfo<bool>(), cancellationToken);
 
 }

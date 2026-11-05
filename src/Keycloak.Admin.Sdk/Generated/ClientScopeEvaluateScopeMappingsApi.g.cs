@@ -6,10 +6,10 @@ public sealed class ClientScopeEvaluateScopeMappingsApi(KeycloakAdminClient tran
 {
     /// <summary>Get effective scope mapping of all roles of particular role container, which this client is defacto allowed to have in the accessToken issued for him.</summary>
     public Task<AdminResponse<List<RoleRepresentation>>> GetGrantedScopeMappingsAsync(string @realm, string @clientUuid, string @roleContainerId, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/clients/{1}/evaluate-scopes/scope-mappings/{2}/granted", [@realm, @clientUuid, @roleContainerId]), AdminUri.Query([]), null, AdminJson.TypeInfo<List<RoleRepresentation>>(), cancellationToken);
+        transport.SendJsonOperationAsync("ClientScopeEvaluateScopeMappings.GetGrantedScopeMappingsAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/clients/{1}/evaluate-scopes/scope-mappings/{2}/granted", [@realm, @clientUuid, @roleContainerId]), AdminUri.Query([]), null, AdminJson.TypeInfo<List<RoleRepresentation>>(), cancellationToken);
 
     /// <summary>Get roles, which this client doesn&apos;t have scope for and can&apos;t have them in the accessToken issued for him.</summary>
     public Task<AdminResponse<List<RoleRepresentation>>> GetNotGrantedScopeMappingsAsync(string @realm, string @clientUuid, string @roleContainerId, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/clients/{1}/evaluate-scopes/scope-mappings/{2}/not-granted", [@realm, @clientUuid, @roleContainerId]), AdminUri.Query([]), null, AdminJson.TypeInfo<List<RoleRepresentation>>(), cancellationToken);
+        transport.SendJsonOperationAsync("ClientScopeEvaluateScopeMappings.GetNotGrantedScopeMappingsAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/clients/{1}/evaluate-scopes/scope-mappings/{2}/not-granted", [@realm, @clientUuid, @roleContainerId]), AdminUri.Query([]), null, AdminJson.TypeInfo<List<RoleRepresentation>>(), cancellationToken);
 
 }

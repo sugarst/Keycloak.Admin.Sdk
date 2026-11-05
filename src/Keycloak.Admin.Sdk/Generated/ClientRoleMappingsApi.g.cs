@@ -6,62 +6,62 @@ public sealed class ClientRoleMappingsApi(KeycloakAdminClient transport)
 {
     /// <summary>Get client-level role mappings for the user or group, and the app</summary>
     public Task<AdminResponse<List<RoleRepresentation>>> GetClientRoleMappingsAsync(string @realm, string @groupId, string @clientId, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/groups/{1}/role-mappings/clients/{2}", [@realm, @groupId, @clientId]), AdminUri.Query([]), null, AdminJson.TypeInfo<List<RoleRepresentation>>(), cancellationToken);
+        transport.SendJsonOperationAsync("ClientRoleMappings.GetClientRoleMappingsAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/groups/{1}/role-mappings/clients/{2}", [@realm, @groupId, @clientId]), AdminUri.Query([]), null, AdminJson.TypeInfo<List<RoleRepresentation>>(), cancellationToken);
 
     /// <summary>Add client-level roles to the user or group role mapping</summary>
     public Task<AdminResponse> AddClientRoleMappingAsync(string @realm, string @groupId, string @clientId, List<RoleRepresentation>? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/groups/{1}/role-mappings/clients/{2}", [@realm, @groupId, @clientId]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<List<RoleRepresentation>>()), cancellationToken);
+        transport.SendOperationAsync("ClientRoleMappings.AddClientRoleMappingAsync", HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/groups/{1}/role-mappings/clients/{2}", [@realm, @groupId, @clientId]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<List<RoleRepresentation>>()), cancellationToken);
 
     /// <summary>Delete client-level roles from user or group role mapping</summary>
     public Task<AdminResponse> DeleteClientRoleMappingAsync(string @realm, string @groupId, string @clientId, List<RoleRepresentation>? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Delete, AdminUri.Path("/admin/realms/{0}/groups/{1}/role-mappings/clients/{2}", [@realm, @groupId, @clientId]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<List<RoleRepresentation>>()), cancellationToken);
+        transport.SendOperationAsync("ClientRoleMappings.DeleteClientRoleMappingAsync", HttpMethod.Delete, AdminUri.Path("/admin/realms/{0}/groups/{1}/role-mappings/clients/{2}", [@realm, @groupId, @clientId]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<List<RoleRepresentation>>()), cancellationToken);
 
     /// <summary>Get available client-level roles that can be mapped to the user or group</summary>
     public Task<AdminResponse<List<RoleRepresentation>>> GetAvailableClientRoleMappingsAsync(string @realm, string @groupId, string @clientId, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/groups/{1}/role-mappings/clients/{2}/available", [@realm, @groupId, @clientId]), AdminUri.Query([]), null, AdminJson.TypeInfo<List<RoleRepresentation>>(), cancellationToken);
+        transport.SendJsonOperationAsync("ClientRoleMappings.GetAvailableClientRoleMappingsAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/groups/{1}/role-mappings/clients/{2}/available", [@realm, @groupId, @clientId]), AdminUri.Query([]), null, AdminJson.TypeInfo<List<RoleRepresentation>>(), cancellationToken);
 
     /// <summary>Get effective client-level role mappings This recurses any composite roles</summary>
     public Task<AdminResponse<List<RoleRepresentation>>> GetCompositeClientRoleMappingsAsync(string @realm, string @groupId, string @clientId, bool? @briefRepresentation = null, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/groups/{1}/role-mappings/clients/{2}/composite", [@realm, @groupId, @clientId]), AdminUri.Query([new("briefRepresentation", @briefRepresentation)]), null, AdminJson.TypeInfo<List<RoleRepresentation>>(), cancellationToken);
+        transport.SendJsonOperationAsync("ClientRoleMappings.GetCompositeClientRoleMappingsAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/groups/{1}/role-mappings/clients/{2}/composite", [@realm, @groupId, @clientId]), AdminUri.Query([new("briefRepresentation", @briefRepresentation)]), null, AdminJson.TypeInfo<List<RoleRepresentation>>(), cancellationToken);
 
     /// <summary>Get client-level role mappings for the user or group, and the app</summary>
     public Task<AdminResponse<List<RoleRepresentation>>> GetClientRoleMappingsGETAdminRealmsRealmOrganizationsOrgIdGroupsGroupIdRoleMappingsClientsClientIdAsync(string @realm, string @orgId, string @groupId, string @clientId, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/organizations/{1}/groups/{2}/role-mappings/clients/{3}", [@realm, @orgId, @groupId, @clientId]), AdminUri.Query([]), null, AdminJson.TypeInfo<List<RoleRepresentation>>(), cancellationToken);
+        transport.SendJsonOperationAsync("ClientRoleMappings.GetClientRoleMappingsGETAdminRealmsRealmOrganizationsOrgIdGroupsGroupIdRoleMappingsClientsClientIdAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/organizations/{1}/groups/{2}/role-mappings/clients/{3}", [@realm, @orgId, @groupId, @clientId]), AdminUri.Query([]), null, AdminJson.TypeInfo<List<RoleRepresentation>>(), cancellationToken);
 
     /// <summary>Add client-level roles to the user or group role mapping</summary>
     public Task<AdminResponse> AddClientRoleMappingPOSTAdminRealmsRealmOrganizationsOrgIdGroupsGroupIdRoleMappingsClientsClientIdAsync(string @realm, string @orgId, string @groupId, string @clientId, List<RoleRepresentation>? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/organizations/{1}/groups/{2}/role-mappings/clients/{3}", [@realm, @orgId, @groupId, @clientId]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<List<RoleRepresentation>>()), cancellationToken);
+        transport.SendOperationAsync("ClientRoleMappings.AddClientRoleMappingPOSTAdminRealmsRealmOrganizationsOrgIdGroupsGroupIdRoleMappingsClientsClientIdAsync", HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/organizations/{1}/groups/{2}/role-mappings/clients/{3}", [@realm, @orgId, @groupId, @clientId]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<List<RoleRepresentation>>()), cancellationToken);
 
     /// <summary>Delete client-level roles from user or group role mapping</summary>
     public Task<AdminResponse> DeleteClientRoleMappingDELETEAdminRealmsRealmOrganizationsOrgIdGroupsGroupIdRoleMappingsClientsClientIdAsync(string @realm, string @orgId, string @groupId, string @clientId, List<RoleRepresentation>? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Delete, AdminUri.Path("/admin/realms/{0}/organizations/{1}/groups/{2}/role-mappings/clients/{3}", [@realm, @orgId, @groupId, @clientId]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<List<RoleRepresentation>>()), cancellationToken);
+        transport.SendOperationAsync("ClientRoleMappings.DeleteClientRoleMappingDELETEAdminRealmsRealmOrganizationsOrgIdGroupsGroupIdRoleMappingsClientsClientIdAsync", HttpMethod.Delete, AdminUri.Path("/admin/realms/{0}/organizations/{1}/groups/{2}/role-mappings/clients/{3}", [@realm, @orgId, @groupId, @clientId]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<List<RoleRepresentation>>()), cancellationToken);
 
     /// <summary>Get available client-level roles that can be mapped to the user or group</summary>
     public Task<AdminResponse<List<RoleRepresentation>>> GetAvailableClientRoleMappingsGETAdminRealmsRealmOrganizationsOrgIdGroupsGroupIdRoleMappingsClientsClientIdAvailableAsync(string @realm, string @orgId, string @groupId, string @clientId, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/organizations/{1}/groups/{2}/role-mappings/clients/{3}/available", [@realm, @orgId, @groupId, @clientId]), AdminUri.Query([]), null, AdminJson.TypeInfo<List<RoleRepresentation>>(), cancellationToken);
+        transport.SendJsonOperationAsync("ClientRoleMappings.GetAvailableClientRoleMappingsGETAdminRealmsRealmOrganizationsOrgIdGroupsGroupIdRoleMappingsClientsClientIdAvailableAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/organizations/{1}/groups/{2}/role-mappings/clients/{3}/available", [@realm, @orgId, @groupId, @clientId]), AdminUri.Query([]), null, AdminJson.TypeInfo<List<RoleRepresentation>>(), cancellationToken);
 
     /// <summary>Get effective client-level role mappings This recurses any composite roles</summary>
     public Task<AdminResponse<List<RoleRepresentation>>> GetCompositeClientRoleMappingsGETAdminRealmsRealmOrganizationsOrgIdGroupsGroupIdRoleMappingsClientsClientIdCompositeAsync(string @realm, string @orgId, string @groupId, string @clientId, bool? @briefRepresentation = null, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/organizations/{1}/groups/{2}/role-mappings/clients/{3}/composite", [@realm, @orgId, @groupId, @clientId]), AdminUri.Query([new("briefRepresentation", @briefRepresentation)]), null, AdminJson.TypeInfo<List<RoleRepresentation>>(), cancellationToken);
+        transport.SendJsonOperationAsync("ClientRoleMappings.GetCompositeClientRoleMappingsGETAdminRealmsRealmOrganizationsOrgIdGroupsGroupIdRoleMappingsClientsClientIdCompositeAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/organizations/{1}/groups/{2}/role-mappings/clients/{3}/composite", [@realm, @orgId, @groupId, @clientId]), AdminUri.Query([new("briefRepresentation", @briefRepresentation)]), null, AdminJson.TypeInfo<List<RoleRepresentation>>(), cancellationToken);
 
     /// <summary>Get client-level role mappings for the user or group, and the app</summary>
     public Task<AdminResponse<List<RoleRepresentation>>> GetClientRoleMappingsGETAdminRealmsRealmUsersUserIdRoleMappingsClientsClientIdAsync(string @realm, string @userId, string @clientId, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/users/{1}/role-mappings/clients/{2}", [@realm, @userId, @clientId]), AdminUri.Query([]), null, AdminJson.TypeInfo<List<RoleRepresentation>>(), cancellationToken);
+        transport.SendJsonOperationAsync("ClientRoleMappings.GetClientRoleMappingsGETAdminRealmsRealmUsersUserIdRoleMappingsClientsClientIdAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/users/{1}/role-mappings/clients/{2}", [@realm, @userId, @clientId]), AdminUri.Query([]), null, AdminJson.TypeInfo<List<RoleRepresentation>>(), cancellationToken);
 
     /// <summary>Add client-level roles to the user or group role mapping</summary>
     public Task<AdminResponse> AddClientRoleMappingPOSTAdminRealmsRealmUsersUserIdRoleMappingsClientsClientIdAsync(string @realm, string @userId, string @clientId, List<RoleRepresentation>? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/users/{1}/role-mappings/clients/{2}", [@realm, @userId, @clientId]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<List<RoleRepresentation>>()), cancellationToken);
+        transport.SendOperationAsync("ClientRoleMappings.AddClientRoleMappingPOSTAdminRealmsRealmUsersUserIdRoleMappingsClientsClientIdAsync", HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/users/{1}/role-mappings/clients/{2}", [@realm, @userId, @clientId]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<List<RoleRepresentation>>()), cancellationToken);
 
     /// <summary>Delete client-level roles from user or group role mapping</summary>
     public Task<AdminResponse> DeleteClientRoleMappingDELETEAdminRealmsRealmUsersUserIdRoleMappingsClientsClientIdAsync(string @realm, string @userId, string @clientId, List<RoleRepresentation>? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Delete, AdminUri.Path("/admin/realms/{0}/users/{1}/role-mappings/clients/{2}", [@realm, @userId, @clientId]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<List<RoleRepresentation>>()), cancellationToken);
+        transport.SendOperationAsync("ClientRoleMappings.DeleteClientRoleMappingDELETEAdminRealmsRealmUsersUserIdRoleMappingsClientsClientIdAsync", HttpMethod.Delete, AdminUri.Path("/admin/realms/{0}/users/{1}/role-mappings/clients/{2}", [@realm, @userId, @clientId]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<List<RoleRepresentation>>()), cancellationToken);
 
     /// <summary>Get available client-level roles that can be mapped to the user or group</summary>
     public Task<AdminResponse<List<RoleRepresentation>>> GetAvailableClientRoleMappingsGETAdminRealmsRealmUsersUserIdRoleMappingsClientsClientIdAvailableAsync(string @realm, string @userId, string @clientId, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/users/{1}/role-mappings/clients/{2}/available", [@realm, @userId, @clientId]), AdminUri.Query([]), null, AdminJson.TypeInfo<List<RoleRepresentation>>(), cancellationToken);
+        transport.SendJsonOperationAsync("ClientRoleMappings.GetAvailableClientRoleMappingsGETAdminRealmsRealmUsersUserIdRoleMappingsClientsClientIdAvailableAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/users/{1}/role-mappings/clients/{2}/available", [@realm, @userId, @clientId]), AdminUri.Query([]), null, AdminJson.TypeInfo<List<RoleRepresentation>>(), cancellationToken);
 
     /// <summary>Get effective client-level role mappings This recurses any composite roles</summary>
     public Task<AdminResponse<List<RoleRepresentation>>> GetCompositeClientRoleMappingsGETAdminRealmsRealmUsersUserIdRoleMappingsClientsClientIdCompositeAsync(string @realm, string @userId, string @clientId, bool? @briefRepresentation = null, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/users/{1}/role-mappings/clients/{2}/composite", [@realm, @userId, @clientId]), AdminUri.Query([new("briefRepresentation", @briefRepresentation)]), null, AdminJson.TypeInfo<List<RoleRepresentation>>(), cancellationToken);
+        transport.SendJsonOperationAsync("ClientRoleMappings.GetCompositeClientRoleMappingsGETAdminRealmsRealmUsersUserIdRoleMappingsClientsClientIdCompositeAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/users/{1}/role-mappings/clients/{2}/composite", [@realm, @userId, @clientId]), AdminUri.Query([new("briefRepresentation", @briefRepresentation)]), null, AdminJson.TypeInfo<List<RoleRepresentation>>(), cancellationToken);
 
 }

@@ -6,6 +6,6 @@ public sealed class UiAvailableEventListenersApi(KeycloakAdminClient transport)
 {
     /// <summary>Source: UiAvailableEventListenersResource.listAvailableEventListeners</summary>
     public Task<AdminResponse<JsonElement>> ListAvailableEventListenersAsync(string @realm, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/ui-ext/available-event-listeners/", [@realm]), AdminUri.Query([]), null, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
+        transport.SendJsonOperationAsync("UiAvailableEventListeners.ListAvailableEventListenersAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/ui-ext/available-event-listeners/", [@realm]), AdminUri.Query([]), null, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
 
 }

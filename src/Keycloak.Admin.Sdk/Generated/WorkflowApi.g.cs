@@ -6,22 +6,22 @@ public sealed class WorkflowApi(KeycloakAdminClient transport)
 {
     /// <summary>Get workflow</summary>
     public Task<AdminResponse> ToRepresentationAsync(string @realm, string @id, bool? @includeId = null, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/workflows/{1}", [@realm, @id]), AdminUri.Query([new("includeId", @includeId)]), null, cancellationToken);
+        transport.SendOperationAsync("Workflow.ToRepresentationAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/workflows/{1}", [@realm, @id]), AdminUri.Query([new("includeId", @includeId)]), null, cancellationToken);
 
     /// <summary>Update workflow Supply HttpContent with the desired server-supported Content-Type; the request consumes and disposes it.</summary>
     public Task<AdminResponse> UpdateAsync(string @realm, string @id, HttpContent? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Put, AdminUri.Path("/admin/realms/{0}/workflows/{1}", [@realm, @id]), AdminUri.Query([]), body, cancellationToken);
+        transport.SendOperationAsync("Workflow.UpdateAsync", HttpMethod.Put, AdminUri.Path("/admin/realms/{0}/workflows/{1}", [@realm, @id]), AdminUri.Query([]), body, cancellationToken);
 
     /// <summary>Delete workflow</summary>
     public Task<AdminResponse> DeleteAsync(string @realm, string @id, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Delete, AdminUri.Path("/admin/realms/{0}/workflows/{1}", [@realm, @id]), AdminUri.Query([]), null, cancellationToken);
+        transport.SendOperationAsync("Workflow.DeleteAsync", HttpMethod.Delete, AdminUri.Path("/admin/realms/{0}/workflows/{1}", [@realm, @id]), AdminUri.Query([]), null, cancellationToken);
 
     /// <summary>Activate workflow for resource</summary>
     public Task<AdminResponse> ActivateAsync(string @realm, string @id, string @type, string @resourceId, string? @notBefore = null, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/workflows/{1}/activate/{2}/{3}", [@realm, @id, @type, @resourceId]), AdminUri.Query([new("notBefore", @notBefore)]), null, cancellationToken);
+        transport.SendOperationAsync("Workflow.ActivateAsync", HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/workflows/{1}/activate/{2}/{3}", [@realm, @id, @type, @resourceId]), AdminUri.Query([new("notBefore", @notBefore)]), null, cancellationToken);
 
     /// <summary>Deactivate workflow for resource</summary>
     public Task<AdminResponse> DeactivateAsync(string @realm, string @id, string @type, string @resourceId, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/workflows/{1}/deactivate/{2}/{3}", [@realm, @id, @type, @resourceId]), AdminUri.Query([]), null, cancellationToken);
+        transport.SendOperationAsync("Workflow.DeactivateAsync", HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/workflows/{1}/deactivate/{2}/{3}", [@realm, @id, @type, @resourceId]), AdminUri.Query([]), null, cancellationToken);
 
 }

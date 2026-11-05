@@ -6,10 +6,10 @@ public sealed class UiSessionsApi(KeycloakAdminClient transport)
 {
     /// <summary>Source: UiSessionsResource.realmSessions</summary>
     public Task<AdminResponse<JsonElement>> RealmSessionsAsync(string @realm, string? @type = null, string? @search = null, int? @first = null, int? @max = null, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/ui-ext/sessions", [@realm]), AdminUri.Query([new("type", @type), new("search", @search), new("first", @first), new("max", @max)]), null, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
+        transport.SendJsonOperationAsync("UiSessions.RealmSessionsAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/ui-ext/sessions", [@realm]), AdminUri.Query([new("type", @type), new("search", @search), new("first", @first), new("max", @max)]), null, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
 
     /// <summary>Source: UiSessionsResource.clientSessions</summary>
     public Task<AdminResponse<JsonElement>> ClientSessionsAsync(string @realm, string? @clientId = null, string? @type = null, string? @search = null, int? @first = null, int? @max = null, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/ui-ext/sessions/client", [@realm]), AdminUri.Query([new("clientId", @clientId), new("type", @type), new("search", @search), new("first", @first), new("max", @max)]), null, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
+        transport.SendJsonOperationAsync("UiSessions.ClientSessionsAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/ui-ext/sessions/client", [@realm]), AdminUri.Query([new("clientId", @clientId), new("type", @type), new("search", @search), new("first", @first), new("max", @max)]), null, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
 
 }

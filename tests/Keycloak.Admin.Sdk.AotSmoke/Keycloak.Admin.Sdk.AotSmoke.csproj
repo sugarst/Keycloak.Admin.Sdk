@@ -6,11 +6,14 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="../../src/Keycloak.Admin.Sdk/Keycloak.Admin.Sdk.csproj" />
+    <ProjectReference Include="../../src/Keycloak.Admin.Sdk.DependencyInjection/Keycloak.Admin.Sdk.DependencyInjection.csproj" />
     <Compile Include="../Keycloak.Admin.Sdk.Tests/ContractSuite.cs" Link="ContractSuite.cs" />
     <Compile Include="../Keycloak.Admin.Sdk.Tests/Endpoints.g.cs" Link="Endpoints.g.cs" />
     <Compile Include="../Keycloak.Admin.Sdk.Tests/AlignmentContracts.cs" Link="AlignmentContracts.cs" />
     <Compile Include="../Keycloak.Admin.Sdk.Tests/EndpointCase.cs" Link="EndpointCase.cs" />
     <Compile Include="../Keycloak.Admin.Sdk.Tests/RuntimeContracts.cs" Link="RuntimeContracts.cs" />
+    <Compile Include="../Keycloak.Admin.Sdk.Tests/RecoveryContracts.cs" Link="RecoveryContracts.cs" />
+    <Compile Include="../Keycloak.Admin.Sdk.Tests/DependencyInjectionContracts.cs" Link="DependencyInjectionContracts.cs" />
     <Compile Include="../Keycloak.Admin.Sdk.Tests/EndpointMatrix.g.cs" Link="EndpointMatrix.g.cs" />
     <Compile Include="../Keycloak.Admin.Sdk.Tests/ModelMatrix.g.cs" Link="ModelMatrix.g.cs" />
   </ItemGroup>

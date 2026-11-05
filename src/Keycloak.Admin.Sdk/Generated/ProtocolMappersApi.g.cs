@@ -6,86 +6,86 @@ public sealed class ProtocolMappersApi(KeycloakAdminClient transport)
 {
     /// <summary>Create multiple mappers</summary>
     public Task<AdminResponse> CreateMapperAsync(string @realm, string @clientScopeId, List<ProtocolMapperRepresentation>? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/client-scopes/{1}/protocol-mappers/add-models", [@realm, @clientScopeId]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<List<ProtocolMapperRepresentation>>()), cancellationToken);
+        transport.SendOperationAsync("ProtocolMappers.CreateMapperAsync", HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/client-scopes/{1}/protocol-mappers/add-models", [@realm, @clientScopeId]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<List<ProtocolMapperRepresentation>>()), cancellationToken);
 
     /// <summary>Get mappers</summary>
     public Task<AdminResponse<List<ProtocolMapperRepresentation>>> GetMappersAsync(string @realm, string @clientScopeId, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/client-scopes/{1}/protocol-mappers/models", [@realm, @clientScopeId]), AdminUri.Query([]), null, AdminJson.TypeInfo<List<ProtocolMapperRepresentation>>(), cancellationToken);
+        transport.SendJsonOperationAsync("ProtocolMappers.GetMappersAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/client-scopes/{1}/protocol-mappers/models", [@realm, @clientScopeId]), AdminUri.Query([]), null, AdminJson.TypeInfo<List<ProtocolMapperRepresentation>>(), cancellationToken);
 
     /// <summary>Create a mapper</summary>
     public Task<AdminResponse> CreateMapperPOSTAdminRealmsRealmClientScopesClientScopeIdProtocolMappersModelsAsync(string @realm, string @clientScopeId, ProtocolMapperRepresentation? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/client-scopes/{1}/protocol-mappers/models", [@realm, @clientScopeId]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<ProtocolMapperRepresentation>()), cancellationToken);
+        transport.SendOperationAsync("ProtocolMappers.CreateMapperPOSTAdminRealmsRealmClientScopesClientScopeIdProtocolMappersModelsAsync", HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/client-scopes/{1}/protocol-mappers/models", [@realm, @clientScopeId]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<ProtocolMapperRepresentation>()), cancellationToken);
 
     /// <summary>Get mapper by id</summary>
     public Task<AdminResponse<ProtocolMapperRepresentation>> GetMapperByIdAsync(string @realm, string @clientScopeId, string @id, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/client-scopes/{1}/protocol-mappers/models/{2}", [@realm, @clientScopeId, @id]), AdminUri.Query([]), null, AdminJson.TypeInfo<ProtocolMapperRepresentation>(), cancellationToken);
+        transport.SendJsonOperationAsync("ProtocolMappers.GetMapperByIdAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/client-scopes/{1}/protocol-mappers/models/{2}", [@realm, @clientScopeId, @id]), AdminUri.Query([]), null, AdminJson.TypeInfo<ProtocolMapperRepresentation>(), cancellationToken);
 
     /// <summary>Update the mapper</summary>
     public Task<AdminResponse> UpdateAsync(string @realm, string @clientScopeId, string @id, ProtocolMapperRepresentation? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Put, AdminUri.Path("/admin/realms/{0}/client-scopes/{1}/protocol-mappers/models/{2}", [@realm, @clientScopeId, @id]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<ProtocolMapperRepresentation>()), cancellationToken);
+        transport.SendOperationAsync("ProtocolMappers.UpdateAsync", HttpMethod.Put, AdminUri.Path("/admin/realms/{0}/client-scopes/{1}/protocol-mappers/models/{2}", [@realm, @clientScopeId, @id]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<ProtocolMapperRepresentation>()), cancellationToken);
 
     /// <summary>Delete the mapper</summary>
     public Task<AdminResponse> DeleteAsync(string @realm, string @clientScopeId, string @id, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Delete, AdminUri.Path("/admin/realms/{0}/client-scopes/{1}/protocol-mappers/models/{2}", [@realm, @clientScopeId, @id]), AdminUri.Query([]), null, cancellationToken);
+        transport.SendOperationAsync("ProtocolMappers.DeleteAsync", HttpMethod.Delete, AdminUri.Path("/admin/realms/{0}/client-scopes/{1}/protocol-mappers/models/{2}", [@realm, @clientScopeId, @id]), AdminUri.Query([]), null, cancellationToken);
 
     /// <summary>Get mappers by name for a specific protocol</summary>
     public Task<AdminResponse<List<ProtocolMapperRepresentation>>> GetMappersPerProtocolAsync(string @realm, string @clientScopeId, string @protocol, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/client-scopes/{1}/protocol-mappers/protocol/{2}", [@realm, @clientScopeId, @protocol]), AdminUri.Query([]), null, AdminJson.TypeInfo<List<ProtocolMapperRepresentation>>(), cancellationToken);
+        transport.SendJsonOperationAsync("ProtocolMappers.GetMappersPerProtocolAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/client-scopes/{1}/protocol-mappers/protocol/{2}", [@realm, @clientScopeId, @protocol]), AdminUri.Query([]), null, AdminJson.TypeInfo<List<ProtocolMapperRepresentation>>(), cancellationToken);
 
     /// <summary>Create multiple mappers</summary>
     public Task<AdminResponse> CreateMapperPOSTAdminRealmsRealmClientTemplatesClientScopeIdProtocolMappersAddModelsAsync(string @realm, string @clientScopeId, List<ProtocolMapperRepresentation>? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/client-templates/{1}/protocol-mappers/add-models", [@realm, @clientScopeId]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<List<ProtocolMapperRepresentation>>()), cancellationToken);
+        transport.SendOperationAsync("ProtocolMappers.CreateMapperPOSTAdminRealmsRealmClientTemplatesClientScopeIdProtocolMappersAddModelsAsync", HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/client-templates/{1}/protocol-mappers/add-models", [@realm, @clientScopeId]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<List<ProtocolMapperRepresentation>>()), cancellationToken);
 
     /// <summary>Get mappers</summary>
     public Task<AdminResponse<List<ProtocolMapperRepresentation>>> GetMappersGETAdminRealmsRealmClientTemplatesClientScopeIdProtocolMappersModelsAsync(string @realm, string @clientScopeId, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/client-templates/{1}/protocol-mappers/models", [@realm, @clientScopeId]), AdminUri.Query([]), null, AdminJson.TypeInfo<List<ProtocolMapperRepresentation>>(), cancellationToken);
+        transport.SendJsonOperationAsync("ProtocolMappers.GetMappersGETAdminRealmsRealmClientTemplatesClientScopeIdProtocolMappersModelsAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/client-templates/{1}/protocol-mappers/models", [@realm, @clientScopeId]), AdminUri.Query([]), null, AdminJson.TypeInfo<List<ProtocolMapperRepresentation>>(), cancellationToken);
 
     /// <summary>Create a mapper</summary>
     public Task<AdminResponse> CreateMapperPOSTAdminRealmsRealmClientTemplatesClientScopeIdProtocolMappersModelsAsync(string @realm, string @clientScopeId, ProtocolMapperRepresentation? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/client-templates/{1}/protocol-mappers/models", [@realm, @clientScopeId]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<ProtocolMapperRepresentation>()), cancellationToken);
+        transport.SendOperationAsync("ProtocolMappers.CreateMapperPOSTAdminRealmsRealmClientTemplatesClientScopeIdProtocolMappersModelsAsync", HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/client-templates/{1}/protocol-mappers/models", [@realm, @clientScopeId]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<ProtocolMapperRepresentation>()), cancellationToken);
 
     /// <summary>Get mapper by id</summary>
     public Task<AdminResponse<ProtocolMapperRepresentation>> GetMapperByIdGETAdminRealmsRealmClientTemplatesClientScopeIdProtocolMappersModelsIdAsync(string @realm, string @clientScopeId, string @id, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/client-templates/{1}/protocol-mappers/models/{2}", [@realm, @clientScopeId, @id]), AdminUri.Query([]), null, AdminJson.TypeInfo<ProtocolMapperRepresentation>(), cancellationToken);
+        transport.SendJsonOperationAsync("ProtocolMappers.GetMapperByIdGETAdminRealmsRealmClientTemplatesClientScopeIdProtocolMappersModelsIdAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/client-templates/{1}/protocol-mappers/models/{2}", [@realm, @clientScopeId, @id]), AdminUri.Query([]), null, AdminJson.TypeInfo<ProtocolMapperRepresentation>(), cancellationToken);
 
     /// <summary>Update the mapper</summary>
     public Task<AdminResponse> UpdatePUTAdminRealmsRealmClientTemplatesClientScopeIdProtocolMappersModelsIdAsync(string @realm, string @clientScopeId, string @id, ProtocolMapperRepresentation? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Put, AdminUri.Path("/admin/realms/{0}/client-templates/{1}/protocol-mappers/models/{2}", [@realm, @clientScopeId, @id]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<ProtocolMapperRepresentation>()), cancellationToken);
+        transport.SendOperationAsync("ProtocolMappers.UpdatePUTAdminRealmsRealmClientTemplatesClientScopeIdProtocolMappersModelsIdAsync", HttpMethod.Put, AdminUri.Path("/admin/realms/{0}/client-templates/{1}/protocol-mappers/models/{2}", [@realm, @clientScopeId, @id]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<ProtocolMapperRepresentation>()), cancellationToken);
 
     /// <summary>Delete the mapper</summary>
     public Task<AdminResponse> DeleteDELETEAdminRealmsRealmClientTemplatesClientScopeIdProtocolMappersModelsIdAsync(string @realm, string @clientScopeId, string @id, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Delete, AdminUri.Path("/admin/realms/{0}/client-templates/{1}/protocol-mappers/models/{2}", [@realm, @clientScopeId, @id]), AdminUri.Query([]), null, cancellationToken);
+        transport.SendOperationAsync("ProtocolMappers.DeleteDELETEAdminRealmsRealmClientTemplatesClientScopeIdProtocolMappersModelsIdAsync", HttpMethod.Delete, AdminUri.Path("/admin/realms/{0}/client-templates/{1}/protocol-mappers/models/{2}", [@realm, @clientScopeId, @id]), AdminUri.Query([]), null, cancellationToken);
 
     /// <summary>Get mappers by name for a specific protocol</summary>
     public Task<AdminResponse<List<ProtocolMapperRepresentation>>> GetMappersPerProtocolGETAdminRealmsRealmClientTemplatesClientScopeIdProtocolMappersProtocolProtocolAsync(string @realm, string @clientScopeId, string @protocol, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/client-templates/{1}/protocol-mappers/protocol/{2}", [@realm, @clientScopeId, @protocol]), AdminUri.Query([]), null, AdminJson.TypeInfo<List<ProtocolMapperRepresentation>>(), cancellationToken);
+        transport.SendJsonOperationAsync("ProtocolMappers.GetMappersPerProtocolGETAdminRealmsRealmClientTemplatesClientScopeIdProtocolMappersProtocolProtocolAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/client-templates/{1}/protocol-mappers/protocol/{2}", [@realm, @clientScopeId, @protocol]), AdminUri.Query([]), null, AdminJson.TypeInfo<List<ProtocolMapperRepresentation>>(), cancellationToken);
 
     /// <summary>Create multiple mappers</summary>
     public Task<AdminResponse> CreateMapperPOSTAdminRealmsRealmClientsClientUuidProtocolMappersAddModelsAsync(string @realm, string @clientUuid, List<ProtocolMapperRepresentation>? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/clients/{1}/protocol-mappers/add-models", [@realm, @clientUuid]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<List<ProtocolMapperRepresentation>>()), cancellationToken);
+        transport.SendOperationAsync("ProtocolMappers.CreateMapperPOSTAdminRealmsRealmClientsClientUuidProtocolMappersAddModelsAsync", HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/clients/{1}/protocol-mappers/add-models", [@realm, @clientUuid]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<List<ProtocolMapperRepresentation>>()), cancellationToken);
 
     /// <summary>Get mappers</summary>
     public Task<AdminResponse<List<ProtocolMapperRepresentation>>> GetMappersGETAdminRealmsRealmClientsClientUuidProtocolMappersModelsAsync(string @realm, string @clientUuid, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/clients/{1}/protocol-mappers/models", [@realm, @clientUuid]), AdminUri.Query([]), null, AdminJson.TypeInfo<List<ProtocolMapperRepresentation>>(), cancellationToken);
+        transport.SendJsonOperationAsync("ProtocolMappers.GetMappersGETAdminRealmsRealmClientsClientUuidProtocolMappersModelsAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/clients/{1}/protocol-mappers/models", [@realm, @clientUuid]), AdminUri.Query([]), null, AdminJson.TypeInfo<List<ProtocolMapperRepresentation>>(), cancellationToken);
 
     /// <summary>Create a mapper</summary>
     public Task<AdminResponse> CreateMapperPOSTAdminRealmsRealmClientsClientUuidProtocolMappersModelsAsync(string @realm, string @clientUuid, ProtocolMapperRepresentation? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/clients/{1}/protocol-mappers/models", [@realm, @clientUuid]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<ProtocolMapperRepresentation>()), cancellationToken);
+        transport.SendOperationAsync("ProtocolMappers.CreateMapperPOSTAdminRealmsRealmClientsClientUuidProtocolMappersModelsAsync", HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/clients/{1}/protocol-mappers/models", [@realm, @clientUuid]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<ProtocolMapperRepresentation>()), cancellationToken);
 
     /// <summary>Get mapper by id</summary>
     public Task<AdminResponse<ProtocolMapperRepresentation>> GetMapperByIdGETAdminRealmsRealmClientsClientUuidProtocolMappersModelsIdAsync(string @realm, string @clientUuid, string @id, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/clients/{1}/protocol-mappers/models/{2}", [@realm, @clientUuid, @id]), AdminUri.Query([]), null, AdminJson.TypeInfo<ProtocolMapperRepresentation>(), cancellationToken);
+        transport.SendJsonOperationAsync("ProtocolMappers.GetMapperByIdGETAdminRealmsRealmClientsClientUuidProtocolMappersModelsIdAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/clients/{1}/protocol-mappers/models/{2}", [@realm, @clientUuid, @id]), AdminUri.Query([]), null, AdminJson.TypeInfo<ProtocolMapperRepresentation>(), cancellationToken);
 
     /// <summary>Update the mapper</summary>
     public Task<AdminResponse> UpdatePUTAdminRealmsRealmClientsClientUuidProtocolMappersModelsIdAsync(string @realm, string @clientUuid, string @id, ProtocolMapperRepresentation? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Put, AdminUri.Path("/admin/realms/{0}/clients/{1}/protocol-mappers/models/{2}", [@realm, @clientUuid, @id]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<ProtocolMapperRepresentation>()), cancellationToken);
+        transport.SendOperationAsync("ProtocolMappers.UpdatePUTAdminRealmsRealmClientsClientUuidProtocolMappersModelsIdAsync", HttpMethod.Put, AdminUri.Path("/admin/realms/{0}/clients/{1}/protocol-mappers/models/{2}", [@realm, @clientUuid, @id]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<ProtocolMapperRepresentation>()), cancellationToken);
 
     /// <summary>Delete the mapper</summary>
     public Task<AdminResponse> DeleteDELETEAdminRealmsRealmClientsClientUuidProtocolMappersModelsIdAsync(string @realm, string @clientUuid, string @id, CancellationToken cancellationToken = default) =>
-        transport.SendAsync(HttpMethod.Delete, AdminUri.Path("/admin/realms/{0}/clients/{1}/protocol-mappers/models/{2}", [@realm, @clientUuid, @id]), AdminUri.Query([]), null, cancellationToken);
+        transport.SendOperationAsync("ProtocolMappers.DeleteDELETEAdminRealmsRealmClientsClientUuidProtocolMappersModelsIdAsync", HttpMethod.Delete, AdminUri.Path("/admin/realms/{0}/clients/{1}/protocol-mappers/models/{2}", [@realm, @clientUuid, @id]), AdminUri.Query([]), null, cancellationToken);
 
     /// <summary>Get mappers by name for a specific protocol</summary>
     public Task<AdminResponse<List<ProtocolMapperRepresentation>>> GetMappersPerProtocolGETAdminRealmsRealmClientsClientUuidProtocolMappersProtocolProtocolAsync(string @realm, string @clientUuid, string @protocol, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/clients/{1}/protocol-mappers/protocol/{2}", [@realm, @clientUuid, @protocol]), AdminUri.Query([]), null, AdminJson.TypeInfo<List<ProtocolMapperRepresentation>>(), cancellationToken);
+        transport.SendJsonOperationAsync("ProtocolMappers.GetMappersPerProtocolGETAdminRealmsRealmClientsClientUuidProtocolMappersProtocolProtocolAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/clients/{1}/protocol-mappers/protocol/{2}", [@realm, @clientUuid, @protocol]), AdminUri.Query([]), null, AdminJson.TypeInfo<List<ProtocolMapperRepresentation>>(), cancellationToken);
 
 }

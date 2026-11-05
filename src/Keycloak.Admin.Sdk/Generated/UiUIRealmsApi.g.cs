@@ -6,6 +6,6 @@ public sealed class UiUIRealmsApi(KeycloakAdminClient transport)
 {
     /// <summary>Source: UiUIRealmsResource.getRealms</summary>
     public Task<AdminResponse<JsonElement>> GetRealmsAsync(string @realm, int? @first = null, int? @max = null, string? @search = null, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/ui-ext/realms/names", [@realm]), AdminUri.Query([new("first", @first), new("max", @max), new("search", @search)]), null, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
+        transport.SendJsonOperationAsync("UiUIRealms.GetRealmsAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/ui-ext/realms/names", [@realm]), AdminUri.Query([new("first", @first), new("max", @max), new("search", @search)]), null, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
 
 }

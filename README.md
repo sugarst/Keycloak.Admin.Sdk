@@ -33,7 +33,7 @@ var created = await sdk.Users.CreateUserAsync("target-realm",
 Console.WriteLine(created.Location);
 ```
 
-认证 realm 与目标 realm 独立。可用 `StaticAccessTokenProvider` 或实现 `IAccessTokenProvider` 接入现有 token 系统。SDK 不自动授予服务账号权限，不自动重试或重放 401。
+认证 realm 与目标 realm 独立。可用 `StaticAccessTokenProvider` 或实现 `IAccessTokenProvider` 接入现有 token 系统。SDK 不自动授予服务账号权限；401 恢复默认关闭，可显式开启。结构化错误、认证恢复及 DI 配置见 [认证与错误处理](docs/authentication-and-errors.md)。
 
 每个生成方法有明确的 HTTP 方法、路径和源码位置，见 [端点清单](docs/contracts/endpoint-inventory.md)。资源入口沿 Java 资源类命名，如 `Users`、`User`、`Clients`、`Client`、`RealmAdmin`、`AuthenticationManagement`。同一 Java 方法挂载到多个不同路径时，后续方法带路径后缀，以避免公开名称冲突；预览期间命名仍可能调整。
 
@@ -48,7 +48,7 @@ Console.WriteLine(created.Location);
 - 身份提供方导入、本地化导入及 SMTP 测试的方法接收 `HttpContent`，由调用方选择 JSON、multipart 或表单；scheduled workflows 返回 `List<WorkflowRepresentation>`。这两项是预览 API 签名变更，示例见 [修复记录](docs/contracts/six-path-fixes.md)。
 - DTO 中 null 属性默认省略；false、0、空集合会发送。需要显式 JSON null 或特殊更新结构时，使用原始请求。读取 DTO 可能含只读字段、掩码密钥或 brief 信息，更新时应构造明确的请求，避免直接回写。
 - **26.8.1 的客户端 PUT 若省略 `authorizationServicesEnabled=true` 会关闭该客户端的授权服务。** 更新模型应明确保留所需配置。SDK 忠实传递服务器语义，不隐式先读后写。
-- `KeycloakAdminException` 保留 HTTP 状态及方法；默认不暴露错误响应体，避免凭据或个人数据进入异常日志。传输异常、取消和 JSON 格式异常分别保留。超时后的写入结果可能未知。
+- `KeycloakAdminException` 保留 HTTP 状态、方法、`Stage`、`ErrorKind` 及生成接口的固定 `Operation`；错误响应体不读取，`ErrorCode` 当前为 null。传输异常、取消和 JSON 格式异常分别保留。超时后的写入结果可能未知。
 
 ## 构建与验证
 

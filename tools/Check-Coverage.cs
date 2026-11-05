@@ -80,13 +80,19 @@ return await ScriptHost.ExecuteAsync(args, "dotnet run --file tools/Check-Covera
         Console.WriteLine($"PASS {key}: {value:F4}%");
     }
     report.AppendLine($"\nMSTest {outcomes.Length}/{outcomes.Length} 通过；矩阵 {matrixResults.Length}/{contracts.Count}，无缺失、重复、跳过或失败。SDK 自有源码覆盖 {sdk.MethodsCovered}/{sdk.Methods} 个可执行方法、{sdk.LinesCovered}/{sdk.Lines} 行、{sdk.BranchesCovered}/{sdk.Branches} 个分支。\n");
-    report.AppendLine("`sdkSource*` 保留仓库中的全部 SDK 生成 API、DTO 和手写代码，仅把 `obj/` 下 .NET SDK 生成的 JSON/正则实现另列为 raw 指标；原始 Cobertura 不删减。当前剩余一行是 token 方法 try 块的结束括号（所有路径 return/throw），PDB 将其计为零命中序列点，因此源码行门槛为 99.9%，分支及可执行方法门槛为 100%。框架生成实现的未执行分支不代表某个 Admin API 没有测试。\n");
+    report.AppendLine("`sdkSource*` 保留仓库中的全部 SDK 生成 API、DTO 和手写代码，仅把 `obj/` 下 .NET SDK 生成的 JSON/正则实现另列为 raw 指标；原始 Cobertura 不删减。源码行门槛为 99.9%，分支及可执行方法门槛为 100%。框架生成实现的未执行分支不代表某个 Admin API 没有测试。可选 DI 扩展由独立程序集提供，并有生命周期/命名隔离测试及 Native AOT 运行验证。\n");
     report.AppendLine("门禁读取本次 TRX 指向的 Cobertura，核验编译后 SDK、冻结契约矩阵和已执行测试的一一对应。任何操作缺少测试、跳过、失败或指标低于 [coverage-policy.json](../../tests/coverage-policy.json) 都返回非零。矩阵断言见 [操作清单](admin-api-test-matrix.md)；输入来自独立 Java token 索引和固定发布定义，不从 SDK 请求实现推导期望值。\n");
     await File.WriteAllTextAsync(Path.Combine(root, "artifacts/test-matrix-summary.json"), summary.ToJsonString(), ct);
     await File.WriteAllTextAsync(Path.Combine(root, "docs/contracts/test-coverage.md"), report.ToString().TrimEnd() + "\n", ct);
 });
 
-static string FileName(XElement e) => e.Attribute("filename")!.Value.Replace('\\', '/');
+static string FileName(XElement e)
+{
+    string path = e.Attribute("filename")!.Value.Replace('\\', '/');
+    // Multiple covered product assemblies make Coverlet use paths relative to src/.
+    const string prefix = "Keycloak.Admin.Sdk/";
+    return path.StartsWith(prefix, StringComparison.Ordinal) ? path[prefix.Length..] : path;
+}
 static double Percent(int covered, int total) => total > 0 && covered >= 0 && covered <= total ? covered * 100.0 / total : throw new InvalidDataException("Empty or invalid coverage counts are not accepted.");
 static Coverage Measure(IEnumerable<XElement> classes)
 {

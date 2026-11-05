@@ -6,6 +6,6 @@ public sealed class LdapServerCapabilitiesApi(KeycloakAdminClient transport)
 {
     /// <summary>Source: LdapServerCapabilitiesResource.ldapServerCapabilities</summary>
     public Task<AdminResponse<JsonElement>> LdapServerCapabilitiesAsync(string @realm, HttpContent? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/ldap-server-capabilities", [@realm]), AdminUri.Query([]), body, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
+        transport.SendJsonOperationAsync("LdapServerCapabilities.LdapServerCapabilitiesAsync", HttpMethod.Post, AdminUri.Path("/admin/realms/{0}/ldap-server-capabilities", [@realm]), AdminUri.Query([]), body, AdminJson.TypeInfo<JsonElement>(), cancellationToken);
 
 }

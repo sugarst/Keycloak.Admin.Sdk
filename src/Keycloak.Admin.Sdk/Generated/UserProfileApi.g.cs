@@ -6,14 +6,14 @@ public sealed class UserProfileApi(KeycloakAdminClient transport)
 {
     /// <summary>GetConfiguration</summary>
     public Task<AdminResponse<UPConfig>> GetConfigurationAsync(string @realm, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/users/profile", [@realm]), AdminUri.Query([]), null, AdminJson.TypeInfo<UPConfig>(), cancellationToken);
+        transport.SendJsonOperationAsync("UserProfile.GetConfigurationAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/users/profile", [@realm]), AdminUri.Query([]), null, AdminJson.TypeInfo<UPConfig>(), cancellationToken);
 
     /// <summary>Update</summary>
     public Task<AdminResponse<UPConfig>> UpdateAsync(string @realm, UPConfig? body = null, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Put, AdminUri.Path("/admin/realms/{0}/users/profile", [@realm]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<UPConfig>()), AdminJson.TypeInfo<UPConfig>(), cancellationToken);
+        transport.SendJsonOperationAsync("UserProfile.UpdateAsync", HttpMethod.Put, AdminUri.Path("/admin/realms/{0}/users/profile", [@realm]), AdminUri.Query([]), body is null ? null : AdminJson.Content(body, AdminJson.TypeInfo<UPConfig>()), AdminJson.TypeInfo<UPConfig>(), cancellationToken);
 
     /// <summary>GetMetadata</summary>
     public Task<AdminResponse<UserProfileMetadata>> GetMetadataAsync(string @realm, CancellationToken cancellationToken = default) =>
-        transport.SendJsonAsync(HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/users/profile/metadata", [@realm]), AdminUri.Query([]), null, AdminJson.TypeInfo<UserProfileMetadata>(), cancellationToken);
+        transport.SendJsonOperationAsync("UserProfile.GetMetadataAsync", HttpMethod.Get, AdminUri.Path("/admin/realms/{0}/users/profile/metadata", [@realm]), AdminUri.Query([]), null, AdminJson.TypeInfo<UserProfileMetadata>(), cancellationToken);
 
 }
