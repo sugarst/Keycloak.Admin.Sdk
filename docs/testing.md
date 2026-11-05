@@ -9,12 +9,14 @@
 | MSTest.TestAdapter | 4.5.2 | 已引入：MSTest 适配器 |
 | MSTest.TestFramework | 4.5.2 | 已引入：测试属性和断言 |
 | coverlet.collector | 10.1.0 | 已引入：Cobertura 覆盖率收集 |
-| AutoFixture | 4.18.1 | 允许按需引入：自动构造测试对象 |
-| Bogus | 35.6.5 | 允许按需引入：有固定种子的业务测试数据 |
-| Moq | 4.21.0 | 允许按需引入：依赖行为模拟 |
-| PasswordGenerator | 3.0.0 | 允许按需引入：集成测试密码数据 |
+| AutoFixture | 4.18.1 | 已引入：用户创建请求对象；关键字段显式指定 |
+| Bogus | 35.6.5 | 已引入：局部固定种子的用户列表及反序列化测试 |
+| Moq | 4.21.0 | 已引入：Token 获取、条件失效与策略评估次数验证 |
+| PasswordGenerator | 3.0.0 | 已引入：密码重置请求透传及错误信息脱敏测试 |
 
-目前手工构造的数据和 `HttpMessageHandler` 足以支持现有测试，因此后四个包尚未添加引用。引入数据生成器时仍须保证测试可复现，且不依赖随机值恰好满足断言。
+八个允许的测试工具包现均直接引用并使用，另外保留 FeatureManagement 测试需要的 JSON 配置包。新增四项测试位于 `ManagedTestDataTests.cs`，仅由常规 MSTest 项目编译，不链接进 AotSmoke。AutoFixture 只填充明确选择的字段；Bogus 使用局部固定种子，不修改并行测试的全局随机状态；密码样本验证传输前后相等及错误信息不泄露，不依赖随机输出的具体内容或字符类别碰巧满足规则。密码策略边界和其他固定契约仍使用明确样本。
+
+测试包保留 `PrivateAssets="all"`，测试项目保持 `IsPackable=false`。核心 SDK 不反向引用测试代码，也不增加上述包的引用；`Verify.cs` 继续检查核心 NuGet 包的 `.nuspec` 不包含依赖。Moq 等托管测试依赖不进入原生项目的源码链接或项目引用；Native AOT 继续执行共用契约套件。
 
 ## 常规测试
 
@@ -24,7 +26,7 @@
 dotnet test tests/Keycloak.Admin.Sdk.Tests -c Release --logger 'trx;LogFileName=contracts.trx' --results-directory artifacts/test-results --collect 'XPlat Code Coverage'
 ```
 
-当前共 **553 个测试方法**：520 个按操作独立发现的功能契约矩阵用例，原有 18 项基础、模型和六路径回归检查，5 项结构化错误、401 重放、流所有权、并发刷新及失败/超时检查，1 项 DI 生命周期和命名身份隔离检查，5 项能力目录/策略契约，以及 4 项 FeatureManagement 全目录判断、配置刷新/重放、初始化和 Application Insights 事件检查。每个操作的错误矩阵同时核对固定 Operation 和 AdminApi 阶段。原有冒烟仍执行 520 次调用，另有独立矩阵逐项断言功能契约。路由检查通过后，在仓库根目录 `artifacts/routing-verified.tsv` 写入证据。
+当前共 **557 个测试方法**：520 个按操作独立发现的功能契约矩阵用例，原有 18 项基础、模型和六路径回归检查，5 项结构化错误、401 重放、流所有权、并发刷新及失败/超时检查，1 项 DI 生命周期和命名身份隔离检查，5 项能力目录/策略契约，以及 4 项 FeatureManagement 全目录判断、配置刷新/重放、初始化和 Application Insights 事件检查，以及 4 项托管测试数据与模拟交互检查。每个操作的错误矩阵同时核对固定 Operation 和 AdminApi 阶段。原有冒烟仍执行 520 次调用，另有独立矩阵逐项断言功能契约。路由检查通过后，在仓库根目录 `artifacts/routing-verified.tsv` 写入证据。
 
 矩阵期望值冻结在 `contracts/admin-api-test-matrix.json`，来源是独立 Java token 扫描器与发布 OpenAPI/已审定差异，不从 SDK 的 URI、请求序列化实现或原有生成冒烟样本计算期望值。每个操作测试声明的全部查询绑定（缺省、false/true、0/非零、Unicode、空串、重复/空列表）、不同路径参数的独立编码、完整/缺省请求体、成功状态/Location/header、完整/空集合/标量/空响应，以及 400/401/403/404/409/415/500、取消、网络失败和不重放。JSON 响应检查完整字段与非法 JSON；原始内容检查声明媒体类型及字节透传。服务端要求的具体文件/表单业务格式另由真实测试验证。
 

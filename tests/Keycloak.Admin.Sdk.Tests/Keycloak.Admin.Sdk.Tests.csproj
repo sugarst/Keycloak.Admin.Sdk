@@ -5,6 +5,10 @@
     <DefineConstants>$(DefineConstants);KEYCLOAK_FEATURE_MANAGEMENT</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="AutoFixture" Version="4.18.1" PrivateAssets="all" />
+    <PackageReference Include="Bogus" Version="35.6.5" PrivateAssets="all" />
+    <PackageReference Include="Moq" Version="4.21.0" PrivateAssets="all" />
+    <PackageReference Include="PasswordGenerator" Version="3.0.0" PrivateAssets="all" />
     <ProjectReference Include="../../src/Keycloak.Admin.Sdk.FeatureManagement.ApplicationInsights/Keycloak.Admin.Sdk.FeatureManagement.ApplicationInsights.csproj" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="10.0.11" PrivateAssets="all" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.11.0" PrivateAssets="all" />
