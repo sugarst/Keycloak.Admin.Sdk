@@ -13,6 +13,7 @@ public static class KeycloakAdminSdkServiceCollectionExtensions
     {
         var builder = services.AddKeycloakAdminSdk(DefaultName, configure);
         services.AddSingleton(sp => sp.GetRequiredKeyedService<KeycloakAdminClient>(DefaultName));
+        services.AddSingleton<IKeycloakAdminClient>(sp => sp.GetRequiredKeyedService<IKeycloakAdminClient>(DefaultName));
         return builder;
     }
 
@@ -51,6 +52,7 @@ public static class KeycloakAdminSdkServiceCollectionExtensions
             return new(sp.GetRequiredKeyedService<HttpClient>(name), options.Server,
                 sp.GetRequiredKeyedService<ClientCredentialsTokenProvider>(name), options.Client);
         });
+        services.AddKeyedSingleton<IKeycloakAdminClient>(name, (sp, _) => sp.GetRequiredKeyedService<KeycloakAdminClient>(name));
         return builder;
     }
 }

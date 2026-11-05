@@ -2,7 +2,7 @@
 #nullable enable
 using System.Text.Json;
 namespace Keycloak.Admin.Sdk;
-public sealed class RoleMapperApi(KeycloakAdminClient transport)
+public sealed class RoleMapperApi(KeycloakAdminClient transport) : IRoleMapperApi
 {
     /// <summary>Get role mappings</summary>
     public Task<AdminResponse<MappingsRepresentation>> GetRoleMappingsAsync(string @realm, string @groupId, CancellationToken cancellationToken = default) =>

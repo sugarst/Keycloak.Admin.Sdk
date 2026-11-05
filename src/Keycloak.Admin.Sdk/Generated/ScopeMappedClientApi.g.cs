@@ -2,7 +2,7 @@
 #nullable enable
 using System.Text.Json;
 namespace Keycloak.Admin.Sdk;
-public sealed class ScopeMappedClientApi(KeycloakAdminClient transport)
+public sealed class ScopeMappedClientApi(KeycloakAdminClient transport) : IScopeMappedClientApi
 {
     /// <summary>Get the roles associated with a client&apos;s scope Returns roles for the client.</summary>
     public Task<AdminResponse<List<RoleRepresentation>>> GetClientScopeMappingsAsync(string @realm, string @clientScopeId, string @client, CancellationToken cancellationToken = default) =>

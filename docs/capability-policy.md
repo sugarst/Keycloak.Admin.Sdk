@@ -18,7 +18,7 @@ var sdk = await KeycloakSupportedClient.CreateAsync(
 var users = await sdk.Users.GetUsersAsync("example", first: 0, max: 20);
 ```
 
-HTTP 客户端和 token 的初始化/释放见 [README](../README.md)。也可用可信 serverinfo 经 `KeycloakServerCapabilities.FromServerInfo` 构造 `KeycloakCapabilityPolicy`，放入 `KeycloakAdminClientOptions.RequestPolicy`；DI 的 `options.Client` 接受同一选项，避免在同步工厂阻塞网络初始化。
+HTTP 客户端和 token 的初始化/释放见 [认证说明](authentication-and-errors.md)。也可用可信 serverinfo 经 `KeycloakServerCapabilities.FromServerInfo` 构造 `KeycloakCapabilityPolicy`，放入 `KeycloakAdminClientOptions.RequestPolicy`；DI 的 `options.Client` 接受同一选项，避免在同步工厂阻塞网络初始化。
 
 ## 配置
 

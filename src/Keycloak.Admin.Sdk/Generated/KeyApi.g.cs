@@ -2,7 +2,7 @@
 #nullable enable
 using System.Text.Json;
 namespace Keycloak.Admin.Sdk;
-public sealed class KeyApi(KeycloakAdminClient transport)
+public sealed class KeyApi(KeycloakAdminClient transport) : IKeyApi
 {
     /// <summary>GetKeyMetadata</summary>
     public Task<AdminResponse<KeysMetadataRepresentation>> GetKeyMetadataAsync(string @realm, CancellationToken cancellationToken = default) =>

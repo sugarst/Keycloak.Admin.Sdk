@@ -1,6 +1,21 @@
 # 认证、错误与依赖注入
 
-核心客户端的手动初始化见 [README](../README.md)。主包的 DI 模块提供 Microsoft DI、Options、HttpClientFactory 与可选的 HTTP 弹性管道。
+主包的 DI 模块提供 Microsoft DI、Options、HttpClientFactory 与可选的 HTTP 弹性管道。[README](../README.md) 展示了 DI 注册。已有 HTTP 客户端或 token 系统时，也可手动构造：
+
+```csharp
+using Keycloak.Admin.Sdk;
+
+var server = new Uri("https://keycloak.example.com/auth/");
+using var http = new HttpClient(new SocketsHttpHandler { AllowAutoRedirect = false });
+using var tokens = new ClientCredentialsTokenProvider(
+    http, server, authenticationRealm: "master", clientId: "admin-service",
+    secret: ct => ValueTask.FromResult(
+        Environment.GetEnvironmentVariable("KEYCLOAK_CLIENT_SECRET")
+        ?? throw new InvalidOperationException("Missing secret")));
+var sdk = new KeycloakAdminClient(http, server, tokens);
+```
+
+也可使用 `StaticAccessTokenProvider` 或实现 `IAccessTokenProvider`。调用方须在所有调用及共享 token 获取结束后释放自己创建的 HTTP 客户端和 provider。
 
 ## 结构化错误
 
@@ -92,10 +107,25 @@ services.AddKeycloakAdminSdk(options =>
 
 ```csharp
 services.AddKeycloakAdminSdk("secondary", options => { /* 另一组地址和凭据 */ });
-var secondary = serviceProvider.GetRequiredKeyedService<KeycloakAdminClient>("secondary");
+var secondary = serviceProvider.GetRequiredKeyedService<IKeycloakAdminClient>("secondary");
 ```
 
 每个名称（含默认）仅注册一次，分别持有 HTTP 客户端、Options 和 token 缓存。Options 启动校验拒绝不完整配置且不输出配置值；客户端创建后配置固定，切换身份需新注册或重建容器。
+
+## 接口与测试替身
+
+`AddKeycloakAdminSdk` 同时注册 `IKeycloakAdminClient` 和 `KeycloakAdminClient`，默认注册和每个命名注册分别映射到同一个单例。业务服务可直接通过构造函数注入接口，示例见 [README](../README.md)。命名接口使用 `GetRequiredKeyedService<IKeycloakAdminClient>(name)` 解析。
+
+主接口包含全部资源入口和原始请求的六个重载。资源属性使用 `IUsersApi`、`IClientsApi` 等生成接口，业务测试可以模拟资源接口，再将它设置为主接口的对应属性。测试依赖由宿主测试项目自行引用。
+
+具体类型继续公开原来的具体资源属性。异步工厂仍返回 `KeycloakAdminClient`，可直接赋给接口变量：
+
+```csharp
+IKeycloakAdminClient sdk = await KeycloakSupportedClient.CreateAsync(
+    http, server, tokens, support);
+```
+
+功能开关工厂也支持同样的赋值方式。接口调用经过相同的认证、支持策略、功能开关和 HTTP 管道。HTTP 客户端和 token provider 的所有权规则同上。
 
 ## HTTP 弹性策略
 

@@ -2,7 +2,7 @@
 #nullable enable
 using System.Text.Json;
 namespace Keycloak.Admin.Sdk;
-public sealed class RealmsAdminApi(KeycloakAdminClient transport)
+public sealed class RealmsAdminApi(KeycloakAdminClient transport) : IRealmsAdminApi
 {
     /// <summary>Get accessible realms Returns a list of accessible realms. The list is filtered based on what realms the caller is allowed to view.</summary>
     public Task<AdminResponse<List<RealmRepresentation>>> GetRealmsAsync(bool? @briefRepresentation = null, CancellationToken cancellationToken = default) =>

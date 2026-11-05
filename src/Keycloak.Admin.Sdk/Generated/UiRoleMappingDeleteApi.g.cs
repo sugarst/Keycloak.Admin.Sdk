@@ -2,7 +2,7 @@
 #nullable enable
 using System.Text.Json;
 namespace Keycloak.Admin.Sdk;
-public sealed class UiRoleMappingDeleteApi(KeycloakAdminClient transport)
+public sealed class UiRoleMappingDeleteApi(KeycloakAdminClient transport) : IUiRoleMappingDeleteApi
 {
     /// <summary>Source: UiRoleMappingDeleteResource.deleteGroupRoleMappings</summary>
     public Task<AdminResponse<JsonElement>> DeleteGroupRoleMappingsAsync(string @realm, string @id, HttpContent? body = null, CancellationToken cancellationToken = default) =>

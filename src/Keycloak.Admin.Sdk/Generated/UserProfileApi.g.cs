@@ -2,7 +2,7 @@
 #nullable enable
 using System.Text.Json;
 namespace Keycloak.Admin.Sdk;
-public sealed class UserProfileApi(KeycloakAdminClient transport)
+public sealed class UserProfileApi(KeycloakAdminClient transport) : IUserProfileApi
 {
     /// <summary>GetConfiguration</summary>
     public Task<AdminResponse<UPConfig>> GetConfigurationAsync(string @realm, CancellationToken cancellationToken = default) =>

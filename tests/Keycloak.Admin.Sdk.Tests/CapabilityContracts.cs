@@ -171,7 +171,7 @@ public static class CapabilityContracts
         using var handler = new Handler(request => { calls++; Check(request.Headers.Authorization?.Parameter == "token"); return new(HttpStatusCode.OK) { Content = new ByteArrayContent(ServerInfo()) }; });
         using var http = new HttpClient(handler);
         var token = new Token(() => { });
-        var sdk = await KeycloakSupportedClient.CreateAsync(http, Server, token, new(KeycloakTarget.Version), true);
+        IKeycloakAdminClient sdk = await KeycloakSupportedClient.CreateAsync(http, Server, token, new(KeycloakTarget.Version), true);
         Check(calls == 1);
         try { await sdk.SendAsync(HttpMethod.Get, "/admin/vendor/unknown"); throw new Exception("Expected deny"); } catch (KeycloakCapabilityDeniedException e) { Check(e.Decision.Reason == KeycloakCapabilityReason.UnknownEndpoint); }
         Check(calls == 1);

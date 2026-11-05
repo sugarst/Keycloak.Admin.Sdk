@@ -2,7 +2,7 @@
 #nullable enable
 using System.Text.Json;
 namespace Keycloak.Admin.Sdk;
-public sealed class SetApi(KeycloakAdminClient transport)
+public sealed class SetApi(KeycloakAdminClient transport) : ISetApi
 {
     /// <summary>Find</summary>
     public Task<AdminResponse<List<ResourceRepresentation>>> FindAsync(string @realm, string @clientUuid, string? @id = null, bool? @deep = null, bool? @exactName = null, int? @first = null, bool? @matchingUri = null, int? @max = null, string? @name = null, string? @owner = null, string? @scope = null, string? @type = null, string? @uri = null, CancellationToken cancellationToken = default) =>

@@ -5,7 +5,7 @@ using System.Text.Json.Serialization.Metadata;
 namespace Keycloak.Admin.Sdk;
 
 /// <summary>Thread-safe admin transport. The caller owns HttpClient and the token provider.</summary>
-public sealed partial class KeycloakAdminClient(HttpClient httpClient, Uri server, IAccessTokenProvider? tokenProvider, KeycloakAdminClientOptions options)
+public sealed partial class KeycloakAdminClient(HttpClient httpClient, Uri server, IAccessTokenProvider? tokenProvider, KeycloakAdminClientOptions options) : IKeycloakAdminClient
 {
     private readonly HttpClient httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
     private readonly Uri server = AdminUri.Base(server);

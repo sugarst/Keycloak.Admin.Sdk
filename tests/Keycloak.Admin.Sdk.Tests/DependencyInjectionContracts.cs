@@ -15,10 +15,19 @@ public static class DependencyInjectionContracts
         using var container = services.BuildServiceProvider(new ServiceProviderOptions { ValidateScopes = true, ValidateOnBuild = true });
         var sdk = container.GetRequiredService<KeycloakAdminClient>();
         var other = container.GetRequiredKeyedService<KeycloakAdminClient>("other");
-        await sdk.Users.GetUsersAsync("target");
-        await other.Users.GetUsersAsync("target");
+        var contract = container.GetRequiredService<IKeycloakAdminClient>();
+        var namedContract = container.GetRequiredKeyedService<IKeycloakAdminClient>("other");
+        Check(ReferenceEquals(sdk, contract), "default interface aliases concrete client");
+        Check(ReferenceEquals(sdk, container.GetRequiredKeyedService<IKeycloakAdminClient>("Keycloak.Admin.Sdk")), "default keyed interface aliases concrete client");
+        Check(ReferenceEquals(other, namedContract), "named interface aliases concrete client");
+        await contract.Users.GetUsersAsync("target");
+        await namedContract.Users.GetUsersAsync("target");
         using (var scope = container.CreateScope())
+        {
             Check(ReferenceEquals(sdk, scope.ServiceProvider.GetRequiredService<KeycloakAdminClient>()), "singleton SDK lifetime");
+            Check(ReferenceEquals(contract, scope.ServiceProvider.GetRequiredService<IKeycloakAdminClient>()), "singleton interface lifetime");
+        }
+        Check(!ReferenceEquals(contract, namedContract), "named interface identities isolated");
         Check(!ReferenceEquals(sdk, other), "named clients isolated");
         Check(await container.GetRequiredKeyedService<ClientCredentialsTokenProvider>("other").GetAccessTokenAsync() == "other-token", "named token cache");
 

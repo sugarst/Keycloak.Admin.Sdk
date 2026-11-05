@@ -2,7 +2,7 @@
 #nullable enable
 using System.Text.Json;
 namespace Keycloak.Admin.Sdk;
-public sealed class ClientScopeEvaluateScopeMappingsApi(KeycloakAdminClient transport)
+public sealed class ClientScopeEvaluateScopeMappingsApi(KeycloakAdminClient transport) : IClientScopeEvaluateScopeMappingsApi
 {
     /// <summary>Get effective scope mapping of all roles of particular role container, which this client is defacto allowed to have in the accessToken issued for him.</summary>
     public Task<AdminResponse<List<RoleRepresentation>>> GetGrantedScopeMappingsAsync(string @realm, string @clientUuid, string @roleContainerId, CancellationToken cancellationToken = default) =>

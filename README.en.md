@@ -8,29 +8,43 @@ Public APIs may change. For development, reference the [core project](src/Keyclo
 
 ## Quick start
 
-Configure a Keycloak service account with management permissions for the target realm, then let the host manage HTTP clients and credentials:
+Configure a Keycloak service account with management permissions for the target realm, then register the SDK in ASP.NET Core or a Generic Host:
+
+```csharp
+using Keycloak.Admin.Sdk;
+using Microsoft.Extensions.DependencyInjection;
+
+var configuration = builder.Configuration;
+builder.Services.AddKeycloakAdminSdk(options =>
+{
+    options.Server = new Uri("https://keycloak.example.com/auth/");
+    options.AuthenticationRealm = "master";
+    options.ClientId = "admin-service";
+    options.ClientSecret = (_, ct) => ValueTask.FromResult(
+        configuration["Keycloak:ClientSecret"]
+        ?? throw new InvalidOperationException("Missing Keycloak client secret"));
+});
+```
+
+Inject the client into an application service:
 
 ```csharp
 using Keycloak.Admin.Sdk;
 
-var server = new Uri("https://keycloak.example.com/auth/");
-using var http = new HttpClient(new SocketsHttpHandler { AllowAutoRedirect = false });
-using var tokens = new ClientCredentialsTokenProvider(
-    http, server, authenticationRealm: "master", clientId: "admin-service",
-    secret: ct => ValueTask.FromResult(
-        Environment.GetEnvironmentVariable("KEYCLOAK_CLIENT_SECRET")
-        ?? throw new InvalidOperationException("Missing secret")));
-var sdk = new KeycloakAdminClient(http, server, tokens);
-
-var page = await sdk.Users.GetUsersAsync("target-realm", first: 0, max: 20);
-foreach (var user in page.Body ?? []) Console.WriteLine(user.Username);
-
-var created = await sdk.Users.CreateUserAsync("target-realm",
-    new UserRepresentation { Username = "new-user", Enabled = true });
-Console.WriteLine(created.Location);
+public sealed class UserService(IKeycloakAdminClient sdk)
+{
+    public Task<AdminResponse<List<UserRepresentation>>> GetUsersAsync(
+        string realm, CancellationToken cancellationToken)
+        => sdk.Users.GetUsersAsync(realm, first: 0, max: 20,
+            cancellationToken: cancellationToken);
+}
 ```
 
-The authentication realm is independent of the target realm. Use realm names and internal client UUIDs in paths; a client UUID is different from the OIDC `clientId`. Use `StaticAccessTokenProvider` or implement `IAccessTokenProvider` to reuse existing authentication. All network methods support cancellation. Pagination exposes server parameters without snapshot or total-count guarantees.
+Provide `Keycloak:ClientSecret` through a secure host configuration source. DI manages the HTTP client and token provider lifetimes and disables automatic redirects by default. The authentication realm is independent of the target realm. Use realm names and internal client UUIDs in paths; a client UUID is different from the OIDC `clientId`. All network methods support cancellation. Pagination exposes server parameters without snapshot or total-count guarantees.
+
+`IKeycloakAdminClient` exposes generated resource interfaces such as `IUsersApi` for business test doubles. DI supports both the interface and concrete type, resolving the same client instance for each name. See [interfaces and test doubles](docs/authentication-and-errors.md#接口与测试替身).
+
+This DI registration creates the underlying client without installing a support policy. To enforce the supported stable scope before requests, obtain a trusted server capability snapshot and configure `options.Client.RequestPolicy`, or use the asynchronous `KeycloakSupportedClient.CreateAsync`. See [authentication and DI](docs/authentication-and-errors.md) and [capability policy](docs/capability-policy.md) for manual construction, existing token integration and policy initialization.
 
 `AddKeycloakAdminSdk` exposes opt-in read resilience through `options.Resilience`:
 
@@ -60,7 +74,9 @@ The feature package depends on Microsoft telemetry components; telemetry is opt-
 - Build explicit update requests to avoid writing back read-only fields, masked secrets or brief representations. **In 26.8.1, a client PUT that omits `authorizationServicesEnabled=true` disables that client's authorization services.**
 - HTTP errors throw `KeycloakAdminException`. Optional 401 recovery is disabled by default and permits one safe read replay when enabled. A timed-out write may have an unknown outcome. See [authentication and errors](docs/authentication-and-errors.md) for details.
 
-## Support and verification scope
+## Keycloak 26.8.1 capability boundaries
+
+The main package generates 520 Admin API operations, counted by HTTP method and path. Supported areas include realms, users, groups, roles, clients, client scopes, identity providers, authentication flows, authorization policies, organizations, workflows and admin console extensions. Availability also depends on the declared FGAP route, server features and account permissions.
 
 | Scope | Operations | Verification |
 | --- | --- | --- |
@@ -68,7 +84,19 @@ The feature package depends on Microsoft telemetry components; telemetry is opt-
 | `fgap-v2-stable` (default) | 478 | Real business acceptance in managed and Linux Native AOT modes |
 | `fgap-v1-compat` | 492 | Real business acceptance in managed and Linux Native AOT modes |
 
-Both routes exclude 28 preview/experimental APIs; v2 also excludes 14 v1-only APIs. Excluded APIs retain generated methods and contract tests and are not counted as successful business acceptance. See the [coverage report](docs/contracts/test-coverage.md) for current test totals and coverage, and [live acceptance](docs/contracts/full-live-acceptance.md) for per-operation evidence. Results apply to the pinned baseline and recorded scenarios; see [verification status](docs/contracts/verification.md).
+The following APIs retain generated methods and contract tests, but are excluded from both support routes and are not counted as successful business acceptance:
+
+| Keycloak feature | Stage | Operations | Reason |
+| --- | --- | ---: | --- |
+| `oid4vc-vci` | Preview | 7 | Credential management is preview and excluded by the current support policy |
+| `ssf` | Experimental | 19 | Experimental functionality is excluded by the current support policy |
+| `client-types` | Experimental | 2 | Experimental functionality is excluded by the current support policy |
+
+The default v2 route also excludes 14 FGAP v1-only operations; those have passed acceptance on the v1 compatibility route. **A generated method does not itself imply SDK support.** Use `KeycloakSupportedClient.CreateAsync` to check version, maturity, route, server features and verification before sending a request. Constructing `KeycloakAdminClient` directly provides the underlying transport without applying the support policy automatically.
+
+The scope is the Keycloak 26.8.1 Admin API. It excludes console static assets, standalone OAuth/OIDC, Account, SCIM and experimental Admin API v2 protocols, and cannot enumerate third-party SPI extensions in advance. Results do not automatically apply to other Keycloak versions or cover every permission and configuration combination.
+
+See the [support matrix](docs/contracts/admin-api-support-matrix.tsv) for per-operation status and exclusion reasons, the [verification index](docs/contracts/admin-api-validation-list.md) for a summary, and [live acceptance](docs/contracts/full-live-acceptance.md) for tested environments and evidence. See [capability policy](docs/capability-policy.md) for integration.
 
 ## Development and verification
 

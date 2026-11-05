@@ -2,7 +2,7 @@
 #nullable enable
 using System.Text.Json;
 namespace Keycloak.Admin.Sdk;
-public sealed class OrganizationMemberApi(KeycloakAdminClient transport)
+public sealed class OrganizationMemberApi(KeycloakAdminClient transport) : IOrganizationMemberApi
 {
     /// <summary>Returns a paginated list of organization members filtered according to the specified parameters</summary>
     public Task<AdminResponse<List<MemberRepresentation>>> SearchAsync(string @realm, string @orgId, bool? @briefRepresentation = null, bool? @exact = null, int? @first = null, int? @max = null, string? @membershipType = null, string? @search = null, CancellationToken cancellationToken = default) =>

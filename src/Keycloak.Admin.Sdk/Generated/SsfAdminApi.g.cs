@@ -2,7 +2,7 @@
 #nullable enable
 using System.Text.Json;
 namespace Keycloak.Admin.Sdk;
-public sealed class SsfAdminApi(KeycloakAdminClient transport)
+public sealed class SsfAdminApi(KeycloakAdminClient transport) : ISsfAdminApi
 {
     /// <summary>Source: SsfAdminResource.deleteClientEvents</summary>
     public Task<AdminResponse<JsonElement>> DeleteClientEventsAsync(string @realm, string @clientId, string? @status = null, string? @olderThan = null, CancellationToken cancellationToken = default) =>

@@ -2,7 +2,7 @@
 #nullable enable
 using System.Text.Json;
 namespace Keycloak.Admin.Sdk;
-public sealed class UiBruteForceUsersApi(KeycloakAdminClient transport)
+public sealed class UiBruteForceUsersApi(KeycloakAdminClient transport) : IUiBruteForceUsersApi
 {
     /// <summary>Source: UiBruteForceUsersResource.searchUser</summary>
     public Task<AdminResponse<JsonElement>> SearchUserAsync(string @realm, string? @search = null, string? @lastName = null, string? @firstName = null, string? @email = null, string? @username = null, bool? @emailVerified = null, string? @idpAlias = null, string? @idpUserId = null, int? @first = null, int? @max = null, bool? @enabled = null, bool? @briefRepresentation = null, bool? @exact = null, string? @q = null, CancellationToken cancellationToken = default) =>

@@ -2,7 +2,7 @@
 #nullable enable
 using System.Text.Json;
 namespace Keycloak.Admin.Sdk;
-public sealed class OrganizationInvitationApi(KeycloakAdminClient transport)
+public sealed class OrganizationInvitationApi(KeycloakAdminClient transport) : IOrganizationInvitationApi
 {
     /// <summary>Get invitations for the organization</summary>
     public Task<AdminResponse<List<OrganizationInvitationRepresentation>>> GetInvitationsAsync(string @realm, string @orgId, string? @email = null, int? @first = null, string? @firstName = null, string? @lastName = null, int? @max = null, string? @search = null, string? @status = null, CancellationToken cancellationToken = default) =>

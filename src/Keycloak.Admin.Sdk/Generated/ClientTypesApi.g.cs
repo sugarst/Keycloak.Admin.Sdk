@@ -2,7 +2,7 @@
 #nullable enable
 using System.Text.Json;
 namespace Keycloak.Admin.Sdk;
-public sealed class ClientTypesApi(KeycloakAdminClient transport)
+public sealed class ClientTypesApi(KeycloakAdminClient transport) : IClientTypesApi
 {
     /// <summary>List all client types available in the current realm</summary>
     public Task<AdminResponse<ClientTypesRepresentation>> GetClientTypesAsync(string @realm, CancellationToken cancellationToken = default) =>

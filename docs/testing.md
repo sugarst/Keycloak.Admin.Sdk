@@ -20,6 +20,8 @@ Windows 原生发布需要 Visual Studio C++ 桌面工具链和 Windows SDK；Li
 
 每个生成操作有一个独立 MSTest 入口，映射见 [测试矩阵](contracts/admin-api-test-matrix.md)。期望值冻结在 [admin-api-test-matrix.json](../contracts/admin-api-test-matrix.json)，来自独立 Java token 扫描和发布定义。查询参数逐一隔离测试，以检出同类型参数互换；模型同时检查嵌套往返与单字段 wire 映射，避免对称读写错误相互抵消。媒体类型、动态分派等另有 [手写专项断言](../tests/Keycloak.Admin.Sdk.Tests/AlignmentContracts.cs)。
 
+操作矩阵通过 `IKeycloakAdminClient` 及生成资源接口调用。托管测试核对接口与实现的签名、参数名及默认值，并用 Moq 验证资源替换；DI 别名和六个原始入口的接口调用同时进入 Native AOT 验证。支持策略及功能开关工厂另验证返回值可通过接口使用。
+
 `Verify.cs` 检查生成一致性和门禁负向控制，再运行 MSTest，将本次目录写入 `artifacts/test-results/latest.txt`。覆盖率门禁只读取该次 TRX 引用的 Cobertura；操作缺失、重复、跳过、失败或低于 [coverage-policy.json](../tests/coverage-policy.json) 均返回非零。当前测试总数、实测指标及统计口径仅在 [覆盖率报告](contracts/test-coverage.md) 维护。
 
 需要单独收集覆盖率时：

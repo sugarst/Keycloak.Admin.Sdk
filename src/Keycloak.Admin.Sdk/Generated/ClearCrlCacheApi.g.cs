@@ -2,7 +2,7 @@
 #nullable enable
 using System.Text.Json;
 namespace Keycloak.Admin.Sdk;
-public sealed class ClearCrlCacheApi(KeycloakAdminClient transport)
+public sealed class ClearCrlCacheApi(KeycloakAdminClient transport) : IClearCrlCacheApi
 {
     /// <summary>Source: ClearCrlCacheResource.clearCrlCache</summary>
     public Task<AdminResponse<JsonElement>> ClearCrlCacheAsync(string @realm, HttpContent? body = null, CancellationToken cancellationToken = default) =>

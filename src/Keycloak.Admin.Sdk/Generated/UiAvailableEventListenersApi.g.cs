@@ -2,7 +2,7 @@
 #nullable enable
 using System.Text.Json;
 namespace Keycloak.Admin.Sdk;
-public sealed class UiAvailableEventListenersApi(KeycloakAdminClient transport)
+public sealed class UiAvailableEventListenersApi(KeycloakAdminClient transport) : IUiAvailableEventListenersApi
 {
     /// <summary>Source: UiAvailableEventListenersResource.listAvailableEventListeners</summary>
     public Task<AdminResponse<JsonElement>> ListAvailableEventListenersAsync(string @realm, CancellationToken cancellationToken = default) =>

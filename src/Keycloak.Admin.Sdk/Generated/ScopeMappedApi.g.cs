@@ -2,7 +2,7 @@
 #nullable enable
 using System.Text.Json;
 namespace Keycloak.Admin.Sdk;
-public sealed class ScopeMappedApi(KeycloakAdminClient transport)
+public sealed class ScopeMappedApi(KeycloakAdminClient transport) : IScopeMappedApi
 {
     /// <summary>Get all scope mappings for the client</summary>
     public Task<AdminResponse<MappingsRepresentation>> GetScopeMappingsAsync(string @realm, string @clientScopeId, CancellationToken cancellationToken = default) =>

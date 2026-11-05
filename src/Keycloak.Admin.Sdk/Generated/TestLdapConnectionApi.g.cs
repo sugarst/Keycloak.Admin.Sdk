@@ -2,7 +2,7 @@
 #nullable enable
 using System.Text.Json;
 namespace Keycloak.Admin.Sdk;
-public sealed class TestLdapConnectionApi(KeycloakAdminClient transport)
+public sealed class TestLdapConnectionApi(KeycloakAdminClient transport) : ITestLdapConnectionApi
 {
     /// <summary>Source: TestLdapConnectionResource.testLDAPConnection Supply HttpContent with the desired server-supported Content-Type; the request consumes and disposes it.</summary>
     public Task<AdminResponse<JsonElement>> TestLDAPConnectionAsync(string @realm, HttpContent? body = null, CancellationToken cancellationToken = default) =>

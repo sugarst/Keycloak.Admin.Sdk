@@ -2,7 +2,7 @@
 #nullable enable
 using System.Text.Json;
 namespace Keycloak.Admin.Sdk;
-public sealed class UserStorageProviderApi(KeycloakAdminClient transport)
+public sealed class UserStorageProviderApi(KeycloakAdminClient transport) : IUserStorageProviderApi
 {
     /// <summary>Source: UserStorageProviderResource.getSimpleName</summary>
     public Task<AdminResponse<JsonElement>> GetSimpleNameAsync(string @realm, string @id, CancellationToken cancellationToken = default) =>

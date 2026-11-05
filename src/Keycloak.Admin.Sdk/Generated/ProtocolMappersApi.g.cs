@@ -2,7 +2,7 @@
 #nullable enable
 using System.Text.Json;
 namespace Keycloak.Admin.Sdk;
-public sealed class ProtocolMappersApi(KeycloakAdminClient transport)
+public sealed class ProtocolMappersApi(KeycloakAdminClient transport) : IProtocolMappersApi
 {
     /// <summary>Create multiple mappers</summary>
     public Task<AdminResponse> CreateMapperAsync(string @realm, string @clientScopeId, List<ProtocolMapperRepresentation>? body = null, CancellationToken cancellationToken = default) =>

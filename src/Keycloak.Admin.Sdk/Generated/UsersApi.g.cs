@@ -2,7 +2,7 @@
 #nullable enable
 using System.Text.Json;
 namespace Keycloak.Admin.Sdk;
-public sealed class UsersApi(KeycloakAdminClient transport)
+public sealed class UsersApi(KeycloakAdminClient transport) : IUsersApi
 {
     /// <summary>Get users Returns a stream of users, filtered according to query parameters.</summary>
     public Task<AdminResponse<List<UserRepresentation>>> GetUsersAsync(string @realm, bool? @briefRepresentation = null, string? @createdAfter = null, string? @createdBefore = null, string? @email = null, bool? @emailVerified = null, bool? @enabled = null, bool? @exact = null, int? @first = null, string? @firstName = null, string? @idpAlias = null, string? @idpUserId = null, string? @lastName = null, int? @max = null, string? @q = null, string? @search = null, string? @username = null, CancellationToken cancellationToken = default) =>

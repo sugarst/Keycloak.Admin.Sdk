@@ -2,7 +2,7 @@
 #nullable enable
 using System.Text.Json;
 namespace Keycloak.Admin.Sdk;
-public sealed class OrganizationGroupsApi(KeycloakAdminClient transport)
+public sealed class OrganizationGroupsApi(KeycloakAdminClient transport) : IOrganizationGroupsApi
 {
     /// <summary>Get organization groups</summary>
     public Task<AdminResponse<List<GroupRepresentation>>> GetGroupsAsync(string @realm, string @orgId, bool? @briefRepresentation = null, bool? @exact = null, int? @first = null, int? @max = null, bool? @populateHierarchy = null, string? @q = null, string? @search = null, bool? @subGroupsCount = null, CancellationToken cancellationToken = default) =>

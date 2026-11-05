@@ -2,7 +2,7 @@
 #nullable enable
 using System.Text.Json;
 namespace Keycloak.Admin.Sdk;
-public sealed class ClientPoliciesApi(KeycloakAdminClient transport)
+public sealed class ClientPoliciesApi(KeycloakAdminClient transport) : IClientPoliciesApi
 {
     /// <summary>GetPolicies</summary>
     public Task<AdminResponse<ClientPoliciesRepresentation>> GetPoliciesAsync(string @realm, bool? @includeGlobalPolicies = null, CancellationToken cancellationToken = default) =>

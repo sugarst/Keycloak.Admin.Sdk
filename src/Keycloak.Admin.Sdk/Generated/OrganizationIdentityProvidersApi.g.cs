@@ -2,7 +2,7 @@
 #nullable enable
 using System.Text.Json;
 namespace Keycloak.Admin.Sdk;
-public sealed class OrganizationIdentityProvidersApi(KeycloakAdminClient transport)
+public sealed class OrganizationIdentityProvidersApi(KeycloakAdminClient transport) : IOrganizationIdentityProvidersApi
 {
     /// <summary>Returns all identity providers associated with the organization</summary>
     public Task<AdminResponse<List<IdentityProviderRepresentation>>> GetIdentityProvidersAsync(string @realm, string @orgId, CancellationToken cancellationToken = default) =>

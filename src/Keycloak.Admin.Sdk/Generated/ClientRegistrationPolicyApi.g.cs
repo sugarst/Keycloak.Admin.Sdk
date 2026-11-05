@@ -2,7 +2,7 @@
 #nullable enable
 using System.Text.Json;
 namespace Keycloak.Admin.Sdk;
-public sealed class ClientRegistrationPolicyApi(KeycloakAdminClient transport)
+public sealed class ClientRegistrationPolicyApi(KeycloakAdminClient transport) : IClientRegistrationPolicyApi
 {
     /// <summary>Base path for retrieve providers with the configProperties properly filled</summary>
     public Task<AdminResponse<List<ComponentTypeRepresentation>>> GetProvidersAsync(string @realm, CancellationToken cancellationToken = default) =>

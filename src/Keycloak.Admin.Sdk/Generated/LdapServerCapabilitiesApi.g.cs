@@ -2,7 +2,7 @@
 #nullable enable
 using System.Text.Json;
 namespace Keycloak.Admin.Sdk;
-public sealed class LdapServerCapabilitiesApi(KeycloakAdminClient transport)
+public sealed class LdapServerCapabilitiesApi(KeycloakAdminClient transport) : ILdapServerCapabilitiesApi
 {
     /// <summary>Source: LdapServerCapabilitiesResource.ldapServerCapabilities</summary>
     public Task<AdminResponse<JsonElement>> LdapServerCapabilitiesAsync(string @realm, HttpContent? body = null, CancellationToken cancellationToken = default) =>

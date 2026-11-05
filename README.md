@@ -8,29 +8,43 @@
 
 ## 快速开始
 
-先在 Keycloak 配置服务账号及目标 realm 的管理权限，再由宿主管理 HTTP 客户端和凭据：
+先在 Keycloak 配置服务账号及目标 realm 的管理权限，再在 ASP.NET Core 或 Generic Host 中注册：
+
+```csharp
+using Keycloak.Admin.Sdk;
+using Microsoft.Extensions.DependencyInjection;
+
+var configuration = builder.Configuration;
+builder.Services.AddKeycloakAdminSdk(options =>
+{
+    options.Server = new Uri("https://keycloak.example.com/auth/");
+    options.AuthenticationRealm = "master";
+    options.ClientId = "admin-service";
+    options.ClientSecret = (_, ct) => ValueTask.FromResult(
+        configuration["Keycloak:ClientSecret"]
+        ?? throw new InvalidOperationException("Missing Keycloak client secret"));
+});
+```
+
+在业务服务中注入客户端：
 
 ```csharp
 using Keycloak.Admin.Sdk;
 
-var server = new Uri("https://keycloak.example.com/auth/");
-using var http = new HttpClient(new SocketsHttpHandler { AllowAutoRedirect = false });
-using var tokens = new ClientCredentialsTokenProvider(
-    http, server, authenticationRealm: "master", clientId: "admin-service",
-    secret: ct => ValueTask.FromResult(
-        Environment.GetEnvironmentVariable("KEYCLOAK_CLIENT_SECRET")
-        ?? throw new InvalidOperationException("Missing secret")));
-var sdk = new KeycloakAdminClient(http, server, tokens);
-
-var page = await sdk.Users.GetUsersAsync("target-realm", first: 0, max: 20);
-foreach (var user in page.Body ?? []) Console.WriteLine(user.Username);
-
-var created = await sdk.Users.CreateUserAsync("target-realm",
-    new UserRepresentation { Username = "new-user", Enabled = true });
-Console.WriteLine(created.Location);
+public sealed class UserService(IKeycloakAdminClient sdk)
+{
+    public Task<AdminResponse<List<UserRepresentation>>> GetUsersAsync(
+        string realm, CancellationToken cancellationToken)
+        => sdk.Users.GetUsersAsync(realm, first: 0, max: 20,
+            cancellationToken: cancellationToken);
+}
 ```
 
-认证 realm 与目标 realm 独立；`realm` 使用名称，客户端路径参数使用内部 UUID，而非 OIDC `clientId`。可用 `StaticAccessTokenProvider` 或实现 `IAccessTokenProvider` 接入已有认证。所有网络方法支持取消；分页直接采用服务端参数，不保证快照或总数。
+宿主应从安全配置源提供 `Keycloak:ClientSecret`。DI 容器管理 HTTP 客户端和 token provider 的生命周期，默认禁用自动重定向。认证 realm 与目标 realm 独立；`realm` 使用名称，客户端路径参数使用内部 UUID，而非 OIDC `clientId`。所有网络方法支持取消；分页直接采用服务端参数，不保证快照或总数。
+
+`IKeycloakAdminClient` 的资源入口返回 `IUsersApi` 等生成接口，便于业务测试替换。DI 同时支持接口和具体类型，同一名称解析到同一客户端实例，详见 [接口与测试替身](docs/authentication-and-errors.md#接口与测试替身)。
+
+该 DI 入口默认注册底层客户端，不自动安装支持策略。需要在请求前限制稳定支持范围时，可先获取可信的服务端能力快照并通过 `options.Client.RequestPolicy` 配置策略，或使用异步的 `KeycloakSupportedClient.CreateAsync`。手动构造、已有 token 接入和策略初始化见 [认证与 DI](docs/authentication-and-errors.md) 和 [能力策略](docs/capability-policy.md)。
 
 DI 入口 `AddKeycloakAdminSdk` 提供 `options.Resilience`，默认关闭。开启后，仅为无内容 GET/HEAD 提供瞬态重试、超时和独立读熔断；写请求与 Token POST 绕过该管道。配置、401 组合次数和异常约定见 [HTTP 弹性策略](docs/authentication-and-errors.md#http-弹性策略)。
 
@@ -48,7 +62,9 @@ DI 入口 `AddKeycloakAdminSdk` 提供 `options.Resilience`，默认关闭。开
 - 更新时应构造明确的请求，避免回写只读字段、掩码密钥或 brief 数据。**26.8.1 客户端 PUT 若省略 `authorizationServicesEnabled=true` 会关闭该客户端的授权服务。**
 - HTTP 错误抛出 `KeycloakAdminException`；401 恢复默认关闭，可显式开启一次安全读取重放。写入超时后的结果可能未知。详细规则见 [认证与错误处理](docs/authentication-and-errors.md)。
 
-## 支持与验证范围
+## Keycloak 26.8.1 能力边界
+
+主包按 HTTP 方法 + 路径生成了 520 项 Admin API 操作。已纳入支持范围的功能包括 realm、用户、组、角色、客户端、客户端作用域、身份提供方、认证流程、授权策略、组织、工作流及管理控制台扩展等。实际可用范围还取决于声明的 FGAP 路线、服务器功能配置和账号权限。
 
 | 范围 | 操作数 | 验证 |
 | --- | --- | --- |
@@ -56,7 +72,19 @@ DI 入口 `AddKeycloakAdminSdk` 提供 `options.Resilience`，默认关闭。开
 | `fgap-v2-stable`（默认） | 478 | 托管及 Linux Native AOT 真实业务验收 |
 | `fgap-v1-compat` | 492 | 托管及 Linux Native AOT 真实业务验收 |
 
-两条路线均排除 28 项预览/实验接口；v2 另排除 14 项 v1 专用接口。排除项保留生成方法和单测，不计为业务验收成功。最新测试总数与覆盖率见 [覆盖率报告](docs/contracts/test-coverage.md)，逐项业务证据见 [真实验收](docs/contracts/full-live-acceptance.md)。结果仅适用于当前基线与记录的场景，详见 [验证状态](docs/contracts/verification.md)。
+以下接口保留生成方法和契约单测，但不属于两条路线的支持范围，也未计入真实业务验收成功：
+
+| Keycloak 功能 | 阶段 | 操作数 | 不支持的原因 |
+| --- | --- | ---: | --- |
+| `oid4vc-vci` | Preview | 7 | 凭证管理功能处于预览阶段，按当前支持策略排除 |
+| `ssf` | Experimental | 19 | 功能处于实验阶段，按当前支持策略排除 |
+| `client-types` | Experimental | 2 | 功能处于实验阶段，按当前支持策略排除 |
+
+默认 v2 路线另外排除 14 个 FGAP v1 专用接口；这些接口已在 v1 兼容路线上通过验收。**生成方法存在不等于 SDK 承诺支持该接口**：使用 `KeycloakSupportedClient.CreateAsync` 可在发送请求前执行版本、成熟度、路线、服务器功能及验证状态检查。直接构造 `KeycloakAdminClient` 提供底层传输，不自动应用支持策略。
+
+范围以 Keycloak 26.8.1 的 Admin API 为准，不涵盖控制台静态资源、独立 OAuth/OIDC、Account、SCIM 或实验性 Admin API v2 等协议，也不能预先枚举第三方 SPI 扩展。结果不自动适用于其他 Keycloak 版本，也不代表已覆盖所有权限和配置组合。
+
+逐接口状态及排除原因见 [支持矩阵](docs/contracts/admin-api-support-matrix.tsv)，分类汇总见 [验证索引](docs/contracts/admin-api-validation-list.md)，实测环境和证据见 [真实验收](docs/contracts/full-live-acceptance.md)。支持策略的接入方式见 [能力策略](docs/capability-policy.md)。
 
 ## 开发与验证
 

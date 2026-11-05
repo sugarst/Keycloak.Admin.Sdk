@@ -2,7 +2,7 @@
 #nullable enable
 using System.Text.Json;
 namespace Keycloak.Admin.Sdk;
-public sealed class ClientScopeEvaluateApi(KeycloakAdminClient transport)
+public sealed class ClientScopeEvaluateApi(KeycloakAdminClient transport) : IClientScopeEvaluateApi
 {
     /// <summary>Create JSON with payload of example access token</summary>
     public Task<AdminResponse<AccessToken>> GenerateExampleAccessTokenAsync(string @realm, string @clientUuid, string? @audience = null, string? @scope = null, string? @userId = null, CancellationToken cancellationToken = default) =>

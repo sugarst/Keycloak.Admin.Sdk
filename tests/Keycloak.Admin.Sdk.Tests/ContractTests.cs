@@ -7,6 +7,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 [TestClass]
 public sealed class ContractTests
 {
+    [TestMethod] public Task RawClientInterfaceOverloads() => InterfaceContracts.RawTransportsAsync();
     [TestMethod] public Task TransientReadResilience() => ResilienceContracts.ReadsAsync();
     [TestMethod] public Task ResilienceBypassesWritesAndTokenPost() => ResilienceContracts.BypassAsync();
     [TestMethod] public Task ResilienceAnd401RecoveryAreBounded() => ResilienceContracts.AuthenticationAsync();

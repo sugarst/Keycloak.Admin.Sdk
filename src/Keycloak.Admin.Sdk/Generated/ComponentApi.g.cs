@@ -2,7 +2,7 @@
 #nullable enable
 using System.Text.Json;
 namespace Keycloak.Admin.Sdk;
-public sealed class ComponentApi(KeycloakAdminClient transport)
+public sealed class ComponentApi(KeycloakAdminClient transport) : IComponentApi
 {
     /// <summary>GetComponents</summary>
     public Task<AdminResponse<List<ComponentRepresentation>>> GetComponentsAsync(string @realm, string? @name = null, string? @parent = null, string? @providerId = null, string? @type = null, CancellationToken cancellationToken = default) =>

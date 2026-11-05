@@ -37,7 +37,7 @@ public sealed class MatrixInput(int variant, bool hasBody, CancellationToken can
 
 public sealed record EndpointCase(string Method, string Path, string Operation, string TestName, string RequestKind,
     string ResponseKind, string RequestJson, string ResponseJson, MatrixQuery[] Queries, int[] SuccessStatuses,
-    string[] MediaTypes, Func<KeycloakAdminClient, MatrixInput, Task<MatrixResult>> Invoke)
+    string[] MediaTypes, Func<IKeycloakAdminClient, MatrixInput, Task<MatrixResult>> Invoke)
 {
     public async Task RunAsync()
     {

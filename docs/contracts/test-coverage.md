@@ -11,8 +11,8 @@
 | `apiWrapperLinePercent` | 100.0000% | 100% |
 | `apiWrapperBranchPercent` | 100.0000% | 100% |
 | `modelLinePercent` | 100.0000% | 100% |
-| `rawLinePercent` | 94.4481% | 94% |
-| `rawBranchPercent` | 65.1176% | 59% |
+| `rawLinePercent` | 94.4671% | 94% |
+| `rawBranchPercent` | 65.2296% | 59% |
 | `capabilityMethodPercent` | 100.0000% | 100% |
 | `capabilityLinePercent` | 100.0000% | 100% |
 | `capabilityBranchPercent` | 100.0000% | 100% |
@@ -23,7 +23,7 @@
 | `featureTelemetryLinePercent` | 100.0000% | 100% |
 | `featureTelemetryBranchPercent` | 100.0000% | 100% |
 
-MSTest 564/564 通过；矩阵 520/520，无缺失、重复、跳过或失败。SDK 自有源码覆盖 1882/1882 个可执行方法、2721/2721 行、538/538 个分支。
+MSTest 567/567 通过；矩阵 520/520，无缺失、重复、跳过或失败。SDK 自有源码覆盖 1950/1950 个可执行方法、2791/2791 行、538/538 个分支。
 
 `sdkSource*` 包含 SDK 手写代码及生成 API/DTO；`raw*` 还包含 `obj/` 中 .NET 生成的 JSON/正则实现。原始 Cobertura 不删减。能力、开关和遥测模块分别统计；DI 通过独立生命周期及原生断言验证。
 

@@ -2,7 +2,7 @@
 #nullable enable
 using System.Text.Json;
 namespace Keycloak.Admin.Sdk;
-public sealed class GroupsApi(KeycloakAdminClient transport)
+public sealed class GroupsApi(KeycloakAdminClient transport) : IGroupsApi
 {
     /// <summary>Get group hierarchy.  Only `name` and `id` are returned.  `subGroups` are only returned when using the `search` or `q` parameter. If none of these parameters is provided, the top-level groups are returned without `subGroups` being filled.</summary>
     public Task<AdminResponse<List<GroupRepresentation>>> GetGroupsAsync(string @realm, bool? @briefRepresentation = null, bool? @exact = null, int? @first = null, int? @max = null, bool? @populateHierarchy = null, string? @q = null, string? @search = null, bool? @subGroupsCount = null, CancellationToken cancellationToken = default) =>

@@ -2,7 +2,7 @@
 #nullable enable
 using System.Text.Json;
 namespace Keycloak.Admin.Sdk;
-public sealed class UiAuthenticationManagementApi(KeycloakAdminClient transport)
+public sealed class UiAuthenticationManagementApi(KeycloakAdminClient transport) : IUiAuthenticationManagementApi
 {
     /// <summary>Source: UiAuthenticationManagementResource.listIdentityProviders</summary>
     public Task<AdminResponse<JsonElement>> ListIdentityProvidersAsync(string @realm, CancellationToken cancellationToken = default) =>

@@ -2,7 +2,7 @@
 #nullable enable
 using System.Text.Json;
 namespace Keycloak.Admin.Sdk;
-public sealed class UiUIRealmsApi(KeycloakAdminClient transport)
+public sealed class UiUIRealmsApi(KeycloakAdminClient transport) : IUiUIRealmsApi
 {
     /// <summary>Source: UiUIRealmsResource.getRealms</summary>
     public Task<AdminResponse<JsonElement>> GetRealmsAsync(string @realm, int? @first = null, int? @max = null, string? @search = null, CancellationToken cancellationToken = default) =>

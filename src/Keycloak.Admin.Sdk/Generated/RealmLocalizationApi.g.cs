@@ -2,7 +2,7 @@
 #nullable enable
 using System.Text.Json;
 namespace Keycloak.Admin.Sdk;
-public sealed class RealmLocalizationApi(KeycloakAdminClient transport)
+public sealed class RealmLocalizationApi(KeycloakAdminClient transport) : IRealmLocalizationApi
 {
     /// <summary>GetRealmLocalizationLocales</summary>
     public Task<AdminResponse<List<string>>> GetRealmLocalizationLocalesAsync(string @realm, CancellationToken cancellationToken = default) =>

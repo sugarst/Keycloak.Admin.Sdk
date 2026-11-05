@@ -30,6 +30,8 @@
 
 ## 运行时设计
 
+`IKeycloakAdminClient` 由手写的原始请求契约和生成的资源入口两部分组成，各资源接口与实现从同一契约生成。具体客户端显式实现接口资源属性，以保留原有具体返回类型。DI 为默认及命名接口注册同一具体实例。
+
 - `KeycloakAdminClient` 保留服务器上下文路径，逐段编码路径及查询参数，每次请求独立设置 Bearer header。调用方管理 HTTP 客户端和 token provider。
 - JSON 使用 `System.Text.Json` 源生成元数据；自定义泛型入口接受显式 `JsonTypeInfo<T>`。null 属性省略，需要显式 null 时提交原始 JSON。
 - 常规响应缓冲内容；流入口转移响应所有权给调用方。HTTP 错误不读取错误体，网络、取消与 JSON 格式错误分别保留。

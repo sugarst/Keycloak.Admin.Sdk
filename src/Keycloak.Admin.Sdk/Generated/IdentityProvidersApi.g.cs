@@ -2,7 +2,7 @@
 #nullable enable
 using System.Text.Json;
 namespace Keycloak.Admin.Sdk;
-public sealed class IdentityProvidersApi(KeycloakAdminClient transport)
+public sealed class IdentityProvidersApi(KeycloakAdminClient transport) : IIdentityProvidersApi
 {
     /// <summary>Import identity provider from JSON body Supply HttpContent with the desired server-supported Content-Type; the request consumes and disposes it.</summary>
     public Task<AdminResponse<Dictionary<string, string>>> ImportFromAsync(string @realm, HttpContent? body = null, CancellationToken cancellationToken = default) =>

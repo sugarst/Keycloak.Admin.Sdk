@@ -2,7 +2,7 @@
 #nullable enable
 using System.Text.Json;
 namespace Keycloak.Admin.Sdk;
-public sealed class UiAllEffectiveRoleMappingApi(KeycloakAdminClient transport)
+public sealed class UiAllEffectiveRoleMappingApi(KeycloakAdminClient transport) : IUiAllEffectiveRoleMappingApi
 {
     /// <summary>Source: UiAllEffectiveRoleMappingResource.listAllEffectiveClientScopeRoleMappings</summary>
     public Task<AdminResponse<JsonElement>> ListAllEffectiveClientScopeRoleMappingsAsync(string @realm, string @id, CancellationToken cancellationToken = default) =>

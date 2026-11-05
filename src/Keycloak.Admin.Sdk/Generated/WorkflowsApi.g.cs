@@ -2,7 +2,7 @@
 #nullable enable
 using System.Text.Json;
 namespace Keycloak.Admin.Sdk;
-public sealed class WorkflowsApi(KeycloakAdminClient transport)
+public sealed class WorkflowsApi(KeycloakAdminClient transport) : IWorkflowsApi
 {
     /// <summary>List workflows</summary>
     public Task<AdminResponse> ListAsync(string @realm, bool? @exact = null, int? @first = null, int? @max = null, string? @search = null, CancellationToken cancellationToken = default) =>

@@ -2,7 +2,7 @@
 #nullable enable
 using System.Text.Json;
 namespace Keycloak.Admin.Sdk;
-public sealed class AttackDetectionApi(KeycloakAdminClient transport)
+public sealed class AttackDetectionApi(KeycloakAdminClient transport) : IAttackDetectionApi
 {
     /// <summary>Clear any user login failures for all users This can release temporary disabled users</summary>
     public Task<AdminResponse> ClearAllBruteForceAsync(string @realm, CancellationToken cancellationToken = default) =>

@@ -2,7 +2,7 @@
 #nullable enable
 using System.Text.Json;
 namespace Keycloak.Admin.Sdk;
-public sealed class UserVerifiableCredentialApi(KeycloakAdminClient transport)
+public sealed class UserVerifiableCredentialApi(KeycloakAdminClient transport) : IUserVerifiableCredentialApi
 {
     /// <summary>Source: UserVerifiableCredentialResource.getCredentials</summary>
     public Task<AdminResponse<JsonElement>> GetCredentialsAsync(string @realm, string @userId, CancellationToken cancellationToken = default) =>

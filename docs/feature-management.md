@@ -38,7 +38,7 @@ var sdk = await KeycloakFeatureManagedClient.CreateAsync(
 await sdk.Users.GetUsersAsync("target-realm");
 ```
 
-`http`、`server`、`tokens` 由宿主管理，示例见 [README](../README.md)。工厂先读取一次受认证的 serverinfo，再检查版本和总开关；初始化拒绝前可能已发送该元数据请求。已有可信快照时可自行构造能力/功能策略，安装到 `KeycloakAdminClientOptions.RequestPolicy`。
+`http`、`server`、`tokens` 由宿主管理，示例见 [认证说明](authentication-and-errors.md)。工厂先读取一次受认证的 serverinfo，再检查版本和总开关；初始化拒绝前可能已发送该元数据请求。已有可信快照时可自行构造能力/功能策略，安装到 `KeycloakAdminClientOptions.RequestPolicy`。
 
 支持策略的环境覆盖见 [能力策略](capability-policy.md)。FeatureManagement 由宿主配置提供方处理；启用 `AddEnvironmentVariables()` 后，示例总开关的键为 `feature_management__feature_flags__0__enabled`，Organizations 为 `feature_management__feature_flags__2__enabled`。数字取决于数组位置，重排须同步；优先沿用宿主配置发布/刷新机制。
 

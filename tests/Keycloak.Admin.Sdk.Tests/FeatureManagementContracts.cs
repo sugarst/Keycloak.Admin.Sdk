@@ -98,7 +98,7 @@ public static class FeatureManagementContracts
         var host = Host(); using var services = host.Services; using var config = host.Config;
         var policy = new KeycloakFeatureManagementPolicy(Catalog(), host.Manager);
         using var handler = new Handler(); using var http = new HttpClient(handler); var tokens = new Tokens();
-        var client = new KeycloakAdminClient(http, Server, tokens, new() { RequestPolicy = policy, EnableUnauthorizedRecovery = true });
+        IKeycloakAdminClient client = new KeycloakAdminClient(http, Server, tokens, new() { RequestPolicy = policy, EnableUnauthorizedRecovery = true });
         await client.Users.GetUsersAsync("master");
         Check(handler.Sends == 1 && tokens.Acquisitions == 1 && host.Manager.Calls.Count == 1, "Allowed generated request");
         int index = Array.IndexOf(Ids, "KeycloakSdk.AdminApi");
@@ -138,7 +138,7 @@ public static class FeatureManagementContracts
         await Throws<ArgumentNullException>(async () => await KeycloakFeatureManagedClient.CreateAsync(http, Server, null!, new(KeycloakTarget.Version), host.Manager));
         await Throws<ArgumentNullException>(async () => await KeycloakFeatureManagedClient.CreateAsync(http, Server, tokens, null!, host.Manager));
         await Throws<ArgumentNullException>(async () => await KeycloakFeatureManagedClient.CreateAsync(http, Server, tokens, new(KeycloakTarget.Version), null!));
-        var client = await KeycloakFeatureManagedClient.CreateAsync(http, Server, tokens, new(KeycloakTarget.Version), host.Manager, enableUnauthorizedRecovery: true);
+        IKeycloakAdminClient client = await KeycloakFeatureManagedClient.CreateAsync(http, Server, tokens, new(KeycloakTarget.Version), host.Manager, enableUnauthorizedRecovery: true);
         Check(handler.Sends == 1, "Only authenticated metadata read during bootstrap");
         await client.Users.GetUsersAsync("master");
         Check(handler.Sends == 2, "Guarded client works");

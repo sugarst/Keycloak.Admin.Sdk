@@ -2,7 +2,7 @@
 #nullable enable
 using System.Text.Json;
 namespace Keycloak.Admin.Sdk;
-public sealed class ServerInfoAdminApi(KeycloakAdminClient transport)
+public sealed class ServerInfoAdminApi(KeycloakAdminClient transport) : IServerInfoAdminApi
 {
     /// <summary>Source: ServerInfoAdminResource.getInfo</summary>
     public Task<AdminResponse<JsonElement>> GetInfoAsync(CancellationToken cancellationToken = default) =>

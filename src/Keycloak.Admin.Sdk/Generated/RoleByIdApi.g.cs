@@ -2,7 +2,7 @@
 #nullable enable
 using System.Text.Json;
 namespace Keycloak.Admin.Sdk;
-public sealed class RoleByIdApi(KeycloakAdminClient transport)
+public sealed class RoleByIdApi(KeycloakAdminClient transport) : IRoleByIdApi
 {
     /// <summary>Get a specific role&apos;s representation</summary>
     public Task<AdminResponse<RoleRepresentation>> GetRoleAsync(string @realm, string @roleId, CancellationToken cancellationToken = default) =>

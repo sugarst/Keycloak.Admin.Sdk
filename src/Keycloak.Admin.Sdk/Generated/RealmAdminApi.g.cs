@@ -2,7 +2,7 @@
 #nullable enable
 using System.Text.Json;
 namespace Keycloak.Admin.Sdk;
-public sealed class RealmAdminApi(KeycloakAdminClient transport)
+public sealed class RealmAdminApi(KeycloakAdminClient transport) : IRealmAdminApi
 {
     /// <summary>Get the top-level representation of the realm It will not include nested information like User and Client representations.</summary>
     public Task<AdminResponse<RealmRepresentation>> GetRealmAsync(string @realm, CancellationToken cancellationToken = default) =>

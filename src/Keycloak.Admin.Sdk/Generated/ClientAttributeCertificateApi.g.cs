@@ -2,7 +2,7 @@
 #nullable enable
 using System.Text.Json;
 namespace Keycloak.Admin.Sdk;
-public sealed class ClientAttributeCertificateApi(KeycloakAdminClient transport)
+public sealed class ClientAttributeCertificateApi(KeycloakAdminClient transport) : IClientAttributeCertificateApi
 {
     /// <summary>Get key info</summary>
     public Task<AdminResponse<CertificateRepresentation>> GetKeyInfoAsync(string @realm, string @clientUuid, string @attr, CancellationToken cancellationToken = default) =>

@@ -2,7 +2,7 @@
 #nullable enable
 using System.Text.Json;
 namespace Keycloak.Admin.Sdk;
-public sealed class UserApi(KeycloakAdminClient transport)
+public sealed class UserApi(KeycloakAdminClient transport) : IUserApi
 {
     /// <summary>Get representation of the user</summary>
     public Task<AdminResponse<UserRepresentation>> GetUserAsync(string @realm, string @userId, bool? @userProfileMetadata = null, CancellationToken cancellationToken = default) =>
