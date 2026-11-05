@@ -16,6 +16,7 @@
     <Compile Include="../Keycloak.Admin.Sdk.Tests/RuntimeContracts.cs" Link="RuntimeContracts.cs" />
     <Compile Include="../Keycloak.Admin.Sdk.Tests/RecoveryContracts.cs" Link="RecoveryContracts.cs" />
     <Compile Include="../Keycloak.Admin.Sdk.Tests/DependencyInjectionContracts.cs" Link="DependencyInjectionContracts.cs" />
+    <Compile Include="../Keycloak.Admin.Sdk.Tests/ResilienceContracts.cs" Link="ResilienceContracts.cs" />
     <Compile Include="../Keycloak.Admin.Sdk.Tests/EndpointMatrix.g.cs" Link="EndpointMatrix.g.cs" />
     <Compile Include="../Keycloak.Admin.Sdk.Tests/ModelMatrix.g.cs" Link="ModelMatrix.g.cs" />
   </ItemGroup>

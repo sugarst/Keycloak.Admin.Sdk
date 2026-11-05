@@ -7,6 +7,13 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 [TestClass]
 public sealed class ContractTests
 {
+    [TestMethod] public Task TransientReadResilience() => ResilienceContracts.ReadsAsync();
+    [TestMethod] public Task ResilienceBypassesWritesAndTokenPost() => ResilienceContracts.BypassAsync();
+    [TestMethod] public Task ResilienceAnd401RecoveryAreBounded() => ResilienceContracts.AuthenticationAsync();
+    [TestMethod] public Task ResilienceTimeoutsAndCancellation() => ResilienceContracts.TimeoutsAsync();
+    [TestMethod] public Task ReadCircuitAndNamedClientIsolation() => ResilienceContracts.CircuitAsync();
+    [TestMethod] public Task StreamResilienceBeforeDeliveryOnly() => ResilienceContracts.StreamsAsync();
+    [TestMethod] public void ResilienceConfigurationValidation() => ResilienceContracts.Validation();
     [TestMethod] public Task FeatureFlagsCannotPromoteAnyCatalogEndpoint() => FeatureManagementContracts.DecisionsAsync();
     [TestMethod] public Task FeatureFlagTransportReloadAndReplay() => FeatureManagementContracts.TransportAsync();
     [TestMethod] public Task FeatureManagedClientBootstrap() => FeatureManagementContracts.BootstrapAsync();

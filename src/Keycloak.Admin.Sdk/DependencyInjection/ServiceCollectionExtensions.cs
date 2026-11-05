@@ -27,6 +27,7 @@ public static class KeycloakAdminSdkServiceCollectionExtensions
                 "Server must be an absolute HTTP(S) base URI without credentials, query or fragment.")
             .Validate(o => !string.IsNullOrWhiteSpace(o.AuthenticationRealm) && !string.IsNullOrWhiteSpace(o.ClientId), "AuthenticationRealm and ClientId are required.")
             .Validate(o => o.ClientSecret is not null && o.Client is not null && o.Token is not null, "Secret resolver and client/token options are required.")
+            .Validate(o => KeycloakHttpResilienceOptions.IsValid(o.Resilience), "Invalid resilience settings; see KeycloakHttpResilienceOptions limits.")
             .ValidateOnStart();
         services.TryAddSingleton(TimeProvider.System);
         var builder = services.AddHttpClient(name).ConfigurePrimaryHttpMessageHandler(() => new SocketsHttpHandler
@@ -34,6 +35,9 @@ public static class KeycloakAdminSdkServiceCollectionExtensions
             AllowAutoRedirect = false,
             PooledConnectionLifetime = TimeSpan.FromMinutes(5)
         });
+        builder.AddHttpMessageHandler(sp => KeycloakHttpResilience.CreateHandler(
+            sp.GetRequiredService<IOptionsMonitor<KeycloakAdminSdkOptions>>().Get(name).Resilience,
+            sp.GetRequiredService<TimeProvider>()));
         services.AddKeyedSingleton<HttpClient>(name, (sp, _) => sp.GetRequiredService<IHttpClientFactory>().CreateClient(name));
         services.AddKeyedSingleton<ClientCredentialsTokenProvider>(name, (sp, _) =>
         {

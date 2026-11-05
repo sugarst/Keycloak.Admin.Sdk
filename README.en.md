@@ -2,7 +2,7 @@
 
 [简体中文](README.md) | English
 
-A **.NET 10 / Native AOT** client for the Keycloak Admin REST API, currently targeting **Keycloak 26.8.1** only. The main package integrates Microsoft.Extensions.Http and uses source-generated JSON metadata with reflection serialization disabled. This repository pins .NET SDK **10.0.403**.
+A **.NET 10 / Native AOT** client for the Keycloak Admin REST API, currently targeting **Keycloak 26.8.1** only. The main package references Microsoft.Extensions.Http **10.0.14** and Microsoft.Extensions.Http.Resilience **10.11.0**, and uses source-generated JSON metadata with reflection serialization disabled. This repository pins .NET SDK **10.0.403**.
 
 The current package version is **0.1.0-preview.2**; public APIs may change. Reference the [core project](src/Keycloak.Admin.Sdk/Keycloak.Admin.Sdk.csproj), or consume the preview packages from the `artifacts/packages/0.1.0-preview.2` local NuGet feed produced by the verification tool.
 
@@ -31,6 +31,20 @@ Console.WriteLine(created.Location);
 ```
 
 The authentication realm is independent of the target realm. Use realm names and internal client UUIDs in paths; a client UUID is different from the OIDC `clientId`. Use `StaticAccessTokenProvider` or implement `IAccessTokenProvider` to reuse existing authentication. All network methods support cancellation. Pagination exposes server parameters without snapshot or total-count guarantees.
+
+`AddKeycloakAdminSdk` exposes opt-in read resilience through `options.Resilience`:
+
+```csharp
+services.AddKeycloakAdminSdk(options =>
+{
+    options.Server = server;
+    options.ClientId = "admin-service";
+    options.ClientSecret = (_, ct) => secretStore.GetSecretAsync(ct);
+    options.Resilience = new() { Enabled = true, MaxRetryAttempts = 2 };
+});
+```
+
+Only bodyless GET/HEAD requests use transient retry, timeout and circuit-breaking strategies. Writes and token POST bypass the entire pipeline, including an open read circuit. Resilience is disabled by default; 401 recovery remains a separate option. With both enabled, the default upper bound is six physical admin requests per logical call. Use a cancellation token for the whole operation: pipeline timeouts exclude token acquisition, SDK 401 recovery and response body reading. See [configuration and exception details](docs/authentication-and-errors.md#http-弹性策略). Do not stack another retry/resilience handler on this named client.
 
 ## NuGet packages and migration
 

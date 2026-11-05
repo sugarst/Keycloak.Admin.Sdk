@@ -10,7 +10,7 @@
 | `src/Keycloak.Admin.Sdk/Authentication` | Token 获取、缓存及条件失效 |
 | `src/Keycloak.Admin.Sdk/Transport` | URI、JSON 元数据入口、响应及错误类型 |
 | `src/Keycloak.Admin.Sdk/Generated` | 生成的 API、DTO、端点目录及 JSON 上下文 |
-| `src/Keycloak.Admin.Sdk/DependencyInjection` | Microsoft DI、Options、HttpClientFactory |
+| `src/Keycloak.Admin.Sdk/DependencyInjection` | Microsoft DI、Options、HttpClientFactory、显式开启的读取弹性管道 |
 | `src/Keycloak.Admin.Sdk/Capabilities` | 不可变版本目录与请求支持策略 |
 | `src/Keycloak.Admin.Sdk.FeatureManagement` | 托管功能开关与可选评估遥测 |
 | `src/Keycloak.Admin.Sdk.FeatureManagement/ApplicationInsights` | 默认关闭的遥测注册适配器 |
@@ -36,7 +36,7 @@
 - client credentials 使用实例内缓存及共享获取；401 恢复可选，写入不自动重放。并发、超时和生命周期见 [认证说明](authentication-and-errors.md)。
 - 请求策略在最终 URI 构造后、token 获取和 HTTP 发送前执行。支持策略、宿主功能开关依次收紧开放结果，详见 [能力策略](capability-policy.md)。
 
-主包通过 Microsoft.Extensions.Http 提供 DI 集成。托管扩展依赖主包、Microsoft.FeatureManagement 及微软的 Application Insights 遥测适配器。
+主包直接引用 Microsoft.Extensions.Http 10.0.14 和 Microsoft.Extensions.Http.Resilience 10.11.0。DI 的 `options.Resilience` 将读取弹性策略封装为一个 ResilienceHandler，按命名客户端隔离状态，默认关闭。写入、带内容请求和 Token POST 选择空管道，读熔断不会阻断这些请求；具体规则见 [认证与弹性配置](authentication-and-errors.md#http-弹性策略)。Diagnostics 与 Polly 作为 Resilience 的传递依赖还原，不重复添加旧的 Http.Polly 适配器。托管扩展依赖主包、Microsoft.FeatureManagement 及微软的 Application Insights 遥测适配器。
 
 仅这两个库项目产出 NuGet 包，测试与生成器项目不打包。包引用迁移见 [README](../README.md#nuget-包与迁移)。
 

@@ -1,6 +1,6 @@
 # 认证、错误与依赖注入
 
-核心客户端的手动初始化见 [README](../README.md)。主包内置的 DI 模块 提供 Microsoft DI、Options 与 HttpClientFactory。
+核心客户端的手动初始化见 [README](../README.md)。主包的 DI 模块提供 Microsoft DI、Options、HttpClientFactory 与可选的 HTTP 弹性管道。
 
 ## 结构化错误
 
@@ -96,3 +96,51 @@ var secondary = serviceProvider.GetRequiredKeyedService<KeycloakAdminClient>("se
 ```
 
 每个名称（含默认）仅注册一次，分别持有 HTTP 客户端、Options 和 token 缓存。Options 启动校验拒绝不完整配置且不输出配置值；客户端创建后配置固定，切换身份需新注册或重建容器。
+
+## HTTP 弹性策略
+
+主包直接引用 Microsoft.Extensions.Http 10.0.14 与 Microsoft.Extensions.Http.Resilience 10.11.0，使用微软 ResilienceHandler 和 Polly 管道，无反射式配置绑定。通过既有 DI 入口统一配置，不再叠加 AddStandardResilienceHandler、Http.Polly 或其他重试 handler：
+
+```csharp
+services.AddKeycloakAdminSdk(options =>
+{
+    options.Server = new Uri("https://keycloak.example.com/auth/");
+    options.ClientId = "admin-service";
+    options.ClientSecret = (sp, ct) => sp.GetRequiredService<ISecretStore>().GetSecretAsync(ct);
+    options.Client = new() { EnableUnauthorizedRecovery = true };
+    options.Resilience = new()
+    {
+        Enabled = true,
+        MaxRetryAttempts = 2,
+        RetryDelay = TimeSpan.FromMilliseconds(200),
+        TotalRequestTimeout = TimeSpan.FromSeconds(30),
+        AttemptTimeout = TimeSpan.FromSeconds(10)
+    };
+});
+```
+
+默认 Enabled=false；不开启时不安装有效重试、超时或熔断策略。开启后，仅无 HttpContent 的 GET/HEAD 进入管道（包括原始请求与流式请求）。所有写方法、GET/HEAD 携带内容以及 Token POST 都绕过整个管道，包括已打开的读熔断。Token 获取仍受 provider 自己的超时和失败冷却控制。默认不添加 hedging、限流、HTTP 正文日志或远端遥测导出。
+
+管道顺序为：总超时 → 可选瞬态重试 → 可选熔断 → 单次超时。瞬态错误使用微软默认分类：408、429、5xx、HttpRequestException、Polly 的 TimeoutRejectedException；采用指数退避，可加抖动，遵守 Retry-After，等待仍受总超时和调用取消控制。失败响应在重试时释放，最终 HTTP 失败仍转换为 SDK 的结构化异常。
+
+| 配置 | 默认值 | 允许范围/含义 |
+| --- | --- | --- |
+| Enabled | false | 开启本命名客户端的读取管道 |
+| MaxRetryAttempts | 2 | 0–10；额外重试次数，0 关闭瞬态重试 |
+| RetryDelay | 200 ms | 0–1 分钟；初始退避 |
+| UseJitter | true | 退避抖动 |
+| TotalRequestTimeout | 30 秒 | 不小于 AttemptTimeout，不超过 1 天 |
+| AttemptTimeout | 10 秒 | 至少 1 ms，不大于 TotalRequestTimeout |
+| EnableCircuitBreaker | true | 开启读取熔断，MaxRetryAttempts=0 时仍可启用 |
+| CircuitBreakerFailureRatio | 0.5 | 大于 0、不超过 1；拒绝 NaN |
+| CircuitBreakerMinimumThroughput | 20 | 至少 2；每次物理尝试均参与统计 |
+| CircuitBreakerSamplingDuration | 30 秒 | 500 ms–1 天 |
+| CircuitBreakerBreakDuration | 5 秒 | 500 ms–1 天 |
+
+配置即使关闭也会校验，Resilience 不能为 null。不同命名客户端/handler 实例不共享熔断状态；重建 handler 后使用新管道。熔断打开后，读取抛出 Polly.CircuitBreaker.BrokenCircuitException；弹性超时抛出 Polly.Timeout.TimeoutRejectedException；调用方取消仍为 OperationCanceledException。这些异常不转换成 HTTP 状态异常，调用方可分别处理。
+
+401/403 不属于瞬态分类。401 仍由上文 SDK 条件失效流程处理：每次逻辑调用最多两个管理请求发送，每个发送允许 MaxRetryAttempts 次瞬态重试。因此物理管理请求上限为 `2 × (1 + MaxRetryAttempts)`（默认开启两种能力时最多 6 次）；不开启 401 恢复则为 `1 + MaxRetryAttempts`。Token 获取不计入该数，支持策略仍只评估一次。403、404、409 不自动重试。
+
+TotalRequestTimeout 仅约束单个 HTTP 发送及其瞬态重试/退避，不覆盖 Token 获取、后续 401 恢复或 ResponseHeadersRead 之后的响应体读取。宿主应使用同一个 CancellationToken 为整个逻辑操作设置总时间预算。流一旦交付，读取故障不透明重试。
+
+此配置仅作用于 AddKeycloakAdminSdk 创建的命名 HttpClient；手动 new KeycloakAdminClient(http, ...) 使用宿主传入的管道。增加额外 HTTP handler 的宿主须自行避免重复重试。原始请求的瞬态读取重试由本命名客户端配置控制，与原始请求针对 401 的 AllowUnauthorizedReplay 相互独立。

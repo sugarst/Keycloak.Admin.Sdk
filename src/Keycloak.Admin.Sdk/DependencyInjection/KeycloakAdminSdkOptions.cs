@@ -10,4 +10,6 @@ public sealed class KeycloakAdminSdkOptions
     public Func<IServiceProvider, CancellationToken, ValueTask<string>> ClientSecret { get; set; } = null!;
     public KeycloakAdminClientOptions Client { get; set; } = new();
     public ClientCredentialsTokenProviderOptions Token { get; set; } = new();
+    /// <summary>Opt-in resilience for bodyless GET/HEAD requests on this named client. Writes and token POST bypass the pipeline.</summary>
+    public KeycloakHttpResilienceOptions Resilience { get; set; } = new();
 }

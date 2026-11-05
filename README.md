@@ -2,7 +2,7 @@
 
 简体中文 | [English](README.en.md)
 
-面向 **.NET 10 / Native AOT** 的 Keycloak Admin REST API 客户端，当前仅支持 **Keycloak 26.8.1**。主包集成 Microsoft.Extensions.Http，使用源生成 JSON 元数据，默认关闭反射序列化。仓库固定 .NET SDK **10.0.403**。
+面向 **.NET 10 / Native AOT** 的 Keycloak Admin REST API 客户端，当前仅支持 **Keycloak 26.8.1**。主包引用 Microsoft.Extensions.Http **10.0.14** 和 Microsoft.Extensions.Http.Resilience **10.11.0**，使用源生成 JSON 元数据，默认关闭反射序列化。仓库固定 .NET SDK **10.0.403**。
 
 当前包版本为 **0.1.0-preview.2**，公开 API 仍可能调整。可引用 [核心项目](src/Keycloak.Admin.Sdk/Keycloak.Admin.Sdk.csproj)，或使用验证工具生成的 `artifacts/packages/0.1.0-preview.2` 本地 NuGet 源。
 
@@ -31,6 +31,8 @@ Console.WriteLine(created.Location);
 ```
 
 认证 realm 与目标 realm 独立；`realm` 使用名称，客户端路径参数使用内部 UUID，而非 OIDC `clientId`。可用 `StaticAccessTokenProvider` 或实现 `IAccessTokenProvider` 接入已有认证。所有网络方法支持取消；分页直接采用服务端参数，不保证快照或总数。
+
+DI 入口 `AddKeycloakAdminSdk` 提供 `options.Resilience`，默认关闭。开启后，仅为无内容 GET/HEAD 提供瞬态重试、超时和独立读熔断；写请求与 Token POST 绕过该管道。配置、401 组合次数和异常约定见 [HTTP 弹性策略](docs/authentication-and-errors.md#http-弹性策略)。
 
 ## NuGet 包与迁移
 

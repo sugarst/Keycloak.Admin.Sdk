@@ -45,7 +45,9 @@ dotnet run --file tools/Check-Coverage.cs -- --results=artifacts/test-results/ma
 
 `ManagedTestDataTests.cs` 中的测试数据工具只进入 MSTest 项目，不进入 AOT。关键字段、密码策略边界仍用明确样本；随机测试不依赖特定输出。核心包不引用测试依赖，`Verify.cs` 检查两个 nuspec 的直接依赖清单及包数量。
 
-`Verify.cs` 将本次两个包写入 `artifacts/packages/<packageVersion>/`。主包的直接包依赖为 Microsoft.Extensions.Http；FeatureManagement 包依赖主包和两个微软功能开关/遥测包。独立的版本目录避免混入早期五包产物。
+`Verify.cs` 将本次两个包写入 `artifacts/packages/<packageVersion>/`。主包直接依赖 Microsoft.Extensions.Http 10.0.14 和 Microsoft.Extensions.Http.Resilience 10.11.0；FeatureManagement 包依赖主包和两个微软功能开关/遥测包。独立的版本目录避免混入早期五包产物。
+
+`ResilienceContracts.cs` 的七组测试验证默认关闭、408/429/5xx/连接故障重试及响应释放、写入/内容/Token POST 排除、401 组合次数与策略单次判断、单次/总超时、Retry-After、取消、命名读熔断及流交付边界；校验所有配置限制。该文件同时链接到 AotSmoke，原生程序从本次 NuGet 包还原并实际启用管道，覆盖序列化关闭反射及裁剪边界。
 
 ## 原生与真实业务验收
 

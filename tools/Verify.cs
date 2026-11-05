@@ -37,7 +37,7 @@ return await ScriptHost.ExecuteAsync(args,
     string feed = Path.Combine(root, "artifacts", "packages", target.PackageVersion);
     var dependencies = new Dictionary<string, string[]>
     {
-        ["Keycloak.Admin.Sdk"] = ["Microsoft.Extensions.Http"],
+        ["Keycloak.Admin.Sdk"] = ["Microsoft.Extensions.Http", "Microsoft.Extensions.Http.Resilience"],
         ["Keycloak.Admin.Sdk.FeatureManagement"] = ["Keycloak.Admin.Sdk", "Microsoft.FeatureManagement", "Microsoft.FeatureManagement.Telemetry.ApplicationInsights"]
     };
     foreach (var (id, expected) in dependencies)
@@ -49,6 +49,10 @@ return await ScriptHost.ExecuteAsync(args,
         var actual = manifest.Descendants().Where(e => e.Name.LocalName == "dependency").Select(e => (string)e.Attribute("id")!);
         if (!expected.ToHashSet(StringComparer.OrdinalIgnoreCase).SetEquals(actual))
             throw new InvalidDataException($"Unexpected dependencies in {id}: {string.Join(", ", actual)}");
+        if (id == "Keycloak.Admin.Sdk")
+            foreach (var (dependency, version) in new[] { ("Microsoft.Extensions.Http", "10.0.14"), ("Microsoft.Extensions.Http.Resilience", "10.11.0") })
+                if (manifest.Descendants().Single(e => e.Name.LocalName == "dependency" && (string?)e.Attribute("id") == dependency).Attribute("version")!.Value != version)
+                    throw new InvalidDataException($"Unexpected dependency version for {dependency}.");
     }
     if (Directory.GetFiles(feed, "*.nupkg").Length != dependencies.Count)
         throw new InvalidDataException($"Expected exactly two SDK packages in {feed}.");

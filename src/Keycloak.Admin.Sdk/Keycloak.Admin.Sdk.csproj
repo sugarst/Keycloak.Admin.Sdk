@@ -8,7 +8,8 @@
   </PropertyGroup>
   <ItemGroup>
     <EmbeddedResource Include="../../contracts/capabilities.json" LogicalName="Keycloak.Capabilities.Current.json" />
-    <PackageReference Include="Microsoft.Extensions.Http" Version="10.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="10.0.14" />
+    <PackageReference Include="Microsoft.Extensions.Http.Resilience" Version="10.11.0" />
     <None Include="../../README.md" Pack="true" PackagePath="/" />
     <None Include="../../README.en.md" Pack="true" PackagePath="/" />
   </ItemGroup>
