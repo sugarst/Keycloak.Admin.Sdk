@@ -1,7 +1,10 @@
 **/bin/
 **/obj/
 .cache/
+# Build output only. Version notes and release records belong in CHANGELOG.md and docs/releases/.
 artifacts/
+*.nupkg
+*.snupkg
 .vs/
 *.user
 local/keycloak/.env

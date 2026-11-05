@@ -101,6 +101,7 @@ dotnet run --file local/keycloak/Service.cs                # 启动本地 Keyclo
 ## 文档
 
 - [架构与契约来源](docs/architecture.md)
+- [版本变更](CHANGELOG.md) · [发布记录与保存规则](docs/releases/README.md)
 - [支持路线](docs/contracts/admin-api-routing.md) · [接口验证索引](docs/contracts/admin-api-validation-list.md)
 - [端点与源码](docs/contracts/endpoint-inventory.md) · [源码对齐审计](docs/contracts/keycloak-26.8.1-alignment-audit.md)
 

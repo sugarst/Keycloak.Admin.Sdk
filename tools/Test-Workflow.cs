@@ -32,6 +32,18 @@ return await ScriptHost.ExecuteAsync(args, "dotnet run --file tools/Test-Workflo
     File.Copy(Path.Combine(root, "contracts/baseline.json"), Path.Combine(bundle, "baseline.json"), true);
     await ScriptHost.RunCheckedAsync(fixture, "dotnet", ["run", "--file", "tools/Upgrade.cs", "--", "--candidate=" + bundle], ct);
     if (Before() != before) throw new InvalidOperationException("Read-only upgrade changed the active tree.");
+    string prepared = Directory.EnumerateDirectories(Path.Combine(fixture, "artifacts/upgrade"))
+        .Single(dir => File.Exists(Path.Combine(dir, "upgrade-diff.json")));
+    using (var seeded = JsonDocument.Parse(File.ReadAllText(Path.Combine(prepared, "contracts/capabilities.json"))))
+    {
+        var endpoints = seeded.RootElement.GetProperty("endpoints").EnumerateArray().ToArray();
+        if (seeded.RootElement.GetProperty("serverVersion").GetString() != target.Version ||
+            seeded.RootElement.GetProperty("sourceCommit").GetString() != target.Commit ||
+            endpoints.Length != target.Endpoints ||
+            endpoints.Any(e => e.GetProperty("verification").GetString() != "Contract" ||
+                e.GetProperty("support").GetString() != "NotSupported"))
+            throw new InvalidOperationException("Prepared target must have a complete, unverified capability catalog.");
+    }
     await ScriptHost.RunCheckedAsync(fixture, "dotnet", ["run", "--file", "tools/Upgrade.cs", "--", "--candidate=" + bundle, "--apply"], ct);
     using var capabilities = JsonDocument.Parse(File.ReadAllText(Path.Combine(fixture, "contracts/capabilities.json")));
     if (File.Exists(sentinel) || File.Exists(obsoleteEvidence) || capabilities.RootElement.GetProperty("endpoints").EnumerateArray().Any(e => e.GetProperty("verification").GetString() != "Contract" || e.GetProperty("support").GetString() != "NotSupported"))

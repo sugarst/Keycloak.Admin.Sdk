@@ -1,6 +1,6 @@
 # 单基线升级与发布
 
-每个 SDK 构建及本地包只声明一个精确 Keycloak 版本，升级完整替换活跃实现；如未来创建 Git tag、公开包或发布附件，可用它们追溯历史契约和结果。
+每个 SDK 构建及本地包只声明一个精确 Keycloak 版本，升级完整替换活跃实现；[版本变更](../CHANGELOG.md) 和 [候选记录](releases/README.md) 随代码保存，实际发布另以 Git tag、NuGet 链接和长期制品追溯。
 
 ## 基线
 
@@ -46,11 +46,13 @@ dotnet run --file tools/Release.cs
 3. 执行构建、单测、覆盖率、打包、包依赖检查及严格 Native AOT。
 4. 用最终能力策略客户端重跑四套真实验收，包含本地拦截及托管功能开关的数据断言。
 5. 验证两路线各十三项门禁负向控制，更新逐项清单并核对源码指纹。
-6. 从 `artifacts/packages/<packageVersion>/` 收集主包、FeatureManagement 包及证据，写入含版本、指纹和包 SHA256 的 `release-manifest.json`。
+6. 从 `artifacts/packages/<packageVersion>/` 收集主包、FeatureManagement 包及证据，写入含 SDK/Keycloak 来源、指纹、包 SHA256 和验收摘要的 `release-manifest.json`，同步到 Git 跟踪的 `docs/releases/<packageVersion>/<sourceFingerprint>.json`。
 
 首次验收只在测试程序显式使用 `bootstrap-wire`，业务断言不减少，但没有最终策略拦截证明，不能导出为发布证据。`--promote` 核验四份首次证据，晋升后必须重跑最终客户端。`Release.cs -- --bootstrap` 可强制演练。
 
 失败即停止，不输出成功 manifest；旧 artifacts 可能保留，以本次成功清单为准。输出位于 `artifacts/releases/<packageVersion>/<sourceFingerprint>/`。命令只生成本地候选，不提交、推送或发布 NuGet。[release.yaml](../.github/workflows/release.yaml) 手动工作流执行同一入口。NuGet 发布由项目所有者明确执行；版本配置、候选产物和源码推送均不代表已发布，发布记录以实际公开结果为准。
+
+版本记录需要提交，构建产物继续忽略；字段含义、制品保存和实际发布记录要求见 [发布记录与保存规则](releases/README.md)。
 
 ## 数据与路线边界
 

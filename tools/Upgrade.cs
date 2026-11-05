@@ -39,8 +39,17 @@ return await ScriptHost.ExecuteAsync(args, "dotnet run --file tools/Upgrade.cs -
     string archive = File.Exists(next.Archive(root)) ? next.Archive(root) : Path.Combine(root, ".cache/keycloak/source.tar.gz");
     if (File.Exists(archive) && Convert.ToHexStringLower(SHA256.HashData(await File.ReadAllBytesAsync(archive, ct))) == next.ArchiveHash) File.Copy(archive, next.Archive(stage));
     File.Delete(Path.Combine(stage, "contracts/source-files.sha256"));
-    File.Delete(Path.Combine(stage, "contracts/capabilities.json"));
-    foreach (string script in new[] { "Update-Contracts.cs", "Generate-TestMatrix.cs", "Generate-LiveRoutes.cs", "Generate-CapabilityCatalog.cs" })
+    // The core project embeds this resource, including while the seed tool is compiled.
+    // Never copy old acceptance state into a new target, even temporarily.
+    var emptyCatalog = new JsonObject
+    {
+        ["schemaVersion"] = 1,
+        ["serverVersion"] = next.Version,
+        ["sourceCommit"] = next.Commit,
+        ["endpoints"] = new JsonArray()
+    };
+    await File.WriteAllTextAsync(Path.Combine(stage, "contracts/capabilities.json"), emptyCatalog.ToJsonString(), ct);
+    foreach (string script in new[] { "Update-Contracts.cs", "Generate-CapabilityCatalog.cs", "Generate-TestMatrix.cs", "Generate-LiveRoutes.cs" })
     {
         string[] mode = script == "Generate-TestMatrix.cs" ? ["--", "--refresh-contracts"] : script == "Generate-CapabilityCatalog.cs" ? ["--", "--seed"] : [];
         await ScriptHost.RunCheckedAsync(stage, "dotnet", ["run", "--file", "tools/" + script, .. mode], ct);

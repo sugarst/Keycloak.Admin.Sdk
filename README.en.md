@@ -115,6 +115,7 @@ The local console is at <http://127.0.0.1:18080/admin/>. The default user is `ad
 The detailed guides and generated reports below are maintained in Chinese; the endpoint inventory is in English.
 
 - [Architecture and contract sources](docs/architecture.md)
+- [Changelog](CHANGELOG.md) · [Release records and retention](docs/releases/README.md)
 - [Support routes](docs/contracts/admin-api-routing.md) · [Verification index](docs/contracts/admin-api-validation-list.md)
 - [Endpoints and source mapping](docs/contracts/endpoint-inventory.md) · [Source alignment audit](docs/contracts/keycloak-26.8.1-alignment-audit.md)
 

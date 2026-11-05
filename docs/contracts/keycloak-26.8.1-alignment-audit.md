@@ -2,7 +2,7 @@
 
 结论：本次静态对照未发现方法、路径、已比较查询参数、媒体类型及直接声明返回类型的差异。该结果不代替全量 DTO、权限、状态码与业务验收。
 
-基线为 [发布 tag](https://github.com/keycloak/keycloak/releases/tag/26.8.1)，完整提交 `24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b`。[官方 API 定义](https://www.keycloak.org/docs-api/26.8.1/rest-api/index.html) 仍标记为预览。远端 tag 和 OpenAPI 本次在线核验：**未执行；可加 --online**；本地源码归档 SHA256 和源码文件清单校验通过。
+基线为 [发布 tag](https://github.com/keycloak/keycloak/releases/tag/26.8.1)，完整提交 `24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b`。[官方 API 定义](https://www.keycloak.org/docs-api/26.8.1/rest-api/index.html) 仍标记为预览。远端 tag 和 OpenAPI 本次在线核验：**一致**；本地源码归档 SHA256 和源码文件清单校验通过。
 
 ## 数量与口径
 

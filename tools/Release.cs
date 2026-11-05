@@ -11,6 +11,9 @@ using System.Security.Cryptography;
 return await ScriptHost.ExecuteAsync(args, "dotnet run --file tools/Release.cs -- [--bootstrap] (full acceptance; no publishing)", ["--bootstrap"], async ct =>
 {
     string root = ScriptHost.RepositoryRoot(); var target = TargetBaseline.Load(root);
+    string sdkCommit = (await ScriptHost.RunCheckedAsync(root, "git", ["rev-parse", "HEAD"], ct, capture: true)).StandardOutput.Trim();
+    bool sdkWorkingTreeDirty = !string.IsNullOrWhiteSpace((await ScriptHost.RunCheckedAsync(root, "git", ["status", "--porcelain", "--untracked-files=normal"], ct, capture: true)).StandardOutput);
+    string initialFingerprint = LiveEvidence.Fingerprint(root);
     var finalEnvironment = new Dictionary<string, string?> { ["KC_TEST_RELEASE_BOOTSTRAP"] = null };
     async Task Run(string script, params string[] options) => await ScriptHost.RunCheckedAsync(root, "dotnet", ["run", "--file", "tools/" + script, .. options.Length > 0 ? (string[])["--", .. options] : []], ct, environment: finalEnvironment);
     await Run("Check-Baseline.cs");
@@ -45,13 +48,31 @@ return await ScriptHost.ExecuteAsync(args, "dotnet run --file tools/Release.cs -
         string source = Path.Combine(root, "artifacts/packages", target.PackageVersion, filename);
         if (!File.Exists(source)) throw new FileNotFoundException("Missing current-target package: " + filename);
         File.Copy(source, Path.Combine(output, filename), true);
-        packages.Add(new JsonObject { ["file"] = filename, ["sha256"] = Convert.ToHexStringLower(SHA256.HashData(await File.ReadAllBytesAsync(source, ct))) });
+        packages.Add(new JsonObject { ["id"] = id, ["file"] = filename, ["sha256"] = Convert.ToHexStringLower(SHA256.HashData(await File.ReadAllBytesAsync(source, ct))) });
     }
     foreach (string file in Directory.EnumerateFiles(Path.Combine(root, "docs/contracts/full-live-evidence"))) File.Copy(file, Path.Combine(output, Path.GetFileName(file)), true);
     foreach (string file in new[] { "contracts/baseline.json", "docs/contracts/test-coverage.md", "docs/contracts/full-live-acceptance.tsv", "docs/contracts/full-live-acceptance.md", "artifacts/test-matrix-summary.json" }) File.Copy(Path.Combine(root, file), Path.Combine(output, Path.GetFileName(file)), true);
-    var manifest = new JsonObject { ["schemaVersion"] = 1, ["keycloakVersion"] = target.Version, ["packageVersion"] = target.PackageVersion, ["sourceCommit"] = target.Commit,
-        ["sourceFingerprint"] = fingerprint, ["finishedUtc"] = DateTimeOffset.UtcNow.ToString("O"), ["packages"] = packages,
-        ["acceptance"] = "managed + linux-musl-x64 Native AOT; FGAP v1 compatibility + v2 stable; final guarded clients", ["published"] = false };
-    await File.WriteAllTextAsync(Path.Combine(output, "release-manifest.json"), manifest.ToJsonString(new JsonSerializerOptions { WriteIndented = true }), ct);
-    Console.WriteLine("PASS release candidate: " + output + "; all gates passed; no Git or NuGet publication performed.");
+    var acceptanceRuns = new JsonArray();
+    foreach (string route in new[] { "fgap-v2-stable", "fgap-v1-compat" })
+        foreach (string mode in new[] { "managed", "native-aot" })
+        {
+            using var evidence = JsonDocument.Parse(File.ReadAllText(Path.Combine(output, route + "-" + mode + ".json")));
+            var run = evidence.RootElement;
+            acceptanceRuns.Add(new JsonObject { ["route"] = route, ["mode"] = mode,
+                ["accepted"] = run.GetProperty("accepted").GetInt32(), ["expected"] = run.GetProperty("expected").GetInt32(),
+                ["excluded"] = run.GetProperty("excluded").GetInt32() });
+        }
+    var manifest = new JsonObject { ["schemaVersion"] = 2, ["status"] = "local-candidate",
+        ["keycloakVersion"] = target.Version, ["keycloakSourceCommit"] = target.Commit, ["packageVersion"] = target.PackageVersion,
+        ["sdkCommit"] = sdkCommit, ["sdkWorkingTreeDirty"] = sdkWorkingTreeDirty || initialFingerprint != fingerprint,
+        ["dotnetSdk"] = target.Sdk, ["sourceFingerprint"] = fingerprint, ["finishedUtc"] = DateTimeOffset.UtcNow.ToString("O"),
+        ["packages"] = packages, ["allGatesPassed"] = true,
+        ["acceptance"] = "managed + linux-musl-x64 Native AOT; FGAP v1 compatibility + v2 stable; final guarded clients",
+        ["acceptanceRuns"] = acceptanceRuns, ["published"] = false };
+    string json = manifest.ToJsonString(new JsonSerializerOptions { WriteIndented = true }) + "\n";
+    await File.WriteAllTextAsync(Path.Combine(output, "release-manifest.json"), json, ct);
+    string record = ScriptHost.Within(root, "docs/releases/" + target.PackageVersion + "/" + fingerprint + ".json");
+    Directory.CreateDirectory(Path.GetDirectoryName(record)!);
+    await File.WriteAllTextAsync(record, json, ct);
+    Console.WriteLine("PASS release candidate: " + output + "; all gates passed; tracked record: " + record + "; no Git or NuGet publication performed.");
 });

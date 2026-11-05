@@ -1,6 +1,6 @@
 # 测试与验证
 
-从仓库根目录运行；.NET SDK 版本以 [global.json](../global.json) 为准。辅助工具统一为 .NET 文件式 C#，支持 `--help`；YAML 使用 `.yaml`。升级与发布验收见 [单基线流程](single-target-workflow.md)。
+从仓库根目录运行；.NET SDK 版本以 [global.json](../global.json) 为准。文件式工具支持 `--help`；全部工具入口、参数和文件影响见 [tools 工具总览](tools-overview.md)。YAML 使用 `.yaml`；升级与发布验收见 [单基线流程](single-target-workflow.md)。
 
 ## 常用入口
 

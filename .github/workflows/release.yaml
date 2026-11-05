@@ -16,6 +16,7 @@ jobs:
           name: single-target-release-candidate
           path: |
             artifacts/releases/
+            docs/releases/
             artifacts/test-results/
             !artifacts/test-results/**/packages/**
             artifacts/full-live/
