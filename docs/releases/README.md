@@ -11,6 +11,8 @@
 
 记录中的 `keycloakSourceCommit` 是上游 Keycloak 提交；`sdkCommit` 是命令启动时的 SDK HEAD。`sdkWorkingTreeDirty=true` 表示启动时有未提交文件，或重建改变了验收输入，此时不能仅凭该提交还原候选，应结合 `sourceFingerprint` 和提交后的源码检查。命令生成的报告和记录可在后续提交保存，不要求记录包含自身提交的哈希。
 
+迁入的旧记录保留原始 schema 1：其中 `sourceCommit` 指 Keycloak 上游提交，未记录 SDK HEAD。新流程使用 schema 2，明确区分两者，不为历史记录补造来源信息。
+
 候选状态固定为 `local-candidate`、`published=false`。相同版本、不同源码指纹各保留一份；相同指纹重跑更新该记录，Git 保留修改历史。失败不会写入本次成功记录，已有记录只代表其对应的历史成功执行。
 
 ## 单独保存的制品

@@ -18,9 +18,11 @@ return await ScriptHost.ExecuteAsync(args,
     var legacyYaml = ScriptHost.RepositoryFiles(root).Where(file => Path.GetExtension(file).Equals(".yml", StringComparison.OrdinalIgnoreCase)).ToArray();
     if (legacyYaml.Length != 0)
         throw new InvalidDataException("Use .yaml for repository YAML files:\n" + string.Join('\n', legacyYaml.Select(file => Path.GetRelativePath(root, file))));
+    // Release.cs can be the parent process. Do not overwrite its running apphost on Windows.
+    string toolsOutput = "artifacts/tool-check/" + Guid.NewGuid().ToString("N");
     foreach (string script in new[] { "Release.cs", "Upgrade.cs", "Test-Workflow.cs", "Generate-ValidationList.cs", "Test-Integration.cs", "Update-Contracts.cs", "Update-Verification.cs", "Audit-Contracts.cs", "Generate-TestMatrix.cs", "Check-Coverage.cs", "Generate-LiveRoutes.cs", "Check-AdminRoutes.cs", "Check-FullAcceptance.cs", "Test-AcceptanceGate.cs", "Test-AllAdminRoutes.cs", "Generate-CapabilityCatalog.cs" })
-        await ScriptHost.RunCheckedAsync(root, "dotnet", ["build", "tools/" + script], ct);
-    await ScriptHost.RunCheckedAsync(root, "dotnet", ["build", "local/keycloak/Service.cs"], ct);
+        await ScriptHost.RunCheckedAsync(root, "dotnet", ["build", "tools/" + script, "-o", toolsOutput + "/" + Path.GetFileNameWithoutExtension(script)], ct);
+    await ScriptHost.RunCheckedAsync(root, "dotnet", ["build", "local/keycloak/Service.cs", "-o", toolsOutput + "/Service"], ct);
     await ScriptHost.RunCheckedAsync(root, "dotnet", ["build", "Keycloak.Admin.Sdk.slnx", "-c", "Release"], ct);
     await ScriptHost.RunCheckedAsync(root, "dotnet", ["run", "--file", "tools/Generate-TestMatrix.cs", "--", "--check"], ct);
     await ScriptHost.RunCheckedAsync(root, "dotnet", ["run", "--file", "tools/Generate-LiveRoutes.cs", "--", "--check"], ct);

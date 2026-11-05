@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "keycloakVersion": "26.8.1",
+  "packageVersion": "26.8.1-preview.1",
+  "sourceCommit": "24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b",
+  "sourceFingerprint": "291a8c66a0abc502aa80219b6365f06f3f3ce012ad6586402286ba5d4cd86868",
+  "finishedUtc": "2026-11-05T10:29:04.7026237\u002B00:00",
+  "packages": [
+    {
+      "file": "Keycloak.Admin.Sdk.26.8.1-preview.1.nupkg",
+      "sha256": "38ff79060a31472735cb80464fc8ba80ade170fe6d6714a275576bcc2c22824c"
+    },
+    {
+      "file": "Keycloak.Admin.Sdk.FeatureManagement.26.8.1-preview.1.nupkg",
+      "sha256": "c466db3146b9a47d3101b41a0cea689526dada9bf835e1c3b6b7b60ea44a6929"
+    }
+  ],
+  "acceptance": "managed \u002B linux-musl-x64 Native AOT; FGAP v1 compatibility \u002B v2 stable; final guarded clients",
+  "published": false
+}
