@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <Version>0.1.0-preview.1</Version>
+    <Description>Optional conjunctive Microsoft FeatureManagement adapter for Keycloak Admin SDK.</Description>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../Keycloak.Admin.Sdk.Capabilities/Keycloak.Admin.Sdk.Capabilities.csproj" />
+    <PackageReference Include="Microsoft.FeatureManagement" Version="4.8.0" />
+  </ItemGroup>
+</Project>

@@ -10,6 +10,7 @@ internal static class LiveEvidence
             .Where(p => !p.Split(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar).Any(s => s is "bin" or "obj") && Path.GetExtension(p) is ".cs" or ".csproj" or ".yaml")
             .Concat(new[] { "global.json", "Directory.Build.props", "contracts/admin-api-routes.json", "contracts/baseline.json", "tests/Keycloak.Admin.Sdk.AotSmoke/Dockerfile", "tools/ScriptSupport.cs" }.Select(p => Path.Combine(root, p)))
             .Concat(Directory.EnumerateFiles(Path.Combine(root, "contracts/capabilities"), "*.json"))
+            .Append(Path.Combine(root, "contracts/feature-management.example.json"))
             .OrderBy(p => Path.GetRelativePath(root, p).Replace('\\', '/'), StringComparer.Ordinal);
         using var hash = IncrementalHash.CreateHash(HashAlgorithmName.SHA256);
         foreach (string path in paths)

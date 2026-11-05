@@ -54,6 +54,10 @@ public sealed class KeycloakCapabilityDecision
     public KeycloakEndpointCapability? Capability { get; }
     internal KeycloakCapabilityDecision(KeycloakCapabilityReason reason, string version, KeycloakAdminRoute route, KeycloakEndpointCapability? capability)
     { Reason = reason; ServerVersion = version; Route = route; Capability = capability; }
+
+    /// <summary>Host adapters may restrict an allowed decision, but cannot override a catalog denial.</summary>
+    public KeycloakCapabilityDecision DisableByHost() => IsAllowed
+        ? new(KeycloakCapabilityReason.DisabledByHost, ServerVersion, Route, Capability) : this;
 }
 
 public sealed class KeycloakCapabilityDeniedException(KeycloakCapabilityDecision decision)

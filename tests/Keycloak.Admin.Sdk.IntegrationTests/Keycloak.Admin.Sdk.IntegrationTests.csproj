@@ -2,4 +2,14 @@
   <PropertyGroup><OutputType>Exe</OutputType><IsAotCompatible>true</IsAotCompatible></PropertyGroup>
   <ItemGroup><ProjectReference Include="../../src/Keycloak.Admin.Sdk/Keycloak.Admin.Sdk.csproj" /></ItemGroup>
   <ItemGroup><ProjectReference Include="../../src/Keycloak.Admin.Sdk.Capabilities/Keycloak.Admin.Sdk.Capabilities.csproj" /></ItemGroup>
+  <PropertyGroup Condition="'$(PublishAot)' != 'true'">
+    <DefineConstants>$(DefineConstants);KEYCLOAK_FEATURE_MANAGEMENT</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup Condition="'$(PublishAot)' != 'true'">
+    <ProjectReference Include="../../src/Keycloak.Admin.Sdk.FeatureManagement/Keycloak.Admin.Sdk.FeatureManagement.csproj" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="10.0.11" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(PublishAot)' == 'true'">
+    <Compile Remove="FullFeatureManagement.cs" />
+  </ItemGroup>
 </Project>

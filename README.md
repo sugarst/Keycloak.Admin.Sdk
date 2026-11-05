@@ -6,13 +6,15 @@
 
 独立源码审计确认官方 415 个操作及 105 个源码补充操作均有路由。此前发现的 6 个路径契约缺口已修复：保留 526 个源码分派变体，补齐动态查询参数与媒体类型分支，修正工作流列表响应；新增六组独立测试并通过托管与 Native AOT 真实容器验证。完整分组及逐项对照见 [对齐审计](docs/contracts/keycloak-26.8.1-alignment-audit.md)，变更及验证场景见 [六路径修复记录](docs/contracts/six-path-fixes.md)。
 
-全部 **520/520 Admin API SDK 操作已有功能契约单元测试**，每个操作有独立的 MSTest 入口；当前 **549/549** 通过。SDK 自有源码（含生成 API/DTO）及新能力扩展的方法、行和分支覆盖率均为 **100%**；[覆盖率门槛](tests/coverage-policy.json) 阻断缺失、跳过、失败与未达标。详见 [520 项测试矩阵](docs/contracts/admin-api-test-matrix.md) 和 [覆盖率报告](docs/contracts/test-coverage.md)。
+全部 **520/520 Admin API SDK 操作已有功能契约单元测试**，每个操作有独立的 MSTest 入口；当前 **553/553** 通过。SDK 自有源码（含生成 API/DTO）、能力扩展及两个开关/遥测扩展的方法、行和分支覆盖率均为 **100%**；[覆盖率门槛](tests/coverage-policy.json) 阻断缺失、跳过、失败与未达标。详见 [520 项测试矩阵](docs/contracts/admin-api-test-matrix.md) 和 [覆盖率报告](docs/contracts/test-coverage.md)。
 
 **真实 Keycloak 26.8.1 + PostgreSQL 18.0 业务验收**：v2 正式路线 **478/478**、v1 兼容路线 **492/492**，托管和 .NET 10 Native AOT 均通过。每项有业务结果或数据状态断言，包含委派管理员 403 → 授权读写 → 撤销 403、LDAP 同步、SMTP 投递、OIDC 会话/同意、JWKS 轮换、X509 CRL 吊销与数据库缓存失效。28 项预览/实验 API 政策排除；v2 另排除 14 项 v1 专用接口，均不计为成功。逐接口证据见 [全功能验收](docs/contracts/full-live-acceptance.md)。
 
 ## 使用
 
-需要按 Keycloak 版本、真实服务端能力和声明路线控制可用接口时，使用新增的可选 `Keycloak.Admin.Sdk.Capabilities` 扩展及 `KeycloakSupportedClient.CreateAsync`。它在请求发送前统一检查支持状态；原有构造方式继续提供 wire 传输。配置、拒绝原因、升级流程和示例见 [版本能力与开放策略](docs/capability-policy.md)。本阶段没有引入 FeatureManagement 或 Application Insights。
+需要按 Keycloak 版本、真实服务端能力和声明路线控制可用接口时，使用可选 `Keycloak.Admin.Sdk.Capabilities` 扩展及 `KeycloakSupportedClient.CreateAsync`。它在请求发送前统一检查支持状态；原有构造方式继续提供 wire 传输。配置、拒绝原因、升级流程和示例见 [版本能力与开放策略](docs/capability-policy.md)。
+
+托管宿主可以使用独立的 `Keycloak.Admin.Sdk.FeatureManagement` 扩展（Microsoft.FeatureManagement 4.8.0），在能力判断通过后再检查总开关和目标功能开关。Microsoft.FeatureManagement.Telemetry.ApplicationInsights 4.8.0 另有可选遥测适配包，默认关闭。**核心零运行时 NuGet 依赖并坚持 Native AOT；这两个托管扩展不要求 AOT**。完整配置、生命周期及遥测范围见 [接入指南](docs/feature-management.md)。
 
 ```csharp
 using Keycloak.Admin.Sdk;

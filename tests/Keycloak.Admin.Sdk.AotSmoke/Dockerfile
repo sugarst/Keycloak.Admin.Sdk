@@ -5,7 +5,7 @@ COPY global.json Directory.Build.props ./
 COPY src ./src
 COPY tests ./tests
 COPY contracts/capabilities ./contracts/capabilities
-RUN dotnet publish tests/Keycloak.Admin.Sdk.AotSmoke -c Release -r linux-musl-x64 -o /out
+RUN dotnet publish tests/Keycloak.Admin.Sdk.AotSmoke -c Release -r linux-musl-x64 -p:TrimmerSingleWarn=false -o /out
 RUN /out/Keycloak.Admin.Sdk.AotSmoke
 FROM scratch AS export
 COPY --from=build /out/ /

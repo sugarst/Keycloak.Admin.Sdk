@@ -1,13 +1,13 @@
 # 验证状态与边界
 
-验证日期：2026-11-04。构建 SDK：10.0.403；目标：net10.0；Keycloak 固定提交和镜像见 [baseline.json](../../contracts/baseline.json)。
+验证日期：2026-11-05。构建 SDK：10.0.403；目标：net10.0；Keycloak 固定提交和镜像见 [baseline.json](../../contracts/baseline.json)。
 
 ## 已完成
 
 - 固定源码中 520 个 HTTP 方法/路径对应 SDK 方法；每项包含 Java 文件及行号。官方预览 OpenAPI 所列端点均能关联到源码。
 - 核心库 Release 构建通过，AOT 与裁剪分析零警告。全局关闭反射 JSON，内置 DTO 与响应集合使用源生成元数据。
 - 520 个生成方法逐个执行无网络路由及序列化冒烟测试；另验证上下文路径、Unicode/斜杠/百分号编码、查询缺省/false/0/空值/重复数组值、Location、HTTP/JSON 错误、取消、流所有权、token 并发缓存和过期。
-- MSTest **549/549** 通过，其中全部 **520 个 Admin API SDK 操作各有一个独立功能契约矩阵测试**，另有源码手写专项、全部模型往返、公共组件异常分支、DI 与能力策略检查。SDK 自有源码及新能力扩展的方法、行、分支覆盖率均为 100%。完整矩阵及门槛见 [单测矩阵](admin-api-test-matrix.md) 和 [覆盖率报告](test-coverage.md)。测试框架包全部标记 `PrivateAssets="all"`，独立 Native AOT 程序以无测试框架依赖的源码执行同一矩阵。
+- MSTest **553/553** 通过，其中全部 **520 个 Admin API SDK 操作各有一个独立功能契约矩阵测试**，另有源码手写专项、模型、公共组件、DI、能力策略及四项开关/遥测检查。SDK 自有源码、能力策略和两个新托管扩展的方法、行、分支覆盖率均为 100%。完整矩阵及门槛见 [单测矩阵](admin-api-test-matrix.md) 和 [覆盖率报告](test-coverage.md)。测试框架包全部标记 `PrivateAssets="all"`，独立 Native AOT 程序执行全部 520 项矩阵与适用的专项测试；两个托管扩展不进入原生程序。
 - 本机辅助入口统一为 .NET 10 文件式 C#，覆盖构建、容器生命周期、契约更新和证据汇总；CI 配置使用 `verify.yaml` 并复用相同工具。
 - `linux-musl-x64` 已在 .NET SDK 10.0.403 Alpine 容器中实际 Native AOT 发布，全部 520 个功能矩阵、模型及专项断言在原生程序中执行成功。Windows 本机缺少 C++ 链接器及 Windows SDK，尚未通过 win-x64 原生发布；仓库 CI 将继续验证该目标。
 - 全功能真实集成程序在当前 Keycloak 26.8.1 + PostgreSQL 18.0 服务上，以托管和 `linux-musl-x64` Native AOT 两种方式分别通过：v2 正式路线 **478/478**、v1 兼容路线 **492/492**。每个支持范围内的方法/路径有业务证明，未完成项均为 0；排除项独立记录，见 [逐项结果](full-live-acceptance.md)。原有 91 路径场景和 [HTTP 观测清单](live-endpoints.tsv) 保留为历史辅助记录。
@@ -16,7 +16,7 @@
 - 缓存验证观察实际效果：直接修改隔离 realm 的 PostgreSQL 数据，清理 realm 缓存后才读到新值；修改 LDAP 属性并清理用户缓存；轮换远端 JWKS，清理公钥缓存后新密钥认证成功；更新真实签名 CRL，清理 CRL 缓存后吊销证书被拒绝。SMTP/HTTP/LDAP/PostgreSQL 协议均真实通信。
 - 本次六路径全部通过托管及 Native AOT 真实测试：策略与权限的类型分支筛选/分页和 ID 分支；身份提供方 multipart 文件解析及 JSON URL 拉取；本地化 JSON/multipart UTF-8 持久化；SMTP JSON/表单各实际投递一封邮件；工作流空列表与调度后非空列表。元数据 HTTP 服务及 SMTP 接收器均由 .NET 10 测试代码实现。工作流测试启用 `workflows`，调度资源类型使用源码定义的 `USERS`。详见 [修复记录](six-path-fixes.md)。
 - [本地 Compose 服务](../../local/keycloak/README.md) 固定 Keycloak 26.8.1 + PostgreSQL 18.0 Alpine 镜像，JSON/环境变量显式声明路线，核验实际功能开关、服务器版本及数据库 schema；`down` / `up` 保留 PostgreSQL 集群和凭据。全功能入口自动增加真实 OpenLDAP 辅助服务，普通启动仍为基础配置。
-- `Check-FullAcceptance.cs` 校验四份完整业务证据、当前代码指纹和实际服务版本；两条路线各验证十一项门禁负向控制。CI 已改为两路线的真实 PostgreSQL 托管/AOT 矩阵，远端执行状态以 CI 为准。全量程序现使用 [能力策略客户端](../capability-policy.md)，并验证本地拒绝未产生 HTTP 请求；新目录严格区分上游阶段、实现、支持及验证状态。
+- `Check-FullAcceptance.cs` 校验四份完整业务证据、当前代码指纹和实际服务版本；两条路线各验证十二项门禁负向控制。CI 已改为两路线的真实 PostgreSQL 托管/AOT 矩阵，远端执行状态以 CI 为准。全量程序使用 [能力策略客户端](../capability-policy.md)，并验证本地拒绝未产生 HTTP 请求；目录严格区分上游阶段、实现、支持及验证状态。托管入口另外使用官方 FeatureManager 4.8.0，验证开关控制的真实创建/删除与数据保留；原生入口编译时排除开关/遥测包。Application Insights 默认关闭，已通过本地官方 publisher 事件测试，未配置 Azure 云端投递；两个托管扩展不要求 AOT，详见 [接入指南](../feature-management.md)。
 
 ## 仍需完成的稳定发布条件
 

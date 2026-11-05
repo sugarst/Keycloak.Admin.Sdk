@@ -43,6 +43,8 @@ return await ScriptHost.ExecuteAsync(args,
     }
     await ScriptHost.RunCheckedAsync(root, "dotnet", ["pack", "src/Keycloak.Admin.Sdk.DependencyInjection", "-c", "Release", "--no-build", "-o", "artifacts/packages"], ct);
     await ScriptHost.RunCheckedAsync(root, "dotnet", ["pack", "src/Keycloak.Admin.Sdk.Capabilities", "-c", "Release", "--no-build", "-o", "artifacts/packages"], ct);
+    await ScriptHost.RunCheckedAsync(root, "dotnet", ["pack", "src/Keycloak.Admin.Sdk.FeatureManagement", "-c", "Release", "--no-build", "-o", "artifacts/packages"], ct);
+    await ScriptHost.RunCheckedAsync(root, "dotnet", ["pack", "src/Keycloak.Admin.Sdk.FeatureManagement.ApplicationInsights", "-c", "Release", "--no-build", "-o", "artifacts/packages"], ct);
     if (args.Contains("--native-container"))
         await ScriptHost.RunCheckedAsync(root, "docker", ["build", "-f", "tests/Keycloak.Admin.Sdk.AotSmoke/Dockerfile", "--target", "export",
             "--output", "type=local,dest=artifacts/aot/linux-musl-x64", "."], ct);

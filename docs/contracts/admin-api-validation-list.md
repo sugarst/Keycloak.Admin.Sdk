@@ -13,10 +13,10 @@
 
 ## 实跑时间（北京时间）
 
-- `fgap-v2-stable` / `managed`：2026-11-05 11:34:51（UTC+08:00）
-- `fgap-v2-stable` / `native-aot`：2026-11-05 11:35:16（UTC+08:00）
-- `fgap-v1-compat` / `managed`：2026-11-05 11:33:13（UTC+08:00）
-- `fgap-v1-compat` / `native-aot`：2026-11-05 11:34:07（UTC+08:00）
+- `fgap-v2-stable` / `managed`：2026-11-05 12:06:48（UTC+08:00）
+- `fgap-v2-stable` / `native-aot`：2026-11-05 12:07:12（UTC+08:00）
+- `fgap-v1-compat` / `managed`：2026-11-05 12:05:05（UTC+08:00）
+- `fgap-v1-compat` / `native-aot`：2026-11-05 12:06:00（UTC+08:00）
 
 ## 没有真实容器验收的 28 项
 

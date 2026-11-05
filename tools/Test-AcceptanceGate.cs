@@ -23,7 +23,8 @@ return await ScriptHost.ExecuteAsync(args, "dotnet run --file tools/Test-Accepta
         ("wrong-mode", (m, _) => m["mode"] = "not-native-or-managed", "Incomplete, wrong-server or stale"),
         ("bad-exclusions", (_, _) => { }, "Invalid exclusion ledger"),
         ("no-fgap-proof", (m, _) => m["evidence"]!["fgapDelegation"]!["revocationDenied"] = false, "FGAP delegation must be verified"),
-        ("no-support-policy-proof", (m, _) => m["evidence"]!["supportPolicyLocalGuards"] = false, "Real acceptance must use the support policy")
+        ("no-support-policy-proof", (m, _) => m["evidence"]!["supportPolicyLocalGuards"] = false, "Real acceptance must use the support policy"),
+        ("no-feature-management-proof", (m, _) => m["evidence"]!["featureManagementBusinessGuards"] = false, "FeatureManagement evidence must match")
     };
     string parent = "acceptance-gate-selftest-" + Guid.NewGuid().ToString("N");
     foreach (var test in cases)

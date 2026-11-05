@@ -10,12 +10,26 @@ internal static class FullAdminSuite
     {
         using var tokens = new LivePasswordTokens(http, server);
         var declared = KeycloakRoute.Load(Directory.GetCurrentDirectory());
+#if KEYCLOAK_FEATURE_MANAGEMENT
+        using var flags = FullFeatureManagement.CreateHost();
+        var sdk = await Keycloak.Admin.Sdk.FeatureManagement.KeycloakFeatureManagedClient.CreateAsync(http, server, tokens, new KeycloakSupportConfiguration("26.8.1",
+            declared.FgapVersion == 1 ? KeycloakAdminRoute.FgapV1Compatibility : KeycloakAdminRoute.FgapV2Stable), flags.Manager);
+        await FullFeatureManagement.VerifyAsync(sdk, flags.Configuration);
+#else
         var sdk = await KeycloakSupportedClient.CreateAsync(http, server, tokens, new KeycloakSupportConfiguration("26.8.1",
             declared.FgapVersion == 1 ? KeycloakAdminRoute.FgapV1Compatibility : KeycloakAdminRoute.FgapV2Stable));
+#endif
         var ledger = new LiveLedger();
         string realm = "sdk-full-" + Guid.NewGuid().ToString("N");
         var c = new LiveContext(sdk, realm, ledger);
         c.Evidence("supportPolicy", System.Text.Json.Nodes.JsonValue.Create("catalog-conjunctive-v1"));
+#if KEYCLOAK_FEATURE_MANAGEMENT
+        c.Evidence("featureManagement", System.Text.Json.Nodes.JsonValue.Create("microsoft-4.8.0"));
+        c.Evidence("featureManagementBusinessGuards", System.Text.Json.Nodes.JsonValue.Create(true));
+#else
+        c.Evidence("featureManagement", System.Text.Json.Nodes.JsonValue.Create("not-loaded-native-aot"));
+        c.Evidence("featureManagementBusinessGuards", System.Text.Json.Nodes.JsonValue.Create(false));
+#endif
         var serverInfo = await sdk.ServerInfoAdmin.GetInfoAsync();
         await FullCapabilities.VerifyAsync(http, server, tokens, declared.FgapVersion == 1 ? KeycloakAdminRoute.FgapV1Compatibility : KeycloakAdminRoute.FgapV2Stable, serverInfo.Content);
         c.Evidence("supportPolicyLocalGuards", System.Text.Json.Nodes.JsonValue.Create(true));

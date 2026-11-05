@@ -2,8 +2,11 @@
   <PropertyGroup>
     <IsTestProject>true</IsTestProject>
     <IsPackable>false</IsPackable>
+    <DefineConstants>$(DefineConstants);KEYCLOAK_FEATURE_MANAGEMENT</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
+    <ProjectReference Include="../../src/Keycloak.Admin.Sdk.FeatureManagement.ApplicationInsights/Keycloak.Admin.Sdk.FeatureManagement.ApplicationInsights.csproj" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="10.0.11" PrivateAssets="all" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.11.0" PrivateAssets="all" />
     <PackageReference Include="MSTest.TestAdapter" Version="4.5.2" PrivateAssets="all" />
     <PackageReference Include="MSTest.TestFramework" Version="4.5.2" PrivateAssets="all" />

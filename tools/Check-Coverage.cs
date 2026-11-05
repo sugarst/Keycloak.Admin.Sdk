@@ -63,6 +63,8 @@ return await ScriptHost.ExecuteAsync(args, "dotnet run --file tools/Check-Covera
     var raw = Measure(classes);
     var capabilityClasses = coverage.Descendants("package").Single(p => (string?)p.Attribute("name") == "Keycloak.Admin.Sdk.Capabilities").Descendants("class").ToArray();
     var capabilities = Measure(capabilityClasses);
+    var featureManagement = Measure(coverage.Descendants("package").Single(p => (string?)p.Attribute("name") == "Keycloak.Admin.Sdk.FeatureManagement").Descendants("class"));
+    var featureTelemetry = Measure(coverage.Descendants("package").Single(p => (string?)p.Attribute("name") == "Keycloak.Admin.Sdk.FeatureManagement.ApplicationInsights").Descendants("class"));
     var metrics = new Dictionary<string, double>
     {
         ["matrixOperationPercent"] = Percent(matrixResults.Length, contracts.Count),
@@ -74,6 +76,12 @@ return await ScriptHost.ExecuteAsync(args, "dotnet run --file tools/Check-Covera
         , ["capabilityMethodPercent"] = Percent(capabilities.MethodsCovered, capabilities.Methods)
         , ["capabilityLinePercent"] = Percent(capabilities.LinesCovered, capabilities.Lines)
         , ["capabilityBranchPercent"] = Percent(capabilities.BranchesCovered, capabilities.Branches)
+        , ["featureManagementMethodPercent"] = Percent(featureManagement.MethodsCovered, featureManagement.Methods)
+        , ["featureManagementLinePercent"] = Percent(featureManagement.LinesCovered, featureManagement.Lines)
+        , ["featureManagementBranchPercent"] = Percent(featureManagement.BranchesCovered, featureManagement.Branches)
+        , ["featureTelemetryMethodPercent"] = Percent(featureTelemetry.MethodsCovered, featureTelemetry.Methods)
+        , ["featureTelemetryLinePercent"] = Percent(featureTelemetry.LinesCovered, featureTelemetry.Lines)
+        , ["featureTelemetryBranchPercent"] = Percent(featureTelemetry.BranchesCovered, featureTelemetry.Branches)
     };
     ValidateThresholds(policy.RootElement, metrics);
     var summary = new JsonObject { ["operations"] = contracts.Count, ["passedTests"] = outcomes.Length, ["matrixPassed"] = matrixResults.Length };
@@ -86,6 +94,7 @@ return await ScriptHost.ExecuteAsync(args, "dotnet run --file tools/Check-Covera
     }
     report.AppendLine($"\nMSTest {outcomes.Length}/{outcomes.Length} 通过；矩阵 {matrixResults.Length}/{contracts.Count}，无缺失、重复、跳过或失败。SDK 自有源码覆盖 {sdk.MethodsCovered}/{sdk.Methods} 个可执行方法、{sdk.LinesCovered}/{sdk.Lines} 行、{sdk.BranchesCovered}/{sdk.Branches} 个分支。\n");
     report.AppendLine("`sdkSource*` 保留仓库中的全部 SDK 生成 API、DTO 和手写代码，仅把 `obj/` 下 .NET SDK 生成的 JSON/正则实现另列为 raw 指标；原始 Cobertura 不删减。源码行门槛为 99.9%，分支及可执行方法门槛为 100%。框架生成实现的未执行分支不代表某个 Admin API 没有测试。可选 DI 扩展由独立程序集提供，并有生命周期/命名隔离测试及 Native AOT 运行验证。\n");
+    report.AppendLine("FeatureManagement 和 Application Insights 是独立托管扩展，不要求 Native AOT；其方法、行、分支分别使用 100% 门槛。原生测试程序编译时排除这两个包，继续执行核心与能力策略测试。开关使用真实 FeatureManager；遥测使用实际官方 publisher 和本地内存通道，未向 Azure 投递。详见 [接入指南](../feature-management.md)。\n");
     report.AppendLine("门禁读取本次 TRX 指向的 Cobertura，核验编译后 SDK、冻结契约矩阵和已执行测试的一一对应。任何操作缺少测试、跳过、失败或指标低于 [coverage-policy.json](../../tests/coverage-policy.json) 都返回非零。矩阵断言见 [操作清单](admin-api-test-matrix.md)；输入来自独立 Java token 索引和固定发布定义，不从 SDK 请求实现推导期望值。\n");
     await File.WriteAllTextAsync(Path.Combine(root, "artifacts/test-matrix-summary.json"), summary.ToJsonString(), ct);
     await File.WriteAllTextAsync(Path.Combine(root, "docs/contracts/test-coverage.md"), report.ToString().TrimEnd() + "\n", ct);

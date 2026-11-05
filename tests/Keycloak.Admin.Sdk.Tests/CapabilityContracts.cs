@@ -25,6 +25,11 @@ public static class CapabilityContracts
 
     public static void Catalog()
     {
+        var allowedDecision = Policy().Evaluate(HttpMethod.Get, Target("admin/serverinfo"));
+        var hostDenied = allowedDecision.DisableByHost();
+        Check(hostDenied.Reason == KeycloakCapabilityReason.DisabledByHost && hostDenied.Capability == allowedDecision.Capability
+            && hostDenied.Route == allowedDecision.Route && hostDenied.ServerVersion == allowedDecision.ServerVersion);
+        Check(ReferenceEquals(hostDenied, hostDenied.DisableByHost()));
         var release = KeycloakCapabilityCatalog.Find("26.8.1")!;
         Check(KeycloakCapabilityCatalog.Releases.Count == 1 && KeycloakCapabilityCatalog.Find("26.8.2") is null);
         Check(release.SourceCommit == "24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b" && release.ServerVersion == "26.8.1");

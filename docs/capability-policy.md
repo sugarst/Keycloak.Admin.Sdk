@@ -76,7 +76,7 @@ var users = await sdk.Users.GetUsersAsync("example", first: 0, max: 20);
 
 当前生成入口为 `dotnet run --file tools/Generate-CapabilityCatalog.cs`，`-- --check` 校验快照一致性，已接入 Verify。生成器明确固定 26.8.1，升级时应新增经过审阅的映射和目录加载登记；不能只改 baseline 版本号便覆盖历史。
 
-后续 FeatureManagement 适配器可以实现 `IKeycloakAdminRequestPolicy`：先调用目录策略，再对允许的能力检查宿主开关；不能用 OR 组合绕过目录拒绝。接口为异步，允许后续适配 `IFeatureManager`，但当前没有增加其依赖。Application Insights 最后按需连接诊断事件，遥测不作为开放判断或业务验收证据。
+可选的 `Keycloak.Admin.Sdk.FeatureManagement` 现已实现 `IKeycloakAdminRequestPolicy`：先调用目录策略，再通过 `IVariantFeatureManager` 检查总开关及能力开关，以 AND 组合收紧结果。Application Insights 使用独立可选包，默认关闭；遥测不作为开放判断或业务验收证据。两者仅面向托管宿主，不要求 AOT，不进入核心或本能力包的依赖。配置及范围见 [接入指南](feature-management.md)。
 
 ## 验证
 
