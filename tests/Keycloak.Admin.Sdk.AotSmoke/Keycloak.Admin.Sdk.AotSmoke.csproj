@@ -1,14 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
+    <IsPackable>false</IsPackable><OutputType>Exe</OutputType>
     <PublishAot>true</PublishAot>
     <IlcTreatWarningsAsErrors>true</IlcTreatWarningsAsErrors>
+    <RestoreAdditionalProjectSources Condition="'$(SdkPackageFeed)' != ''">$(SdkPackageFeed);$(RestoreAdditionalProjectSources)</RestoreAdditionalProjectSources>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="../../src/Keycloak.Admin.Sdk.Capabilities/Keycloak.Admin.Sdk.Capabilities.csproj" />
     <Compile Include="../Keycloak.Admin.Sdk.Tests/CapabilityContracts.cs" Link="CapabilityContracts.cs" />
-    <ProjectReference Include="../../src/Keycloak.Admin.Sdk/Keycloak.Admin.Sdk.csproj" />
-    <ProjectReference Include="../../src/Keycloak.Admin.Sdk.DependencyInjection/Keycloak.Admin.Sdk.DependencyInjection.csproj" />
+    <PackageReference Condition="'$(SdkPackageFeed)' != ''" Include="Keycloak.Admin.Sdk" Version="[$(Version)]" />
+    <ProjectReference Condition="'$(SdkPackageFeed)' == ''" Include="../../src/Keycloak.Admin.Sdk/Keycloak.Admin.Sdk.csproj" />
     <Compile Include="../Keycloak.Admin.Sdk.Tests/ContractSuite.cs" Link="ContractSuite.cs" />
     <Compile Include="../Keycloak.Admin.Sdk.Tests/Endpoints.g.cs" Link="Endpoints.g.cs" />
     <Compile Include="../Keycloak.Admin.Sdk.Tests/AlignmentContracts.cs" Link="AlignmentContracts.cs" />

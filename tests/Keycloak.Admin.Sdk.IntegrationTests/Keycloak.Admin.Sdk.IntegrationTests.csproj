@@ -1,8 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup><Compile Include="../../tools/TargetBaseline.cs" Link="TargetBaseline.cs" /></ItemGroup>
-  <PropertyGroup><OutputType>Exe</OutputType><IsAotCompatible>true</IsAotCompatible></PropertyGroup>
+  <PropertyGroup><IsPackable>false</IsPackable><OutputType>Exe</OutputType><IsAotCompatible>true</IsAotCompatible></PropertyGroup>
   <ItemGroup><ProjectReference Include="../../src/Keycloak.Admin.Sdk/Keycloak.Admin.Sdk.csproj" /></ItemGroup>
-  <ItemGroup><ProjectReference Include="../../src/Keycloak.Admin.Sdk.Capabilities/Keycloak.Admin.Sdk.Capabilities.csproj" /></ItemGroup>
   <PropertyGroup Condition="'$(PublishAot)' != 'true'">
     <DefineConstants>$(DefineConstants);KEYCLOAK_FEATURE_MANAGEMENT</DefineConstants>
   </PropertyGroup>

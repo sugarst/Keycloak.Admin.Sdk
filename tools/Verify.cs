@@ -33,29 +33,33 @@ return await ScriptHost.ExecuteAsync(args,
         "--logger", "trx;LogFileName=contracts.trx", "--results-directory", testResults, "--collect", "XPlat Code Coverage"], ct);
     await ScriptHost.RunCheckedAsync(root, "dotnet", ["run", "--file", "tools/Check-Coverage.cs", "--", "--results=" + testResults], ct);
     await File.WriteAllTextAsync(Path.Combine(root, "artifacts/test-results/latest.txt"), testResults, ct);
-    await ScriptHost.RunCheckedAsync(root, "dotnet", ["pack", "src/Keycloak.Admin.Sdk", "-c", "Release", "--no-build", "-o", "artifacts/packages"], ct);
-    string package = Directory.EnumerateFiles(Path.Combine(root, "artifacts/packages"), "Keycloak.Admin.Sdk.*.nupkg")
-        .Where(path => char.IsDigit(Path.GetFileName(path)["Keycloak.Admin.Sdk.".Length]))
-        .OrderByDescending(File.GetLastWriteTimeUtc).First();
-    using (var archive = ZipFile.OpenRead(package))
+    var target = TargetBaseline.Load(root);
+    string feed = Path.Combine(root, "artifacts", "packages", target.PackageVersion);
+    var dependencies = new Dictionary<string, string[]>
     {
-        await using var content = archive.Entries.Single(entry => entry.FullName.EndsWith(".nuspec", StringComparison.Ordinal)).Open();
+        ["Keycloak.Admin.Sdk"] = ["Microsoft.Extensions.Http"],
+        ["Keycloak.Admin.Sdk.FeatureManagement"] = ["Keycloak.Admin.Sdk", "Microsoft.FeatureManagement", "Microsoft.FeatureManagement.Telemetry.ApplicationInsights"]
+    };
+    foreach (var (id, expected) in dependencies)
+    {
+        await ScriptHost.RunCheckedAsync(root, "dotnet", ["pack", "src/" + id, "-c", "Release", "--no-build", "-o", feed], ct);
+        using var package = ZipFile.OpenRead(Path.Combine(feed, $"{id}.{target.PackageVersion}.nupkg"));
+        await using var content = package.Entries.Single(e => e.FullName.EndsWith(".nuspec", StringComparison.Ordinal)).Open();
         var manifest = await XDocument.LoadAsync(content, LoadOptions.None, ct);
-        if (manifest.Descendants().Any(element => element.Name.LocalName == "dependency"))
-            throw new InvalidDataException("SDK package must not have runtime NuGet dependencies.");
+        var actual = manifest.Descendants().Where(e => e.Name.LocalName == "dependency").Select(e => (string)e.Attribute("id")!);
+        if (!expected.ToHashSet(StringComparer.OrdinalIgnoreCase).SetEquals(actual))
+            throw new InvalidDataException($"Unexpected dependencies in {id}: {string.Join(", ", actual)}");
     }
-    await ScriptHost.RunCheckedAsync(root, "dotnet", ["pack", "src/Keycloak.Admin.Sdk.DependencyInjection", "-c", "Release", "--no-build", "-o", "artifacts/packages"], ct);
-    await ScriptHost.RunCheckedAsync(root, "dotnet", ["pack", "src/Keycloak.Admin.Sdk.Capabilities", "-c", "Release", "--no-build", "-o", "artifacts/packages"], ct);
-    await ScriptHost.RunCheckedAsync(root, "dotnet", ["pack", "src/Keycloak.Admin.Sdk.FeatureManagement", "-c", "Release", "--no-build", "-o", "artifacts/packages"], ct);
-    await ScriptHost.RunCheckedAsync(root, "dotnet", ["pack", "src/Keycloak.Admin.Sdk.FeatureManagement.ApplicationInsights", "-c", "Release", "--no-build", "-o", "artifacts/packages"], ct);
+    if (Directory.GetFiles(feed, "*.nupkg").Length != dependencies.Count)
+        throw new InvalidDataException($"Expected exactly two SDK packages in {feed}.");
     if (args.Contains("--native-container"))
-        await ScriptHost.RunCheckedAsync(root, "docker", ["build", .. TargetBaseline.Load(root).DockerBuildArgs, "-f", "tests/Keycloak.Admin.Sdk.AotSmoke/Dockerfile", "--target", "export",
+        await ScriptHost.RunCheckedAsync(root, "docker", ["build", .. target.DockerBuildArgs, "--build-context", "sdkpackages=" + feed, "-f", "tests/Keycloak.Admin.Sdk.AotSmoke/Dockerfile", "--target", "export",
             "--output", "type=local,dest=artifacts/aot/linux-musl-x64", "."], ct);
     else if (!args.Contains("--skip-native-publish"))
     {
         string rid = RuntimeInformation.RuntimeIdentifier;
         string output = "artifacts/aot/" + rid;
-        await ScriptHost.RunCheckedAsync(root, "dotnet", ["publish", "tests/Keycloak.Admin.Sdk.AotSmoke", "-c", "Release", "-r", rid, "-o", output], ct);
+        await ScriptHost.RunCheckedAsync(root, "dotnet", ["publish", "tests/Keycloak.Admin.Sdk.AotSmoke", "-c", "Release", "-r", rid, "-p:SdkPackageFeed=" + feed, "-p:RestorePackagesPath=" + Path.Combine(root, testResults, "packages"), "-o", output], ct);
         string executable = Path.Combine(root, output, "Keycloak.Admin.Sdk.AotSmoke" + (OperatingSystem.IsWindows() ? ".exe" : ""));
         await ScriptHost.RunCheckedAsync(root, executable, [], ct);
     }

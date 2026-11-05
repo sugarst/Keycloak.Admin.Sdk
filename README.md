@@ -2,9 +2,9 @@
 
 简体中文 | [English](README.en.md)
 
-面向 **.NET 10 / Native AOT** 的 Keycloak Admin REST API 客户端，当前仅支持 **Keycloak 26.8.1**。核心库无运行时 NuGet 包依赖，使用源生成 JSON 元数据，默认关闭反射序列化。仓库固定 .NET SDK **10.0.403**。
+面向 **.NET 10 / Native AOT** 的 Keycloak Admin REST API 客户端，当前仅支持 **Keycloak 26.8.1**。主包集成 Microsoft.Extensions.Http，使用源生成 JSON 元数据，默认关闭反射序列化。仓库固定 .NET SDK **10.0.403**。
 
-当前包版本为 **0.1.0-preview.1**，公开 API 仍可能调整。可引用 [核心项目](src/Keycloak.Admin.Sdk/Keycloak.Admin.Sdk.csproj)，或使用验证工具生成的 `artifacts/packages` 本地 NuGet 源。
+当前包版本为 **0.1.0-preview.2**，公开 API 仍可能调整。可引用 [核心项目](src/Keycloak.Admin.Sdk/Keycloak.Admin.Sdk.csproj)，或使用验证工具生成的 `artifacts/packages/0.1.0-preview.2` 本地 NuGet 源。
 
 ## 快速开始
 
@@ -32,14 +32,14 @@ Console.WriteLine(created.Location);
 
 认证 realm 与目标 realm 独立；`realm` 使用名称，客户端路径参数使用内部 UUID，而非 OIDC `clientId`。可用 `StaticAccessTokenProvider` 或实现 `IAccessTokenProvider` 接入已有认证。所有网络方法支持取消；分页直接采用服务端参数，不保证快照或总数。
 
-## 可选扩展
+## NuGet 包与迁移
 
-| 项目 | 用途 | Native AOT |
+| 包 | 用途 | Native AOT |
 | --- | --- | --- |
-| `Keycloak.Admin.Sdk.DependencyInjection` | Microsoft DI、Options、HttpClientFactory | 支持 |
-| `Keycloak.Admin.Sdk.Capabilities` | 精确版本、服务端功能及支持路线检查 | 支持 |
-| `Keycloak.Admin.Sdk.FeatureManagement` | 在能力策略之上叠加宿主功能开关 | 仅托管 |
-| `Keycloak.Admin.Sdk.FeatureManagement.ApplicationInsights` | 显式启用的功能评估遥测，默认关闭 | 仅托管 |
+| `Keycloak.Admin.Sdk` | 管理客户端、认证、能力策略、DI 和 HttpClientFactory | 支持 |
+| `Keycloak.Admin.Sdk.FeatureManagement` | 宿主功能开关与可选 Application Insights 评估遥测 | 仅托管 |
+
+从 preview.1 升级时，将 `.Capabilities`、`.DependencyInjection` 的包引用换成主包，将 `.FeatureManagement.ApplicationInsights` 换成 `.FeatureManagement`，并重新编译。现有命名空间和注册方法可继续使用。安装功能开关包会还原微软遥测依赖，遥测默认关闭。
 
 `new KeycloakAdminClient(...)` 提供底层 API 传输。需要在发送前限制支持范围时，使用 `KeycloakSupportedClient.CreateAsync`；托管功能开关使用 `KeycloakFeatureManagedClient.CreateAsync`。配置见 [能力策略](docs/capability-policy.md)、[功能开关与遥测](docs/feature-management.md)，DI 见 [认证与错误处理](docs/authentication-and-errors.md)。
 

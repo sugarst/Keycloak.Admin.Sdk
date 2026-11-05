@@ -43,11 +43,13 @@ dotnet run --file tools/Check-Coverage.cs -- --results=artifacts/test-results/ma
 | AutoFixture、Bogus | 请求样本、局部固定种子的用户数据 |
 | Moq、PasswordGenerator | token/策略交互次数、密码透传与错误脱敏 |
 
-`ManagedTestDataTests.cs` 中的测试数据工具只进入 MSTest 项目，不进入 AOT。关键字段、密码策略边界仍用明确样本；随机测试不依赖特定输出。核心包不引用测试依赖，`Verify.cs` 检查其 nuspec 无运行时依赖。
+`ManagedTestDataTests.cs` 中的测试数据工具只进入 MSTest 项目，不进入 AOT。关键字段、密码策略边界仍用明确样本；随机测试不依赖特定输出。核心包不引用测试依赖，`Verify.cs` 检查两个 nuspec 的直接依赖清单及包数量。
+
+`Verify.cs` 将本次两个包写入 `artifacts/packages/<packageVersion>/`。主包的直接包依赖为 Microsoft.Extensions.Http；FeatureManagement 包依赖主包和两个微软功能开关/遥测包。独立的版本目录避免混入早期五包产物。
 
 ## 原生与真实业务验收
 
-`AotSmoke` 不引用 MSTest 程序集或测试框架，源码链接执行完整操作矩阵、模型和适用的运行时、DI、能力策略断言。托管通过后仍需实际发布并运行原生程序。FeatureManagement / Application Insights 只在托管模式验证，详见 [接入指南](feature-management.md)。
+`Verify.cs` 的原生步骤通过 `SdkPackageFeed` 让 `AotSmoke` 引用本次本地 NuGet 主包，源码链接执行完整操作矩阵、模型和适用的运行时、DI、能力策略断言。直接构建 `AotSmoke` 项目时默认使用项目引用。托管通过后仍需实际发布并运行原生程序。FeatureManagement 及其遥测模块在托管模式验证，详见 [接入指南](feature-management.md)。
 
 `Test-Integration.cs` 使用固定 digest、临时本机端口和隔离 realm，退出时清理容器。原生模式自动构建 Linux 程序；已有二进制可加 `--no-build-native`。需要持久化 PostgreSQL 时使用 [本地服务](../local/keycloak/README.md) 的 `test` / `test-native`，全量业务验收使用 `test-full` / `test-full-native`。
 

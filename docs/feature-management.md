@@ -1,6 +1,6 @@
 # FeatureManagement 与 Application Insights
 
-`Keycloak.Admin.Sdk.FeatureManagement` 使用 Microsoft.FeatureManagement 4.8.0；独立的 `Keycloak.Admin.Sdk.FeatureManagement.ApplicationInsights` 使用同版本官方遥测适配器。两者仅面向托管宿主，不声明 AOT 兼容。原生应用使用 [能力策略](capability-policy.md) 的配置及禁用集合。
+`Keycloak.Admin.Sdk.FeatureManagement` 同时引用 Microsoft.FeatureManagement 和 Microsoft.FeatureManagement.Telemetry.ApplicationInsights 4.8.0。安装本包会还原这两项依赖，遥测默认关闭。`Keycloak.Admin.Sdk.FeatureManagement.ApplicationInsights` 命名空间及原注册方法随本包提供。原生应用使用 [能力策略](capability-policy.md) 的配置及禁用集合。
 
 ## 开放规则
 
@@ -75,8 +75,8 @@ Generic Host / ASP.NET Core 自动启动注册的 hosted services。仅用 Servi
 
 ## 验证边界
 
-严格原生发布曾触发标准引擎配置绑定、过滤器反射及间接遥测依赖的 IL2026 / IL3050 等诊断，因此两个包不进入原生程序，也不抑制相关警告。托管单测使用官方 FeatureManager 与 publisher，本地内存通道验证默认关闭及开启条件，未向 Azure 投递。
+严格原生发布曾触发标准引擎配置绑定、过滤器反射及间接遥测依赖的 IL2026 / IL3050 等诊断，因此功能开关扩展仅用于托管程序，也不抑制相关警告。托管单测使用官方 FeatureManager 与 publisher，本地内存通道验证默认关闭及开启条件，未向 Azure 投递。
 
-托管真实验收另验证动态开关控制创建/删除和持久化状态；原生程序排除这两个包，manifest 分别记录 `microsoft-4.8.0` 与 `not-loaded-native-aot`。结果见 [覆盖率](contracts/test-coverage.md) 和 [真实验收](contracts/full-live-acceptance.md)，命令见 [测试说明](testing.md)。
+托管真实验收另验证动态开关控制创建/删除和持久化状态；原生程序只引用主包，manifest 分别记录 `microsoft-4.8.0` 与 `not-loaded-native-aot`。结果见 [覆盖率](contracts/test-coverage.md) 和 [真实验收](contracts/full-live-acceptance.md)，命令见 [测试说明](testing.md)。
 
 参考：[微软配置、生命周期与遥测文档](https://learn.microsoft.com/en-us/azure/azure-app-configuration/feature-management-dotnet-reference)。

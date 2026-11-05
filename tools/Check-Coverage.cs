@@ -62,10 +62,11 @@ return await ScriptHost.ExecuteAsync(args, "dotnet run --file tools/Check-Covera
     var api = Measure(source.Where(e => Regex.IsMatch(FileName(e), @"^Generated/.*Api\.g\.cs$")));
     var models = Measure(source.Where(e => FileName(e) == "Generated/Models.g.cs"));
     var raw = Measure(classes);
-    var capabilityClasses = coverage.Descendants("package").Single(p => (string?)p.Attribute("name") == "Keycloak.Admin.Sdk.Capabilities").Descendants("class").ToArray();
-    var capabilities = Measure(capabilityClasses);
-    var featureManagement = Measure(coverage.Descendants("package").Single(p => (string?)p.Attribute("name") == "Keycloak.Admin.Sdk.FeatureManagement").Descendants("class"));
-    var featureTelemetry = Measure(coverage.Descendants("package").Single(p => (string?)p.Attribute("name") == "Keycloak.Admin.Sdk.FeatureManagement.ApplicationInsights").Descendants("class"));
+    var capabilities = Measure(source.Where(e => FileName(e).StartsWith("Capabilities/", StringComparison.Ordinal)));
+    var featureClasses = coverage.Descendants("package").Single(p => (string?)p.Attribute("name") == "Keycloak.Admin.Sdk.FeatureManagement").Descendants("class").ToArray();
+    bool IsTelemetry(XElement element) => FileName(element).EndsWith("ApplicationInsights/KeycloakTelemetryExtensions.cs", StringComparison.Ordinal);
+    var featureManagement = Measure(featureClasses.Where(e => !IsTelemetry(e)));
+    var featureTelemetry = Measure(featureClasses.Where(IsTelemetry));
     var metrics = new Dictionary<string, double>
     {
         ["matrixOperationPercent"] = Percent(matrixResults.Length, contracts.Count),
@@ -94,7 +95,7 @@ return await ScriptHost.ExecuteAsync(args, "dotnet run --file tools/Check-Covera
         Console.WriteLine($"PASS {key}: {value:F4}%");
     }
     report.AppendLine($"\nMSTest {outcomes.Length}/{outcomes.Length} 通过；矩阵 {matrixResults.Length}/{contracts.Count}，无缺失、重复、跳过或失败。SDK 自有源码覆盖 {sdk.MethodsCovered}/{sdk.Methods} 个可执行方法、{sdk.LinesCovered}/{sdk.Lines} 行、{sdk.BranchesCovered}/{sdk.Branches} 个分支。\n");
-    report.AppendLine("`sdkSource*` 包含 SDK 手写代码及生成 API/DTO；`raw*` 还包含 `obj/` 中 .NET 生成的 JSON/正则实现。原始 Cobertura 不删减。能力、开关和遥测扩展分别统计；DI 通过独立生命周期及原生断言验证。\n");
+    report.AppendLine("`sdkSource*` 包含 SDK 手写代码及生成 API/DTO；`raw*` 还包含 `obj/` 中 .NET 生成的 JSON/正则实现。原始 Cobertura 不删减。能力、开关和遥测模块分别统计；DI 通过独立生命周期及原生断言验证。\n");
     report.AppendLine("门禁核对编译目录、冻结矩阵与本次测试一一对应，拒绝缺失、重复、跳过、失败及指标不足。测试方法与依赖边界见 [测试说明](../testing.md)，映射见 [操作矩阵](admin-api-test-matrix.md)。本报告不代表真实服务器或 Azure 验收，业务证据见 [真实验收](full-live-acceptance.md)。\n");
     await File.WriteAllTextAsync(Path.Combine(root, "artifacts/test-matrix-summary.json"), summary.ToJsonString(), ct);
     await File.WriteAllTextAsync(Path.Combine(root, "docs/contracts/test-coverage.md"), report.ToString().TrimEnd() + "\n", ct);

@@ -1,6 +1,6 @@
 # 认证、错误与依赖注入
 
-核心客户端的手动初始化见 [README](../README.md)。可选 `Keycloak.Admin.Sdk.DependencyInjection` 提供 Microsoft DI、Options 与 HttpClientFactory。
+核心客户端的手动初始化见 [README](../README.md)。主包内置的 DI 模块 提供 Microsoft DI、Options 与 HttpClientFactory。
 
 ## 结构化错误
 
@@ -67,7 +67,7 @@ using var tokens = new ClientCredentialsTokenProvider(http, server, "master", "s
 
 ## 依赖注入
 
-引用 `Keycloak.Admin.Sdk.DependencyInjection` 后注册：
+引用 `Keycloak.Admin.Sdk` 后注册：
 
 ```csharp
 using Keycloak.Admin.Sdk;

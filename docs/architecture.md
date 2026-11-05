@@ -7,9 +7,13 @@
 | 目录 | 职责 |
 | --- | --- |
 | `src/Keycloak.Admin.Sdk` | HTTP 传输、认证、响应、生成资源方法及 DTO |
-| `src/Keycloak.Admin.Sdk.DependencyInjection` | Microsoft DI、Options、HttpClientFactory |
-| `src/Keycloak.Admin.Sdk.Capabilities` | 不可变版本目录与请求支持策略 |
-| `src/Keycloak.Admin.Sdk.FeatureManagement*` | 托管功能开关与可选评估遥测 |
+| `src/Keycloak.Admin.Sdk/Authentication` | Token 获取、缓存及条件失效 |
+| `src/Keycloak.Admin.Sdk/Transport` | URI、JSON 元数据入口、响应及错误类型 |
+| `src/Keycloak.Admin.Sdk/Generated` | 生成的 API、DTO、端点目录及 JSON 上下文 |
+| `src/Keycloak.Admin.Sdk/DependencyInjection` | Microsoft DI、Options、HttpClientFactory |
+| `src/Keycloak.Admin.Sdk/Capabilities` | 不可变版本目录与请求支持策略 |
+| `src/Keycloak.Admin.Sdk.FeatureManagement` | 托管功能开关与可选评估遥测 |
+| `src/Keycloak.Admin.Sdk.FeatureManagement/ApplicationInsights` | 默认关闭的遥测注册适配器 |
 | `tests/Keycloak.Admin.Sdk.Tests` | MSTest 契约矩阵及运行时行为检查 |
 | `tests/Keycloak.Admin.Sdk.AotSmoke` | 源码链接共用断言的独立 Native AOT 程序 |
 | `tests/Keycloak.Admin.Sdk.IntegrationTests` | 真实服务端业务及协议断言 |
@@ -32,7 +36,9 @@
 - client credentials 使用实例内缓存及共享获取；401 恢复可选，写入不自动重放。并发、超时和生命周期见 [认证说明](authentication-and-errors.md)。
 - 请求策略在最终 URI 构造后、token 获取和 HTTP 发送前执行。支持策略、宿主功能开关依次收紧开放结果，详见 [能力策略](capability-policy.md)。
 
-核心无运行时 NuGet 依赖，能力扩展仅引用核心；DI 单独依赖 Microsoft.Extensions.Http。FeatureManagement 和 Application Insights 为可选托管扩展，不进入 Native AOT 程序。
+主包通过 Microsoft.Extensions.Http 提供 DI 集成。托管扩展依赖主包、Microsoft.FeatureManagement 及微软的 Application Insights 遥测适配器。
+
+仅这两个库项目产出 NuGet 包，测试与生成器项目不打包。包引用迁移见 [README](../README.md#nuget-包与迁移)。
 
 ## 范围边界
 

@@ -39,10 +39,10 @@ return await ScriptHost.ExecuteAsync(args, "dotnet run --file tools/Release.cs -
     string output = ScriptHost.Within(root, "artifacts/releases/" + target.PackageVersion + "/" + fingerprint);
     Directory.CreateDirectory(output);
     var packages = new JsonArray();
-    foreach (string id in new[] { "Keycloak.Admin.Sdk", "Keycloak.Admin.Sdk.Capabilities", "Keycloak.Admin.Sdk.DependencyInjection", "Keycloak.Admin.Sdk.FeatureManagement", "Keycloak.Admin.Sdk.FeatureManagement.ApplicationInsights" })
+    foreach (string id in new[] { "Keycloak.Admin.Sdk", "Keycloak.Admin.Sdk.FeatureManagement" })
     {
         string filename = id + "." + target.PackageVersion + ".nupkg";
-        string source = Path.Combine(root, "artifacts/packages", filename);
+        string source = Path.Combine(root, "artifacts/packages", target.PackageVersion, filename);
         if (!File.Exists(source)) throw new FileNotFoundException("Missing current-target package: " + filename);
         File.Copy(source, Path.Combine(output, filename), true);
         packages.Add(new JsonObject { ["file"] = filename, ["sha256"] = Convert.ToHexStringLower(SHA256.HashData(await File.ReadAllBytesAsync(source, ct))) });

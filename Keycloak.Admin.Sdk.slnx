@@ -1,10 +1,7 @@
 <Solution>
   <Folder Name="/src/">
     <Project Path="src/Keycloak.Admin.Sdk.FeatureManagement/Keycloak.Admin.Sdk.FeatureManagement.csproj" />
-    <Project Path="src/Keycloak.Admin.Sdk.FeatureManagement.ApplicationInsights/Keycloak.Admin.Sdk.FeatureManagement.ApplicationInsights.csproj" />
-    <Project Path="src/Keycloak.Admin.Sdk.Capabilities/Keycloak.Admin.Sdk.Capabilities.csproj" />
     <Project Path="src/Keycloak.Admin.Sdk/Keycloak.Admin.Sdk.csproj" />
-    <Project Path="src/Keycloak.Admin.Sdk.DependencyInjection/Keycloak.Admin.Sdk.DependencyInjection.csproj" />
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/Keycloak.Admin.Sdk.Tests/Keycloak.Admin.Sdk.Tests.csproj" />

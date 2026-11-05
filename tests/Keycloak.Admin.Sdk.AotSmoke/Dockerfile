@@ -8,7 +8,8 @@ COPY tests ./tests
 COPY contracts/baseline.json contracts/capabilities.json ./contracts/
 COPY tools/TargetBaseline.cs ./tools/TargetBaseline.cs
 FROM source AS build
-RUN dotnet publish tests/Keycloak.Admin.Sdk.AotSmoke -c Release -r linux-musl-x64 -p:TrimmerSingleWarn=false -o /out
+COPY --from=sdkpackages / /sdk-packages/
+RUN dotnet publish tests/Keycloak.Admin.Sdk.AotSmoke -c Release -r linux-musl-x64 -p:SdkPackageFeed=/sdk-packages -p:TrimmerSingleWarn=false -o /out
 RUN /out/Keycloak.Admin.Sdk.AotSmoke
 FROM scratch AS export
 COPY --from=build /out/ /

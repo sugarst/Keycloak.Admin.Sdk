@@ -27,6 +27,26 @@ public static class DependencyInjectionContracts
         using var bad = invalid.BuildServiceProvider();
         try { bad.GetRequiredService<KeycloakAdminClient>(); throw new InvalidOperationException("Expected invalid options"); }
         catch (OptionsValidationException e) { Check(!e.Message.Contains("client-secret-value"), "validation has no credentials"); }
+
+        foreach (var address in new[] { "relative", "ftp://server/", "https://user@server/", "http://server/?query", "https://server/#fragment" })
+            RejectOptions(o => o.Server = new Uri(address, UriKind.RelativeOrAbsolute));
+        RejectOptions(o => o.AuthenticationRealm = "");
+        RejectOptions(o => o.Client = null!);
+        RejectOptions(o => o.Token = null!);
+    }
+
+    private static void RejectOptions(Action<KeycloakAdminSdkOptions> invalidate)
+    {
+        var services = new ServiceCollection();
+        services.AddKeycloakAdminSdk(options =>
+        {
+            Configure(options, "validation", false);
+            invalidate(options);
+        });
+        using var provider = services.BuildServiceProvider();
+        try { provider.GetRequiredService<KeycloakAdminClient>(); }
+        catch (OptionsValidationException) { return; }
+        throw new InvalidOperationException("Invalid SDK options were accepted.");
     }
 
     private static void Configure(KeycloakAdminSdkOptions options, string identity, bool recovery)

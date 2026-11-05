@@ -20,6 +20,7 @@ jobs:
           name: test-matrix-and-coverage-${{ matrix.os }}
           path: |
             artifacts/test-results/
+            !artifacts/test-results/**/packages/**
             artifacts/test-matrix-summary.json
             docs/contracts/test-coverage.md
   keycloak:

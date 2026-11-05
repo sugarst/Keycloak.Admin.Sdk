@@ -17,6 +17,7 @@ jobs:
           path: |
             artifacts/releases/
             artifacts/test-results/
+            !artifacts/test-results/**/packages/**
             artifacts/full-live/
       - if: always()
         run: dotnet run --file local/keycloak/Service.cs -- down

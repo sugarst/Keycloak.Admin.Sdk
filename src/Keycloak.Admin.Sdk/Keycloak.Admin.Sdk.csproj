@@ -2,11 +2,13 @@
   <PropertyGroup>
     <IsAotCompatible>true</IsAotCompatible>
     <PackageId>Keycloak.Admin.Sdk</PackageId>
-    <Description>Dependency-free Native AOT compatible .NET 10 client for Keycloak $(KeycloakTargetVersion) Admin REST API.</Description>
+    <Description>Native AOT compatible .NET 10 client for Keycloak $(KeycloakTargetVersion) Admin REST API.</Description>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
   <ItemGroup>
+    <EmbeddedResource Include="../../contracts/capabilities.json" LogicalName="Keycloak.Capabilities.Current.json" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="10.0.0" />
     <None Include="../../README.md" Pack="true" PackagePath="/" />
     <None Include="../../README.en.md" Pack="true" PackagePath="/" />
   </ItemGroup>

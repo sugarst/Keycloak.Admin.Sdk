@@ -2,9 +2,9 @@
 
 [简体中文](README.md) | English
 
-A **.NET 10 / Native AOT** client for the Keycloak Admin REST API, currently targeting **Keycloak 26.8.1** only. The core library has no runtime NuGet dependencies and uses source-generated JSON metadata with reflection serialization disabled. This repository pins .NET SDK **10.0.403**.
+A **.NET 10 / Native AOT** client for the Keycloak Admin REST API, currently targeting **Keycloak 26.8.1** only. The main package integrates Microsoft.Extensions.Http and uses source-generated JSON metadata with reflection serialization disabled. This repository pins .NET SDK **10.0.403**.
 
-The current package version is **0.1.0-preview.1**; public APIs may change. Reference the [core project](src/Keycloak.Admin.Sdk/Keycloak.Admin.Sdk.csproj), or consume the preview packages from the `artifacts/packages` local NuGet feed produced by the verification tool.
+The current package version is **0.1.0-preview.2**; public APIs may change. Reference the [core project](src/Keycloak.Admin.Sdk/Keycloak.Admin.Sdk.csproj), or consume the preview packages from the `artifacts/packages/0.1.0-preview.2` local NuGet feed produced by the verification tool.
 
 ## Quick start
 
@@ -32,14 +32,14 @@ Console.WriteLine(created.Location);
 
 The authentication realm is independent of the target realm. Use realm names and internal client UUIDs in paths; a client UUID is different from the OIDC `clientId`. Use `StaticAccessTokenProvider` or implement `IAccessTokenProvider` to reuse existing authentication. All network methods support cancellation. Pagination exposes server parameters without snapshot or total-count guarantees.
 
-## Optional extensions
+## NuGet packages and migration
 
-| Project | Purpose | Native AOT |
+| Package | Purpose | Native AOT |
 | --- | --- | --- |
-| `Keycloak.Admin.Sdk.DependencyInjection` | Microsoft DI, Options and HttpClientFactory | Supported |
-| `Keycloak.Admin.Sdk.Capabilities` | Exact-version, server-feature and support-route checks | Supported |
-| `Keycloak.Admin.Sdk.FeatureManagement` | Host feature flags applied after capability checks | Managed only |
-| `Keycloak.Admin.Sdk.FeatureManagement.ApplicationInsights` | Opt-in feature evaluation telemetry, disabled by default | Managed only |
+| `Keycloak.Admin.Sdk` | Admin client, authentication, capability policy, DI and HttpClientFactory | Supported |
+| `Keycloak.Admin.Sdk.FeatureManagement` | Host feature flags and optional Application Insights evaluation telemetry | Managed only |
+
+When upgrading from preview.1, replace the `.Capabilities` and `.DependencyInjection` package references with the main package, replace `.FeatureManagement.ApplicationInsights` with `.FeatureManagement`, and recompile. Existing namespaces and registration methods are preserved. Installing the feature package restores the Microsoft telemetry dependency. Telemetry is opt-in.
 
 `new KeycloakAdminClient(...)` provides the underlying API transport. Use `KeycloakSupportedClient.CreateAsync` to enforce the supported scope before sending requests, or `KeycloakFeatureManagedClient.CreateAsync` for managed feature flags. See [capability policy](docs/capability-policy.md), [feature flags and telemetry](docs/feature-management.md), and [authentication, errors and DI](docs/authentication-and-errors.md).
 

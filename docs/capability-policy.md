@@ -1,6 +1,6 @@
 # 版本能力与支持策略
 
-`Keycloak.Admin.Sdk.Capabilities` 只依赖核心与 .NET BCL。它检查精确版本、真实服务器功能与发布支持范围；业务资源和账户权限仍由 Keycloak 判断。
+`Keycloak.Admin.Sdk.Capabilities` 命名空间随主包提供。它检查精确版本、真实服务器功能与发布支持范围；业务资源和账户权限仍由 Keycloak 判断。
 
 ## 接入
 
