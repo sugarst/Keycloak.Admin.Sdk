@@ -15,13 +15,14 @@ return await ScriptHost.ExecuteAsync(args,
     var legacyYaml = ScriptHost.RepositoryFiles(root).Where(file => Path.GetExtension(file).Equals(".yml", StringComparison.OrdinalIgnoreCase)).ToArray();
     if (legacyYaml.Length != 0)
         throw new InvalidDataException("Use .yaml for repository YAML files:\n" + string.Join('\n', legacyYaml.Select(file => Path.GetRelativePath(root, file))));
-    foreach (string script in new[] { "Test-Integration.cs", "Update-Contracts.cs", "Update-Verification.cs", "Audit-Contracts.cs", "Generate-TestMatrix.cs", "Check-Coverage.cs", "Generate-LiveRoutes.cs", "Check-AdminRoutes.cs", "Check-FullAcceptance.cs", "Test-AcceptanceGate.cs", "Test-AllAdminRoutes.cs" })
+    foreach (string script in new[] { "Test-Integration.cs", "Update-Contracts.cs", "Update-Verification.cs", "Audit-Contracts.cs", "Generate-TestMatrix.cs", "Check-Coverage.cs", "Generate-LiveRoutes.cs", "Check-AdminRoutes.cs", "Check-FullAcceptance.cs", "Test-AcceptanceGate.cs", "Test-AllAdminRoutes.cs", "Generate-CapabilityCatalog.cs" })
         await ScriptHost.RunCheckedAsync(root, "dotnet", ["build", "tools/" + script], ct);
     await ScriptHost.RunCheckedAsync(root, "dotnet", ["build", "local/keycloak/Service.cs"], ct);
     await ScriptHost.RunCheckedAsync(root, "dotnet", ["build", "Keycloak.Admin.Sdk.slnx", "-c", "Release"], ct);
     await ScriptHost.RunCheckedAsync(root, "dotnet", ["run", "--file", "tools/Generate-TestMatrix.cs", "--", "--check"], ct);
     await ScriptHost.RunCheckedAsync(root, "dotnet", ["run", "--file", "tools/Generate-LiveRoutes.cs", "--", "--check"], ct);
     await ScriptHost.RunCheckedAsync(root, "dotnet", ["run", "--file", "tools/Check-AdminRoutes.cs"], ct);
+    await ScriptHost.RunCheckedAsync(root, "dotnet", ["run", "--file", "tools/Generate-CapabilityCatalog.cs", "--", "--check"], ct);
     await ScriptHost.RunCheckedAsync(root, "dotnet", ["run", "--file", "tools/Check-Coverage.cs", "--", "--self-test"], ct);
     // A fresh directory makes stale TRX/coverage evidence impossible to reuse accidentally.
     string testResults = "artifacts/test-results/verify-" + Guid.NewGuid().ToString("N");
@@ -41,6 +42,7 @@ return await ScriptHost.ExecuteAsync(args,
             throw new InvalidDataException("SDK package must not have runtime NuGet dependencies.");
     }
     await ScriptHost.RunCheckedAsync(root, "dotnet", ["pack", "src/Keycloak.Admin.Sdk.DependencyInjection", "-c", "Release", "--no-build", "-o", "artifacts/packages"], ct);
+    await ScriptHost.RunCheckedAsync(root, "dotnet", ["pack", "src/Keycloak.Admin.Sdk.Capabilities", "-c", "Release", "--no-build", "-o", "artifacts/packages"], ct);
     if (args.Contains("--native-container"))
         await ScriptHost.RunCheckedAsync(root, "docker", ["build", "-f", "tests/Keycloak.Admin.Sdk.AotSmoke/Dockerfile", "--target", "export",
             "--output", "type=local,dest=artifacts/aot/linux-musl-x64", "."], ct);

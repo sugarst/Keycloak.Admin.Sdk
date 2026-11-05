@@ -61,6 +61,8 @@ return await ScriptHost.ExecuteAsync(args, "dotnet run --file tools/Check-Covera
     var api = Measure(source.Where(e => Regex.IsMatch(FileName(e), @"^Generated/.*Api\.g\.cs$")));
     var models = Measure(source.Where(e => FileName(e) == "Generated/Models.g.cs"));
     var raw = Measure(classes);
+    var capabilityClasses = coverage.Descendants("package").Single(p => (string?)p.Attribute("name") == "Keycloak.Admin.Sdk.Capabilities").Descendants("class").ToArray();
+    var capabilities = Measure(capabilityClasses);
     var metrics = new Dictionary<string, double>
     {
         ["matrixOperationPercent"] = Percent(matrixResults.Length, contracts.Count),
@@ -69,6 +71,9 @@ return await ScriptHost.ExecuteAsync(args, "dotnet run --file tools/Check-Covera
         ["apiWrapperLinePercent"] = Percent(api.LinesCovered, api.Lines), ["apiWrapperBranchPercent"] = Percent(api.BranchesCovered, api.Branches),
         ["modelLinePercent"] = Percent(models.LinesCovered, models.Lines),
         ["rawLinePercent"] = Percent(raw.LinesCovered, raw.Lines), ["rawBranchPercent"] = Percent(raw.BranchesCovered, raw.Branches)
+        , ["capabilityMethodPercent"] = Percent(capabilities.MethodsCovered, capabilities.Methods)
+        , ["capabilityLinePercent"] = Percent(capabilities.LinesCovered, capabilities.Lines)
+        , ["capabilityBranchPercent"] = Percent(capabilities.BranchesCovered, capabilities.Branches)
     };
     ValidateThresholds(policy.RootElement, metrics);
     var summary = new JsonObject { ["operations"] = contracts.Count, ["passedTests"] = outcomes.Length, ["matrixPassed"] = matrixResults.Length };

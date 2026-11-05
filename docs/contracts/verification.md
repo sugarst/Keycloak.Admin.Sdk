@@ -7,7 +7,7 @@
 - 固定源码中 520 个 HTTP 方法/路径对应 SDK 方法；每项包含 Java 文件及行号。官方预览 OpenAPI 所列端点均能关联到源码。
 - 核心库 Release 构建通过，AOT 与裁剪分析零警告。全局关闭反射 JSON，内置 DTO 与响应集合使用源生成元数据。
 - 520 个生成方法逐个执行无网络路由及序列化冒烟测试；另验证上下文路径、Unicode/斜杠/百分号编码、查询缺省/false/0/空值/重复数组值、Location、HTTP/JSON 错误、取消、流所有权、token 并发缓存和过期。
-- MSTest **538/538** 通过，其中全部 **520 个 Admin API SDK 操作各有一个独立功能契约矩阵测试**，另有源码手写专项、全部模型往返及公共组件异常分支。SDK 自有源码方法与分支覆盖率 100%，行覆盖率 99.9583%；API 包装方法行/分支和 DTO 行覆盖率 100%。完整矩阵及门槛见 [单测矩阵](admin-api-test-matrix.md) 和 [覆盖率报告](test-coverage.md)。测试框架包全部标记 `PrivateAssets="all"`，独立 Native AOT 程序以无包源码执行同一矩阵。
+- MSTest **549/549** 通过，其中全部 **520 个 Admin API SDK 操作各有一个独立功能契约矩阵测试**，另有源码手写专项、全部模型往返、公共组件异常分支、DI 与能力策略检查。SDK 自有源码及新能力扩展的方法、行、分支覆盖率均为 100%。完整矩阵及门槛见 [单测矩阵](admin-api-test-matrix.md) 和 [覆盖率报告](test-coverage.md)。测试框架包全部标记 `PrivateAssets="all"`，独立 Native AOT 程序以无测试框架依赖的源码执行同一矩阵。
 - 本机辅助入口统一为 .NET 10 文件式 C#，覆盖构建、容器生命周期、契约更新和证据汇总；CI 配置使用 `verify.yaml` 并复用相同工具。
 - `linux-musl-x64` 已在 .NET SDK 10.0.403 Alpine 容器中实际 Native AOT 发布，全部 520 个功能矩阵、模型及专项断言在原生程序中执行成功。Windows 本机缺少 C++ 链接器及 Windows SDK，尚未通过 win-x64 原生发布；仓库 CI 将继续验证该目标。
 - 全功能真实集成程序在当前 Keycloak 26.8.1 + PostgreSQL 18.0 服务上，以托管和 `linux-musl-x64` Native AOT 两种方式分别通过：v2 正式路线 **478/478**、v1 兼容路线 **492/492**。每个支持范围内的方法/路径有业务证明，未完成项均为 0；排除项独立记录，见 [逐项结果](full-live-acceptance.md)。原有 91 路径场景和 [HTTP 观测清单](live-endpoints.tsv) 保留为历史辅助记录。
@@ -16,7 +16,7 @@
 - 缓存验证观察实际效果：直接修改隔离 realm 的 PostgreSQL 数据，清理 realm 缓存后才读到新值；修改 LDAP 属性并清理用户缓存；轮换远端 JWKS，清理公钥缓存后新密钥认证成功；更新真实签名 CRL，清理 CRL 缓存后吊销证书被拒绝。SMTP/HTTP/LDAP/PostgreSQL 协议均真实通信。
 - 本次六路径全部通过托管及 Native AOT 真实测试：策略与权限的类型分支筛选/分页和 ID 分支；身份提供方 multipart 文件解析及 JSON URL 拉取；本地化 JSON/multipart UTF-8 持久化；SMTP JSON/表单各实际投递一封邮件；工作流空列表与调度后非空列表。元数据 HTTP 服务及 SMTP 接收器均由 .NET 10 测试代码实现。工作流测试启用 `workflows`，调度资源类型使用源码定义的 `USERS`。详见 [修复记录](six-path-fixes.md)。
 - [本地 Compose 服务](../../local/keycloak/README.md) 固定 Keycloak 26.8.1 + PostgreSQL 18.0 Alpine 镜像，JSON/环境变量显式声明路线，核验实际功能开关、服务器版本及数据库 schema；`down` / `up` 保留 PostgreSQL 集群和凭据。全功能入口自动增加真实 OpenLDAP 辅助服务，普通启动仍为基础配置。
-- `Check-FullAcceptance.cs` 校验四份完整业务证据、当前代码指纹和实际服务版本；两条路线各验证十项门禁负向控制。CI 已改为两路线的真实 PostgreSQL 托管/AOT 矩阵，远端执行状态以 CI 为准。
+- `Check-FullAcceptance.cs` 校验四份完整业务证据、当前代码指纹和实际服务版本；两条路线各验证十一项门禁负向控制。CI 已改为两路线的真实 PostgreSQL 托管/AOT 矩阵，远端执行状态以 CI 为准。全量程序现使用 [能力策略客户端](../capability-policy.md)，并验证本地拒绝未产生 HTTP 请求；新目录严格区分上游阶段、实现、支持及验证状态。
 
 ## 仍需完成的稳定发布条件
 
@@ -30,7 +30,7 @@
 
 ## 路由盘点范围
 
-已审定的 7 项 OpenAPI 差异记录在 [overrides.json](../../contracts/overrides.json)：原有六项加上 SAML 示例包装类的 `@JsonValue` 实际输出字符串。全量实跑还发现证书上传通过 session 读取 multipart、没有 Java body 参数；生成器现保留这类隐式 `HttpContent` 请求体，证书生成/上传/下载均实际验证。两项新增独立回归包含在 538 项测试中。Java 的 `RawJsonValue` 映射为 `JsonElement`，多值 map 保留字典与列表结构。
+已审定的 7 项 OpenAPI 差异记录在 [overrides.json](../../contracts/overrides.json)：原有六项加上 SAML 示例包装类的 `@JsonValue` 实际输出字符串。全量实跑还发现证书上传通过 session 读取 multipart、没有 Java body 参数；生成器现保留这类隐式 `HttpContent` 请求体，证书生成/上传/下载均实际验证。两项独立回归继续保留在当前测试中。Java 的 `RawJsonValue` 映射为 `JsonElement`，多值 map 保留字典与列表结构。
 
 从 `AdminRoot` 的 realms 和 serverinfo 出发，解析资源定位器、继承和授权策略的动态分支；额外追踪内置 AdminRealmResourceProvider（用户存储、缓存、LDAP、SSF）及 ui-ext。管理端点即使依赖可选 feature flag 也保留。控制台 HTML/静态资源、CORS preflight、独立 OAuth/SCIM/Account 协议和任意第三方 SPI 扩展不属于该清单。
 

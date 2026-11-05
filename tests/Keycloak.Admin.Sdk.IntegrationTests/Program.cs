@@ -134,9 +134,12 @@ static string LastId(AdminResponse response) => Uri.UnescapeDataString(response.
 
 sealed class RecordingHandler(HttpMessageHandler inner) : DelegatingHandler(inner)
 {
+    private static int sent;
+    public static int SentCount => Volatile.Read(ref sent);
     public HashSet<string> Results { get; } = [];
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
+        Interlocked.Increment(ref sent);
         var response = await base.SendAsync(request, cancellationToken);
         if (!response.IsSuccessStatusCode && Environment.GetEnvironmentVariable("KC_TEST_FULL_ADMIN") == "1")
         {

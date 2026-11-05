@@ -59,7 +59,7 @@ SMTP JSON 使用 `StringContent(json, Encoding.UTF8, "application/json")`；兼�
 | 检查 | 本次结果 |
 | --- | --- |
 | Release 构建、AOT/裁剪分析 | 通过，零警告 |
-| MSTest | 当前 **538 / 538**，含全量 520 个操作矩阵、六组手写契约及新增 SAML/隐式 multipart 回归；见 [覆盖率门禁](test-coverage.md) |
+| MSTest | 当前 **549 / 549**，含全量 520 个操作矩阵、六组手写契约、SAML/隐式 multipart 回归及能力策略等检查；见 [覆盖率门禁](test-coverage.md) |
 | 独立源码审计 | 官方 415、源码/SDK 520、分派变体 526；路由、查询、媒体类型、请求体缺口为 **0**；205 项可比返回类型差异 **0** |
 | Native AOT 无网络冒烟 | .NET 10.0.403 / `linux-musl-x64` 实际编译并执行，520 个方法及六组独立断言通过 |
 | 托管真实 Keycloak | 六路径 **6 / 6**；全部集成场景通过 |

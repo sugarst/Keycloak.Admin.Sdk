@@ -1,5 +1,6 @@
 <Solution>
   <Folder Name="/src/">
+    <Project Path="src/Keycloak.Admin.Sdk.Capabilities/Keycloak.Admin.Sdk.Capabilities.csproj" />
     <Project Path="src/Keycloak.Admin.Sdk/Keycloak.Admin.Sdk.csproj" />
     <Project Path="src/Keycloak.Admin.Sdk.DependencyInjection/Keycloak.Admin.Sdk.DependencyInjection.csproj" />
   </Folder>

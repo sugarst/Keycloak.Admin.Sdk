@@ -7,6 +7,11 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 [TestClass]
 public sealed class ContractTests
 {
+    [TestMethod] public void VersionCapabilityCatalog() => CapabilityContracts.Catalog();
+    [TestMethod] public void SupportConfigurationAndOverrides() => CapabilityContracts.Configuration();
+    [TestMethod] public void ConjunctiveSupportDecisions() => CapabilityContracts.Decisions();
+    [TestMethod] public Task PolicyBlocksAllTransportsBeforeAuthentication() => CapabilityContracts.Transport();
+    [TestMethod] public Task ServerCapabilitiesBootstrap() => CapabilityContracts.Bootstrap();
     [TestMethod] public Task DependencyInjectionLifetimesAndIsolation() => DependencyInjectionContracts.RunAsync();
     [TestMethod] public Task StructuredHttpErrors() => RecoveryContracts.ErrorsAsync();
     [TestMethod] public Task UnauthorizedReplayPolicy() => RecoveryContracts.ReplayAsync();

@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <IsAotCompatible>true</IsAotCompatible>
+    <PackageId>Keycloak.Admin.Sdk.Capabilities</PackageId>
+    <Version>0.1.0-preview.1</Version>
+    <Description>Versioned capability catalog and explicit support policy for Keycloak Admin SDK. No runtime NuGet dependencies.</Description>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../Keycloak.Admin.Sdk/Keycloak.Admin.Sdk.csproj" />
+    <EmbeddedResource Include="../../contracts/capabilities/*.json" LogicalName="Keycloak.Capabilities.%(Filename).json" />
+  </ItemGroup>
+</Project>

@@ -37,6 +37,7 @@ return await ScriptHost.ExecuteAsync(args, "dotnet run --file tools/Check-FullAc
                 || m.GetProperty("sourceFingerprint").GetString() != fingerprint || m.GetProperty("evidence").GetProperty("serverVersion").GetString() != "26.8.1"
                 || m.GetProperty("evidence").GetProperty("postgres").GetProperty("versionNumber").GetString() != "180000") throw new InvalidDataException("Incomplete, wrong-server or stale acceptance manifest: " + prefix);
             var delegation = m.GetProperty("evidence").GetProperty("fgapDelegation");
+            if (m.GetProperty("evidence").GetProperty("supportPolicy").GetString() != "catalog-conjunctive-v1" || !m.GetProperty("evidence").GetProperty("supportPolicyLocalGuards").GetBoolean()) throw new InvalidDataException("Real acceptance must use the support policy and verify local guards.");
             if (!delegation.GetProperty("initialDenied").GetBoolean() || !delegation.GetProperty("grantAllowsReadAndWrite").GetBoolean() || !delegation.GetProperty("revocationDenied").GetBoolean()) throw new InvalidDataException("FGAP delegation must be verified against real server.");
             var features = m.GetProperty("evidence").GetProperty("features").EnumerateArray().ToArray();
             string desired = route.FgapVersion == 1 ? "ADMIN_FINE_GRAINED_AUTHZ" : "ADMIN_FINE_GRAINED_AUTHZ_V2";

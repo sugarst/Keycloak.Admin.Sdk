@@ -23,7 +23,7 @@
 dotnet test tests/Keycloak.Admin.Sdk.Tests -c Release --logger 'trx;LogFileName=contracts.trx' --results-directory artifacts/test-results --collect 'XPlat Code Coverage'
 ```
 
-当前共 **544 个测试方法**：520 个按操作独立发现的功能契约矩阵用例，原有 18 项基础、模型和六路径回归检查，新增 5 项结构化错误、401 重放、流所有权、并发刷新及失败/超时检查，以及 1 项 DI 生命周期和命名身份隔离检查。每个操作的错误矩阵同时核对固定 Operation 和 AdminApi 阶段。原有冒烟仍执行 520 次调用，另有独立矩阵逐项断言功能契约。路由检查通过后，在仓库根目录 `artifacts/routing-verified.tsv` 写入证据。
+当前共 **549 个测试方法**：520 个按操作独立发现的功能契约矩阵用例，原有 18 项基础、模型和六路径回归检查，5 项结构化错误、401 重放、流所有权、并发刷新及失败/超时检查，1 项 DI 生命周期和命名身份隔离检查，以及 5 项能力目录、配置覆盖、统一决策、传输拦截和真实能力初始化契约。每个操作的错误矩阵同时核对固定 Operation 和 AdminApi 阶段。原有冒烟仍执行 520 次调用，另有独立矩阵逐项断言功能契约。路由检查通过后，在仓库根目录 `artifacts/routing-verified.tsv` 写入证据。
 
 矩阵期望值冻结在 `contracts/admin-api-test-matrix.json`，来源是独立 Java token 扫描器与发布 OpenAPI/已审定差异，不从 SDK 的 URI、请求序列化实现或原有生成冒烟样本计算期望值。每个操作测试声明的全部查询绑定（缺省、false/true、0/非零、Unicode、空串、重复/空列表）、不同路径参数的独立编码、完整/缺省请求体、成功状态/Location/header、完整/空集合/标量/空响应，以及 400/401/403/404/409/415/500、取消、网络失败和不重放。JSON 响应检查完整字段与非法 JSON；原始内容检查声明媒体类型及字节透传。服务端要求的具体文件/表单业务格式另由真实测试验证。
 
@@ -51,9 +51,11 @@ dotnet test tests/Keycloak.Admin.Sdk.Tests -c Release --logger 'trx;LogFileName=
 
 本次在真实 Keycloak 26.8.1 + PostgreSQL 18.0 上通过 v2 正式路线 478/478、v1 兼容路线 492/492，托管及 Native AOT 均通过。LDAP 使用真实 OpenLDAP；SMTP、元数据/JWKS、X509/CRL、OIDC 登录/同意和 PostgreSQL/SCRAM 全部实际通信。缓存验证观察外部数据变更、密钥轮换和证书吊销后的结果，不以空 204 响应作为全部证明。结果见 [逐接口业务矩阵](contracts/full-live-acceptance.md)。
 
-`Check-FullAcceptance.cs` 校验当前源码指纹、实际路线/版本、完整且唯一的成功记录和非空业务证明。`Test-AcceptanceGate.cs` 在独立 artifacts 副本上注入十类缺陷，确认门禁拒绝缺失、重复、失败响应、空证明、额外操作、过期代码、未完成、错误执行方式、错误排除清单和缺失 FGAP 撤销证据；原始实测证据保留。CI 对两条声明路线分别执行真实 PostgreSQL 托管/AOT 场景及这些负向控制。
+`Check-FullAcceptance.cs` 校验当前源码指纹、实际路线/版本、完整且唯一的成功记录和非空业务证明。`Test-AcceptanceGate.cs` 在独立 artifacts 副本上注入十一类缺陷，确认门禁拒绝缺失、重复、失败响应、空证明、额外操作、过期代码、未完成、错误执行方式、错误排除清单、缺失 FGAP 撤销证据和缺失本地支持策略拦截证明；原始实测证据保留。CI 对两条声明路线分别执行真实 PostgreSQL 托管/AOT 场景及这些负向控制。
 
 ## 工具技术栈
+
+版本能力目录和统一开放策略由 `CapabilityContracts.cs` 的独立用例及 AOT 共享测试验证；`Generate-CapabilityCatalog.cs -- --check` 阻断快照漂移。`capabilityMethodPercent`、`capabilityLinePercent`、`capabilityBranchPercent` 独立强制 100%。真实全功能程序使用 `KeycloakSupportedClient`，并观察本地拒绝没有产生 HTTP 请求，详见 [能力策略](capability-policy.md)。
 
 统一使用 .NET 10 / C#，SDK 版本固定 10.0.403。辅助入口为 .NET 文件式程序，通过 `#:include ScriptSupport.cs` 复用进程管理和仓库路径处理；不需要额外脚本运行器或脚本语言。契约解压使用 .NET TarReader/GZipStream，校验和报告处理使用 .NET 的 SHA256、JSON 和 XML API。YAML 配置文件统一使用 `.yaml`。
 

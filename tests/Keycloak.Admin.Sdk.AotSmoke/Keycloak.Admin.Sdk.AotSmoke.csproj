@@ -5,6 +5,8 @@
     <IlcTreatWarningsAsErrors>true</IlcTreatWarningsAsErrors>
   </PropertyGroup>
   <ItemGroup>
+    <ProjectReference Include="../../src/Keycloak.Admin.Sdk.Capabilities/Keycloak.Admin.Sdk.Capabilities.csproj" />
+    <Compile Include="../Keycloak.Admin.Sdk.Tests/CapabilityContracts.cs" Link="CapabilityContracts.cs" />
     <ProjectReference Include="../../src/Keycloak.Admin.Sdk/Keycloak.Admin.Sdk.csproj" />
     <ProjectReference Include="../../src/Keycloak.Admin.Sdk.DependencyInjection/Keycloak.Admin.Sdk.DependencyInjection.csproj" />
     <Compile Include="../Keycloak.Admin.Sdk.Tests/ContractSuite.cs" Link="ContractSuite.cs" />

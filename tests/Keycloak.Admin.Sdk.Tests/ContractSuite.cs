@@ -16,6 +16,7 @@ public static partial class ContractSuite
         await RuntimeContracts.RunAsync();
         await RecoveryContracts.RunAsync();
         await DependencyInjectionContracts.RunAsync();
+        await CapabilityContracts.RunAsync();
         ModelMatrix.Run();
         foreach (var operation in EndpointMatrix.Cases) await operation.RunAsync();
         Console.WriteLine($"PASS: {EndpointMatrix.Cases.Count} API operation matrices and all published DTO contracts.");

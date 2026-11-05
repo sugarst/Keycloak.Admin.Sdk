@@ -1,0 +1,8 @@
+{
+  "schemaVersion": 1,
+  "serverVersion": "26.8.1",
+  "route": "fgap-v2-stable",
+  "allowPreview": false,
+  "allowExperimental": false,
+  "disabledCapabilities": []
+}

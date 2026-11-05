@@ -2,6 +2,8 @@ namespace Keycloak.Admin.Sdk;
 
 public sealed class KeycloakAdminClientOptions
 {
+    /// <summary>Optional immutable support policy. Null retains the existing unrestricted wire transport.</summary>
+    public IKeycloakAdminRequestPolicy? RequestPolicy { get; init; }
     /// <summary>Conditionally invalidate rejected tokens. Generated, bodyless GET/HEAD requests may be replayed once. Default false.</summary>
     public bool EnableUnauthorizedRecovery { get; init; }
 }

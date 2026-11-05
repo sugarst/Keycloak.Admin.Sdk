@@ -1,6 +1,7 @@
 using System.Net;
 using System.Text.Json;
 using Keycloak.Admin.Sdk;
+using Keycloak.Admin.Sdk.Capabilities;
 using static LiveContext;
 
 internal static class FullAdminSuite
@@ -8,11 +9,16 @@ internal static class FullAdminSuite
     public static async Task RunAsync(HttpClient http, Uri server)
     {
         using var tokens = new LivePasswordTokens(http, server);
-        var sdk = new KeycloakAdminClient(http, server, tokens);
+        var declared = KeycloakRoute.Load(Directory.GetCurrentDirectory());
+        var sdk = await KeycloakSupportedClient.CreateAsync(http, server, tokens, new KeycloakSupportConfiguration("26.8.1",
+            declared.FgapVersion == 1 ? KeycloakAdminRoute.FgapV1Compatibility : KeycloakAdminRoute.FgapV2Stable));
         var ledger = new LiveLedger();
         string realm = "sdk-full-" + Guid.NewGuid().ToString("N");
         var c = new LiveContext(sdk, realm, ledger);
+        c.Evidence("supportPolicy", System.Text.Json.Nodes.JsonValue.Create("catalog-conjunctive-v1"));
         var serverInfo = await sdk.ServerInfoAdmin.GetInfoAsync();
+        await FullCapabilities.VerifyAsync(http, server, tokens, declared.FgapVersion == 1 ? KeycloakAdminRoute.FgapV1Compatibility : KeycloakAdminRoute.FgapV2Stable, serverInfo.Content);
+        c.Evidence("supportPolicyLocalGuards", System.Text.Json.Nodes.JsonValue.Create(true));
         using (var actual = JsonDocument.Parse(serverInfo.Content))
         {
             c.Route.ValidateServer(actual.RootElement);

@@ -11,6 +11,7 @@ public sealed partial class KeycloakAdminClient(HttpClient httpClient, Uri serve
     private readonly Uri server = AdminUri.Base(server);
     private readonly IAccessTokenProvider? tokenProvider = tokenProvider;
     private readonly bool recoverUnauthorized = (options ?? throw new ArgumentNullException(nameof(options))).EnableUnauthorizedRecovery;
+    private readonly IKeycloakAdminRequestPolicy? requestPolicy = options.RequestPolicy;
 
     public KeycloakAdminClient(HttpClient httpClient, Uri server, IAccessTokenProvider? tokenProvider = null)
         : this(httpClient, server, tokenProvider, new KeycloakAdminClientOptions()) { }
@@ -92,6 +93,8 @@ public sealed partial class KeycloakAdminClient(HttpClient httpClient, Uri serve
             // Materialize the URI only once: caller query enumerables need not be repeatable.
             target ??= AdminUri.Combine(server, path, query ?? []);
             request.RequestUri = target;
+            if (attempt == 0 && requestPolicy is not null)
+                await requestPolicy.EnsureAllowedAsync(method, target, operation, cancellationToken).ConfigureAwait(false);
             string? token = null;
             if (tokenProvider is not null)
             {

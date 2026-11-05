@@ -11,10 +11,13 @@
 | `apiWrapperLinePercent` | 100.0000% | 100% |
 | `apiWrapperBranchPercent` | 100.0000% | 100% |
 | `modelLinePercent` | 100.0000% | 100% |
-| `rawLinePercent` | 94.3918% | 94% |
-| `rawBranchPercent` | 61.0487% | 59% |
+| `rawLinePercent` | 94.3926% | 94% |
+| `rawBranchPercent` | 61.1457% | 59% |
+| `capabilityMethodPercent` | 100.0000% | 100% |
+| `capabilityLinePercent` | 100.0000% | 100% |
+| `capabilityBranchPercent` | 100.0000% | 100% |
 
-MSTest 544/544 通过；矩阵 520/520，无缺失、重复、跳过或失败。SDK 自有源码覆盖 1810/1810 个可执行方法、2481/2481 行、354/354 个分支。
+MSTest 549/549 通过；矩阵 520/520，无缺失、重复、跳过或失败。SDK 自有源码覆盖 1811/1811 个可执行方法、2485/2485 行、358/358 个分支。
 
 `sdkSource*` 保留仓库中的全部 SDK 生成 API、DTO 和手写代码，仅把 `obj/` 下 .NET SDK 生成的 JSON/正则实现另列为 raw 指标；原始 Cobertura 不删减。源码行门槛为 99.9%，分支及可执行方法门槛为 100%。框架生成实现的未执行分支不代表某个 Admin API 没有测试。可选 DI 扩展由独立程序集提供，并有生命周期/命名隔离测试及 Native AOT 运行验证。
 
