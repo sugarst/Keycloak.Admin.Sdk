@@ -1,6 +1,6 @@
 # .NET 10 Keycloak Admin SDK 实施方案
 
-> 状态：实施中；制定日期：2026-11-04。本文是实施决策和验收依据；实际进展和未完成项见 [验证记录](contracts/verification.md)。
+> 状态：实施中；制定日期：2026-11-04。本文保留实施目标和发布门禁；当前行为以代码及 [验证记录](contracts/verification.md) 为准。尚未完成的目标不代表现有功能。
 
 ## 1. 目标与边界
 
@@ -20,7 +20,7 @@
 
 路线规范位于 [admin-api-routes.json](../contracts/admin-api-routes.json)。完整 wire 契约仍保留 520 项并全部单测；v2 正式支持范围 478 项，v1 兼容范围 492 项。两条路线排除 28 项预览/实验 API，v2 另排除 14 项 v1 专用管理权限 API；Workflows 在 26.8.1 是 DEFAULT，纳入正式验收。逐项分类及真实托管/AOT 结果见 [路线说明](contracts/admin-api-routing.md) 和 [全功能验收](contracts/full-live-acceptance.md)。
 
-本项目不实现通用 OAuth/OIDC 或 UMA 客户端、JWT 验签、ASP.NET Core 中间件和 DI 扩展、SCIM、数字凭证协议或实验性 Admin API v2。管理 API 所需 token 获取属于基础设施。FGAP 等配置的底层管理端点按清单实现；跨请求业务编排单独设计，不假设原子性。
+本项目不实现通用 OAuth/OIDC 或 UMA 客户端、JWT 验签、ASP.NET Core 中间件、SCIM、数字凭证协议或实验性 Admin API v2。独立的 `Keycloak.Admin.Sdk.DependencyInjection` 已提供 Microsoft DI 集成，详见 [认证与错误处理](authentication-and-errors.md)。管理 API 所需 token 获取属于基础设施。FGAP 等配置的底层管理端点按清单实现；跨请求业务编排单独设计，不假设原子性。
 
 本仓库是独立新项目，采用根目录 `LICENSE`（Apache License 2.0）。旧项目仅作为行为与迁移需求参考；不要直接复制代码。契约来源及改编声明见 [第三方说明](../THIRD_PARTY_NOTICES.md)。
 
@@ -36,22 +36,24 @@
 
 ## 3. 目标目录结构
 
-以下为工程结构；契约生成器、原生验证程序和 CI 随实施一并维护。
+以下为当前主要工程结构及尚待完成的迁移文档；契约生成器、原生验证程序和 CI 随实施一并维护。
 
 ```text
 src/Keycloak.Admin.Sdk/        核心库：认证、HTTP、模型和资源客户端
+src/Keycloak.Admin.Sdk.DependencyInjection/ Microsoft DI 集成
+src/Keycloak.Admin.Sdk.Capabilities/ 版本与服务端能力策略
+src/Keycloak.Admin.Sdk.FeatureManagement*/ 托管宿主开关及可选遥测扩展
 tests/Keycloak.Admin.Sdk.Tests/ MSTest 常规测试、HTTP 契约检查与覆盖率收集
 tests/Keycloak.Admin.Sdk.IntegrationTests/ 固定版本容器集成测试
 tests/Keycloak.Admin.Sdk.AotSmoke/ 关闭反射后实际发布和运行的原生测试程序
 tools/Keycloak.Admin.Sdk.Generator/ 从固定源码与 OpenAPI 生成路由、DTO 和 JSON 元数据
 tools/*.cs                    .NET 10 文件式构建、容器测试、契约更新及证据汇总工具
 .github/workflows/verify.yaml  调用同一组 .NET 工具的 CI 验证入口
-examples/                      无额外包的最小用法
 docs/contracts/                端点清单、模型差异、基线和验证证据
-docs/migration/                旧 SDK 能力映射
+docs/migration/                旧 SDK 能力映射（尚未建立）
 ```
 
-公开入口暂定 `KeycloakAdminClient`，其 `Realms`、`Users`、`Groups`、`Clients`、`Roles`、`ClientScopes`、`IdentityProviders`、`Organizations` 等资源入口一对一映射服务端操作；最终命名在阶段 1 API 评审时固定。所有网络操作接受 `CancellationToken`。内部划分请求构造、认证、响应处理、JSON 和资源模块，不暴露底层实现细节。
+公开入口为 `KeycloakAdminClient`，资源入口包括 `RealmsAdmin`、`RealmAdmin`、`Users`、`Groups`、`Clients`、`RoleContainer`、`ClientScopes`、`IdentityProviders` 和 `Organizations`；具体方法见 [端点清单](contracts/endpoint-inventory.md)。预览期间公开命名仍可能调整。所有网络操作接受 `CancellationToken`。内部划分请求构造、认证、响应处理、JSON 和资源模块，不暴露底层实现细节。
 
 ## 4. 契约盘点与范围冻结
 
@@ -77,7 +79,7 @@ docs/migration/                旧 SDK 能力映射
 - 接收调用方提供的 `HttpClient`，由调用方释放；若未来提供内部创建方式，明确所有权和释放规则。每次请求创建独立 `HttpRequestMessage`，在请求上设置 Bearer token，不修改共享默认 Authorization header。
 - 保留服务端基地址的上下文路径，如 `/auth/`；逐路径段编码路径参数，逐项编码查询参数。区分缺省、空字符串、`false` 和 `0`。验证 Unicode、斜杠、百分号和反向代理前缀。
 - 按端点处理 JSON、文本、二进制和空响应；及时释放响应。大文件提供流式访问，并明确响应与流的所有权。
-- 默认不自动重试或因 401 重放请求，尤其是创建、发邮件和密码重置。超时或连接中断后的写入结果可能未知，由调用方核对。未来重试策略需显式配置并验证幂等性及请求体可重读性。
+- 默认不自动重试或因 401 重放请求，尤其是创建、发邮件和密码重置。超时或连接中断后的写入结果可能未知，由调用方核对。当前可显式启用 401 恢复：符合条件的生成无请求体 GET/HEAD 至多重放一次，写请求符合条件时只失效 token 而不重放；原始读取需单独声明允许重放，详见 [认证与错误处理](authentication-and-errors.md)。
 - realm 参数为 realm **名称**；涉及 `/clients/{client-uuid}` 的操作使用内部 ID 而非 `clientId`。便利查找方法应显式命名，不隐藏两者差异。
 
 ### 5.2 token 与并发
@@ -97,9 +99,9 @@ docs/migration/                旧 SDK 能力映射
 
 ### 5.4 错误和诊断
 
-HTTP 错误保留状态码、方法、脱敏 URI、允许的诊断头和有限长度的响应信息；非 JSON 错误也必须保留原始 HTTP 状态。响应体可能包含敏感信息：默认不记录，异常中仅在明确安全策略下提供受限、脱敏的信息。区分 HTTP 错误、传输错误、调用方取消、超时和响应格式错误；不将 403、404 或 409 折叠成空结果。
+当前 HTTP 错误保留状态码、方法、阶段、错误类别及生成接口的操作标识；异常不包含 URI、响应头或响应体，错误体也不会被读取。非 JSON 错误同样保留原始 HTTP 状态。区分 HTTP 错误、传输错误、调用方取消、超时和响应格式错误；不将 403、404 或 409 折叠成空结果。
 
-可使用运行时内置 `ActivitySource`、`Meter` 或回调；默认仅记录操作名、耗时、状态码等低敏信息。禁止记录凭据、请求体、用户属性及带敏感查询参数的完整 URI。FGAP 下的可见性与权限以服务端结果为准。
+核心客户端当前不提供内置请求日志或追踪；如后续增加诊断，可使用运行时内置 `ActivitySource`、`Meter` 或回调，并限制记录的信息。禁止记录凭据、请求体、用户属性及带敏感查询参数的完整 URI。FGAP 下的可见性与权限以服务端结果为准。
 
 ## 6. 实施任务与退出条件
 

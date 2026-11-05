@@ -37,7 +37,7 @@ var created = await sdk.Users.CreateUserAsync("target-realm",
 Console.WriteLine(created.Location);
 ```
 
-认证 realm 与目标 realm 独立。可用 `StaticAccessTokenProvider` 或实现 `IAccessTokenProvider` 接入现有 token 系统。SDK 不自动授予服务账号权限；401 恢复默认关闭，可显式开启。结构化错误、认证恢复及 DI 配置见 [认证与错误处理](docs/authentication-and-errors.md)。
+认证 realm 与目标 realm 独立。可用 `StaticAccessTokenProvider` 或实现 `IAccessTokenProvider` 接入现有 token 系统。SDK 不自动授予服务账号权限；401 恢复默认关闭，可显式开启。可选 `Keycloak.Admin.Sdk.DependencyInjection` 扩展提供 Microsoft DI、Options 和 HttpClientFactory 集成；结构化错误、认证恢复及 DI 配置见 [认证与错误处理](docs/authentication-and-errors.md)。
 
 每个生成方法有明确的 HTTP 方法、路径和源码位置，见 [端点清单](docs/contracts/endpoint-inventory.md)。资源入口沿 Java 资源类命名，如 `Users`、`User`、`Clients`、`Client`、`RealmAdmin`、`AuthenticationManagement`。同一 Java 方法挂载到多个不同路径时，后续方法带路径后缀，以避免公开名称冲突；预览期间命名仍可能调整。
 

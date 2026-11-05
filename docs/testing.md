@@ -1,9 +1,10 @@
 # 测试依赖与运行方式
 
-测试项目允许使用以下包，使用时固定版本并设置 `PrivateAssets="all"`。核心 SDK 的零运行时包依赖要求继续有效。
+常规 MSTest 项目的直接包引用均固定版本并设置 `PrivateAssets="all"`；集成测试的托管入口另直接引用 JSON 配置包。核心 SDK 的零运行时包依赖要求继续有效。
 
 | 包 | 允许版本 | 当前用途 |
 | --- | --- | --- |
+| Microsoft.Extensions.Configuration.Json | 10.0.11 | 已引入：FeatureManagement 测试的 JSON 配置；托管集成测试也直接引用 |
 | Microsoft.NET.Test.Sdk | 18.11.0 | 已引入：测试发现和执行 |
 | MSTest.TestAdapter | 4.5.2 | 已引入：MSTest 适配器 |
 | MSTest.TestFramework | 4.5.2 | 已引入：测试属性和断言 |

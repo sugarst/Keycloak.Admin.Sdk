@@ -1,6 +1,6 @@
 # 版本能力目录、支持状态与统一开放判断
 
-本次落地第一阶段，扩展项目为 `Keycloak.Admin.Sdk.Capabilities`。核心 SDK 保持零运行时 NuGet 依赖；能力扩展只依赖核心 SDK 和 .NET BCL，不引入 FeatureManagement、Application Insights、ASP.NET Core 或配置绑定包。后两者是后续可选适配阶段。
+`Keycloak.Admin.Sdk.Capabilities` 是独立的能力策略扩展。核心 SDK 保持零运行时 NuGet 依赖；能力扩展只依赖核心 SDK 和 .NET BCL，不引入 FeatureManagement、Application Insights、ASP.NET Core 或配置绑定包。FeatureManagement 与 Application Insights 已通过单独的托管扩展提供，详见 [接入指南](feature-management.md)。
 
 ## 接入方式
 
