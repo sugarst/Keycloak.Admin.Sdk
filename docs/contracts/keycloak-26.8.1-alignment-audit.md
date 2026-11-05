@@ -2,7 +2,7 @@
 
 结论：本次静态对照未发现方法、路径、已比较查询参数、媒体类型及直接声明返回类型的差异。该结果不代替全量 DTO、权限、状态码与业务验收。
 
-基线为 [发布 tag](https://github.com/keycloak/keycloak/releases/tag/26.8.1)，完整提交 `24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b`。[官方 API 定义](https://www.keycloak.org/docs-api/26.8.1/rest-api/index.html) 仍标记为预览。远端 tag 和 OpenAPI 本次在线核验：**一致**；本地源码归档 SHA256 和源码文件清单校验通过。
+基线为 [发布 tag](https://github.com/keycloak/keycloak/releases/tag/26.8.1)，完整提交 `24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b`。[官方 API 定义](https://www.keycloak.org/docs-api/26.8.1/rest-api/index.html) 仍标记为预览。远端 tag 和 OpenAPI 本次在线核验：**未执行；可加 --online**；本地源码归档 SHA256 和源码文件清单校验通过。
 
 ## 数量与口径
 
@@ -58,34 +58,24 @@
 
 services 的 44 项由授权策略动态路径 36 项、用户 VC 管理 7 项和 serverinfo 1 项构成。其余补充包括用户存储/缓存、LDAP、SSF 和 ui-ext；这些并不都属于默认启用、稳定的核心功能。
 
-## 已处理的官方定义差异
+## 已审定差异与回归
 
-[overrides.json](../../contracts/overrides.json) 当前记录了 7 项修正：scope/search 单对象响应、policy/permission 的原始 JSON 对象与创建实体、client-description-converter 的原始载荷、resource attributes 的字典响应，以及 scheduled workflows 的列表响应。它们说明不能把 OpenAPI 直接等同于真实 wire 契约。
+[overrides.json](../../contracts/overrides.json) 记录 7 项响应/载荷修正及各自源码依据，包括列表、字典、原始载荷和 SAML @JsonValue 字符串。
 
-源码直接声明且可与 SDK 强类型结果机械比较的返回类型共 205 项，类型差异 0 项。该检查不覆盖 Java Response 包装的运行时实体、DTO 每个字段的序列化语义或响应状态码全量行为。
-
-## 六路径回归验证
-
-修复方式、独立断言与真实测试场景见 [六路径修复记录](six-path-fixes.md)。生成器保留同路径的全部分派变体，合并查询参数并保留调用方的媒体类型；工作流返回值依据 Java 实现修正为列表。六组手写断言不使用生成器构造的响应，MSTest 和原生冒烟程序均执行这些断言。
+动态查询、媒体类型与工作流列表的独立断言见 [六路径契约](six-path-fixes.md)。以下仅记录本地隔离场景证据：
 
 - 本地 `managed` 六路径真实容器证据：6 / 6 通过。
 - 本地 `native-aot` 六路径真实容器证据：6 / 6 通过。
 
-## 全操作功能契约单元测试
-
-全部 Admin API SDK 操作的独立用例与适用场景见 [完整测试矩阵](admin-api-test-matrix.md)，覆盖率及强制门槛见 [门禁报告](test-coverage.md)。期望值来自独立 Java token 索引和固定发布定义，与 SDK 请求构造及原有冒烟生成逻辑分离；每个操作检查查询/载荷/响应、错误、取消和网络失败。`Verify.cs` 要求编译后目录、冻结矩阵与本次 TRX 一一对应，拒绝缺失、重复、跳过、失败或低覆盖率。该结论是 SDK 功能契约单测覆盖，不是全部服务端业务和权限场景的实测声明。
-
 ## 审计边界与验证证据
 
-独立扫描器按 Java token 解析声明、导入、继承与资源定位器，不复用生成器的 JavaRoutes；使用已知的 PolicyService 动态分派规则并保留媒体类型变体。它不是完整 Java/JAX-RS 编译器，也不能穷举第三方 SPI 或任意递归策略类型 URI。控制台静态资源、CORS、独立 Admin API v2、Account/SCIM/OIDC 协议不纳入本表。
+独立 Java token 扫描器不复用生成器的 JavaRoutes，覆盖已知动态分派，但不是通用 Java/JAX-RS 编译器。本审计不核验 DTO 全字段、Java Response 运行时实体、全部状态码或权限组合。范围定义见 [架构说明](../architecture.md)。已知动态定位器：
 
 - `policy provider SPI: /admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/policy/{type}/provider`
 - `policy provider SPI: /admin/realms/{realm}/clients/{client-uuid}/authz/resource-server/permission/{type}/provider`
 - `dynamic SPI: /admin/realms/{realm}/{extension}`
 
-这是三个已知的动态扩展边界。内置 realm providers 已枚举；自定义 provider、feature flag、授权/FGAP 及响应模型字段的全部运行时语义仍需专门验收。现有 520 次路由冒烟、全操作功能契约单测和 91 条真实方法/路径（93 条状态观测）不能证明全部服务端业务场景对齐。原有冒烟与 SDK 共用生成逻辑，全操作矩阵、六路径手写专项和真实测试分别提供额外证据。
-
-完整逐项对照见 [当前版本清单](keycloak-26.8.1-alignment.tsv)，包含官方分组、SDK 方法、源码、已观测状态与本次缺口。后续新增分派变体或契约差异时，应同步修复生成器并增加独立断言和真实服务器测试。
+[逐项对照](keycloak-26.8.1-alignment.tsv) 包含源码、分组、差异及早期隔离场景观测（91 条方法/路径、93 条状态记录）；该历史观测不代表当前全量业务范围。最新 [单测矩阵](admin-api-test-matrix.md)、[覆盖率](test-coverage.md) 与 [真实业务验收](full-live-acceptance.md) 分别维护证据。
 
 ## 复现
 
@@ -93,4 +83,4 @@ services 的 44 项由授权策略动态路径 36 项、用户 VC 管理 7 项�
 dotnet run --file tools/Audit-Contracts.cs -- --online
 ```
 
-工具总是先输出报告；发现路由、参数、媒体类型或未知定位器差异时返回非零退出码。离线可省略 --online。工具仅执行静态比对和来源校验，不覆盖完整 DTO 字段/状态码、权限与业务验收。
+离线省略 `--online`。工具先输出报告，路由、查询、媒体类型、请求体、可比返回类型或未知定位器存在差异时返回非零。

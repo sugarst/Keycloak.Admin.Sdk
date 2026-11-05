@@ -1,67 +1,56 @@
-# 测试依赖与运行方式
+# 测试与验证
 
-常规 MSTest 项目的直接包引用均固定版本并设置 `PrivateAssets="all"`；集成测试的托管入口另直接引用 JSON 配置包。核心 SDK 的零运行时包依赖要求继续有效。
+从仓库根目录运行；.NET SDK 版本以 [global.json](../global.json) 为准。辅助工具统一为 .NET 文件式 C#，支持 `--help`；YAML 使用 `.yaml`。升级与发布验收见 [单基线流程](single-target-workflow.md)。
 
-| 包 | 允许版本 | 当前用途 |
-| --- | --- | --- |
-| Microsoft.Extensions.Configuration.Json | 10.0.11 | 已引入：FeatureManagement 测试的 JSON 配置；托管集成测试也直接引用 |
-| Microsoft.NET.Test.Sdk | 18.11.0 | 已引入：测试发现和执行 |
-| MSTest.TestAdapter | 4.5.2 | 已引入：MSTest 适配器 |
-| MSTest.TestFramework | 4.5.2 | 已引入：测试属性和断言 |
-| coverlet.collector | 10.1.0 | 已引入：Cobertura 覆盖率收集 |
-| AutoFixture | 4.18.1 | 已引入：用户创建请求对象；关键字段显式指定 |
-| Bogus | 35.6.5 | 已引入：局部固定种子的用户列表及反序列化测试 |
-| Moq | 4.21.0 | 已引入：Token 获取、条件失效与策略评估次数验证 |
-| PasswordGenerator | 3.0.0 | 已引入：密码重置请求透传及错误信息脱敏测试 |
+## 常用入口
 
-八个允许的测试工具包现均直接引用并使用，另外保留 FeatureManagement 测试需要的 JSON 配置包。新增四项测试位于 `ManagedTestDataTests.cs`，仅由常规 MSTest 项目编译，不链接进 AotSmoke。AutoFixture 只填充明确选择的字段；Bogus 使用局部固定种子，不修改并行测试的全局随机状态；密码样本验证传输前后相等及错误信息不泄露，不依赖随机输出的具体内容或字符类别碰巧满足规则。密码策略边界和其他固定契约仍使用明确样本。
+| 目的 | 命令 |
+| --- | --- |
+| 构建、单测、覆盖率、打包 | `dotnet run --file tools/Verify.cs -- --skip-native-publish` |
+| 同时验证当前平台 Native AOT | `dotnet run --file tools/Verify.cs` |
+| 同时验证 Linux 容器 Native AOT | `dotnet run --file tools/Verify.cs -- --native-container` |
+| 仅运行 MSTest | `dotnet test tests/Keycloak.Admin.Sdk.Tests -c Release` |
+| 隔离 Keycloak 场景 | `dotnet run --file tools/Test-Integration.cs`；原生加 `-- --native-aot` |
+| 两条路线、托管/AOT 全量验收及证据更新 | `dotnet run --file tools/Test-AllAdminRoutes.cs -- --update-docs` |
+| 独立源码审计 | `dotnet run --file tools/Audit-Contracts.cs`；在线来源核验加 `-- --online` |
 
-测试包保留 `PrivateAssets="all"`，测试项目保持 `IsPackable=false`。核心 SDK 不反向引用测试代码，也不增加上述包的引用；`Verify.cs` 继续检查核心 NuGet 包的 `.nuspec` 不包含依赖。Moq 等托管测试依赖不进入原生项目的源码链接或项目引用；Native AOT 继续执行共用契约套件。
+Windows 原生发布需要 Visual Studio C++ 桌面工具链和 Windows SDK；Linux 需要 clang、zlib 开发库，或使用上述 Docker 入口。跳过原生发布仅适用于常规开发检查。
 
-## 常规测试
+## 契约测试与覆盖率
 
-`tests/Keycloak.Admin.Sdk.Tests` 为标准 MSTest 项目，可以通过 IDE 测试资源管理器或以下命令运行：
+每个生成操作有一个独立 MSTest 入口，映射见 [测试矩阵](contracts/admin-api-test-matrix.md)。期望值冻结在 [admin-api-test-matrix.json](../contracts/admin-api-test-matrix.json)，来自独立 Java token 扫描和发布定义。查询参数逐一隔离测试，以检出同类型参数互换；模型同时检查嵌套往返与单字段 wire 映射，避免对称读写错误相互抵消。媒体类型、动态分派等另有 [手写专项断言](../tests/Keycloak.Admin.Sdk.Tests/AlignmentContracts.cs)。
+
+`Verify.cs` 检查生成一致性和门禁负向控制，再运行 MSTest，将本次目录写入 `artifacts/test-results/latest.txt`。覆盖率门禁只读取该次 TRX 引用的 Cobertura；操作缺失、重复、跳过、失败或低于 [coverage-policy.json](../tests/coverage-policy.json) 均返回非零。当前测试总数、实测指标及统计口径仅在 [覆盖率报告](contracts/test-coverage.md) 维护。
+
+需要单独收集覆盖率时：
 
 ```shell
-dotnet test tests/Keycloak.Admin.Sdk.Tests -c Release --logger 'trx;LogFileName=contracts.trx' --results-directory artifacts/test-results --collect 'XPlat Code Coverage'
+dotnet test tests/Keycloak.Admin.Sdk.Tests -c Release --logger 'trx;LogFileName=contracts.trx' --results-directory artifacts/test-results/manual-run --collect 'XPlat Code Coverage'
+dotnet run --file tools/Check-Coverage.cs -- --results=artifacts/test-results/manual-run
 ```
 
-当前共 **557 个测试方法**：520 个按操作独立发现的功能契约矩阵用例，原有 18 项基础、模型和六路径回归检查，5 项结构化错误、401 重放、流所有权、并发刷新及失败/超时检查，1 项 DI 生命周期和命名身份隔离检查，5 项能力目录/策略契约，以及 4 项 FeatureManagement 全目录判断、配置刷新/重放、初始化和 Application Insights 事件检查，以及 4 项托管测试数据与模拟交互检查。每个操作的错误矩阵同时核对固定 Operation 和 AdminApi 阶段。原有冒烟仍执行 520 次调用，另有独立矩阵逐项断言功能契约。路由检查通过后，在仓库根目录 `artifacts/routing-verified.tsv` 写入证据。
+每次使用新的结果目录。`Generate-TestMatrix.cs -- --check` 核对冻结矩阵与强类型入口；审阅来源后可用 `-- --refresh-contracts` 更新。`Check-Coverage.cs -- --self-test` 验证门禁拒绝条件。
 
-矩阵期望值冻结在 `contracts/admin-api-test-matrix.json`，来源是独立 Java token 扫描器与发布 OpenAPI/已审定差异，不从 SDK 的 URI、请求序列化实现或原有生成冒烟样本计算期望值。每个操作测试声明的全部查询绑定（缺省、false/true、0/非零、Unicode、空串、重复/空列表）、不同路径参数的独立编码、完整/缺省请求体、成功状态/Location/header、完整/空集合/标量/空响应，以及 400/401/403/404/409/415/500、取消、网络失败和不重放。JSON 响应检查完整字段与非法 JSON；原始内容检查声明媒体类型及字节透传。服务端要求的具体文件/表单业务格式另由真实测试验证。
+## 依赖边界
 
-每个查询参数还会逐一隔离发送，其他参数保持缺省，以检出同类型参数被互换的错误。全量模型样本包含嵌套对象、集合、false/数字及未知扩展字段，反序列化再序列化后结构必须一致；每个 DTO 属性另以单字段对象序列化，核对其 C# 属性到 wire 字段的绑定，避免对称的读写错误相互抵消。六条易错分派路径继续保留手写专项测试。完整操作与用例映射见 [测试矩阵](contracts/admin-api-test-matrix.md)。
+常规测试的直接包引用均设为 `PrivateAssets="all"`，项目不可打包；准确版本见 [测试项目](../tests/Keycloak.Admin.Sdk.Tests/Keycloak.Admin.Sdk.Tests.csproj)。
 
-六组回归断言位于手写的 `AlignmentContracts.cs`，不从 OpenAPI 或生成器复用响应样本：工作流空/非空数组；policy 与 permission 的全部查询参数（含 `false`、`0`、编码及对象/数组分派）；身份提供方和本地化的 JSON/multipart；SMTP 的 JSON/form。测试会核对 MIME、multipart 字段与文件内容、表单编码及响应内容。
+| 包 | 用途 |
+| --- | --- |
+| Microsoft.NET.Test.Sdk、MSTest.TestAdapter、MSTest.TestFramework | 测试发现、运行及断言 |
+| coverlet.collector | Cobertura 覆盖率 |
+| Microsoft.Extensions.Configuration.Json | FeatureManagement 配置；托管集成程序也直接引用 |
+| AutoFixture、Bogus | 请求样本、局部固定种子的用户数据 |
+| Moq、PasswordGenerator | token/策略交互次数、密码透传与错误脱敏 |
 
-上述直接命令的 TRX 输出为 `artifacts/test-results/contracts.trx`；Cobertura 输出位于该目录的本次运行子目录。`Verify.cs` 每次使用新的 `artifacts/test-results/verify-<id>`，并把路径写入 `artifacts/test-results/latest.txt`。门禁只读取这次 TRX 引用的覆盖率附件，不能复用旧通过记录。
+`ManagedTestDataTests.cs` 中的测试数据工具只进入 MSTest 项目，不进入 AOT。关键字段、密码策略边界仍用明确样本；随机测试不依赖特定输出。核心包不引用测试依赖，`Verify.cs` 检查其 nuspec 无运行时依赖。
 
-`dotnet run --file tools/Verify.cs` 先执行矩阵生成一致性检查及门禁负向自检，再执行 MSTest、覆盖率门禁和 SDK 零运行时包依赖检查。策略位于 [coverage-policy.json](../tests/coverage-policy.json)：操作及可执行方法 100%；生成 API 行/分支与 DTO 行 100%；SDK 自有源码分支 100%、行至少 99.9%；含 .NET 框架源生成实现的原始报告行至少 94%、分支至少 59%。自有源码保留全部 SDK 生成 API/DTO，只把 `obj/` 中框架生成代码另列；原始报告不删减。最新计数见 [覆盖率报告](contracts/test-coverage.md)。可选 DI 程序集有独立依赖边界，其测试及原生运行与核心 SDK 一同验证，核心覆盖率门槛保持不变。
+## 原生与真实业务验收
 
-每个操作必须有且仅有一个通过的矩阵测试；缺失、重复、跳过、失败、空覆盖率或指标不足都返回非零。`Check-Coverage.cs -- --self-test` 使用负向控制核验这些阻断条件；CI 同时上传 TRX、Cobertura 和门禁结果。`Generate-TestMatrix.cs -- --check` 检查冻结矩阵与强类型调用入口一致；审阅发布来源后可用 `-- --refresh-contracts` 更新期望，再提交契约及生成用例。该检查覆盖 SDK 功能契约，不等同于所有服务器业务/权限组合已实测。
+`AotSmoke` 不引用 MSTest 程序集或测试框架，源码链接执行完整操作矩阵、模型和适用的运行时、DI、能力策略断言。托管通过后仍需实际发布并运行原生程序。FeatureManagement / Application Insights 只在托管模式验证，详见 [接入指南](feature-management.md)。
 
-## Native AOT 和真实容器测试
+`Test-Integration.cs` 使用固定 digest、临时本机端口和隔离 realm，退出时清理容器。原生模式自动构建 Linux 程序；已有二进制可加 `--no-build-native`。需要持久化 PostgreSQL 时使用 [本地服务](../local/keycloak/README.md) 的 `test` / `test-native`，全量业务验收使用 `test-full` / `test-full-native`。
 
-`tests/Keycloak.Admin.Sdk.AotSmoke` 为无测试框架包的独立原生程序，以源码链接执行全部 520 个功能契约矩阵、模型往返、公共异常分支及原有专项断言。它不引用 MSTest 项目程序集，发布时也不依赖测试适配器、覆盖率工具或反射发现测试。常规 MSTest 通过后，仍必须单独发布和运行此程序，才能形成 Native AOT 证据。
+全量场景位于手写的 `Full*.cs`；生成的 `LiveRoutes.g.cs` 仅分派调用。`LiveLedger` 要求成功 SDK 响应及已通过的业务断言，未完成项非空即失败。验收数量、协议效果、排除项及执行时间见 [真实验收](contracts/full-live-acceptance.md)，不重复维护在本页。
 
-`tests/Keycloak.Admin.Sdk.IntegrationTests` 为可直接 Native AOT 发布的真实容器测试程序。通过 `dotnet run --file tools/Test-Integration.cs` 创建隔离环境并执行；加 `-- --native-aot` 会自动构建并运行 Linux 原生版本。工具使用 .NET 的 Process/HttpClient 管理 Docker、临时端口和就绪检查；凭据仅注入子进程环境，退出和取消时清理本次测试容器。具体操作见 [README](../README.md)。
-
-`AlignmentLive.cs` 覆盖六条修复路径，`CallbackFixture.cs` 用 .NET TcpListener 提供 SAML 元数据 HTTP 服务和 SMTP 接收器，核验真实回调及两封邮件投递，不需要外部服务账号。托管测试通过 `host.docker.internal` 回调，原生测试共享 Keycloak 容器网络并使用 loopback。成功后分别写入 `artifacts/six-contracts-live-managed.txt` 和 `artifacts/six-contracts-live-native-aot.txt`；完整场景及本次验证结果见 [六路径修复记录](contracts/six-path-fixes.md)。
-
-需要持久化 PostgreSQL 后端时，使用 [local/keycloak](../local/keycloak/README.md)：`dotnet run --file local/keycloak/Service.cs` 一键启动固定 Keycloak/PostgreSQL 镜像；`-- test` / `-- test-native` 在该服务上运行当前真实场景。工具生成并复用忽略提交的 `.env`，从运行中的服务核验版本和数据库 schema。测试支持 `KC_TEST_USERNAME`，并在 SMTP 夹具结束后恢复管理员邮箱，适合重复使用常驻环境。
-
-全功能业务验收使用该入口的 `test-full` / `test-full-native`，共享同一套 `Full*.cs` 业务场景。强类型分派 `LiveRoutes.g.cs` 仅生成 SDK 调用，不生成业务前置条件或期望值；真实资源 ID、协议结果和持久化断言由手写场景提供。`LiveLedger` 只接受已观察到的成功 SDK 响应和通过的业务证明；缺失项非空即失败。两个路线的支持范围、预览排除原因和 FGAP 委派授权结果均显式记录。
-
-本次在真实 Keycloak 26.8.1 + PostgreSQL 18.0 上通过 v2 正式路线 478/478、v1 兼容路线 492/492，托管及 Native AOT 均通过。LDAP 使用真实 OpenLDAP；SMTP、元数据/JWKS、X509/CRL、OIDC 登录/同意和 PostgreSQL/SCRAM 全部实际通信。缓存验证观察外部数据变更、密钥轮换和证书吊销后的结果，不以空 204 响应作为全部证明。结果见 [逐接口业务矩阵](contracts/full-live-acceptance.md)。
-
-`Check-FullAcceptance.cs` 校验当前源码指纹、实际路线/版本、完整且唯一的成功记录和非空业务证明。`Test-AcceptanceGate.cs` 在独立 artifacts 副本上注入十三类缺陷，确认门禁拒绝缺失、重复、失败响应、空证明、额外操作、过期代码、未完成、错误执行方式、错误排除清单、缺失 FGAP 撤销证据、缺失本地支持策略拦截证明和缺失托管 FeatureManagement 业务证明；原始实测证据保留。CI 对两条声明路线分别执行真实 PostgreSQL 托管/AOT 场景及这些负向控制。
-
-FeatureManagement 与 Application Insights 两个可选包仅面向托管宿主，不要求 AOT；它们的方法/行/分支有各自 100% 门槛。托管全量入口使用官方 FeatureManager 4.8.0，并在真实服务器核验关闭创建无数据、开启创建后持久化、关闭删除保留数据、刷新后删除成功及功能开关隔离。原生入口在编译时排除这些包，继续验证核心及能力策略。遥测使用实际官方 publisher 与本地内存通道，未验证 Azure 云端 ingestion。完整边界见 [接入指南](feature-management.md)。
-
-## 工具技术栈
-
-版本能力目录和统一开放策略由 `CapabilityContracts.cs` 的独立用例及 AOT 共享测试验证；`Generate-CapabilityCatalog.cs -- --check` 阻断快照漂移。`capabilityMethodPercent`、`capabilityLinePercent`、`capabilityBranchPercent` 独立强制 100%。真实全功能程序使用 `KeycloakSupportedClient`，并观察本地拒绝没有产生 HTTP 请求，详见 [能力策略](capability-policy.md)。
-
-统一使用 .NET 10 / C#，SDK 版本固定 10.0.403。辅助入口为 .NET 文件式程序，通过 `#:include ScriptSupport.cs` 复用进程管理和仓库路径处理；不需要额外脚本运行器或脚本语言。契约解压使用 .NET TarReader/GZipStream，校验和报告处理使用 .NET 的 SHA256、JSON 和 XML API。YAML 配置文件统一使用 `.yaml`。
-
-`dotnet run --file tools/Audit-Contracts.cs -- --online` 使用独立 Java token 扫描器对照发布源码、官方 OpenAPI、编译后的 SDK 目录和文档清单。它会写出 [审计报告](contracts/keycloak-26.8.1-alignment-audit.md) 与逐项 TSV；存在契约缺口时返回非零，不应将该结果描述为全部对齐。该静态检查与运行测试的职责不同。
+`Check-FullAcceptance.cs` 核对源码指纹、版本、路线和唯一完整的业务记录；`Test-AcceptanceGate.cs` 在副本中注入十三类缺陷，验证缺失、重复、失败、空证明、过期代码、错误模式/排除项及缺少权限撤销、支持策略或功能开关证明均被拒绝。CI 的 [verify.yaml](../.github/workflows/verify.yaml) 运行 Windows/Linux 常规及原生检查，并按两条路线执行真实 PostgreSQL 托管/AOT 验收。

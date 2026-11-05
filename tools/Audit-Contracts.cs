@@ -222,9 +222,8 @@ return await ScriptHost.ExecuteAsync(args, "dotnet run --file tools/Audit-Contra
     report.AppendLine("源码另有 `testLDAPConnection` 的 JSON/表单双分支。该 SDK 方法接收 `HttpContent`，可保留调用方选择的媒体类型，因此未计为缺口。\n");
     }
     using var overrides = JsonDocument.Parse(await File.ReadAllTextAsync(Path.Combine(root, "contracts/overrides.json"), ct));
-    report.AppendLine($"## 已处理的官方定义差异\n\n[overrides.json](../../contracts/overrides.json) 当前记录了 {overrides.RootElement.GetArrayLength()} 项修正：scope/search 单对象响应、policy/permission 的原始 JSON 对象与创建实体、client-description-converter 的原始载荷、resource attributes 的字典响应，以及 scheduled workflows 的列表响应。它们说明不能把 OpenAPI 直接等同于真实 wire 契约。\n");
-    report.AppendLine($"源码直接声明且可与 SDK 强类型结果机械比较的返回类型共 {comparableResponses} 项，类型差异 {responseFindings.Count} 项。该检查不覆盖 Java Response 包装的运行时实体、DTO 每个字段的序列化语义或响应状态码全量行为。\n");
-    report.AppendLine("## 六路径回归验证\n\n修复方式、独立断言与真实测试场景见 [六路径修复记录](six-path-fixes.md)。生成器保留同路径的全部分派变体，合并查询参数并保留调用方的媒体类型；工作流返回值依据 Java 实现修正为列表。六组手写断言不使用生成器构造的响应，MSTest 和原生冒烟程序均执行这些断言。\n");
+    report.AppendLine($"## 已审定差异与回归\n\n[overrides.json](../../contracts/overrides.json) 记录 {overrides.RootElement.GetArrayLength()} 项响应/载荷修正及各自源码依据，包括列表、字典、原始载荷和 SAML @JsonValue 字符串。\n");
+    report.AppendLine("动态查询、媒体类型与工作流列表的独立断言见 [六路径契约](six-path-fixes.md)。以下仅记录本地隔离场景证据：\n");
     foreach (string mode in new[] { "managed", "native-aot" })
     {
         string proofPath = Path.Combine(root, "artifacts/six-contracts-live-" + mode + ".txt");
@@ -233,15 +232,13 @@ return await ScriptHost.ExecuteAsync(args, "dotnet run --file tools/Audit-Contra
         report.AppendLine($"- 本地 `{mode}` 六路径真实容器证据：{(passed ? "6 / 6 通过" : "未提供完整的本地通过记录")}。");
     }
     report.AppendLine();
-    report.AppendLine("## 全操作功能契约单元测试\n\n全部 Admin API SDK 操作的独立用例与适用场景见 [完整测试矩阵](admin-api-test-matrix.md)，覆盖率及强制门槛见 [门禁报告](test-coverage.md)。期望值来自独立 Java token 索引和固定发布定义，与 SDK 请求构造及原有冒烟生成逻辑分离；每个操作检查查询/载荷/响应、错误、取消和网络失败。`Verify.cs` 要求编译后目录、冻结矩阵与本次 TRX 一一对应，拒绝缺失、重复、跳过、失败或低覆盖率。该结论是 SDK 功能契约单测覆盖，不是全部服务端业务和权限场景的实测声明。\n");
     report.AppendLine("## 审计边界与验证证据\n");
-    report.AppendLine("独立扫描器按 Java token 解析声明、导入、继承与资源定位器，不复用生成器的 JavaRoutes；使用已知的 PolicyService 动态分派规则并保留媒体类型变体。它不是完整 Java/JAX-RS 编译器，也不能穷举第三方 SPI 或任意递归策略类型 URI。控制台静态资源、CORS、独立 Admin API v2、Account/SCIM/OIDC 协议不纳入本表。\n");
+    report.AppendLine("独立 Java token 扫描器不复用生成器的 JavaRoutes，覆盖已知动态分派，但不是通用 Java/JAX-RS 编译器。本审计不核验 DTO 全字段、Java Response 运行时实体、全部状态码或权限组合。范围定义见 [架构说明](../architecture.md)。已知动态定位器：\n");
     foreach (string locator in index.Unresolved) report.AppendLine("- `" + locator + "`");
     var liveRows = (await File.ReadAllLinesAsync(Path.Combine(root, "docs/contracts/live-endpoints.tsv"), ct)).Select(line => line.Split('\t')).ToArray();
     var live = liveRows.GroupBy(fields => Key(fields[0], fields[1])).ToDictionary(g => g.Key, g => string.Join(',', g.Select(f => f[2]).Distinct().Order()), StringComparer.Ordinal);
-    report.AppendLine($"\n这是三个已知的动态扩展边界。内置 realm providers 已枚举；自定义 provider、feature flag、授权/FGAP 及响应模型字段的全部运行时语义仍需专门验收。现有 {sdk.Count} 次路由冒烟、全操作功能契约单测和 {live.Count} 条真实方法/路径（{liveRows.Length} 条状态观测）不能证明全部服务端业务场景对齐。原有冒烟与 SDK 共用生成逻辑，全操作矩阵、六路径手写专项和真实测试分别提供额外证据。\n");
-    report.AppendLine($"完整逐项对照见 [当前版本清单](keycloak-{version}-alignment.tsv)，包含官方分组、SDK 方法、源码、已观测状态与本次缺口。后续新增分派变体或契约差异时，应同步修复生成器并增加独立断言和真实服务器测试。\n");
-    report.AppendLine("## 复现\n\n```shell\ndotnet run --file tools/Audit-Contracts.cs -- --online\n```\n\n工具总是先输出报告；发现路由、参数、媒体类型或未知定位器差异时返回非零退出码。离线可省略 --online。工具仅执行静态比对和来源校验，不覆盖完整 DTO 字段/状态码、权限与业务验收。");
+    report.AppendLine($"\n[逐项对照](keycloak-{version}-alignment.tsv) 包含源码、分组、差异及早期隔离场景观测（{live.Count} 条方法/路径、{liveRows.Length} 条状态记录）；该历史观测不代表当前全量业务范围。最新 [单测矩阵](admin-api-test-matrix.md)、[覆盖率](test-coverage.md) 与 [真实业务验收](full-live-acceptance.md) 分别维护证据。\n");
+    report.AppendLine("## 复现\n\n```shell\ndotnet run --file tools/Audit-Contracts.cs -- --online\n```\n\n离线省略 `--online`。工具先输出报告，路由、查询、媒体类型、请求体、可比返回类型或未知定位器存在差异时返回非零。");
     await File.WriteAllTextAsync(Path.Combine(root, $"docs/contracts/keycloak-{version}-alignment-audit.md"), report.ToString().TrimEnd() + "\n", ct);
     var rows = new List<string> { "method\tpath\tofficialGroup\tsdkMethod\tsource\tline\tresponse\tliveStatuses\tqueryGaps\tmediaGaps\tresponseGaps" };
     foreach (var (key, endpoint) in sdk.OrderBy(p => p.Value.Path, StringComparer.Ordinal).ThenBy(p => p.Value.Method, StringComparer.Ordinal))
