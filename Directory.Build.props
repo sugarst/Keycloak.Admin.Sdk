@@ -7,5 +7,8 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <JsonSerializerIsReflectionEnabledByDefault>false</JsonSerializerIsReflectionEnabledByDefault>
     <Deterministic>true</Deterministic>
+    <PackageProjectUrl>https://github.com/sugarst/Keycloak.Admin.Sdk</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/sugarst/Keycloak.Admin.Sdk</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
   </PropertyGroup>
 </Project>

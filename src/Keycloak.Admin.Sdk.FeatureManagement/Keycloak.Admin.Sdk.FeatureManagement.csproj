@@ -2,6 +2,13 @@
   <PropertyGroup>
     <Description>Managed feature flags and opt-in Application Insights telemetry for Keycloak Admin SDK.</Description>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <PackageReleaseNotes>Keycloak.Admin.Sdk 的托管功能开关扩展，基于 Microsoft.FeatureManagement 4.8.0；先验证版本能力、服务端功能与 FGAP 路线，再检查宿主开关。
+使用 KeycloakFeatureManagedClient.CreateAsync 创建受策略保护的客户端。支持按需启用 Application Insights 功能评估遥测，默认关闭。
+本扩展面向托管应用；Native AOT 应用可使用主包提供的能力策略。
+接入与遥测配置：https://github.com/sugarst/Keycloak.Admin.Sdk/blob/main/docs/feature-management.md
+版本能力与 FGAP 路线：https://github.com/sugarst/Keycloak.Admin.Sdk/blob/main/docs/capability-policy.md
+版本变更：https://github.com/sugarst/Keycloak.Admin.Sdk/blob/main/CHANGELOG.md
+开源项目：https://github.com/sugarst/Keycloak.Admin.Sdk</PackageReleaseNotes>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="../Keycloak.Admin.Sdk/Keycloak.Admin.Sdk.csproj" />

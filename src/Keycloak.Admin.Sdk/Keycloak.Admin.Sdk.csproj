@@ -5,6 +5,13 @@
     <Description>Native AOT compatible .NET 10 client for Keycloak $(KeycloakTargetVersion) Admin REST API.</Description>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageReleaseNotes>适用于 .NET 10 的 Keycloak $(KeycloakTargetVersion) Admin REST API 客户端，支持 Native AOT、服务账号认证、依赖注入、可选弹性策略和版本能力检查。
+使用 AddKeycloakAdminSdk 注册客户端，通过 IKeycloakAdminClient 调用用户、角色、客户端、组织、授权等管理接口。
+快速开始：https://github.com/sugarst/Keycloak.Admin.Sdk#快速开始
+认证与依赖注入：https://github.com/sugarst/Keycloak.Admin.Sdk/blob/main/docs/authentication-and-errors.md
+版本能力与 FGAP 路线：https://github.com/sugarst/Keycloak.Admin.Sdk/blob/main/docs/capability-policy.md
+版本变更：https://github.com/sugarst/Keycloak.Admin.Sdk/blob/main/CHANGELOG.md
+开源项目：https://github.com/sugarst/Keycloak.Admin.Sdk</PackageReleaseNotes>
   </PropertyGroup>
   <ItemGroup>
     <EmbeddedResource Include="../../contracts/capabilities.json" LogicalName="Keycloak.Capabilities.Current.json" />
