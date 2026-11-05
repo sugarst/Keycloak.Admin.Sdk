@@ -4,7 +4,7 @@
 
 A **.NET 10 / Native AOT** client for the Keycloak Admin REST API, currently targeting **Keycloak 26.8.1** only. The main package references Microsoft.Extensions.Http **10.0.14** and Microsoft.Extensions.Http.Resilience **10.11.0**, and uses source-generated JSON metadata with reflection serialization disabled. This repository pins .NET SDK **10.0.403**.
 
-The current package version is **0.1.0-preview.2**; public APIs may change. Reference the [core project](src/Keycloak.Admin.Sdk/Keycloak.Admin.Sdk.csproj), or consume the preview packages from the `artifacts/packages/0.1.0-preview.2` local NuGet feed produced by the verification tool.
+Public APIs may change. For development, reference the [core project](src/Keycloak.Admin.Sdk/Keycloak.Admin.Sdk.csproj).
 
 ## Quick start
 
@@ -46,14 +46,9 @@ services.AddKeycloakAdminSdk(options =>
 
 Only bodyless GET/HEAD requests use transient retry, timeout and circuit-breaking strategies. Writes and token POST bypass the entire pipeline, including an open read circuit. Resilience is disabled by default; 401 recovery remains a separate option. With both enabled, the default upper bound is six physical admin requests per logical call. Use a cancellation token for the whole operation: pipeline timeouts exclude token acquisition, SDK 401 recovery and response body reading. See [configuration and exception details](docs/authentication-and-errors.md#http-弹性策略). Do not stack another retry/resilience handler on this named client.
 
-## NuGet packages and migration
+## Client and feature flags
 
-| Package | Purpose | Native AOT |
-| --- | --- | --- |
-| `Keycloak.Admin.Sdk` | Admin client, authentication, capability policy, DI and HttpClientFactory | Supported |
-| `Keycloak.Admin.Sdk.FeatureManagement` | Host feature flags and optional Application Insights evaluation telemetry | Managed only |
-
-When upgrading from preview.1, replace the `.Capabilities` and `.DependencyInjection` package references with the main package, replace `.FeatureManagement.ApplicationInsights` with `.FeatureManagement`, and recompile. Existing namespaces and registration methods are preserved. Installing the feature package restores the Microsoft telemetry dependency. Telemetry is opt-in.
+The feature package depends on Microsoft telemetry components; telemetry is opt-in.
 
 `new KeycloakAdminClient(...)` provides the underlying API transport. Use `KeycloakSupportedClient.CreateAsync` to enforce the supported scope before sending requests, or `KeycloakFeatureManagedClient.CreateAsync` for managed feature flags. See [capability policy](docs/capability-policy.md), [feature flags and telemetry](docs/feature-management.md), and [authentication, errors and DI](docs/authentication-and-errors.md).
 
@@ -73,14 +68,14 @@ When upgrading from preview.1, replace the `.Capabilities` and `.DependencyInjec
 | `fgap-v2-stable` (default) | 478 | Real business acceptance in managed and Linux Native AOT modes |
 | `fgap-v1-compat` | 492 | Real business acceptance in managed and Linux Native AOT modes |
 
-Both routes exclude 28 preview/experimental APIs; v2 also excludes 14 v1-only APIs. Excluded APIs retain generated methods and contract tests and are not counted as successful business acceptance. See the [coverage report](docs/contracts/test-coverage.md) for current test totals and coverage, and [live acceptance](docs/contracts/full-live-acceptance.md) for per-operation evidence. Results apply to the pinned baseline and recorded scenarios; see [verification status](docs/contracts/verification.md) for release limitations.
+Both routes exclude 28 preview/experimental APIs; v2 also excludes 14 v1-only APIs. Excluded APIs retain generated methods and contract tests and are not counted as successful business acceptance. See the [coverage report](docs/contracts/test-coverage.md) for current test totals and coverage, and [live acceptance](docs/contracts/full-live-acceptance.md) for per-operation evidence. Results apply to the pinned baseline and recorded scenarios; see [verification status](docs/contracts/verification.md).
 
 ## Development and verification
 
 Run from the repository root. Live services and container-based native verification require Docker:
 
 ```shell
-dotnet run --file tools/Verify.cs -- --skip-native-publish # Build, tests, coverage and packages
+dotnet run --file tools/Verify.cs -- --skip-native-publish # Build, tests and coverage
 dotnet run --file tools/Verify.cs -- --native-container    # Also verify Linux Native AOT
 dotnet run --file local/keycloak/Service.cs                # Start local Keycloak + PostgreSQL
 ```
@@ -92,7 +87,6 @@ The local console is at <http://127.0.0.1:18080/admin/>. The default user is `ad
 The detailed guides and generated reports below are maintained in Chinese; the endpoint inventory is in English.
 
 - [Architecture and contract sources](docs/architecture.md)
-- [Single-target upgrades and releases](docs/single-target-workflow.md)
 - [Support routes](docs/contracts/admin-api-routing.md) · [Verification index](docs/contracts/admin-api-validation-list.md)
 - [Endpoints and source mapping](docs/contracts/endpoint-inventory.md) · [Source alignment audit](docs/contracts/keycloak-26.8.1-alignment-audit.md)
 

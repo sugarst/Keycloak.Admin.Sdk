@@ -1,6 +1,6 @@
 # 单基线升级与发布
 
-每个 SDK 构建及包只声明一个精确 Keycloak 版本，升级完整替换活跃实现；历史契约和结果通过 Git tag、包及发布附件追溯。
+每个 SDK 构建及本地包只声明一个精确 Keycloak 版本，升级完整替换活跃实现；如未来创建 Git tag、公开包或发布附件，可用它们追溯历史契约和结果。
 
 ## 基线
 
@@ -50,7 +50,7 @@ dotnet run --file tools/Release.cs
 
 首次验收只在测试程序显式使用 `bootstrap-wire`，业务断言不减少，但没有最终策略拦截证明，不能导出为发布证据。`--promote` 核验四份首次证据，晋升后必须重跑最终客户端。`Release.cs -- --bootstrap` 可强制演练。
 
-失败即停止，不输出成功 manifest；旧 artifacts 可能保留，以本次成功清单为准。输出位于 `artifacts/releases/<packageVersion>/<sourceFingerprint>/`。命令只生成候选，不提交、推送或发布 NuGet。[release.yaml](../.github/workflows/release.yaml) 手动工作流执行同一入口。
+失败即停止，不输出成功 manifest；旧 artifacts 可能保留，以本次成功清单为准。输出位于 `artifacts/releases/<packageVersion>/<sourceFingerprint>/`。命令只生成本地候选，不提交、推送或发布 NuGet。[release.yaml](../.github/workflows/release.yaml) 手动工作流执行同一入口。NuGet 发布由项目所有者明确执行；版本配置、候选产物和源码推送均不代表已发布，发布记录以实际公开结果为准。
 
 ## 数据与路线边界
 

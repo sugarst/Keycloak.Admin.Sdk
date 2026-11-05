@@ -38,7 +38,7 @@
 
 主包直接引用 Microsoft.Extensions.Http 10.0.14 和 Microsoft.Extensions.Http.Resilience 10.11.0。DI 的 `options.Resilience` 将读取弹性策略封装为一个 ResilienceHandler，按命名客户端隔离状态，默认关闭。写入、带内容请求和 Token POST 选择空管道，读熔断不会阻断这些请求；具体规则见 [认证与弹性配置](authentication-and-errors.md#http-弹性策略)。Diagnostics 与 Polly 作为 Resilience 的传递依赖还原，不重复添加旧的 Http.Polly 适配器。托管扩展依赖主包、Microsoft.FeatureManagement 及微软的 Application Insights 遥测适配器。
 
-仅这两个库项目产出 NuGet 包，测试与生成器项目不打包。包引用迁移见 [README](../README.md#nuget-包与迁移)。
+仅这两个库项目可生成本地 NuGet 包，测试与生成器项目不打包。项目尚未发布 NuGet 包；客户端与功能开关介绍见 [README](../README.md#客户端与功能开关)。
 
 ## 范围边界
 

@@ -4,7 +4,7 @@
 
 面向 **.NET 10 / Native AOT** 的 Keycloak Admin REST API 客户端，当前仅支持 **Keycloak 26.8.1**。主包引用 Microsoft.Extensions.Http **10.0.14** 和 Microsoft.Extensions.Http.Resilience **10.11.0**，使用源生成 JSON 元数据，默认关闭反射序列化。仓库固定 .NET SDK **10.0.403**。
 
-当前包版本为 **0.1.0-preview.2**，公开 API 仍可能调整。可引用 [核心项目](src/Keycloak.Admin.Sdk/Keycloak.Admin.Sdk.csproj)，或使用验证工具生成的 `artifacts/packages/0.1.0-preview.2` 本地 NuGet 源。
+公开 API 仍可能调整。开发时可引用[核心项目](src/Keycloak.Admin.Sdk/Keycloak.Admin.Sdk.csproj)。
 
 ## 快速开始
 
@@ -34,14 +34,9 @@ Console.WriteLine(created.Location);
 
 DI 入口 `AddKeycloakAdminSdk` 提供 `options.Resilience`，默认关闭。开启后，仅为无内容 GET/HEAD 提供瞬态重试、超时和独立读熔断；写请求与 Token POST 绕过该管道。配置、401 组合次数和异常约定见 [HTTP 弹性策略](docs/authentication-and-errors.md#http-弹性策略)。
 
-## NuGet 包与迁移
+## 客户端与功能开关
 
-| 包 | 用途 | Native AOT |
-| --- | --- | --- |
-| `Keycloak.Admin.Sdk` | 管理客户端、认证、能力策略、DI 和 HttpClientFactory | 支持 |
-| `Keycloak.Admin.Sdk.FeatureManagement` | 宿主功能开关与可选 Application Insights 评估遥测 | 仅托管 |
-
-从 preview.1 升级时，将 `.Capabilities`、`.DependencyInjection` 的包引用换成主包，将 `.FeatureManagement.ApplicationInsights` 换成 `.FeatureManagement`，并重新编译。现有命名空间和注册方法可继续使用。安装功能开关包会还原微软遥测依赖，遥测默认关闭。
+功能开关包依赖微软遥测组件，遥测默认关闭。
 
 `new KeycloakAdminClient(...)` 提供底层 API 传输。需要在发送前限制支持范围时，使用 `KeycloakSupportedClient.CreateAsync`；托管功能开关使用 `KeycloakFeatureManagedClient.CreateAsync`。配置见 [能力策略](docs/capability-policy.md)、[功能开关与遥测](docs/feature-management.md)，DI 见 [认证与错误处理](docs/authentication-and-errors.md)。
 
@@ -61,14 +56,14 @@ DI 入口 `AddKeycloakAdminSdk` 提供 `options.Resilience`，默认关闭。开
 | `fgap-v2-stable`（默认） | 478 | 托管及 Linux Native AOT 真实业务验收 |
 | `fgap-v1-compat` | 492 | 托管及 Linux Native AOT 真实业务验收 |
 
-两条路线均排除 28 项预览/实验接口；v2 另排除 14 项 v1 专用接口。排除项保留生成方法和单测，不计为业务验收成功。最新测试总数与覆盖率见 [覆盖率报告](docs/contracts/test-coverage.md)，逐项业务证据见 [真实验收](docs/contracts/full-live-acceptance.md)。结果仅适用于当前基线与记录的场景，发布边界见 [验证状态](docs/contracts/verification.md)。
+两条路线均排除 28 项预览/实验接口；v2 另排除 14 项 v1 专用接口。排除项保留生成方法和单测，不计为业务验收成功。最新测试总数与覆盖率见 [覆盖率报告](docs/contracts/test-coverage.md)，逐项业务证据见 [真实验收](docs/contracts/full-live-acceptance.md)。结果仅适用于当前基线与记录的场景，详见 [验证状态](docs/contracts/verification.md)。
 
 ## 开发与验证
 
 从仓库根目录执行；真实服务及容器原生验证需要 Docker：
 
 ```shell
-dotnet run --file tools/Verify.cs -- --skip-native-publish # 构建、单测、覆盖率、打包
+dotnet run --file tools/Verify.cs -- --skip-native-publish # 构建、单测与覆盖率
 dotnet run --file tools/Verify.cs -- --native-container    # 另做 Linux Native AOT 验证
 dotnet run --file local/keycloak/Service.cs                # 启动本地 Keycloak + PostgreSQL
 ```
@@ -78,7 +73,6 @@ dotnet run --file local/keycloak/Service.cs                # 启动本地 Keyclo
 ## 文档
 
 - [架构与契约来源](docs/architecture.md)
-- [单基线升级与发布](docs/single-target-workflow.md)
 - [支持路线](docs/contracts/admin-api-routing.md) · [接口验证索引](docs/contracts/admin-api-validation-list.md)
 - [端点与源码](docs/contracts/endpoint-inventory.md) · [源码对齐审计](docs/contracts/keycloak-26.8.1-alignment-audit.md)
 
