@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 2,
+  "status": "local-candidate",
+  "keycloakVersion": "26.8.1",
+  "keycloakSourceCommit": "24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b",
+  "packageVersion": "26.8.1-preview.1",
+  "sdkCommit": "b8ca0c09deacf6e1194883e9dfa25e50b3309071",
+  "sdkWorkingTreeDirty": false,
+  "dotnetSdk": "10.0.403",
+  "sourceFingerprint": "1ad1c4c36613534faf0aa56f5de8bc1f8ea9c871d8abff0adcc1081113f75b1d",
+  "finishedUtc": "2026-11-05T10:44:10.1180837\u002B00:00",
+  "packages": [
+    {
+      "id": "Keycloak.Admin.Sdk",
+      "file": "Keycloak.Admin.Sdk.26.8.1-preview.1.nupkg",
+      "sha256": "bdd627ab6bbd188ae6dd57685b121ebfd27240fe13bc4796b9a235c921e0fb12"
+    },
+    {
+      "id": "Keycloak.Admin.Sdk.FeatureManagement",
+      "file": "Keycloak.Admin.Sdk.FeatureManagement.26.8.1-preview.1.nupkg",
+      "sha256": "28a4480b4d17a8f1dbf7c78acef461645d56a04f6a67d0ca17ceaa9968624123"
+    }
+  ],
+  "allGatesPassed": true,
+  "acceptance": "managed \u002B linux-musl-x64 Native AOT; FGAP v1 compatibility \u002B v2 stable; final guarded clients",
+  "acceptanceRuns": [
+    {
+      "route": "fgap-v2-stable",
+      "mode": "managed",
+      "accepted": 478,
+      "expected": 478,
+      "excluded": 42
+    },
+    {
+      "route": "fgap-v2-stable",
+      "mode": "native-aot",
+      "accepted": 478,
+      "expected": 478,
+      "excluded": 42
+    },
+    {
+      "route": "fgap-v1-compat",
+      "mode": "managed",
+      "accepted": 492,
+      "expected": 492,
+      "excluded": 28
+    },
+    {
+      "route": "fgap-v1-compat",
+      "mode": "native-aot",
+      "accepted": 492,
+      "expected": 492,
+      "excluded": 28
+    }
+  ],
+  "published": false
+}
