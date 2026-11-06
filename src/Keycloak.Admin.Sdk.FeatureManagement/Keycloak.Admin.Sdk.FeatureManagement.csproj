@@ -2,6 +2,7 @@
   <PropertyGroup>
     <Description>Managed feature flags and opt-in Application Insights telemetry for Keycloak Admin SDK.</Description>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageReleaseNotes><![CDATA[
 ## Keycloak.Admin.Sdk.FeatureManagement
 
@@ -94,6 +95,7 @@ Application Insights 功能评估遥测默认关闭。启用时引入 `Keycloak.
     ]]></PackageReleaseNotes>
   </PropertyGroup>
   <ItemGroup>
+    <None Update="README.md" Pack="true" PackagePath="/" />
     <ProjectReference Include="../Keycloak.Admin.Sdk/Keycloak.Admin.Sdk.csproj" />
     <PackageReference Include="Microsoft.FeatureManagement.Telemetry.ApplicationInsights" Version="4.8.0" />
     <PackageReference Include="Microsoft.FeatureManagement" Version="4.8.0" />

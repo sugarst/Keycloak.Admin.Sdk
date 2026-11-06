@@ -1,0 +1,110 @@
+{
+  "schemaVersion": 2,
+  "status": "local-candidate",
+  "keycloakVersion": "26.8.1",
+  "keycloakSourceCommit": "24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b",
+  "packageVersion": "26.8.1-preview.2",
+  "sdkCommit": "df2934e169da150a2a993192a90f41d3b61da113",
+  "sdkWorkingTreeDirty": true,
+  "dotnetSdk": "10.0.403",
+  "sourceFingerprint": "83bb57fe71297c43802b47e945f9efb8acc594d50c226f6ef4c531ecc7d0d402",
+  "finishedUtc": "2026-11-06T07:00:12.1843110\u002B00:00",
+  "packages": [
+    {
+      "id": "Keycloak.Admin.Sdk",
+      "file": "Keycloak.Admin.Sdk.26.8.1-preview.2.nupkg",
+      "sha256": "37eb1e9dd3efca515b8459c72cbacc2df7f36968aaa80b37dbac29d2ed7113ed"
+    },
+    {
+      "id": "Keycloak.Admin.Sdk.FeatureManagement",
+      "file": "Keycloak.Admin.Sdk.FeatureManagement.26.8.1-preview.2.nupkg",
+      "sha256": "2478f01f64b602c7c0b8708fae16319fd9c6bcadd283fa8b2be147725386c1bb"
+    }
+  ],
+  "allGatesPassed": true,
+  "capabilityCatalogSha256": "9301ab553e6947542c9a4c5159ba42c8a4ae979fc55ae2f4652e67602e19efde",
+  "verificationProfiles": [
+    {
+      "id": "b136edb664eab6fc1b87778c1c7f6ca5c7c8f4a846a030168b5077ff7d101ee4",
+      "route": "FgapV2Stable",
+      "runtime": "Managed",
+      "runtimeIdentifier": null,
+      "verification": "Contract, Managed",
+      "sourceFingerprint": "504a3c6981781b09e0f46f5f753fa9096b3c14e2104d4fd4d6fff725570f857b",
+      "evidence": "docs/contracts/capability-evidence/b136edb664eab6fc1b87778c1c7f6ca5c7c8f4a846a030168b5077ff7d101ee4.json",
+      "evidenceSha256": "b136edb664eab6fc1b87778c1c7f6ca5c7c8f4a846a030168b5077ff7d101ee4"
+    },
+    {
+      "id": "e7474b39e9d88cc02298f744eb5526a83098202b56f4b6366bf3e0e2b82bb7fb",
+      "route": "FgapV2Stable",
+      "runtime": "NativeAot",
+      "runtimeIdentifier": "linux-musl-x64",
+      "verification": "Contract, NativeAot",
+      "sourceFingerprint": "504a3c6981781b09e0f46f5f753fa9096b3c14e2104d4fd4d6fff725570f857b",
+      "evidence": "docs/contracts/capability-evidence/e7474b39e9d88cc02298f744eb5526a83098202b56f4b6366bf3e0e2b82bb7fb.json",
+      "evidenceSha256": "e7474b39e9d88cc02298f744eb5526a83098202b56f4b6366bf3e0e2b82bb7fb"
+    },
+    {
+      "id": "25c31f46968bdbd0c0183f619300e91ae2d29ff3a57d1ee903001295311a0b9f",
+      "route": "FgapV1Compatibility",
+      "runtime": "Managed",
+      "runtimeIdentifier": null,
+      "verification": "Contract, Managed",
+      "sourceFingerprint": "504a3c6981781b09e0f46f5f753fa9096b3c14e2104d4fd4d6fff725570f857b",
+      "evidence": "docs/contracts/capability-evidence/25c31f46968bdbd0c0183f619300e91ae2d29ff3a57d1ee903001295311a0b9f.json",
+      "evidenceSha256": "25c31f46968bdbd0c0183f619300e91ae2d29ff3a57d1ee903001295311a0b9f"
+    },
+    {
+      "id": "ed2dbbd969921f35538c0c3be898f89c781b652d1cc25f0b3e27e9b7cf45a51f",
+      "route": "FgapV1Compatibility",
+      "runtime": "NativeAot",
+      "runtimeIdentifier": "linux-musl-x64",
+      "verification": "Contract, NativeAot",
+      "sourceFingerprint": "504a3c6981781b09e0f46f5f753fa9096b3c14e2104d4fd4d6fff725570f857b",
+      "evidence": "docs/contracts/capability-evidence/ed2dbbd969921f35538c0c3be898f89c781b652d1cc25f0b3e27e9b7cf45a51f.json",
+      "evidenceSha256": "ed2dbbd969921f35538c0c3be898f89c781b652d1cc25f0b3e27e9b7cf45a51f"
+    },
+    {
+      "id": "895e936f485fcf02956c105b3502819a3c69e658e309cd1618f58c113ab3e4df",
+      "route": "FgapV2Stable",
+      "runtime": "Managed",
+      "runtimeIdentifier": null,
+      "verification": "Contract, Managed",
+      "sourceFingerprint": "4e0735bf6210e1b53095372258525f1b7bce9305f66cbcef2dfaff39eb91995a",
+      "evidence": "docs/contracts/capability-evidence/895e936f485fcf02956c105b3502819a3c69e658e309cd1618f58c113ab3e4df.json",
+      "evidenceSha256": "895e936f485fcf02956c105b3502819a3c69e658e309cd1618f58c113ab3e4df"
+    }
+  ],
+  "acceptance": "managed \u002B linux-musl-x64 Native AOT; FGAP v1 compatibility \u002B v2 stable; final guarded clients",
+  "acceptanceRuns": [
+    {
+      "route": "fgap-v2-stable",
+      "mode": "managed",
+      "accepted": 478,
+      "expected": 478,
+      "excluded": 42
+    },
+    {
+      "route": "fgap-v2-stable",
+      "mode": "native-aot",
+      "accepted": 478,
+      "expected": 478,
+      "excluded": 42
+    },
+    {
+      "route": "fgap-v1-compat",
+      "mode": "managed",
+      "accepted": 492,
+      "expected": 492,
+      "excluded": 28
+    },
+    {
+      "route": "fgap-v1-compat",
+      "mode": "native-aot",
+      "accepted": 492,
+      "expected": 492,
+      "excluded": 28
+    }
+  ],
+  "published": false
+}
