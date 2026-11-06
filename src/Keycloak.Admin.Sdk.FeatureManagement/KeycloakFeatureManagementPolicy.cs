@@ -6,17 +6,11 @@ namespace Keycloak.Admin.Sdk.FeatureManagement;
 /// <summary>Catalog AND host master flag AND endpoint feature flag. Missing flags fail closed.
 /// The SDK evaluates this policy once per logical request, before authentication and transport.
 /// Use a manager with the same lifetime as the client; scoped snapshots must not escape their scope.</summary>
-public sealed class KeycloakFeatureManagementPolicy : IKeycloakAdminRequestPolicy
+public sealed class KeycloakFeatureManagementPolicy(KeycloakCapabilityPolicy capabilities, IVariantFeatureManager features) : IKeycloakAdminRequestPolicy
 {
     public const string AdminApiFeature = "KeycloakSdk.AdminApi";
-    private readonly KeycloakCapabilityPolicy capabilities;
-    private readonly IVariantFeatureManager features;
-
-    public KeycloakFeatureManagementPolicy(KeycloakCapabilityPolicy capabilities, IVariantFeatureManager features)
-    {
-        this.capabilities = capabilities ?? throw new ArgumentNullException(nameof(capabilities));
-        this.features = features ?? throw new ArgumentNullException(nameof(features));
-    }
+    private readonly KeycloakCapabilityPolicy capabilities = capabilities ?? throw new ArgumentNullException(nameof(capabilities));
+    private readonly IVariantFeatureManager features = features ?? throw new ArgumentNullException(nameof(features));
 
     public async ValueTask<KeycloakCapabilityDecision> EvaluateAsync(HttpMethod method, Uri target, string? operation = null,
         CancellationToken cancellationToken = default)
