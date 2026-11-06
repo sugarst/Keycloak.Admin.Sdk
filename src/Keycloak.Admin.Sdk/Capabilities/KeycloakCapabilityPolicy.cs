@@ -1,3 +1,6 @@
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+
 namespace Keycloak.Admin.Sdk.Capabilities;
 
 /// <summary>All gates are conjunctive. Unknown version, endpoint or required server feature denies locally.
@@ -17,6 +20,9 @@ public sealed class KeycloakCapabilityPolicy : IKeycloakAdminRequestPolicy
         this.actual = actual ?? throw new ArgumentNullException(nameof(actual));
         release = KeycloakCapabilityCatalog.Find(configuration.ServerVersion);
         if (release is not null && configuration.DisabledCapabilities.Any(id => !release.Endpoints.Any(e => e.FeatureId == id))) throw new ArgumentException("Unknown disabled capability ID.", nameof(configuration));
+        if (release is not null && (configuration.PreviewCapabilities.Any(id => !release.Endpoints.Any(e => e.FeatureId == id && e.Stage == KeycloakFeatureStage.Preview))
+            || configuration.ExperimentalCapabilities.Any(id => !release.Endpoints.Any(e => e.FeatureId == id && e.Stage == KeycloakFeatureStage.Experimental))))
+            throw new ArgumentException("Unknown capability or incorrect upstream stage in opt-in list.", nameof(configuration));
     }
 
     public KeycloakCapabilityDecision Evaluate(HttpMethod method, Uri target, string? operation = null)
@@ -25,6 +31,8 @@ public sealed class KeycloakCapabilityPolicy : IKeycloakAdminRequestPolicy
         KeycloakCapabilityDecision Result(KeycloakCapabilityReason reason, KeycloakEndpointCapability? capability = null) => new(reason, configuration.ServerVersion, configuration.Route, capability);
         if (release is null) return Result(KeycloakCapabilityReason.UnknownVersion);
         if (actual.ServerVersion != release.ServerVersion) return Result(KeycloakCapabilityReason.VersionMismatch);
+        if (configuration.UsesSupportProfiles && !MatchesRuntime(configuration.RuntimeProfile, configuration.RuntimeIdentifier, RuntimeFeature.IsDynamicCodeSupported, RuntimeInformation.RuntimeIdentifier))
+            return Result(KeycloakCapabilityReason.RuntimeMismatch);
         if (!target.IsAbsoluteUri || target.GetLeftPart(UriPartial.Authority) != server.GetLeftPart(UriPartial.Authority) || !target.AbsolutePath.StartsWith(server.AbsolutePath, StringComparison.Ordinal)) return Result(KeycloakCapabilityReason.WrongServer);
         string path = "/" + target.AbsolutePath[server.AbsolutePath.Length..].TrimEnd('/');
         KeycloakEndpointCapability? endpoint;
@@ -43,14 +51,22 @@ public sealed class KeycloakCapabilityPolicy : IKeycloakAdminRequestPolicy
         return EvaluateEndpoint(endpoint);
     }
 
+    internal static bool MatchesRuntime(KeycloakRuntimeProfile profile, string? requestedRid, bool dynamicCodeSupported, string actualRid)
+        => profile switch
+        {
+            KeycloakRuntimeProfile.Managed => dynamicCodeSupported,
+            KeycloakRuntimeProfile.NativeAot => !dynamicCodeSupported && requestedRid == actualRid,
+            _ => dynamicCodeSupported || requestedRid == actualRid
+        };
+
     internal KeycloakCapabilityDecision EvaluateEndpoint(KeycloakEndpointCapability endpoint)
     {
         KeycloakCapabilityReason reason;
-        if ((endpoint.Stage == KeycloakFeatureStage.Preview && !configuration.AllowPreview) || (endpoint.Stage == KeycloakFeatureStage.Experimental && !configuration.AllowExperimental) || endpoint.Stage == KeycloakFeatureStage.Removed) reason = KeycloakCapabilityReason.StageNotAllowed;
+        if (!configuration.AllowsStage(endpoint)) reason = KeycloakCapabilityReason.StageNotAllowed;
         else if (endpoint.Support == KeycloakSupportStatus.NotSupported) reason = KeycloakCapabilityReason.NotSupported;
         else if (!endpoint.Routes.Contains(configuration.Route)) reason = KeycloakCapabilityReason.RouteUnavailable;
         else if (endpoint.Implementation != KeycloakImplementationStatus.Implemented) reason = KeycloakCapabilityReason.NotImplemented;
-        else if (endpoint.Verification != (KeycloakVerification.Contract | KeycloakVerification.Managed | KeycloakVerification.NativeAot)) reason = KeycloakCapabilityReason.InsufficientVerification;
+        else if (!HasVerification(endpoint)) reason = KeycloakCapabilityReason.InsufficientVerification;
         else if (configuration.DisabledCapabilities.Contains("KeycloakSdk.AdminApi") || configuration.DisabledCapabilities.Contains(endpoint.FeatureId)) reason = KeycloakCapabilityReason.DisabledByHost;
         else
         {
@@ -62,6 +78,27 @@ public sealed class KeycloakCapabilityPolicy : IKeycloakAdminRequestPolicy
             }
         }
         return new(reason, configuration.ServerVersion, configuration.Route, endpoint);
+    }
+
+    private bool HasVerification(KeycloakEndpointCapability endpoint)
+    {
+        if (!configuration.UsesSupportProfiles)
+            return endpoint.Verification == (KeycloakVerification.Contract | KeycloakVerification.Managed | KeycloakVerification.NativeAot)
+                && (endpoint.SupportProfiles.Count == 0 || (endpoint.SupportProfiles.Any(p => p.Route == configuration.Route && p.Runtime == KeycloakRuntimeProfile.Managed)
+                    && endpoint.SupportProfiles.Any(p => p.Route == configuration.Route && p.Runtime == KeycloakRuntimeProfile.NativeAot)));
+        bool Has(KeycloakRuntimeProfile runtime)
+        {
+            var required = KeycloakVerification.Contract | (runtime == KeycloakRuntimeProfile.Managed ? KeycloakVerification.Managed : KeycloakVerification.NativeAot);
+            return endpoint.SupportProfiles.Any(p => p.Route == configuration.Route && p.Runtime == runtime
+                && (runtime != KeycloakRuntimeProfile.NativeAot || p.RuntimeIdentifier == configuration.RuntimeIdentifier)
+                && (p.Verification & required) == required);
+        }
+        return configuration.RuntimeProfile switch
+        {
+            KeycloakRuntimeProfile.Managed => Has(KeycloakRuntimeProfile.Managed),
+            KeycloakRuntimeProfile.NativeAot => Has(KeycloakRuntimeProfile.NativeAot),
+            _ => Has(KeycloakRuntimeProfile.Managed) && Has(KeycloakRuntimeProfile.NativeAot)
+        };
     }
 
     public ValueTask EnsureAllowedAsync(HttpMethod method, Uri target, string? operation, CancellationToken cancellationToken)

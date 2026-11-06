@@ -6,11 +6,31 @@ public enum KeycloakSupportStatus { NotSupported, Supported, Compatibility }
 [Flags]
 public enum KeycloakVerification { None = 0, Contract = 1, Managed = 2, NativeAot = 4 }
 public enum KeycloakAdminRoute { FgapV2Stable, FgapV1Compatibility }
+public enum KeycloakRuntimeProfile { Portable, Managed, NativeAot }
 public enum KeycloakCapabilityReason
 {
     Allowed, UnknownVersion, VersionMismatch, UnknownEndpoint, EndpointMismatch, WrongServer,
     RouteUnavailable, RouteMismatch, StageNotAllowed, NotSupported, NotImplemented,
-    InsufficientVerification, ServerFeatureUnknown, ServerFeatureDisabled, DisabledByHost
+    InsufficientVerification, ServerFeatureUnknown, ServerFeatureDisabled, DisabledByHost, RuntimeMismatch
+}
+
+/// <summary>A recorded verification run for one route, runtime and (for Native AOT) RID.</summary>
+public sealed class KeycloakVerificationProfile
+{
+    public string Id { get; }
+    public KeycloakAdminRoute Route { get; }
+    public KeycloakRuntimeProfile Runtime { get; }
+    public string? RuntimeIdentifier { get; }
+    public KeycloakVerification Verification { get; }
+    public string SourceFingerprint { get; }
+    public string Evidence { get; }
+    public string EvidenceSha256 { get; }
+    internal KeycloakVerificationProfile(string id, KeycloakAdminRoute route, KeycloakRuntimeProfile runtime,
+        string? runtimeIdentifier, KeycloakVerification verification, string sourceFingerprint, string evidence, string evidenceSha256)
+    {
+        Id = id; Route = route; Runtime = runtime; RuntimeIdentifier = runtimeIdentifier; Verification = verification;
+        SourceFingerprint = sourceFingerprint; Evidence = evidence; EvidenceSha256 = evidenceSha256;
+    }
 }
 
 public sealed class KeycloakEndpointCapability
@@ -26,13 +46,16 @@ public sealed class KeycloakEndpointCapability
     public IReadOnlyList<string> RequiredServerFeatures { get; }
     public IReadOnlyList<KeycloakAdminRoute> Routes { get; }
     public string Evidence { get; }
+    public IReadOnlyList<KeycloakVerificationProfile> SupportProfiles { get; }
     internal KeycloakEndpointCapability(string operation, string method, string path, string featureId, KeycloakFeatureStage stage,
-        KeycloakImplementationStatus implementation, KeycloakSupportStatus support, KeycloakVerification verification, string[] features, string evidence, KeycloakAdminRoute[] routes)
+        KeycloakImplementationStatus implementation, KeycloakSupportStatus support, KeycloakVerification verification, string[] features, string evidence, KeycloakAdminRoute[] routes,
+        KeycloakVerificationProfile[]? supportProfiles = null)
     {
         Operation = operation; Method = method; Path = path; FeatureId = featureId; Stage = stage;
         Implementation = implementation; Support = support; Verification = verification;
         RequiredServerFeatures = Array.AsReadOnly(features); Evidence = evidence;
         Routes = Array.AsReadOnly(routes);
+        SupportProfiles = Array.AsReadOnly(supportProfiles ?? []);
     }
 }
 
@@ -41,8 +64,14 @@ public sealed class KeycloakReleaseCapabilities
     public string ServerVersion { get; }
     public string SourceCommit { get; }
     public IReadOnlyList<KeycloakEndpointCapability> Endpoints { get; }
-    internal KeycloakReleaseCapabilities(string version, string commit, KeycloakEndpointCapability[] endpoints)
-    { ServerVersion = version; SourceCommit = commit; Endpoints = Array.AsReadOnly(endpoints); }
+    public IReadOnlyList<KeycloakVerificationProfile> VerificationProfiles { get; }
+    public int SchemaVersion { get; }
+    internal KeycloakReleaseCapabilities(string version, string commit, KeycloakEndpointCapability[] endpoints,
+        KeycloakVerificationProfile[]? verificationProfiles = null, int schemaVersion = 1)
+    {
+        ServerVersion = version; SourceCommit = commit; Endpoints = Array.AsReadOnly(endpoints);
+        VerificationProfiles = Array.AsReadOnly(verificationProfiles ?? []); SchemaVersion = schemaVersion;
+    }
 }
 
 public sealed class KeycloakCapabilityDecision

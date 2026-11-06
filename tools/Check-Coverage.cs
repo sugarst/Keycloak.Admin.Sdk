@@ -105,8 +105,9 @@ static string FileName(XElement e)
 {
     string path = e.Attribute("filename")!.Value.Replace('\\', '/');
     // Multiple covered product assemblies make Coverlet use paths relative to src/.
-    const string prefix = "Keycloak.Admin.Sdk/";
-    return path.StartsWith(prefix, StringComparison.Ordinal) ? path[prefix.Length..] : path;
+    foreach (string prefix in new[] { "src/Keycloak.Admin.Sdk/", "Keycloak.Admin.Sdk/", "src/Keycloak.Admin.Sdk.FeatureManagement/", "Keycloak.Admin.Sdk.FeatureManagement/" })
+        if (path.StartsWith(prefix, StringComparison.Ordinal)) return path[prefix.Length..];
+    return path;
 }
 static double Percent(int covered, int total) => total > 0 && covered >= 0 && covered <= total ? covered * 100.0 / total : throw new InvalidDataException("Empty or invalid coverage counts are not accepted.");
 static Coverage Measure(IEnumerable<XElement> classes)

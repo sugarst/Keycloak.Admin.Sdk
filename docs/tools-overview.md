@@ -55,6 +55,8 @@ dotnet run --file tools/Verify.cs -- --help
 
 ## 目标升级与候选验收
 
+非 Stable 能力的逐环境工作流：`Test-Feature.cs -- --feature=client-types [--native-aot] [--v1]` 执行隔离候选验证；`Check-FeatureAcceptance.cs -- --evidence=<path> --promote` 只晋升已证明的组合；随后 `Test-Feature.cs -- --feature=client-types --guarded` 验证最终目录和宿主开关。`Test-SupportedFeatures.cs` 自动复验所有已支持组合，`Release.cs` 调用它作为附加发布门禁。具体证据规则见[能力策略](capability-policy.md#非-stable-功能的验证与晋升)。
+
 | 工具 | 常用命令 | 用途及影响 |
 | --- | --- | --- |
 | [Upgrade.cs](../tools/Upgrade.cs) | `dotnet run --file tools/Upgrade.cs -- --candidate=artifacts/candidate` | 在 `artifacts/upgrade/<id>/` 隔离准备新目标并生成差异，不替换活跃源码。添加 `--apply` 会重新准备并安装替换结果，删除不再生成的 API 和旧验收证据；使用前审阅候选和工作区。候选输入要求见 [单基线流程](single-target-workflow.md)。 |

@@ -4,9 +4,33 @@
 
 ## 开放规则
 
+本包负责最终灰度开放和关闭。非 Stable 功能先按 [验证与晋升流程](non-stable-feature-lifecycle.md) 获得指定环境的 SDK 支持资格；FeatureManagement 不执行业务验证、不生成晋升证据、不修改支持目录或上游阶段。晋升工具也不会替宿主打开功能开关。
+
 `KeycloakFeatureManagementPolicy` 先执行能力策略，再检查 `KeycloakSdk.AdminApi` 总开关和目录项的 `FeatureId` 开关；目标就是总开关时只检查一次。目录拒绝不调用 FeatureManager；缺失/false 开关返回 DisabledByHost，过滤器或配置异常直接传播，均不发送业务请求。
 
 开关不能绕过阶段、支持、验证或 FGAP 路线。所有请求入口每个逻辑调用只评估一次，401 重放复用结果，下一次调用重新评估；配置变化不撤销已发送请求。不同开关之间不保证跨提供方原子性。
+
+## 托管与 Native AOT 的统一门禁
+
+主包提供 `IKeycloakFeatureGate` 和 `KeycloakFeatureGatePolicy`。本扩展通过 `KeycloakMicrosoftFeatureGate` 适配 `IVariantFeatureManager`；原有 `KeycloakFeatureManagementPolicy` 和工厂入口保持可用，内部复用同一门禁。微软引擎、过滤器和遥测仍仅进入托管扩展。
+
+原生宿主使用主包的 `KeycloakFeatureSnapshotGate`，不引入微软引擎或反射配置绑定：
+
+```csharp
+var flags = new KeycloakFeatureSnapshotGate(new Dictionary<string, bool>
+{
+    [KeycloakFeatureGatePolicy.AdminApiFeature] = true,
+    ["KeycloakSdk.Workflows"] = true
+});
+var support = new KeycloakSupportConfiguration(
+    KeycloakTarget.Version, KeycloakRuntimeProfile.NativeAot,
+    runtimeIdentifier: "linux-musl-x64");
+var sdk = await KeycloakSupportedClient.CreateAsync(http, server, tokens, support, flags);
+```
+
+`Replace` 校验并原子替换完整不可变快照；未知/缺失开关为 false，重复或空 ID 拒绝，失败替换不影响旧快照。一次逻辑请求的总开关和功能开关读取同一代快照。宿主管理配置文件/远端更新、取消令牌和提供方生命周期；复杂目标筛选继续由托管适配器提供。未传 gate 的 SupportedClient 保持原有能力策略行为。
+
+非 Stable 功能先按[能力策略](capability-policy.md#非-stable-功能的验证与晋升)完成逐环境验证与晋升，再显式配置阶段许可，最后由宿主开关决定灰度范围。Flag=true 不会把未验证操作变成已支持，也不会让 Managed 的证据适用于 Native AOT。
 
 策略接收 `IVariantFeatureManager`，复用宿主的注册、过滤器和刷新，仅消费布尔结果。若使用 scoped `IVariantFeatureManagerSnapshot` 固定宿主请求内的结果，SDK 客户端须同属该 scope；默认 singleton FeatureManager 可与单例客户端一起使用。
 

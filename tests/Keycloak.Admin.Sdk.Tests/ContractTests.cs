@@ -7,6 +7,10 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 [TestClass]
 public sealed class ContractTests
 {
+    [TestMethod] public void RuntimeCapabilityConfiguration() => RuntimeCapabilityContracts.Configuration();
+    [TestMethod] public void RuntimeCapabilityMatrix() => RuntimeCapabilityContracts.RuntimeMatrix();
+    [TestMethod] public void RuntimeCapabilityCatalogValidation() => RuntimeCapabilityContracts.CatalogValidation();
+    [TestMethod] public Task RuntimeIndependentFeatureGates() => RuntimeCapabilityContracts.GatesAsync();
     [TestMethod] public Task RawClientInterfaceOverloads() => InterfaceContracts.RawTransportsAsync();
     [TestMethod] public Task TransientReadResilience() => ResilienceContracts.ReadsAsync();
     [TestMethod] public Task ResilienceBypassesWritesAndTokenPost() => ResilienceContracts.BypassAsync();
@@ -16,6 +20,7 @@ public sealed class ContractTests
     [TestMethod] public Task StreamResilienceBeforeDeliveryOnly() => ResilienceContracts.StreamsAsync();
     [TestMethod] public void ResilienceConfigurationValidation() => ResilienceContracts.Validation();
     [TestMethod] public Task FeatureFlagsCannotPromoteAnyCatalogEndpoint() => FeatureManagementContracts.DecisionsAsync();
+    [TestMethod] public Task FeatureFlagsOnlyRollOutPromotedNonStableCapabilities() => FeatureManagementContracts.NonStableRolloutAsync();
     [TestMethod] public Task FeatureFlagTransportReloadAndReplay() => FeatureManagementContracts.TransportAsync();
     [TestMethod] public Task FeatureManagedClientBootstrap() => FeatureManagementContracts.BootstrapAsync();
     [TestMethod, DoNotParallelize] public Task OptionalApplicationInsightsFeatureEvaluations() => FeatureManagementContracts.TelemetryAsync();

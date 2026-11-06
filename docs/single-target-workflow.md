@@ -12,12 +12,17 @@
 
 候选目录须包含已审阅文件：
 
+能力与支持配置包含 `capability-rules.json`、`feature-validation-plans.json`、旧版 `support-policy.example.json` 及 schema 2 的 `support-policy.managed.example.json`、`support-policy.native-aot.example.json`；它们都必须与新目标版本一致。更换目标时不继承旧目录的验证档案。
+
 ```text
 baseline.json
 admin-api-routes.json
 capability-rules.json
+feature-validation-plans.json
 overrides.json
 support-policy.example.json
+support-policy.managed.example.json
+support-policy.native-aot.example.json
 feature-management.example.json
 openapi.json                       # 可选，省略时下载该版本官方定义
 ```

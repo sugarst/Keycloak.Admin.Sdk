@@ -93,6 +93,52 @@ public static class FeatureManagementContracts
         await Throws<FeatureManagementException>(async () => await new KeycloakFeatureManagementPolicy(Catalog(), missingFilter.Manager).EvaluateAsync(HttpMethod.Get, Target("admin/realms/master/organizations")));
     }
 
+    public static async Task NonStableRolloutAsync()
+    {
+        const string feature = "KeycloakSdk.ClientTypes";
+        const string path = "/admin/realms/master/client-types";
+        using var cancellation = new CancellationTokenSource(TimeSpan.FromSeconds(30));
+        var ct = cancellation.Token;
+        var host = Host(); using var services = host.Services; using var config = host.Config;
+        var endpoint = KeycloakCapabilityCatalog.Current.Endpoints.Single(e => e.Operation == "ClientTypes.GetClientTypesAsync");
+        var profiles = endpoint.SupportProfiles.ToArray();
+
+        var noOptIn = new KeycloakFeatureManagementPolicy(Catalog(configuration: new(KeycloakTarget.Version, KeycloakRuntimeProfile.Managed)), host.Manager);
+        Check((await noOptIn.EvaluateAsync(HttpMethod.Get, Target(path), cancellationToken: ct)).Reason == KeycloakCapabilityReason.StageNotAllowed
+            && host.Manager.Calls.IsEmpty, "All flags on cannot supply a non-stable stage opt-in");
+
+        var support = new KeycloakSupportConfiguration(KeycloakTarget.Version, KeycloakRuntimeProfile.Managed, experimentalCapabilities: [feature, "KeycloakSdk.Ssf"]);
+        var policy = new KeycloakFeatureManagementPolicy(Catalog(configuration: support), host.Manager);
+        var unverified = KeycloakCapabilityCatalog.Current.Endpoints.First(e => e.FeatureId == "KeycloakSdk.Ssf");
+        var unverifiedTarget = Target(Regex.Replace(unverified.Path, "\\{[^}]+\\}", "fixture"));
+        Check((await policy.EvaluateAsync(new HttpMethod(unverified.Method), unverifiedTarget, unverified.Operation, ct)).Reason == KeycloakCapabilityReason.NotSupported
+            && host.Manager.Calls.IsEmpty, "All flags on cannot promote an unverified feature");
+
+        var v1 = new KeycloakFeatureManagementPolicy(Catalog(1, new(KeycloakTarget.Version, KeycloakRuntimeProfile.Managed,
+            route: KeycloakAdminRoute.FgapV1Compatibility, experimentalCapabilities: [feature])), host.Manager);
+        Check((await v1.EvaluateAsync(HttpMethod.Get, Target(path), cancellationToken: ct)).Reason == KeycloakCapabilityReason.InsufficientVerification
+            && host.Manager.Calls.IsEmpty, "Flags cannot extend managed v2 evidence to v1");
+
+        using var handler = new Handler(); using var http = new HttpClient(handler); var tokens = new Tokens();
+        var client = new KeycloakAdminClient(http, Server, tokens, new() { RequestPolicy = policy });
+        int index = Array.IndexOf(Ids, feature);
+        foreach (bool enabled in new[] { false, true, false })
+        {
+            config[$"feature_management:feature_flags:{index}:enabled"] = enabled ? "true" : "false";
+            config.Reload();
+            if (enabled) await client.SendAsync(HttpMethod.Get, path, cancellationToken: ct);
+            else await Denied(() => client.SendAsync(HttpMethod.Get, path, cancellationToken: ct));
+        }
+        Check(handler.Sends == 1 && tokens.Acquisitions == 1, "Promoted feature supports off/on/off without HTTP or token acquisition when off");
+        config[$"feature_management:feature_flags:{index}:enabled"] = "true";
+        config[$"feature_management:feature_flags:{Array.IndexOf(Ids, KeycloakFeatureManagementPolicy.AdminApiFeature)}:enabled"] = "false";
+        config.Reload();
+        await Denied(() => client.SendAsync(HttpMethod.Get, path, cancellationToken: ct));
+        Check(handler.Sends == 1 && tokens.Acquisitions == 1, "Master switch also closes a promoted feature");
+        Check(endpoint.Stage == KeycloakFeatureStage.Experimental && endpoint.Support == KeycloakSupportStatus.Supported
+            && endpoint.SupportProfiles.SequenceEqual(profiles), "Rollout changes neither upstream stage nor SDK verification profiles");
+    }
+
     public static async Task TransportAsync()
     {
         var host = Host(); using var services = host.Services; using var config = host.Config;
@@ -174,7 +220,7 @@ public static class FeatureManagementContracts
     }
 
     public static async Task RunAsync()
-    { await DecisionsAsync(); await TransportAsync(); await BootstrapAsync(); await TelemetryAsync(); }
+    { await DecisionsAsync(); await NonStableRolloutAsync(); await TransportAsync(); await BootstrapAsync(); await TelemetryAsync(); }
 
     public sealed class FilterFailure : Exception;
     [FilterAlias("Throwing")]

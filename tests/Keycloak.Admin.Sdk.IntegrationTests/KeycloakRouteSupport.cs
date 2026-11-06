@@ -29,7 +29,7 @@ internal sealed record KeycloakRoute(string TargetVersion, string Id, int FgapVe
         if (FgapVersion != 1 && LegacyPatterns.Any(p => Regex.IsMatch(path, p))) return "FGAP v1 compatibility only; select fgap-v1-compat explicitly";
         return null;
     }
-    public void ValidateServer(JsonElement info)
+    public void ValidateServer(JsonElement info, IReadOnlySet<string>? allowedNonStableFeatures = null)
     {
         if (info.GetProperty("systemInfo").GetProperty("version").GetString() != TargetVersion) throw new InvalidDataException("Server version differs from declared route release.");
         var profile = info.GetProperty("profileInfo");
@@ -38,7 +38,8 @@ internal sealed record KeycloakRoute(string TargetVersion, string Id, int FgapVe
         foreach (var feature in info.GetProperty("features").EnumerateArray())
         {
             string type = feature.GetProperty("type").GetString()!;
-            if (feature.GetProperty("enabled").GetBoolean() && type is "PREVIEW" or "PREVIEW_DISABLED_BY_DEFAULT" or "EXPERIMENTAL")
+            if (feature.GetProperty("enabled").GetBoolean() && type is "PREVIEW" or "PREVIEW_DISABLED_BY_DEFAULT" or "EXPERIMENTAL"
+                && !(allowedNonStableFeatures?.Contains(feature.GetProperty("name").GetString()!) ?? false))
                 throw new InvalidDataException("Declared route has enabled unsupported feature: " + feature.GetProperty("name").GetString());
         }
         var disabled = profile.GetProperty("disabledFeatures").EnumerateArray().Select(f => f.GetString()).ToHashSet();

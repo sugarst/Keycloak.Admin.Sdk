@@ -18,4 +18,8 @@
   </ItemGroup>
   <ItemGroup><ProjectReference Include="../../src/Keycloak.Admin.Sdk/Keycloak.Admin.Sdk.csproj" /></ItemGroup>
   <ItemGroup><ProjectReference Include="../Keycloak.Admin.Sdk.IntegrationTests/Keycloak.Admin.Sdk.IntegrationTests.csproj" /></ItemGroup>
+  <ItemGroup>
+    <Compile Include="../../tools/CapabilityEvidence.cs" Link="CapabilityEvidence.cs" />
+    <Compile Include="../../tools/FeatureAcceptance.cs" Link="FeatureAcceptance.cs" />
+  </ItemGroup>
 </Project>

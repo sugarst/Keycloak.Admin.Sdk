@@ -49,6 +49,12 @@ return await ScriptHost.ExecuteAsync(args, "dotnet run --file tools/Check-Baseli
     using var support = JsonDocument.Parse(File.ReadAllText(Path.Combine(root, "contracts/support-policy.example.json")));
     using var capabilities = JsonDocument.Parse(File.ReadAllText(Path.Combine(root, "contracts/capabilities.json")));
     using var rules = JsonDocument.Parse(File.ReadAllText(Path.Combine(root, "contracts/capability-rules.json")));
+    foreach (string name in new[] { "feature-validation-plans.json", "support-policy.managed.example.json", "support-policy.native-aot.example.json" })
+    {
+        using var reviewed = JsonDocument.Parse(File.ReadAllText(Path.Combine(root, "contracts", name)));
+        if (reviewed.RootElement.GetProperty("serverVersion").GetString() != target.Version)
+            throw new InvalidDataException("Runtime support and validation plans require review for the current target: " + name);
+    }
     if (routes.RootElement.GetProperty("keycloakVersion").GetString() != target.Version || support.RootElement.GetProperty("serverVersion").GetString() != target.Version
         || capabilities.RootElement.GetProperty("serverVersion").GetString() != target.Version || capabilities.RootElement.GetProperty("sourceCommit").GetString() != target.Commit
         || rules.RootElement.GetProperty("keycloakVersion").GetString() != target.Version)

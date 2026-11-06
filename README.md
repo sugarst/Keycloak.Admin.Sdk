@@ -72,17 +72,19 @@ DI 入口 `AddKeycloakAdminSdk` 提供 `options.Resilience`，默认关闭。开
 | `fgap-v2-stable`（默认） | 478 | 托管及 Linux Native AOT 真实业务验收 |
 | `fgap-v1-compat` | 492 | 托管及 Linux Native AOT 真实业务验收 |
 
-以下接口保留生成方法和契约单测，但不属于两条路线的支持范围，也未计入真实业务验收成功：
+以下接口不计入两条正式路线的默认验收范围；非 Stable 功能通过独立计划按环境逐项验证：
 
 | Keycloak 功能 | 阶段 | 操作数 | 不支持的原因 |
 | --- | --- | ---: | --- |
 | `oid4vc-vci` | Preview | 7 | 凭证管理功能处于预览阶段，按当前支持策略排除 |
 | `ssf` | Experimental | 19 | 功能处于实验阶段，按当前支持策略排除 |
-| `client-types` | Experimental | 2 | 功能处于实验阶段，按当前支持策略排除 |
+| `client-types` | Experimental | 2 | 仅托管 v2 组合完成独立验证与晋升；默认关闭，需 schema 2 显式许可和宿主开关；AOT/v1 尚未晋升 |
+
+schema 2 支持 Managed、NativeAot 和 Portable 验证配置。托管使用 FeatureManagement，原生可使用主包的 `KeycloakFeatureSnapshotGate`；开关不能覆盖版本、阶段或证据拒绝。旧配置保持同时要求托管和 AOT 证据。接入见[能力策略](docs/capability-policy.md#按运行环境开放schema-2)；独立验证、晋升与最后的灰度开关见[非 Stable 功能流程](docs/non-stable-feature-lifecycle.md)。
 
 默认 v2 路线另外排除 14 个 FGAP v1 专用接口；这些接口已在 v1 兼容路线上通过验收。**生成方法存在不等于 SDK 承诺支持该接口**：使用 `KeycloakSupportedClient.CreateAsync` 可在发送请求前执行版本、成熟度、路线、服务器功能及验证状态检查。直接构造 `KeycloakAdminClient` 提供底层传输，不自动应用支持策略。
 
-范围以 Keycloak 26.8.1 的 Admin API 为准，不涵盖控制台静态资源、独立 OAuth/OIDC、Account、SCIM 或实验性 Admin API v2 等协议，也不能预先枚举第三方 SPI 扩展。结果不自动适用于其他 Keycloak 版本，也不代表已覆盖所有权限和配置组合。
+范围以 Keycloak 26.8.1 的 Admin API 为准，不涵盖控制台静态资源、独立 OAuth/OIDC、Account、SCIM 或预览 Client Admin API v2 等协议，也不能预先枚举第三方 SPI 扩展。结果不自动适用于其他 Keycloak 版本，也不代表已覆盖所有权限和配置组合。
 
 逐接口状态及排除原因见 [支持矩阵](docs/contracts/admin-api-support-matrix.tsv)，分类汇总见 [验证索引](docs/contracts/admin-api-validation-list.md)，实测环境和证据见 [真实验收](docs/contracts/full-live-acceptance.md)。支持策略的接入方式见 [能力策略](docs/capability-policy.md)。
 

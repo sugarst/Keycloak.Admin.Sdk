@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "serverVersion": "26.8.1",
+  "plans": {
+    "client-types": {
+      "featureId": "KeycloakSdk.ClientTypes",
+      "stage": "Experimental",
+      "serverFeatures": ["CLIENT_TYPES"],
+      "operations": ["ClientTypes.GetClientTypesAsync", "ClientTypes.UpdateClientTypesAsync"]
+    }
+  }
+}

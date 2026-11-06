@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 2,
+  "serverVersion": "26.8.1",
+  "route": "fgap-v2-stable",
+  "runtimeProfile": "Managed",
+  "runtimeIdentifier": null,
+  "previewCapabilities": [],
+  "experimentalCapabilities": [],
+  "disabledCapabilities": []
+}

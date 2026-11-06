@@ -16,4 +16,8 @@
   <ItemGroup Condition="'$(PublishAot)' == 'true'">
     <Compile Remove="FullFeatureManagement.cs" />
   </ItemGroup>
+  <Target Name="StampFeatureValidationInputs" BeforeTargets="CoreCompile">
+    <Exec Command="dotnet run --file &quot;$(MSBuildProjectDirectory)/../../tools/Stamp-ValidationInputs.cs&quot; -- &quot;$(MSBuildProjectDirectory)/../..&quot; &quot;$(MSBuildProjectDirectory)/$(IntermediateOutputPath)FeatureValidationBuildStamp.g.cs&quot;" />
+    <ItemGroup><Compile Include="$(IntermediateOutputPath)FeatureValidationBuildStamp.g.cs" /></ItemGroup>
+  </Target>
 </Project>

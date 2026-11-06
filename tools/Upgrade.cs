@@ -14,7 +14,7 @@ return await ScriptHost.ExecuteAsync(args, "dotnet run --file tools/Upgrade.cs -
     var next = TargetBaseline.Parse(File.ReadAllText(Path.Combine(candidate, "baseline.json")));
     var previous = TargetBaseline.Load(root);
     if (next.Version != previous.Version && next.PackageVersion == previous.PackageVersion) throw new InvalidDataException("A new upstream target requires a new immutable SDK package version.");
-    string[] reviewed = ["baseline.json", "admin-api-routes.json", "capability-rules.json", "overrides.json", "support-policy.example.json", "feature-management.example.json"];
+    string[] reviewed = ["baseline.json", "admin-api-routes.json", "capability-rules.json", "feature-validation-plans.json", "overrides.json", "support-policy.example.json", "support-policy.managed.example.json", "support-policy.native-aot.example.json", "feature-management.example.json"];
     foreach (string name in reviewed) if (!File.Exists(Path.Combine(candidate, name))) throw new InvalidDataException("Missing reviewed input: " + name);
     string stage = ScriptHost.Within(root, "artifacts/upgrade/" + Guid.NewGuid().ToString("N")); Directory.CreateDirectory(stage);
     // Prepare a complete isolated tree. Active contracts and code are untouched until all generation succeeds.

@@ -19,6 +19,7 @@ public static partial class ContractSuite
         await InterfaceContracts.RawTransportsAsync();
         await ResilienceContracts.RunAsync();
         await CapabilityContracts.RunAsync();
+        await RuntimeCapabilityContracts.RunAsync();
 #if KEYCLOAK_FEATURE_MANAGEMENT
         await FeatureManagementContracts.RunAsync();
 #endif

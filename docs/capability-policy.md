@@ -56,6 +56,61 @@ HTTP 客户端和 token 的初始化/释放见 [认证说明](authentication-and
 
 预览/实验 allow 开关不能覆盖 NotSupported 或缺失证据；`FgapV1` 为 Deprecated/Compatibility，仅适用于 v1。当前支持数量及排除原因见 [支持路线](contracts/admin-api-routing.md) 和 [支持矩阵](contracts/admin-api-support-matrix.tsv)。
 
+## 按运行环境开放（schema 2）
+
+旧构造函数和 schema 1 保持原来的严格行为：同一路线必须同时具备托管和 Native AOT 证据。新目录使用 schema 2，旧调用无需迁移。
+
+新宿主可选择 [托管配置](../contracts/support-policy.managed.example.json) 或 [原生配置](../contracts/support-policy.native-aot.example.json)，也可使用新的构造重载：
+
+```csharp
+var support = new KeycloakSupportConfiguration(
+    KeycloakTarget.Version, KeycloakRuntimeProfile.Managed);
+```
+
+| runtimeProfile | 要求 |
+| --- | --- |
+| Managed | 当前 FGAP 路线的 Contract + Managed 业务证据 |
+| NativeAot | 当前路线、当前 RID 的 Contract + NativeAot 发布与业务证据 |
+| Portable | 当前路线的 Managed 和指定 Native AOT RID 证据均完整 |
+
+Managed 的 `runtimeIdentifier` 必须为 null；其他模式可指定 RID，null 时取当前进程 RID。schema 2 在请求前检查运行模式和原生 RID，不能在原生程序中选择 Managed 来跳过原生验证。只有 linux-musl-x64 证据不能声明 win-x64 原生支持。
+
+schema 2 的 `previewCapabilities`、`experimentalCapabilities` 是逐功能许可集合，默认均为空；不会使用 schema 1 的全局 allow 环境变量。与目录中的上游阶段不匹配、未知或重复 ID 均拒绝。新增显式环境覆盖：`KEYCLOAK_ADMIN_RUNTIME_PROFILE`、`KEYCLOAK_ADMIN_RUNTIME_IDENTIFIER`、`KEYCLOAK_ADMIN_PREVIEW_CAPABILITIES`、`KEYCLOAK_ADMIN_EXPERIMENTAL_CAPABILITIES`，后两个使用逗号分隔。
+
+```csharp
+var validationSupport = new KeycloakSupportConfiguration(
+    KeycloakTarget.Version, KeycloakRuntimeProfile.Managed,
+    experimentalCapabilities: ["KeycloakSdk.ClientTypes"]);
+```
+
+许可只允许考虑该能力，仍要求该操作和环境已晋升、真实服务端功能启用以及宿主开关打开。Deprecated 仍走明确的兼容路线，Removed 永远拒绝。
+
+目录根部的 `verificationProfiles` 保存每次验收的路线、运行模式、RID、源码指纹和不可变证据文件及其 SHA256；每个端点的 `supportProfiles` 只引用真正通过验证的组合。`support` 和 `verification` 是汇总信息，不代表所有环境均已支持。首次迁移保留既有历史验收的原始指纹，不将其冒充当前源码的新验收。
+
+上游 Stage 来源于固定版本源码，与 SDK 验证独立。后续 Keycloak 版本转为 Stable 时，必须升级精确目标、审阅契约并重新验收，不能靠开关修改阶段或继承旧目标的成功证据。
+
+## 非 Stable 功能的验证与晋升
+
+完整的职责分工、当前缺口、逐步操作和失败处理见 [非 Stable 功能流程](non-stable-feature-lifecycle.md)。验证和晋升由独立工具完成；FeatureManagement 负责完成这些步骤之后的灰度开放和关闭。
+
+[验证计划](../contracts/feature-validation-plans.json) 独立于 FGAP 路线和运行模式，声明功能、阶段、必需服务端功能和操作白名单。当前提供 Client Types 的真实查询、写入、持久化读取和替换删除工作流。新增其他功能须先添加经过审阅的业务工作流；仅增加计划不会执行未经实现的测试。
+
+```shell
+# 隔离容器上的候选验证，不绕过生产客户端的支持策略。
+dotnet run --file tools/Test-Feature.cs -- --feature=client-types
+# 只晋升该证据覆盖的操作、运行环境和路线。
+dotnet run --file tools/Check-FeatureAcceptance.cs -- --evidence=artifacts/feature-validation/client-types/fgap-v2-stable-managed-candidate.json --promote
+# 使用晋升后的目录复验，并验证关闭开关时没有业务 HTTP 请求。
+dotnet run --file tools/Test-Feature.cs -- --feature=client-types --guarded
+dotnet run --file tools/Check-FeatureAcceptance.cs -- --supported
+```
+
+原生验证加 `--native-aot`，v1 路线加 `--v1`；Native AOT 会实际 publish 并执行 linux-musl-x64 程序。候选证明不等同于最终受策略保护的验收；`--promote` 和 `--guarded` 不能合并。工具拒绝缺失、重复、非成功、无业务证明、错误阶段/版本/路线/运行模式、未知服务端功能和过期指纹。
+
+候选采用 `ValidationFingerprint`，覆盖实现、测试工作流、工具、配置和契约输入，单独排除生成的 `contracts/capabilities.json`，避免晋升目录使自己的输入证据立即失效。集成程序在构建时嵌入输入指纹与目录 SHA256，运行时拒绝使用旧程序验证新源码；最终受保护验收还必须匹配当前目录 SHA256。发布的完整源码指纹仍包含目录。失败运行会清除其旧结果，不能复用先前同名文件。
+
+晋升后，原始证据按内容 SHA256 保存到 `docs/contracts/capability-evidence/`。正式路线继续排除非 Stable 功能；`Release.cs` 另外通过 `Test-SupportedFeatures.cs` 对所有已支持的非 Stable 组合执行隔离复验，任一组合缺失或失败即拒绝候选。它不会把某个环境的成功扩散到另一个环境，也不会自动发布包。
+
 `KeycloakCapabilityPolicy.Evaluate` 可只读预判，返回原因、路线、版本及目录项；发送时拒绝抛出 `KeycloakCapabilityDeniedException`，不附加实际用户路径或请求内容。生成、原始、显式 JSON 元数据及流入口共用策略，在 token 获取和 HTTP 发送前执行；本地拒绝仍释放内容。目录外接口拒绝。每个逻辑请求只评估一次，401 重放复用结果。
 
 ## 维护与验证

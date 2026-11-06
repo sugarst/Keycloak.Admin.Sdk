@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 2,
+  "serverVersion": "26.8.1",
+  "route": "fgap-v2-stable",
+  "runtimeProfile": "NativeAot",
+  "runtimeIdentifier": "linux-musl-x64",
+  "previewCapabilities": [],
+  "experimentalCapabilities": [],
+  "disabledCapabilities": []
+}

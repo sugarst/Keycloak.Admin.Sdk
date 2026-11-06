@@ -3,7 +3,12 @@
 #:property PublishAot=false
 #:include ScriptSupport.cs
 #:include TargetBaseline.cs
+#:include CapabilityEvidence.cs
+#:include FeatureAcceptance.cs
 #:include ../tests/Keycloak.Admin.Sdk.IntegrationTests/LiveEvidence.cs
+#:include ../tests/Keycloak.Admin.Sdk.IntegrationTests/FeatureValidationPlan.cs
+#:include ../tests/Keycloak.Admin.Sdk.IntegrationTests/KeycloakRouteSupport.cs
+#:project ../src/Keycloak.Admin.Sdk/Keycloak.Admin.Sdk.csproj
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Security.Cryptography;
@@ -38,6 +43,7 @@ return await ScriptHost.ExecuteAsync(args, "dotnet run --file tools/Release.cs -
     await Run("Test-AcceptanceGate.cs", "--v2");
     await Run("Generate-ValidationList.cs");
     await Run("Check-FullAcceptance.cs");
+    await Run("Test-SupportedFeatures.cs");
     string fingerprint = LiveEvidence.Fingerprint(root);
     string output = ScriptHost.Within(root, "artifacts/releases/" + target.PackageVersion + "/" + fingerprint);
     Directory.CreateDirectory(output);
@@ -51,7 +57,21 @@ return await ScriptHost.ExecuteAsync(args, "dotnet run --file tools/Release.cs -
         packages.Add(new JsonObject { ["id"] = id, ["file"] = filename, ["sha256"] = Convert.ToHexStringLower(SHA256.HashData(await File.ReadAllBytesAsync(source, ct))) });
     }
     foreach (string file in Directory.EnumerateFiles(Path.Combine(root, "docs/contracts/full-live-evidence"))) File.Copy(file, Path.Combine(output, Path.GetFileName(file)), true);
-    foreach (string file in new[] { "contracts/baseline.json", "docs/contracts/test-coverage.md", "docs/contracts/full-live-acceptance.tsv", "docs/contracts/full-live-acceptance.md", "artifacts/test-matrix-summary.json" }) File.Copy(Path.Combine(root, file), Path.Combine(output, Path.GetFileName(file)), true);
+    foreach (string file in new[] { "contracts/baseline.json", "contracts/capabilities.json", "docs/contracts/test-coverage.md", "docs/contracts/full-live-acceptance.tsv", "docs/contracts/full-live-acceptance.md", "artifacts/test-matrix-summary.json" }) File.Copy(Path.Combine(root, file), Path.Combine(output, Path.GetFileName(file)), true);
+    using var supportCatalog = JsonDocument.Parse(File.ReadAllText(Path.Combine(root, "contracts/capabilities.json")));
+    foreach (var profile in supportCatalog.RootElement.GetProperty("verificationProfiles").EnumerateArray())
+    {
+        string relative = profile.GetProperty("evidence").GetString()!;
+        string source = ScriptHost.Within(root, relative), destination = ScriptHost.Within(output, relative);
+        if (CapabilityEvidence.Digest(source) != profile.GetProperty("evidenceSha256").GetString()) throw new InvalidDataException("Archived capability evidence hash mismatch.");
+        Directory.CreateDirectory(Path.GetDirectoryName(destination)!); File.Copy(source, destination, true);
+    }
+    foreach (var item in FeatureAcceptance.Supported(root).DistinctBy(i => (i.Plan.Id, i.Route, i.Mode, i.Rid)))
+    {
+        string path = item.Plan.ResultPath(root, item.Route, item.Mode, item.Rid, true);
+        string destination = Path.Combine(output, "feature-acceptance", item.Plan.Id, Path.GetFileName(path));
+        Directory.CreateDirectory(Path.GetDirectoryName(destination)!); File.Copy(path, destination, true);
+    }
     var acceptanceRuns = new JsonArray();
     foreach (string route in new[] { "fgap-v2-stable", "fgap-v1-compat" })
         foreach (string mode in new[] { "managed", "native-aot" })
@@ -67,6 +87,8 @@ return await ScriptHost.ExecuteAsync(args, "dotnet run --file tools/Release.cs -
         ["sdkCommit"] = sdkCommit, ["sdkWorkingTreeDirty"] = sdkWorkingTreeDirty || initialFingerprint != fingerprint,
         ["dotnetSdk"] = target.Sdk, ["sourceFingerprint"] = fingerprint, ["finishedUtc"] = DateTimeOffset.UtcNow.ToString("O"),
         ["packages"] = packages, ["allGatesPassed"] = true,
+        ["capabilityCatalogSha256"] = CapabilityEvidence.Digest(Path.Combine(root, "contracts/capabilities.json")),
+        ["verificationProfiles"] = JsonNode.Parse(supportCatalog.RootElement.GetProperty("verificationProfiles").GetRawText()),
         ["acceptance"] = "managed + linux-musl-x64 Native AOT; FGAP v1 compatibility + v2 stable; final guarded clients",
         ["acceptanceRuns"] = acceptanceRuns, ["published"] = false };
     string json = manifest.ToJsonString(new JsonSerializerOptions { WriteIndented = true }) + "\n";

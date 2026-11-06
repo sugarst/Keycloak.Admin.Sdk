@@ -13,8 +13,13 @@
 | 隔离 Keycloak 场景 | `dotnet run --file tools/Test-Integration.cs`；原生加 `-- --native-aot` |
 | 两条路线、托管/AOT 全量验收及证据更新 | `dotnet run --file tools/Test-AllAdminRoutes.cs -- --update-docs` |
 | 独立源码审计 | `dotnet run --file tools/Audit-Contracts.cs`；在线来源核验加 `-- --online` |
+| 隔离非 Stable 功能验证 | `dotnet run --file tools/Test-Feature.cs -- --feature=client-types`；原生加 `--native-aot`，晋升后加 `--guarded` |
+| 按操作、路线和环境晋升 | `dotnet run --file tools/Check-FeatureAcceptance.cs -- --evidence=<candidate.json> --promote` |
+| 所有已支持非 Stable 组合复验 | `dotnet run --file tools/Test-SupportedFeatures.cs`；发布流程会自动执行 |
 
 Windows 原生发布需要 Visual Studio C++ 桌面工具链和 Windows SDK；Linux 需要 clang、zlib 开发库，或使用上述 Docker 入口。跳过原生发布仅适用于常规开发检查。
+
+非 Stable 功能按“候选验证 → 审阅晋升 → 受策略保护复验 → 宿主灰度”推进，职责、命令与失败处理见 [完整流程](non-stable-feature-lifecycle.md)。
 
 ## 契约测试与覆盖率
 

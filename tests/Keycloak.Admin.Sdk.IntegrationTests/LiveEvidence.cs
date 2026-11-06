@@ -3,7 +3,10 @@ using System.Text;
 
 internal static class LiveEvidence
 {
-    public static string Fingerprint(string root)
+    public static string Fingerprint(string root) => Fingerprint(root, false);
+    // Promotion changes the generated support catalog, not the code/contract inputs under test.
+    public static string ValidationFingerprint(string root) => Fingerprint(root, true);
+    private static string Fingerprint(string root, bool validation)
     {
         string[] roots = ["src", "tests/Keycloak.Admin.Sdk.IntegrationTests", "local/keycloak", "tools"];
         var paths = roots.SelectMany(p => Directory.EnumerateFiles(Path.Combine(root, p), "*", SearchOption.AllDirectories))
@@ -13,6 +16,7 @@ internal static class LiveEvidence
             .Concat(Directory.EnumerateFiles(Path.Combine(root, "contracts"), "*.json"))
             .Append(Path.Combine(root, "contracts/source-files.sha256"))
             .Select(Path.GetFullPath)
+            .Where(p => !validation || Path.GetRelativePath(root, p).Replace('\\', '/') != "contracts/capabilities.json")
             .Distinct(StringComparer.Ordinal)
             .OrderBy(p => Path.GetRelativePath(root, p).Replace('\\', '/'), StringComparer.Ordinal);
         using var hash = IncrementalHash.CreateHash(HashAlgorithmName.SHA256);

@@ -22,6 +22,12 @@ static async Task RunAsync(CancellationToken cancellationToken)
     tokenResponse.EnsureSuccessStatusCode();
     var token = JsonSerializer.Deserialize(await tokenResponse.Content.ReadAsStringAsync(cancellationToken: cancellationToken), KeycloakJsonContext.Default.TokenResponse)!;
     var sdk = new KeycloakAdminClient(http, server, new StaticAccessTokenProvider(token.AccessToken!));
+    if (Environment.GetEnvironmentVariable("KC_TEST_FEATURE") is { } feature)
+    {
+        await FeatureValidationRunner.RunAsync(http, server, new StaticAccessTokenProvider(token.AccessToken!), feature,
+            Environment.GetEnvironmentVariable("KC_TEST_FEATURE_GUARDED") == "1", cancellationToken);
+        return;
+    }
     if (Environment.GetEnvironmentVariable("KC_TEST_FULL_ADMIN") == "1")
     {
         await FullAdminSuite.RunAsync(http, server, cancellationToken);

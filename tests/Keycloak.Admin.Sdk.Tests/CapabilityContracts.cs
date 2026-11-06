@@ -48,7 +48,7 @@ public static class CapabilityContracts
                 Check(endpoint.FeatureId.StartsWith("KeycloakSdk.", StringComparison.Ordinal) && endpoint.Evidence.Length > 0 && endpoint.Implementation == KeycloakImplementationStatus.Implemented && endpoint.RequiredServerFeatures.Contains("ADMIN_API"));
                 Check(endpoint.Routes.Contains(KeycloakAdminRoute.FgapV1Compatibility));
                 if (decision.IsAllowed) { allowed++; Check(endpoint.Verification == (KeycloakVerification.Contract | KeycloakVerification.Managed | KeycloakVerification.NativeAot)); }
-                else Check(endpoint.Support == KeycloakSupportStatus.NotSupported || endpoint.Support == KeycloakSupportStatus.Compatibility);
+                else Check(endpoint.Support == KeycloakSupportStatus.NotSupported || endpoint.Support == KeycloakSupportStatus.Compatibility || decision.Reason == KeycloakCapabilityReason.StageNotAllowed);
             }
             Check(allowed == (route == 1 ? 492 : 478));
         }
@@ -120,7 +120,7 @@ public static class CapabilityContracts
         Throws<ArgumentNullException>(() => Policy().Evaluate(HttpMethod.Get, null!));
         foreach (var stage in new[] { KeycloakFeatureStage.Preview, KeycloakFeatureStage.Experimental })
         {
-            var endpoint = KeycloakCapabilityCatalog.Find(KeycloakTarget.Version)!.Endpoints.First(e => e.Stage == stage);
+            var endpoint = KeycloakCapabilityCatalog.Find(KeycloakTarget.Version)!.Endpoints.First(e => e.Stage == stage && e.Support == KeycloakSupportStatus.NotSupported);
             Check(Policy().EvaluateEndpoint(endpoint).Reason == KeycloakCapabilityReason.StageNotAllowed);
             Check(Policy(new(KeycloakTarget.Version, allowPreview: true, allowExperimental: true)).EvaluateEndpoint(endpoint).Reason == KeycloakCapabilityReason.NotSupported);
         }

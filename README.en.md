@@ -84,13 +84,15 @@ The main package generates 520 Admin API operations, counted by HTTP method and 
 | `fgap-v2-stable` (default) | 478 | Real business acceptance in managed and Linux Native AOT modes |
 | `fgap-v1-compat` | 492 | Real business acceptance in managed and Linux Native AOT modes |
 
-The following APIs retain generated methods and contract tests, but are excluded from both support routes and are not counted as successful business acceptance:
+The following APIs remain outside the default formal acceptance scope. Non-stable capabilities use separate, runtime-specific validation plans:
 
 | Keycloak feature | Stage | Operations | Reason |
 | --- | --- | ---: | --- |
 | `oid4vc-vci` | Preview | 7 | Credential management is preview and excluded by the current support policy |
 | `ssf` | Experimental | 19 | Experimental functionality is excluded by the current support policy |
-| `client-types` | Experimental | 2 | Experimental functionality is excluded by the current support policy |
+| `client-types` | Experimental | 2 | Independently validated and promoted for managed v2 only; off by default, requiring a schema-2 opt-in and host flag. AOT/v1 have not been promoted |
+
+Schema 2 supports Managed, NativeAot and Portable verification profiles. Managed applications use FeatureManagement; native applications can use the main package's `KeycloakFeatureSnapshotGate`. Host flags cannot override version, stage or evidence denials. Existing configurations retain their requirement for both managed and AOT evidence. See the [capability policy](docs/capability-policy.md) for configuration and per-operation promotion.
 
 The default v2 route also excludes 14 FGAP v1-only operations; those have passed acceptance on the v1 compatibility route. **A generated method does not itself imply SDK support.** Use `KeycloakSupportedClient.CreateAsync` to check version, maturity, route, server features and verification before sending a request. Constructing `KeycloakAdminClient` directly provides the underlying transport without applying the support policy automatically.
 
