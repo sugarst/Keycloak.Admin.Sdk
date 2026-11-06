@@ -64,6 +64,19 @@ DI 入口 `AddKeycloakAdminSdk` 提供 `options.Resilience`，默认关闭。开
 
 ## Keycloak 26.8.1 能力边界
 
+本开发分支以两种独立矩阵维护支持范围：[Admin API 操作矩阵](docs/contracts/admin-api-support-matrix.tsv)，以及包含 80 个上游功能开关、52 个应用能力族的[全能力矩阵](docs/contracts/platform-capability-matrix.md)。应用可调用能力按固定版本和运行模式独立验收；部署、数据库、多集群、服务端界面和 Java SPI 的责任边界见[实施说明](docs/full-platform-coverage.md)。下述 520 项覆盖只属于 Admin API。
+
+当前 52/52 个审阅应用能力族已晋升，完整覆盖门禁通过；标准业务验收为 Managed 434 项、Linux Native AOT 391 项，旧版兼容计划各 20 项。支持范围以矩阵中的具体运行模式、RID 和当前输入证据为准。
+
+| 包 | 使用场景 |
+| --- | --- |
+| `Keycloak.Admin.Sdk` | 管理接口、服务账号认证与支持策略 |
+| `Keycloak.Admin.Sdk.Protocols` | 应用 OIDC/OAuth、账户、SCIM、授权、钱包及身份代理；支持 Managed 和已验证的 Linux Native AOT |
+| `Keycloak.Admin.Sdk.Hosting` | ASP.NET Core 登录、资源令牌、注销、MCP 元数据及 SAML；仅 Managed |
+| `Keycloak.Admin.Sdk.FeatureManagement` | 在支持策略之后执行宿主的动态灰度开放和关闭 |
+
+preview.3 仍是未发布的开发版本；新增模块使用项目引用或本地构建包。已发布 preview.2 的范围见 [CHANGELOG](CHANGELOG.md)。钱包和认证接入分别见[钱包集成](docs/wallet-integration.md)和[认证集成](docs/authentication-integration.md)。
+
 主包按 HTTP 方法 + 路径生成了 520 项 Admin API 操作。已纳入支持范围的功能包括 realm、用户、组、角色、客户端、客户端作用域、身份提供方、认证流程、授权策略、组织、工作流及管理控制台扩展等。实际可用范围还取决于声明的 FGAP 路线、服务器功能配置和账号权限。
 
 | 范围 | 操作数 | 验证 |
@@ -74,17 +87,17 @@ DI 入口 `AddKeycloakAdminSdk` 提供 `options.Resilience`，默认关闭。开
 
 以下接口不计入两条正式路线的默认验收范围；非 Stable 功能通过独立计划按环境逐项验证：
 
-| Keycloak 功能 | 阶段 | 操作数 | 不支持的原因 |
+| Keycloak 功能 | 阶段 | 操作数 | 独立支持范围 |
 | --- | --- | ---: | --- |
-| `oid4vc-vci` | Preview | 7 | 凭证管理功能处于预览阶段，按当前支持策略排除 |
-| `ssf` | Experimental | 19 | 功能处于实验阶段，按当前支持策略排除 |
-| `client-types` | Experimental | 2 | 仅托管 v2 组合完成独立验证与晋升；默认关闭，需 schema 2 显式许可和宿主开关；AOT/v1 尚未晋升 |
+| `oid4vc-vci` | Preview | 7 | v2 路线 Managed／Linux Native AOT 独立验证；需逐功能 Preview 许可与宿主开关 |
+| `ssf` | Experimental | 19 | v2 路线 Managed／Linux Native AOT 独立验证；需逐功能 Experimental 许可与宿主开关 |
+| `client-types` | Experimental | 2 | v2 路线 Managed／Linux Native AOT 独立验证；默认关闭，需 schema 2 显式许可和宿主开关 |
 
 schema 2 支持 Managed、NativeAot 和 Portable 验证配置。托管使用 FeatureManagement，原生可使用主包的 `KeycloakFeatureSnapshotGate`；开关不能覆盖版本、阶段或证据拒绝。旧配置保持同时要求托管和 AOT 证据。接入见[能力策略](docs/capability-policy.md#按运行环境开放schema-2)；独立验证、晋升与最后的灰度开关见[非 Stable 功能流程](docs/non-stable-feature-lifecycle.md)。
 
 默认 v2 路线另外排除 14 个 FGAP v1 专用接口；这些接口已在 v1 兼容路线上通过验收。**生成方法存在不等于 SDK 承诺支持该接口**：使用 `KeycloakSupportedClient.CreateAsync` 可在发送请求前执行版本、成熟度、路线、服务器功能及验证状态检查。直接构造 `KeycloakAdminClient` 提供底层传输，不自动应用支持策略。
 
-范围以 Keycloak 26.8.1 的 Admin API 为准，不涵盖控制台静态资源、独立 OAuth/OIDC、Account、SCIM 或预览 Client Admin API v2 等协议，也不能预先枚举第三方 SPI 扩展。结果不自动适用于其他 Keycloak 版本，也不代表已覆盖所有权限和配置组合。
+主包的范围是 Keycloak 26.8.1 Admin API；独立 OAuth/OIDC、Account、SCIM、Client Admin API v2 等由 Protocols／Hosting 模块提供并单独晋升。控制台静态资源及第三方 SPI 实施由服务端承担。结果不自动适用于其他 Keycloak 版本，也不代表穷尽所有权限和配置组合。
 
 逐接口状态及排除原因见 [支持矩阵](docs/contracts/admin-api-support-matrix.tsv)，分类汇总见 [验证索引](docs/contracts/admin-api-validation-list.md)，实测环境和证据见 [真实验收](docs/contracts/full-live-acceptance.md)。支持策略的接入方式见 [能力策略](docs/capability-policy.md)。
 

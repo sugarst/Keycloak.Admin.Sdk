@@ -1,9 +1,13 @@
 <Solution>
   <Folder Name="/src/">
+    <Project Path="src/Keycloak.Admin.Sdk.Hosting/Keycloak.Admin.Sdk.Hosting.csproj" />
+    <Project Path="src/Keycloak.Admin.Sdk.Protocols/Keycloak.Admin.Sdk.Protocols.csproj" />
     <Project Path="src/Keycloak.Admin.Sdk.FeatureManagement/Keycloak.Admin.Sdk.FeatureManagement.csproj" />
     <Project Path="src/Keycloak.Admin.Sdk/Keycloak.Admin.Sdk.csproj" />
   </Folder>
   <Folder Name="/tests/">
+    <Project Path="tests/Keycloak.Admin.Sdk.Hosting.Tests/Keycloak.Admin.Sdk.Hosting.Tests.csproj" />
+    <Project Path="tests/Keycloak.Admin.Sdk.Protocols.Tests/Keycloak.Admin.Sdk.Protocols.Tests.csproj" />
     <Project Path="tests/Keycloak.Admin.Sdk.Tests/Keycloak.Admin.Sdk.Tests.csproj" />
     <Project Path="tests/Keycloak.Admin.Sdk.IntegrationTests/Keycloak.Admin.Sdk.IntegrationTests.csproj" />
     <Project Path="tests/Keycloak.Admin.Sdk.AotSmoke/Keycloak.Admin.Sdk.AotSmoke.csproj" />

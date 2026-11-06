@@ -8,15 +8,16 @@ internal static class LiveEvidence
     public static string ValidationFingerprint(string root) => Fingerprint(root, true);
     private static string Fingerprint(string root, bool validation)
     {
-        string[] roots = ["src", "tests/Keycloak.Admin.Sdk.IntegrationTests", "local/keycloak", "tools"];
+        string[] roots = ["src", "tests/Keycloak.Admin.Sdk.IntegrationTests", "tests/Keycloak.Admin.Sdk.Protocols.Tests", "tests/Keycloak.Admin.Sdk.Hosting.Tests", "tests/Keycloak.Admin.Sdk.AotSmoke", "local/keycloak", "tools"];
         var paths = roots.SelectMany(p => Directory.EnumerateFiles(Path.Combine(root, p), "*", SearchOption.AllDirectories))
             .Where(p => !p.Split(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar).Any(s => s is "bin" or "obj") && Path.GetExtension(p) is ".cs" or ".csproj" or ".yaml")
             .Concat(new[] { "global.json", "Directory.Build.props", "contracts/admin-api-routes.json", "contracts/baseline.json", "tests/Keycloak.Admin.Sdk.AotSmoke/Dockerfile", "tools/ScriptSupport.cs" }.Select(p => Path.Combine(root, p)))
+            .Concat(new[] { "local/keycloak/kerberos/Dockerfile", "local/keycloak/kerberos/start.sh", "local/keycloak/kerberos/ticket.py" }.Select(p => Path.Combine(root, p)).Where(File.Exists))
             .Concat(new[] { "contracts/capabilities.json", "contracts/capability-rules.json", "Target.props", "tools/TargetBaseline.cs" }.Select(p => Path.Combine(root, p)))
             .Concat(Directory.EnumerateFiles(Path.Combine(root, "contracts"), "*.json"))
             .Append(Path.Combine(root, "contracts/source-files.sha256"))
             .Select(Path.GetFullPath)
-            .Where(p => !validation || Path.GetRelativePath(root, p).Replace('\\', '/') != "contracts/capabilities.json")
+            .Where(p => !validation || Path.GetRelativePath(root, p).Replace('\\', '/') is not ("contracts/capabilities.json" or "contracts/platform-capabilities.json" or "contracts/application-verification-profiles.json"))
             .Distinct(StringComparer.Ordinal)
             .OrderBy(p => Path.GetRelativePath(root, p).Replace('\\', '/'), StringComparer.Ordinal);
         using var hash = IncrementalHash.CreateHash(HashAlgorithmName.SHA256);

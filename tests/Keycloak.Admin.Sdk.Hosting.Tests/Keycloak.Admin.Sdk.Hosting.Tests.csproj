@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup><IsTestProject>true</IsTestProject><IsPackable>false</IsPackable></PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="PackageSmoke/**" />
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <ProjectReference Include="../../src/Keycloak.Admin.Sdk.Hosting/Keycloak.Admin.Sdk.Hosting.csproj" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.11.0" PrivateAssets="all" />
+    <PackageReference Include="MSTest.TestAdapter" Version="4.5.2" PrivateAssets="all" />
+    <PackageReference Include="MSTest.TestFramework" Version="4.5.2" PrivateAssets="all" />
+    <PackageReference Include="coverlet.collector" Version="10.1.0" PrivateAssets="all" />
+  </ItemGroup>
+</Project>

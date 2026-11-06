@@ -8,6 +8,7 @@ COPY tests ./tests
 COPY contracts ./contracts
 COPY tools ./tools
 COPY local/keycloak/*.cs local/keycloak/*.yaml ./local/keycloak/
+COPY local/keycloak/kerberos ./local/keycloak/kerberos/
 FROM source AS build
 COPY --from=sdkpackages / /sdk-packages/
 RUN dotnet publish tests/Keycloak.Admin.Sdk.AotSmoke -c Release -r linux-musl-x64 -p:SdkPackageFeed=/sdk-packages -p:TrimmerSingleWarn=false -o /out

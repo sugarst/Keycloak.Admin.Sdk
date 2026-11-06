@@ -2852,14 +2852,15 @@
         "FgapV2Stable",
         "FgapV1Compatibility"
       ],
-      "verification": "Contract, Managed",
+      "verification": "Contract, Managed, NativeAot",
       "requiredServerFeatures": [
         "ADMIN_API",
         "CLIENT_TYPES"
       ],
-      "evidence": "verificationProfiles:895e936f485fcf02956c105b3502819a3c69e658e309cd1618f58c113ab3e4df",
+      "evidence": "verificationProfiles:c4924219fdef7d2062b71a46376d363a75a2002576000e721cdaf889be01c2c8",
       "supportProfiles": [
-        "895e936f485fcf02956c105b3502819a3c69e658e309cd1618f58c113ab3e4df"
+        "6047e5deeee4542d3ce6f8e668af2714859bab36b24857e3889e8274332b7478",
+        "c4924219fdef7d2062b71a46376d363a75a2002576000e721cdaf889be01c2c8"
       ]
     },
     {
@@ -2874,14 +2875,15 @@
         "FgapV2Stable",
         "FgapV1Compatibility"
       ],
-      "verification": "Contract, Managed",
+      "verification": "Contract, Managed, NativeAot",
       "requiredServerFeatures": [
         "ADMIN_API",
         "CLIENT_TYPES"
       ],
-      "evidence": "verificationProfiles:895e936f485fcf02956c105b3502819a3c69e658e309cd1618f58c113ab3e4df",
+      "evidence": "verificationProfiles:c4924219fdef7d2062b71a46376d363a75a2002576000e721cdaf889be01c2c8",
       "supportProfiles": [
-        "895e936f485fcf02956c105b3502819a3c69e658e309cd1618f58c113ab3e4df"
+        "6047e5deeee4542d3ce6f8e668af2714859bab36b24857e3889e8274332b7478",
+        "c4924219fdef7d2062b71a46376d363a75a2002576000e721cdaf889be01c2c8"
       ]
     },
     {
@@ -10034,18 +10036,21 @@
       "featureId": "KeycloakSdk.Ssf",
       "stage": "Experimental",
       "implementation": "Implemented",
-      "support": "NotSupported",
+      "support": "Supported",
       "routes": [
         "FgapV2Stable",
         "FgapV1Compatibility"
       ],
-      "verification": "Contract",
+      "verification": "Contract, Managed, NativeAot",
       "requiredServerFeatures": [
         "ADMIN_API",
         "SSF"
       ],
-      "evidence": "contracts/admin-api-test-matrix.json; no real acceptance",
-      "supportProfiles": []
+      "evidence": "verificationProfiles:f9619c3f07df06cfbb95b96b0e4e7db9b1c563ba9bd3ca09871c82623f41d447",
+      "supportProfiles": [
+        "47f2b36faad9ac02aafa4299b56bdff6e4a9ab594290efd528e1677727780ae4",
+        "f9619c3f07df06cfbb95b96b0e4e7db9b1c563ba9bd3ca09871c82623f41d447"
+      ]
     },
     {
       "operation": "SsfAdmin.EmitEventAsync",
@@ -10054,18 +10059,21 @@
       "featureId": "KeycloakSdk.Ssf",
       "stage": "Experimental",
       "implementation": "Implemented",
-      "support": "NotSupported",
+      "support": "Supported",
       "routes": [
         "FgapV2Stable",
         "FgapV1Compatibility"
       ],
-      "verification": "Contract",
+      "verification": "Contract, Managed, NativeAot",
       "requiredServerFeatures": [
         "ADMIN_API",
         "SSF"
       ],
-      "evidence": "contracts/admin-api-test-matrix.json; no real acceptance",
-      "supportProfiles": []
+      "evidence": "verificationProfiles:f9619c3f07df06cfbb95b96b0e4e7db9b1c563ba9bd3ca09871c82623f41d447",
+      "supportProfiles": [
+        "47f2b36faad9ac02aafa4299b56bdff6e4a9ab594290efd528e1677727780ae4",
+        "f9619c3f07df06cfbb95b96b0e4e7db9b1c563ba9bd3ca09871c82623f41d447"
+      ]
     },
     {
       "operation": "SsfAdmin.DeleteClientQueuedEventsAsync",
@@ -10074,18 +10082,21 @@
       "featureId": "KeycloakSdk.Ssf",
       "stage": "Experimental",
       "implementation": "Implemented",
-      "support": "NotSupported",
+      "support": "Supported",
       "routes": [
         "FgapV2Stable",
         "FgapV1Compatibility"
       ],
-      "verification": "Contract",
+      "verification": "Contract, Managed, NativeAot",
       "requiredServerFeatures": [
         "ADMIN_API",
         "SSF"
       ],
-      "evidence": "contracts/admin-api-test-matrix.json; no real acceptance",
-      "supportProfiles": []
+      "evidence": "verificationProfiles:f9619c3f07df06cfbb95b96b0e4e7db9b1c563ba9bd3ca09871c82623f41d447",
+      "supportProfiles": [
+        "47f2b36faad9ac02aafa4299b56bdff6e4a9ab594290efd528e1677727780ae4",
+        "f9619c3f07df06cfbb95b96b0e4e7db9b1c563ba9bd3ca09871c82623f41d447"
+      ]
     },
     {
       "operation": "SsfAdmin.GetClientEventStatsAsync",
@@ -10094,18 +10105,21 @@
       "featureId": "KeycloakSdk.Ssf",
       "stage": "Experimental",
       "implementation": "Implemented",
-      "support": "NotSupported",
+      "support": "Supported",
       "routes": [
         "FgapV2Stable",
         "FgapV1Compatibility"
       ],
-      "verification": "Contract",
+      "verification": "Contract, Managed, NativeAot",
       "requiredServerFeatures": [
         "ADMIN_API",
         "SSF"
       ],
-      "evidence": "contracts/admin-api-test-matrix.json; no real acceptance",
-      "supportProfiles": []
+      "evidence": "verificationProfiles:f9619c3f07df06cfbb95b96b0e4e7db9b1c563ba9bd3ca09871c82623f41d447",
+      "supportProfiles": [
+        "47f2b36faad9ac02aafa4299b56bdff6e4a9ab594290efd528e1677727780ae4",
+        "f9619c3f07df06cfbb95b96b0e4e7db9b1c563ba9bd3ca09871c82623f41d447"
+      ]
     },
     {
       "operation": "SsfAdmin.GetPendingEventAsync",
@@ -10114,18 +10128,21 @@
       "featureId": "KeycloakSdk.Ssf",
       "stage": "Experimental",
       "implementation": "Implemented",
-      "support": "NotSupported",
+      "support": "Supported",
       "routes": [
         "FgapV2Stable",
         "FgapV1Compatibility"
       ],
-      "verification": "Contract",
+      "verification": "Contract, Managed, NativeAot",
       "requiredServerFeatures": [
         "ADMIN_API",
         "SSF"
       ],
-      "evidence": "contracts/admin-api-test-matrix.json; no real acceptance",
-      "supportProfiles": []
+      "evidence": "verificationProfiles:f9619c3f07df06cfbb95b96b0e4e7db9b1c563ba9bd3ca09871c82623f41d447",
+      "supportProfiles": [
+        "47f2b36faad9ac02aafa4299b56bdff6e4a9ab594290efd528e1677727780ae4",
+        "f9619c3f07df06cfbb95b96b0e4e7db9b1c563ba9bd3ca09871c82623f41d447"
+      ]
     },
     {
       "operation": "SsfAdmin.DeleteClientStreamAsync",
@@ -10134,18 +10151,21 @@
       "featureId": "KeycloakSdk.Ssf",
       "stage": "Experimental",
       "implementation": "Implemented",
-      "support": "NotSupported",
+      "support": "Supported",
       "routes": [
         "FgapV2Stable",
         "FgapV1Compatibility"
       ],
-      "verification": "Contract",
+      "verification": "Contract, Managed, NativeAot",
       "requiredServerFeatures": [
         "ADMIN_API",
         "SSF"
       ],
-      "evidence": "contracts/admin-api-test-matrix.json; no real acceptance",
-      "supportProfiles": []
+      "evidence": "verificationProfiles:f9619c3f07df06cfbb95b96b0e4e7db9b1c563ba9bd3ca09871c82623f41d447",
+      "supportProfiles": [
+        "47f2b36faad9ac02aafa4299b56bdff6e4a9ab594290efd528e1677727780ae4",
+        "f9619c3f07df06cfbb95b96b0e4e7db9b1c563ba9bd3ca09871c82623f41d447"
+      ]
     },
     {
       "operation": "SsfAdmin.GetClientStreamAsync",
@@ -10154,18 +10174,21 @@
       "featureId": "KeycloakSdk.Ssf",
       "stage": "Experimental",
       "implementation": "Implemented",
-      "support": "NotSupported",
+      "support": "Supported",
       "routes": [
         "FgapV2Stable",
         "FgapV1Compatibility"
       ],
-      "verification": "Contract",
+      "verification": "Contract, Managed, NativeAot",
       "requiredServerFeatures": [
         "ADMIN_API",
         "SSF"
       ],
-      "evidence": "contracts/admin-api-test-matrix.json; no real acceptance",
-      "supportProfiles": []
+      "evidence": "verificationProfiles:f9619c3f07df06cfbb95b96b0e4e7db9b1c563ba9bd3ca09871c82623f41d447",
+      "supportProfiles": [
+        "47f2b36faad9ac02aafa4299b56bdff6e4a9ab594290efd528e1677727780ae4",
+        "f9619c3f07df06cfbb95b96b0e4e7db9b1c563ba9bd3ca09871c82623f41d447"
+      ]
     },
     {
       "operation": "SsfAdmin.UpdateClientStreamAsync",
@@ -10174,18 +10197,21 @@
       "featureId": "KeycloakSdk.Ssf",
       "stage": "Experimental",
       "implementation": "Implemented",
-      "support": "NotSupported",
+      "support": "Supported",
       "routes": [
         "FgapV2Stable",
         "FgapV1Compatibility"
       ],
-      "verification": "Contract",
+      "verification": "Contract, Managed, NativeAot",
       "requiredServerFeatures": [
         "ADMIN_API",
         "SSF"
       ],
-      "evidence": "contracts/admin-api-test-matrix.json; no real acceptance",
-      "supportProfiles": []
+      "evidence": "verificationProfiles:f9619c3f07df06cfbb95b96b0e4e7db9b1c563ba9bd3ca09871c82623f41d447",
+      "supportProfiles": [
+        "47f2b36faad9ac02aafa4299b56bdff6e4a9ab594290efd528e1677727780ae4",
+        "f9619c3f07df06cfbb95b96b0e4e7db9b1c563ba9bd3ca09871c82623f41d447"
+      ]
     },
     {
       "operation": "SsfAdmin.CreateClientStreamAsync",
@@ -10194,18 +10220,21 @@
       "featureId": "KeycloakSdk.Ssf",
       "stage": "Experimental",
       "implementation": "Implemented",
-      "support": "NotSupported",
+      "support": "Supported",
       "routes": [
         "FgapV2Stable",
         "FgapV1Compatibility"
       ],
-      "verification": "Contract",
+      "verification": "Contract, Managed, NativeAot",
       "requiredServerFeatures": [
         "ADMIN_API",
         "SSF"
       ],
-      "evidence": "contracts/admin-api-test-matrix.json; no real acceptance",
-      "supportProfiles": []
+      "evidence": "verificationProfiles:f9619c3f07df06cfbb95b96b0e4e7db9b1c563ba9bd3ca09871c82623f41d447",
+      "supportProfiles": [
+        "47f2b36faad9ac02aafa4299b56bdff6e4a9ab594290efd528e1677727780ae4",
+        "f9619c3f07df06cfbb95b96b0e4e7db9b1c563ba9bd3ca09871c82623f41d447"
+      ]
     },
     {
       "operation": "SsfAdmin.UpdateClientStreamStatusAsync",
@@ -10214,18 +10243,21 @@
       "featureId": "KeycloakSdk.Ssf",
       "stage": "Experimental",
       "implementation": "Implemented",
-      "support": "NotSupported",
+      "support": "Supported",
       "routes": [
         "FgapV2Stable",
         "FgapV1Compatibility"
       ],
-      "verification": "Contract",
+      "verification": "Contract, Managed, NativeAot",
       "requiredServerFeatures": [
         "ADMIN_API",
         "SSF"
       ],
-      "evidence": "contracts/admin-api-test-matrix.json; no real acceptance",
-      "supportProfiles": []
+      "evidence": "verificationProfiles:f9619c3f07df06cfbb95b96b0e4e7db9b1c563ba9bd3ca09871c82623f41d447",
+      "supportProfiles": [
+        "47f2b36faad9ac02aafa4299b56bdff6e4a9ab594290efd528e1677727780ae4",
+        "f9619c3f07df06cfbb95b96b0e4e7db9b1c563ba9bd3ca09871c82623f41d447"
+      ]
     },
     {
       "operation": "SsfAdmin.VerifyClientStreamAsync",
@@ -10234,18 +10266,21 @@
       "featureId": "KeycloakSdk.Ssf",
       "stage": "Experimental",
       "implementation": "Implemented",
-      "support": "NotSupported",
+      "support": "Supported",
       "routes": [
         "FgapV2Stable",
         "FgapV1Compatibility"
       ],
-      "verification": "Contract",
+      "verification": "Contract, Managed, NativeAot",
       "requiredServerFeatures": [
         "ADMIN_API",
         "SSF"
       ],
-      "evidence": "contracts/admin-api-test-matrix.json; no real acceptance",
-      "supportProfiles": []
+      "evidence": "verificationProfiles:f9619c3f07df06cfbb95b96b0e4e7db9b1c563ba9bd3ca09871c82623f41d447",
+      "supportProfiles": [
+        "47f2b36faad9ac02aafa4299b56bdff6e4a9ab594290efd528e1677727780ae4",
+        "f9619c3f07df06cfbb95b96b0e4e7db9b1c563ba9bd3ca09871c82623f41d447"
+      ]
     },
     {
       "operation": "SsfAdmin.AddSubjectAsync",
@@ -10254,18 +10289,21 @@
       "featureId": "KeycloakSdk.Ssf",
       "stage": "Experimental",
       "implementation": "Implemented",
-      "support": "NotSupported",
+      "support": "Supported",
       "routes": [
         "FgapV2Stable",
         "FgapV1Compatibility"
       ],
-      "verification": "Contract",
+      "verification": "Contract, Managed, NativeAot",
       "requiredServerFeatures": [
         "ADMIN_API",
         "SSF"
       ],
-      "evidence": "contracts/admin-api-test-matrix.json; no real acceptance",
-      "supportProfiles": []
+      "evidence": "verificationProfiles:f9619c3f07df06cfbb95b96b0e4e7db9b1c563ba9bd3ca09871c82623f41d447",
+      "supportProfiles": [
+        "47f2b36faad9ac02aafa4299b56bdff6e4a9ab594290efd528e1677727780ae4",
+        "f9619c3f07df06cfbb95b96b0e4e7db9b1c563ba9bd3ca09871c82623f41d447"
+      ]
     },
     {
       "operation": "SsfAdmin.CheckSubjectAsync",
@@ -10274,18 +10312,21 @@
       "featureId": "KeycloakSdk.Ssf",
       "stage": "Experimental",
       "implementation": "Implemented",
-      "support": "NotSupported",
+      "support": "Supported",
       "routes": [
         "FgapV2Stable",
         "FgapV1Compatibility"
       ],
-      "verification": "Contract",
+      "verification": "Contract, Managed, NativeAot",
       "requiredServerFeatures": [
         "ADMIN_API",
         "SSF"
       ],
-      "evidence": "contracts/admin-api-test-matrix.json; no real acceptance",
-      "supportProfiles": []
+      "evidence": "verificationProfiles:f9619c3f07df06cfbb95b96b0e4e7db9b1c563ba9bd3ca09871c82623f41d447",
+      "supportProfiles": [
+        "47f2b36faad9ac02aafa4299b56bdff6e4a9ab594290efd528e1677727780ae4",
+        "f9619c3f07df06cfbb95b96b0e4e7db9b1c563ba9bd3ca09871c82623f41d447"
+      ]
     },
     {
       "operation": "SsfAdmin.IgnoreSubjectAsync",
@@ -10294,18 +10335,21 @@
       "featureId": "KeycloakSdk.Ssf",
       "stage": "Experimental",
       "implementation": "Implemented",
-      "support": "NotSupported",
+      "support": "Supported",
       "routes": [
         "FgapV2Stable",
         "FgapV1Compatibility"
       ],
-      "verification": "Contract",
+      "verification": "Contract, Managed, NativeAot",
       "requiredServerFeatures": [
         "ADMIN_API",
         "SSF"
       ],
-      "evidence": "contracts/admin-api-test-matrix.json; no real acceptance",
-      "supportProfiles": []
+      "evidence": "verificationProfiles:f9619c3f07df06cfbb95b96b0e4e7db9b1c563ba9bd3ca09871c82623f41d447",
+      "supportProfiles": [
+        "47f2b36faad9ac02aafa4299b56bdff6e4a9ab594290efd528e1677727780ae4",
+        "f9619c3f07df06cfbb95b96b0e4e7db9b1c563ba9bd3ca09871c82623f41d447"
+      ]
     },
     {
       "operation": "SsfAdmin.RemoveSubjectAsync",
@@ -10314,18 +10358,21 @@
       "featureId": "KeycloakSdk.Ssf",
       "stage": "Experimental",
       "implementation": "Implemented",
-      "support": "NotSupported",
+      "support": "Supported",
       "routes": [
         "FgapV2Stable",
         "FgapV1Compatibility"
       ],
-      "verification": "Contract",
+      "verification": "Contract, Managed, NativeAot",
       "requiredServerFeatures": [
         "ADMIN_API",
         "SSF"
       ],
-      "evidence": "contracts/admin-api-test-matrix.json; no real acceptance",
-      "supportProfiles": []
+      "evidence": "verificationProfiles:f9619c3f07df06cfbb95b96b0e4e7db9b1c563ba9bd3ca09871c82623f41d447",
+      "supportProfiles": [
+        "47f2b36faad9ac02aafa4299b56bdff6e4a9ab594290efd528e1677727780ae4",
+        "f9619c3f07df06cfbb95b96b0e4e7db9b1c563ba9bd3ca09871c82623f41d447"
+      ]
     },
     {
       "operation": "SsfAdmin.GetConfigAsync",
@@ -10334,18 +10381,21 @@
       "featureId": "KeycloakSdk.Ssf",
       "stage": "Experimental",
       "implementation": "Implemented",
-      "support": "NotSupported",
+      "support": "Supported",
       "routes": [
         "FgapV2Stable",
         "FgapV1Compatibility"
       ],
-      "verification": "Contract",
+      "verification": "Contract, Managed, NativeAot",
       "requiredServerFeatures": [
         "ADMIN_API",
         "SSF"
       ],
-      "evidence": "contracts/admin-api-test-matrix.json; no real acceptance",
-      "supportProfiles": []
+      "evidence": "verificationProfiles:f9619c3f07df06cfbb95b96b0e4e7db9b1c563ba9bd3ca09871c82623f41d447",
+      "supportProfiles": [
+        "47f2b36faad9ac02aafa4299b56bdff6e4a9ab594290efd528e1677727780ae4",
+        "f9619c3f07df06cfbb95b96b0e4e7db9b1c563ba9bd3ca09871c82623f41d447"
+      ]
     },
     {
       "operation": "SsfAdmin.DeleteEventsAsync",
@@ -10354,18 +10404,21 @@
       "featureId": "KeycloakSdk.Ssf",
       "stage": "Experimental",
       "implementation": "Implemented",
-      "support": "NotSupported",
+      "support": "Supported",
       "routes": [
         "FgapV2Stable",
         "FgapV1Compatibility"
       ],
-      "verification": "Contract",
+      "verification": "Contract, Managed, NativeAot",
       "requiredServerFeatures": [
         "ADMIN_API",
         "SSF"
       ],
-      "evidence": "contracts/admin-api-test-matrix.json; no real acceptance",
-      "supportProfiles": []
+      "evidence": "verificationProfiles:f9619c3f07df06cfbb95b96b0e4e7db9b1c563ba9bd3ca09871c82623f41d447",
+      "supportProfiles": [
+        "47f2b36faad9ac02aafa4299b56bdff6e4a9ab594290efd528e1677727780ae4",
+        "f9619c3f07df06cfbb95b96b0e4e7db9b1c563ba9bd3ca09871c82623f41d447"
+      ]
     },
     {
       "operation": "SsfAdmin.DeleteQueuedEventsAsync",
@@ -10374,18 +10427,21 @@
       "featureId": "KeycloakSdk.Ssf",
       "stage": "Experimental",
       "implementation": "Implemented",
-      "support": "NotSupported",
+      "support": "Supported",
       "routes": [
         "FgapV2Stable",
         "FgapV1Compatibility"
       ],
-      "verification": "Contract",
+      "verification": "Contract, Managed, NativeAot",
       "requiredServerFeatures": [
         "ADMIN_API",
         "SSF"
       ],
-      "evidence": "contracts/admin-api-test-matrix.json; no real acceptance",
-      "supportProfiles": []
+      "evidence": "verificationProfiles:f9619c3f07df06cfbb95b96b0e4e7db9b1c563ba9bd3ca09871c82623f41d447",
+      "supportProfiles": [
+        "47f2b36faad9ac02aafa4299b56bdff6e4a9ab594290efd528e1677727780ae4",
+        "f9619c3f07df06cfbb95b96b0e4e7db9b1c563ba9bd3ca09871c82623f41d447"
+      ]
     },
     {
       "operation": "SsfAdmin.GetEventStatsAsync",
@@ -10394,18 +10450,21 @@
       "featureId": "KeycloakSdk.Ssf",
       "stage": "Experimental",
       "implementation": "Implemented",
-      "support": "NotSupported",
+      "support": "Supported",
       "routes": [
         "FgapV2Stable",
         "FgapV1Compatibility"
       ],
-      "verification": "Contract",
+      "verification": "Contract, Managed, NativeAot",
       "requiredServerFeatures": [
         "ADMIN_API",
         "SSF"
       ],
-      "evidence": "contracts/admin-api-test-matrix.json; no real acceptance",
-      "supportProfiles": []
+      "evidence": "verificationProfiles:f9619c3f07df06cfbb95b96b0e4e7db9b1c563ba9bd3ca09871c82623f41d447",
+      "supportProfiles": [
+        "47f2b36faad9ac02aafa4299b56bdff6e4a9ab594290efd528e1677727780ae4",
+        "f9619c3f07df06cfbb95b96b0e4e7db9b1c563ba9bd3ca09871c82623f41d447"
+      ]
     },
     {
       "operation": "TestLdapConnection.TestLDAPConnectionAsync",
@@ -12078,18 +12137,21 @@
       "featureId": "KeycloakSdk.Oid4vcVci",
       "stage": "Preview",
       "implementation": "Implemented",
-      "support": "NotSupported",
+      "support": "Supported",
       "routes": [
         "FgapV2Stable",
         "FgapV1Compatibility"
       ],
-      "verification": "Contract",
+      "verification": "Contract, Managed, NativeAot",
       "requiredServerFeatures": [
         "ADMIN_API",
         "OID4VC_VCI"
       ],
-      "evidence": "contracts/admin-api-test-matrix.json; no real acceptance",
-      "supportProfiles": []
+      "evidence": "verificationProfiles:b97b4d90407f1e361da1a0de67c7b9405b7dfb85fc231d138fd3352c0c657428",
+      "supportProfiles": [
+        "dd5a807d4dfcbf03405edcc04f778b2a3ad8efde8628609e414553f6cddd1be7",
+        "b97b4d90407f1e361da1a0de67c7b9405b7dfb85fc231d138fd3352c0c657428"
+      ]
     },
     {
       "operation": "UserVerifiableCredential.CreateCredentialAsync",
@@ -12098,18 +12160,21 @@
       "featureId": "KeycloakSdk.Oid4vcVci",
       "stage": "Preview",
       "implementation": "Implemented",
-      "support": "NotSupported",
+      "support": "Supported",
       "routes": [
         "FgapV2Stable",
         "FgapV1Compatibility"
       ],
-      "verification": "Contract",
+      "verification": "Contract, Managed, NativeAot",
       "requiredServerFeatures": [
         "ADMIN_API",
         "OID4VC_VCI"
       ],
-      "evidence": "contracts/admin-api-test-matrix.json; no real acceptance",
-      "supportProfiles": []
+      "evidence": "verificationProfiles:b97b4d90407f1e361da1a0de67c7b9405b7dfb85fc231d138fd3352c0c657428",
+      "supportProfiles": [
+        "dd5a807d4dfcbf03405edcc04f778b2a3ad8efde8628609e414553f6cddd1be7",
+        "b97b4d90407f1e361da1a0de67c7b9405b7dfb85fc231d138fd3352c0c657428"
+      ]
     },
     {
       "operation": "UserVerifiableCredential.SendCredentialOfferAsync",
@@ -12118,18 +12183,21 @@
       "featureId": "KeycloakSdk.Oid4vcVci",
       "stage": "Preview",
       "implementation": "Implemented",
-      "support": "NotSupported",
+      "support": "Supported",
       "routes": [
         "FgapV2Stable",
         "FgapV1Compatibility"
       ],
-      "verification": "Contract",
+      "verification": "Contract, Managed, NativeAot",
       "requiredServerFeatures": [
         "ADMIN_API",
         "OID4VC_VCI"
       ],
-      "evidence": "contracts/admin-api-test-matrix.json; no real acceptance",
-      "supportProfiles": []
+      "evidence": "verificationProfiles:b97b4d90407f1e361da1a0de67c7b9405b7dfb85fc231d138fd3352c0c657428",
+      "supportProfiles": [
+        "dd5a807d4dfcbf03405edcc04f778b2a3ad8efde8628609e414553f6cddd1be7",
+        "b97b4d90407f1e361da1a0de67c7b9405b7dfb85fc231d138fd3352c0c657428"
+      ]
     },
     {
       "operation": "UserVerifiableCredential.RevokeCredentialAsync",
@@ -12138,18 +12206,21 @@
       "featureId": "KeycloakSdk.Oid4vcVci",
       "stage": "Preview",
       "implementation": "Implemented",
-      "support": "NotSupported",
+      "support": "Supported",
       "routes": [
         "FgapV2Stable",
         "FgapV1Compatibility"
       ],
-      "verification": "Contract",
+      "verification": "Contract, Managed, NativeAot",
       "requiredServerFeatures": [
         "ADMIN_API",
         "OID4VC_VCI"
       ],
-      "evidence": "contracts/admin-api-test-matrix.json; no real acceptance",
-      "supportProfiles": []
+      "evidence": "verificationProfiles:b97b4d90407f1e361da1a0de67c7b9405b7dfb85fc231d138fd3352c0c657428",
+      "supportProfiles": [
+        "dd5a807d4dfcbf03405edcc04f778b2a3ad8efde8628609e414553f6cddd1be7",
+        "b97b4d90407f1e361da1a0de67c7b9405b7dfb85fc231d138fd3352c0c657428"
+      ]
     },
     {
       "operation": "UserVerifiableCredential.UpdateCredentialAsync",
@@ -12158,18 +12229,21 @@
       "featureId": "KeycloakSdk.Oid4vcVci",
       "stage": "Preview",
       "implementation": "Implemented",
-      "support": "NotSupported",
+      "support": "Supported",
       "routes": [
         "FgapV2Stable",
         "FgapV1Compatibility"
       ],
-      "verification": "Contract",
+      "verification": "Contract, Managed, NativeAot",
       "requiredServerFeatures": [
         "ADMIN_API",
         "OID4VC_VCI"
       ],
-      "evidence": "contracts/admin-api-test-matrix.json; no real acceptance",
-      "supportProfiles": []
+      "evidence": "verificationProfiles:b97b4d90407f1e361da1a0de67c7b9405b7dfb85fc231d138fd3352c0c657428",
+      "supportProfiles": [
+        "dd5a807d4dfcbf03405edcc04f778b2a3ad8efde8628609e414553f6cddd1be7",
+        "b97b4d90407f1e361da1a0de67c7b9405b7dfb85fc231d138fd3352c0c657428"
+      ]
     },
     {
       "operation": "UserVerifiableCredential.GetIssuedCredentialsAsync",
@@ -12178,18 +12252,21 @@
       "featureId": "KeycloakSdk.Oid4vcVci",
       "stage": "Preview",
       "implementation": "Implemented",
-      "support": "NotSupported",
+      "support": "Supported",
       "routes": [
         "FgapV2Stable",
         "FgapV1Compatibility"
       ],
-      "verification": "Contract",
+      "verification": "Contract, Managed, NativeAot",
       "requiredServerFeatures": [
         "ADMIN_API",
         "OID4VC_VCI"
       ],
-      "evidence": "contracts/admin-api-test-matrix.json; no real acceptance",
-      "supportProfiles": []
+      "evidence": "verificationProfiles:b97b4d90407f1e361da1a0de67c7b9405b7dfb85fc231d138fd3352c0c657428",
+      "supportProfiles": [
+        "dd5a807d4dfcbf03405edcc04f778b2a3ad8efde8628609e414553f6cddd1be7",
+        "b97b4d90407f1e361da1a0de67c7b9405b7dfb85fc231d138fd3352c0c657428"
+      ]
     },
     {
       "operation": "UserVerifiableCredential.RevokeIssuedCredentialAsync",
@@ -12198,18 +12275,21 @@
       "featureId": "KeycloakSdk.Oid4vcVci",
       "stage": "Preview",
       "implementation": "Implemented",
-      "support": "NotSupported",
+      "support": "Supported",
       "routes": [
         "FgapV2Stable",
         "FgapV1Compatibility"
       ],
-      "verification": "Contract",
+      "verification": "Contract, Managed, NativeAot",
       "requiredServerFeatures": [
         "ADMIN_API",
         "OID4VC_VCI"
       ],
-      "evidence": "contracts/admin-api-test-matrix.json; no real acceptance",
-      "supportProfiles": []
+      "evidence": "verificationProfiles:b97b4d90407f1e361da1a0de67c7b9405b7dfb85fc231d138fd3352c0c657428",
+      "supportProfiles": [
+        "dd5a807d4dfcbf03405edcc04f778b2a3ad8efde8628609e414553f6cddd1be7",
+        "b97b4d90407f1e361da1a0de67c7b9405b7dfb85fc231d138fd3352c0c657428"
+      ]
     },
     {
       "operation": "Users.GetUsersAsync",
@@ -12551,14 +12631,64 @@
       "evidenceSha256": "ed2dbbd969921f35538c0c3be898f89c781b652d1cc25f0b3e27e9b7cf45a51f"
     },
     {
-      "id": "895e936f485fcf02956c105b3502819a3c69e658e309cd1618f58c113ab3e4df",
+      "id": "6047e5deeee4542d3ce6f8e668af2714859bab36b24857e3889e8274332b7478",
       "route": "FgapV2Stable",
       "runtime": "Managed",
       "runtimeIdentifier": null,
       "verification": "Contract, Managed",
-      "sourceFingerprint": "4e0735bf6210e1b53095372258525f1b7bce9305f66cbcef2dfaff39eb91995a",
-      "evidence": "docs/contracts/capability-evidence/895e936f485fcf02956c105b3502819a3c69e658e309cd1618f58c113ab3e4df.json",
-      "evidenceSha256": "895e936f485fcf02956c105b3502819a3c69e658e309cd1618f58c113ab3e4df"
+      "sourceFingerprint": "91845857488c428a404ed28e988cc320871f4aad49b0a512414827b30882ea87",
+      "evidence": "docs/contracts/capability-evidence/6047e5deeee4542d3ce6f8e668af2714859bab36b24857e3889e8274332b7478.json",
+      "evidenceSha256": "6047e5deeee4542d3ce6f8e668af2714859bab36b24857e3889e8274332b7478"
+    },
+    {
+      "id": "c4924219fdef7d2062b71a46376d363a75a2002576000e721cdaf889be01c2c8",
+      "route": "FgapV2Stable",
+      "runtime": "NativeAot",
+      "runtimeIdentifier": "linux-musl-x64",
+      "verification": "Contract, NativeAot",
+      "sourceFingerprint": "91845857488c428a404ed28e988cc320871f4aad49b0a512414827b30882ea87",
+      "evidence": "docs/contracts/capability-evidence/c4924219fdef7d2062b71a46376d363a75a2002576000e721cdaf889be01c2c8.json",
+      "evidenceSha256": "c4924219fdef7d2062b71a46376d363a75a2002576000e721cdaf889be01c2c8"
+    },
+    {
+      "id": "47f2b36faad9ac02aafa4299b56bdff6e4a9ab594290efd528e1677727780ae4",
+      "route": "FgapV2Stable",
+      "runtime": "Managed",
+      "runtimeIdentifier": null,
+      "verification": "Contract, Managed",
+      "sourceFingerprint": "91845857488c428a404ed28e988cc320871f4aad49b0a512414827b30882ea87",
+      "evidence": "docs/contracts/capability-evidence/47f2b36faad9ac02aafa4299b56bdff6e4a9ab594290efd528e1677727780ae4.json",
+      "evidenceSha256": "47f2b36faad9ac02aafa4299b56bdff6e4a9ab594290efd528e1677727780ae4"
+    },
+    {
+      "id": "f9619c3f07df06cfbb95b96b0e4e7db9b1c563ba9bd3ca09871c82623f41d447",
+      "route": "FgapV2Stable",
+      "runtime": "NativeAot",
+      "runtimeIdentifier": "linux-musl-x64",
+      "verification": "Contract, NativeAot",
+      "sourceFingerprint": "91845857488c428a404ed28e988cc320871f4aad49b0a512414827b30882ea87",
+      "evidence": "docs/contracts/capability-evidence/f9619c3f07df06cfbb95b96b0e4e7db9b1c563ba9bd3ca09871c82623f41d447.json",
+      "evidenceSha256": "f9619c3f07df06cfbb95b96b0e4e7db9b1c563ba9bd3ca09871c82623f41d447"
+    },
+    {
+      "id": "dd5a807d4dfcbf03405edcc04f778b2a3ad8efde8628609e414553f6cddd1be7",
+      "route": "FgapV2Stable",
+      "runtime": "Managed",
+      "runtimeIdentifier": null,
+      "verification": "Contract, Managed",
+      "sourceFingerprint": "91845857488c428a404ed28e988cc320871f4aad49b0a512414827b30882ea87",
+      "evidence": "docs/contracts/capability-evidence/dd5a807d4dfcbf03405edcc04f778b2a3ad8efde8628609e414553f6cddd1be7.json",
+      "evidenceSha256": "dd5a807d4dfcbf03405edcc04f778b2a3ad8efde8628609e414553f6cddd1be7"
+    },
+    {
+      "id": "b97b4d90407f1e361da1a0de67c7b9405b7dfb85fc231d138fd3352c0c657428",
+      "route": "FgapV2Stable",
+      "runtime": "NativeAot",
+      "runtimeIdentifier": "linux-musl-x64",
+      "verification": "Contract, NativeAot",
+      "sourceFingerprint": "91845857488c428a404ed28e988cc320871f4aad49b0a512414827b30882ea87",
+      "evidence": "docs/contracts/capability-evidence/b97b4d90407f1e361da1a0de67c7b9405b7dfb85fc231d138fd3352c0c657428.json",
+      "evidenceSha256": "b97b4d90407f1e361da1a0de67c7b9405b7dfb85fc231d138fd3352c0c657428"
     }
   ]
 }

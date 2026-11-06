@@ -108,17 +108,19 @@ public static class FeatureManagementContracts
             && host.Manager.Calls.IsEmpty, "All flags on cannot supply a non-stable stage opt-in");
 
         var support = new KeycloakSupportConfiguration(KeycloakTarget.Version, KeycloakRuntimeProfile.Managed, experimentalCapabilities: [feature, "KeycloakSdk.Ssf"]);
-        var policy = new KeycloakFeatureManagementPolicy(Catalog(configuration: support), host.Manager);
+        var unsupportedRuntime = new KeycloakSupportConfiguration(KeycloakTarget.Version, KeycloakRuntimeProfile.NativeAot, runtimeIdentifier: "unverified-rid", experimentalCapabilities: [feature, "KeycloakSdk.Ssf"]);
+        var unsupportedPolicy = new KeycloakFeatureManagementPolicy(Catalog(configuration: unsupportedRuntime), host.Manager);
         var unverified = KeycloakCapabilityCatalog.Current.Endpoints.First(e => e.FeatureId == "KeycloakSdk.Ssf");
         var unverifiedTarget = Target(Regex.Replace(unverified.Path, "\\{[^}]+\\}", "fixture"));
-        Check((await policy.EvaluateAsync(new HttpMethod(unverified.Method), unverifiedTarget, unverified.Operation, ct)).Reason == KeycloakCapabilityReason.NotSupported
-            && host.Manager.Calls.IsEmpty, "All flags on cannot promote an unverified feature");
+        Check((await unsupportedPolicy.EvaluateAsync(new HttpMethod(unverified.Method), unverifiedTarget, unverified.Operation, ct)).Reason == KeycloakCapabilityReason.RuntimeMismatch
+            && host.Manager.Calls.IsEmpty, "All flags on cannot supply a verified native runtime or RID");
 
         var v1 = new KeycloakFeatureManagementPolicy(Catalog(1, new(KeycloakTarget.Version, KeycloakRuntimeProfile.Managed,
             route: KeycloakAdminRoute.FgapV1Compatibility, experimentalCapabilities: [feature])), host.Manager);
         Check((await v1.EvaluateAsync(HttpMethod.Get, Target(path), cancellationToken: ct)).Reason == KeycloakCapabilityReason.InsufficientVerification
             && host.Manager.Calls.IsEmpty, "Flags cannot extend managed v2 evidence to v1");
 
+        var policy = new KeycloakFeatureManagementPolicy(Catalog(configuration: support), host.Manager);
         using var handler = new Handler(); using var http = new HttpClient(handler); var tokens = new Tokens();
         var client = new KeycloakAdminClient(http, Server, tokens, new() { RequestPolicy = policy });
         int index = Array.IndexOf(Ids, feature);

@@ -1,0 +1,966 @@
+{
+  "schemaVersion": 1,
+  "serverVersion": "26.8.1",
+  "sourceCommit": "24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b",
+  "profileSha256": "93df273bd9b57b16d68baf26493f995e732d523bb34f18bd6b85162f7884ac68",
+  "features": [
+    {
+      "id": "AUTHORIZATION",
+      "responsibility": "SdkProtocol"
+    },
+    {
+      "id": "AUTHZEN",
+      "responsibility": "SdkProtocol"
+    },
+    {
+      "id": "ACCOUNT_API",
+      "responsibility": "SdkProtocol"
+    },
+    {
+      "id": "ACCOUNT_V3",
+      "responsibility": "ServerExtension"
+    },
+    {
+      "id": "ADMIN_FINE_GRAINED_AUTHZ",
+      "responsibility": "SdkAdmin"
+    },
+    {
+      "id": "ADMIN_FINE_GRAINED_AUTHZ_V2",
+      "responsibility": "SdkAdmin"
+    },
+    {
+      "id": "ADMIN_API",
+      "responsibility": "SdkAdmin"
+    },
+    {
+      "id": "CLIENT_ADMIN_API_V2",
+      "responsibility": "SdkProtocol"
+    },
+    {
+      "id": "ADMIN_V2",
+      "responsibility": "ServerExtension"
+    },
+    {
+      "id": "LOGIN_V2",
+      "responsibility": "ServerExtension"
+    },
+    {
+      "id": "LOGIN_V1",
+      "responsibility": "ServerExtension"
+    },
+    {
+      "id": "QUICK_THEME",
+      "responsibility": "ServerExtension"
+    },
+    {
+      "id": "DOCKER",
+      "responsibility": "SdkProtocol"
+    },
+    {
+      "id": "IMPERSONATION",
+      "responsibility": "SdkAdmin"
+    },
+    {
+      "id": "SCRIPTS",
+      "responsibility": "ServerExtension"
+    },
+    {
+      "id": "PARAMETERIZED_SCOPES",
+      "responsibility": "SdkProtocol"
+    },
+    {
+      "id": "TOKEN_EXCHANGE",
+      "responsibility": "SdkProtocol"
+    },
+    {
+      "id": "TOKEN_EXCHANGE_STANDARD_V2",
+      "responsibility": "SdkProtocol"
+    },
+    {
+      "id": "TOKEN_EXCHANGE_DELEGATION",
+      "responsibility": "SdkProtocol"
+    },
+    {
+      "id": "JWT_AUTHORIZATION_GRANT",
+      "responsibility": "SdkProtocol"
+    },
+    {
+      "id": "WEB_AUTHN",
+      "responsibility": "HostIntegration"
+    },
+    {
+      "id": "CLIENT_POLICIES",
+      "responsibility": "SdkAdmin"
+    },
+    {
+      "id": "CIBA",
+      "responsibility": "SdkProtocol"
+    },
+    {
+      "id": "PAR",
+      "responsibility": "SdkProtocol"
+    },
+    {
+      "id": "CLIENT_SECRET_ROTATION",
+      "responsibility": "SdkAdmin"
+    },
+    {
+      "id": "STEP_UP_AUTHENTICATION",
+      "responsibility": "HostIntegration"
+    },
+    {
+      "id": "STEP_UP_AUTHENTICATION_SAML",
+      "responsibility": "HostIntegration"
+    },
+    {
+      "id": "CLIENT_AUTH_FEDERATED",
+      "responsibility": "HostIntegration"
+    },
+    {
+      "id": "CLIENT_AUTH_ABCA",
+      "responsibility": "HostIntegration"
+    },
+    {
+      "id": "SPIFFE",
+      "responsibility": "HostIntegration"
+    },
+    {
+      "id": "KUBERNETES_SERVICE_ACCOUNTS",
+      "responsibility": "HostIntegration"
+    },
+    {
+      "id": "KERBEROS",
+      "responsibility": "HostIntegration"
+    },
+    {
+      "id": "RECOVERY_CODES",
+      "responsibility": "HostIntegration"
+    },
+    {
+      "id": "UPDATE_EMAIL",
+      "responsibility": "HostIntegration"
+    },
+    {
+      "id": "FIPS",
+      "responsibility": "ServerRuntime"
+    },
+    {
+      "id": "DPOP",
+      "responsibility": "SdkProtocol"
+    },
+    {
+      "id": "DEVICE_FLOW",
+      "responsibility": "SdkProtocol"
+    },
+    {
+      "id": "TRANSIENT_USERS",
+      "responsibility": "HostIntegration"
+    },
+    {
+      "id": "LOGIN_FAILURES_V1",
+      "responsibility": "ServerRuntime"
+    },
+    {
+      "id": "LOGIN_FAILURES_V2",
+      "responsibility": "ServerRuntime"
+    },
+    {
+      "id": "MULTI_SITE",
+      "responsibility": "ServerRuntime"
+    },
+    {
+      "id": "STATELESS",
+      "responsibility": "ServerRuntime"
+    },
+    {
+      "id": "CLUSTERLESS",
+      "responsibility": "ServerRuntime"
+    },
+    {
+      "id": "CLIENT_TYPES",
+      "responsibility": "SdkAdmin"
+    },
+    {
+      "id": "HOSTNAME_V2",
+      "responsibility": "ServerRuntime"
+    },
+    {
+      "id": "PERSISTENT_USER_SESSIONS",
+      "responsibility": "ServerRuntime"
+    },
+    {
+      "id": "OID4VC_VCI",
+      "responsibility": "SdkProtocol"
+    },
+    {
+      "id": "OID4VC_VCI_PREAUTH_CODE",
+      "responsibility": "SdkProtocol"
+    },
+    {
+      "id": "OID4VC_VCI_REST_CREDENTIAL_OFFER",
+      "responsibility": "SdkProtocol"
+    },
+    {
+      "id": "OID4VC_MDOC",
+      "responsibility": "SdkProtocol"
+    },
+    {
+      "id": "OID4VC_VP",
+      "responsibility": "SdkProtocol"
+    },
+    {
+      "id": "OPENTELEMETRY",
+      "responsibility": "ServerRuntime"
+    },
+    {
+      "id": "OPENTELEMETRY_LOGS",
+      "responsibility": "ServerRuntime"
+    },
+    {
+      "id": "OPENTELEMETRY_METRICS",
+      "responsibility": "ServerRuntime"
+    },
+    {
+      "id": "DECLARATIVE_UI",
+      "responsibility": "ServerExtension"
+    },
+    {
+      "id": "ORGANIZATION",
+      "responsibility": "SdkAdmin"
+    },
+    {
+      "id": "PASSKEYS",
+      "responsibility": "HostIntegration"
+    },
+    {
+      "id": "PASSKEYS_CONDITIONAL_UI_AUTHENTICATOR",
+      "responsibility": "HostIntegration"
+    },
+    {
+      "id": "USER_EVENT_METRICS",
+      "responsibility": "ServerRuntime"
+    },
+    {
+      "id": "LDAP_METRICS",
+      "responsibility": "ServerRuntime"
+    },
+    {
+      "id": "IPA_TUURA_FEDERATION",
+      "responsibility": "ServerExtension"
+    },
+    {
+      "id": "LOGOUT_ALL_SESSIONS_V1",
+      "responsibility": "HostIntegration"
+    },
+    {
+      "id": "ROLLING_UPDATES_V1",
+      "responsibility": "ServerRuntime"
+    },
+    {
+      "id": "ROLLING_UPDATES_V2",
+      "responsibility": "ServerRuntime"
+    },
+    {
+      "id": "WORKFLOWS",
+      "responsibility": "SdkAdmin"
+    },
+    {
+      "id": "LOG_MDC",
+      "responsibility": "ServerRuntime"
+    },
+    {
+      "id": "DB_TIDB",
+      "responsibility": "ServerRuntime"
+    },
+    {
+      "id": "SSF",
+      "responsibility": "SdkProtocol"
+    },
+    {
+      "id": "HTTP_CLIENT",
+      "responsibility": "ServerRuntime"
+    },
+    {
+      "id": "HTTP_CLIENT_V2",
+      "responsibility": "ServerRuntime"
+    },
+    {
+      "id": "HTTP_OPTIMIZED_SERIALIZERS",
+      "responsibility": "ServerRuntime"
+    },
+    {
+      "id": "OPENAPI",
+      "responsibility": "ServerRuntime"
+    },
+    {
+      "id": "CIMD",
+      "responsibility": "SdkProtocol"
+    },
+    {
+      "id": "IDENTITY_ASSERTION_JWT",
+      "responsibility": "SdkProtocol"
+    },
+    {
+      "id": "INSTAGRAM_BROKER",
+      "responsibility": "HostIntegration"
+    },
+    {
+      "id": "TWITTER_BROKER",
+      "responsibility": "HostIntegration"
+    },
+    {
+      "id": "SCIM_API",
+      "responsibility": "SdkProtocol"
+    },
+    {
+      "id": "RESOURCE_INDICATORS",
+      "responsibility": "SdkProtocol"
+    },
+    {
+      "id": "IDENTITY_BROKERING_API_V1",
+      "responsibility": "SdkProtocol"
+    },
+    {
+      "id": "IDENTITY_BROKERING_API_V2",
+      "responsibility": "SdkProtocol"
+    }
+  ],
+  "applicationCapabilities": [
+    {
+      "id": "oidc",
+      "responsibility": "SdkProtocol",
+      "upstreamFeatures": [],
+      "implementation": "Implemented",
+      "acceptanceCriteria": [
+        "Discovery and pinned issuer metadata",
+        "Authorization code + PKCE + state/nonce and ID token validation",
+        "Client credentials, refresh, token introspection and revocation"
+      ],
+      "verificationProfiles": []
+    },
+    {
+      "id": "oidc-standard-exchange",
+      "upstreamFeatures": [
+        "TOKEN_EXCHANGE_STANDARD_V2"
+      ],
+      "responsibility": "SdkProtocol",
+      "verificationProfiles": [],
+      "implementation": "Implemented",
+      "acceptanceCriteria": [
+        "Standard token exchange preserves authorized subject audience and scopes"
+      ]
+    },
+    {
+      "id": "oidc-legacy-exchange",
+      "upstreamFeatures": [
+        "TOKEN_EXCHANGE"
+      ],
+      "responsibility": "SdkProtocol",
+      "verificationProfiles": [],
+      "implementation": "Implemented",
+      "acceptanceCriteria": [
+        "Legacy internal external and impersonation exchange with explicit compatibility consent"
+      ]
+    },
+    {
+      "id": "oidc-delegation",
+      "upstreamFeatures": [
+        "TOKEN_EXCHANGE_DELEGATION"
+      ],
+      "responsibility": "SdkProtocol",
+      "verificationProfiles": [],
+      "implementation": "Implemented",
+      "acceptanceCriteria": [
+        "Client and administrator delegation enforce may_act actor consent and revocation"
+      ]
+    },
+    {
+      "id": "oidc-jwt-grant",
+      "upstreamFeatures": [
+        "JWT_AUTHORIZATION_GRANT"
+      ],
+      "responsibility": "SdkProtocol",
+      "verificationProfiles": [],
+      "implementation": "Implemented",
+      "acceptanceCriteria": [
+        "JWT authorization grants validate trusted issuer audience signature expiry and replay"
+      ]
+    },
+    {
+      "id": "oidc-device",
+      "upstreamFeatures": [
+        "DEVICE_FLOW"
+      ],
+      "responsibility": "SdkProtocol",
+      "verificationProfiles": [],
+      "implementation": "Implemented",
+      "acceptanceCriteria": [
+        "Device authorization completes user approval and bounded pending slow-down denial expiry polling"
+      ]
+    },
+    {
+      "id": "oidc-ciba",
+      "upstreamFeatures": [
+        "CIBA"
+      ],
+      "responsibility": "SdkProtocol",
+      "verificationProfiles": [],
+      "implementation": "Implemented",
+      "acceptanceCriteria": [
+        "CIBA poll and ping authenticate notifications and enforce request lifecycle"
+      ],
+      "upstreamNotes": "Pinned CibaConfig.CIBA_SUPPORTED_MODES contains poll and ping only. Push delivery and user_code are rejected by Keycloak 26.8.1."
+    },
+    {
+      "id": "oidc-par",
+      "upstreamFeatures": [
+        "PAR"
+      ],
+      "responsibility": "SdkProtocol",
+      "verificationProfiles": [],
+      "implementation": "Implemented",
+      "acceptanceCriteria": [
+        "PAR completes the original authorization transaction without replacing state nonce or PKCE"
+      ]
+    },
+    {
+      "id": "oidc-parameterized-scopes",
+      "upstreamFeatures": [
+        "PARAMETERIZED_SCOPES"
+      ],
+      "responsibility": "SdkProtocol",
+      "verificationProfiles": [],
+      "implementation": "Implemented",
+      "acceptanceCriteria": [
+        "Parameterized client scopes enforce allowed parameters and consent"
+      ]
+    },
+    {
+      "id": "oidc-resources",
+      "upstreamFeatures": [
+        "RESOURCE_INDICATORS"
+      ],
+      "responsibility": "SdkProtocol",
+      "verificationProfiles": [],
+      "implementation": "Implemented",
+      "acceptanceCriteria": [
+        "Authorization and token resource indicators narrow the verified audience"
+      ]
+    },
+    {
+      "id": "oidc-identity-assertion",
+      "upstreamFeatures": [
+        "IDENTITY_ASSERTION_JWT"
+      ],
+      "responsibility": "SdkProtocol",
+      "verificationProfiles": [],
+      "implementation": "Implemented",
+      "acceptanceCriteria": [
+        "Identity assertions bind the verified upstream subject and relying party"
+      ],
+      "upstreamNotes": "The pinned 26.8.1 source consumes oauth-id-jag+jwt using the JWT authorization grant; it does not expose an ID-JAG issuance or exchange endpoint."
+    },
+    {
+      "id": "oidc-client-metadata",
+      "upstreamFeatures": [
+        "CIMD"
+      ],
+      "responsibility": "SdkProtocol",
+      "verificationProfiles": [],
+      "implementation": "Implemented",
+      "acceptanceCriteria": [
+        "Client ID metadata documents bind client identity redirects and authentication keys"
+      ]
+    },
+    {
+      "id": "account",
+      "responsibility": "SdkProtocol",
+      "upstreamFeatures": [
+        "ACCOUNT_API"
+      ],
+      "implementation": "Implemented",
+      "acceptanceCriteria": [
+        "User-owned profile, credentials and sessions",
+        "Linked accounts, consent and application access",
+        "Read/write authorization and cross-user denial"
+      ],
+      "verificationProfiles": []
+    },
+    {
+      "id": "scim",
+      "responsibility": "SdkProtocol",
+      "upstreamFeatures": [
+        "SCIM_API"
+      ],
+      "implementation": "Implemented",
+      "acceptanceCriteria": [
+        "Users and Groups CRUD/PATCH/search and extension schemas",
+        "Pagination, filtering, errors, discovery and capability negotiation",
+        "Cross-user and cross-realm authorization denial"
+      ],
+      "verificationProfiles": []
+    },
+    {
+      "id": "registration",
+      "responsibility": "SdkProtocol",
+      "upstreamFeatures": [],
+      "implementation": "Implemented",
+      "acceptanceCriteria": [
+        "Default and OIDC dynamic registration",
+        "Registration access token lifecycle and SAML metadata provider"
+      ],
+      "verificationProfiles": []
+    },
+    {
+      "id": "uma",
+      "responsibility": "SdkProtocol",
+      "upstreamFeatures": [
+        "AUTHORIZATION"
+      ],
+      "implementation": "Implemented",
+      "acceptanceCriteria": [
+        "Protection API resource and permission ticket lifecycle",
+        "RPT grant and runtime policy decisions",
+        "PAT authorization and least-privilege checks"
+      ],
+      "verificationProfiles": []
+    },
+    {
+      "id": "authzen",
+      "responsibility": "SdkProtocol",
+      "upstreamFeatures": [
+        "AUTHZEN"
+      ],
+      "implementation": "Implemented",
+      "acceptanceCriteria": [
+        "Discovery, single and batch evaluations",
+        "Decision semantics and authorization denial"
+      ],
+      "verificationProfiles": []
+    },
+    {
+      "id": "client-admin-v2",
+      "responsibility": "SdkProtocol",
+      "upstreamFeatures": [
+        "CLIENT_ADMIN_API_V2"
+      ],
+      "implementation": "Implemented",
+      "acceptanceCriteria": [
+        "Declarative OIDC and SAML client lifecycle",
+        "Configuration reconciliation and validation failures"
+      ],
+      "verificationProfiles": []
+    },
+    {
+      "id": "identity-brokering-legacy",
+      "upstreamFeatures": [
+        "IDENTITY_BROKERING_API_V1"
+      ],
+      "responsibility": "SdkProtocol",
+      "verificationProfiles": [],
+      "implementation": "Implemented",
+      "acceptanceCriteria": [
+        "Legacy broker token retrieval enforces the user read-token role and provider storage consent"
+      ]
+    },
+    {
+      "id": "identity-brokering",
+      "responsibility": "SdkProtocol",
+      "upstreamFeatures": [
+        "IDENTITY_BROKERING_API_V2"
+      ],
+      "implementation": "Implemented",
+      "acceptanceCriteria": [
+        "Confidential-client external token retrieval and downstream identity validation",
+        "Client user and provider authorization and immediate access shutdown"
+      ],
+      "verificationProfiles": []
+    },
+    {
+      "id": "wallet",
+      "responsibility": "SdkProtocol",
+      "upstreamFeatures": [
+        "OID4VC_VCI"
+      ],
+      "implementation": "Implemented",
+      "acceptanceCriteria": [
+        "Pinned credential metadata and offers with authorization-code PKCE credential authorization",
+        "JWT and SD-JWT credential issuance verifies issuer holder binding and selective disclosures; nonce proof batch encryption refresh and account revocation"
+      ],
+      "verificationProfiles": []
+    },
+    {
+      "id": "wallet-pre-authorized",
+      "responsibility": "SdkProtocol",
+      "upstreamFeatures": [
+        "OID4VC_VCI_PREAUTH_CODE"
+      ],
+      "implementation": "Implemented",
+      "acceptanceCriteria": [
+        "Pre-authorized credential issuance binds the offer and user and rejects replay expiry and revoked entitlements without retrying terminal upstream errors"
+      ],
+      "verificationProfiles": []
+    },
+    {
+      "id": "wallet-offers",
+      "responsibility": "SdkProtocol",
+      "upstreamFeatures": [
+        "OID4VC_VCI_REST_CREDENTIAL_OFFER"
+      ],
+      "implementation": "Implemented",
+      "acceptanceCriteria": [
+        "REST credential offers preserve configured authorization and reject unauthorized targets; URI and bounded PNG QR responses interoperate"
+      ],
+      "verificationProfiles": []
+    },
+    {
+      "id": "wallet-mdoc",
+      "responsibility": "SdkProtocol",
+      "upstreamFeatures": [
+        "OID4VC_MDOC"
+      ],
+      "implementation": "Implemented",
+      "acceptanceCriteria": [
+        "Issued mdoc credentials verify COSE issuer signature certificate trust mobile security object digest validity and holder device key"
+      ],
+      "verificationProfiles": []
+    },
+    {
+      "id": "wallet-presentation",
+      "responsibility": "SdkProtocol",
+      "upstreamFeatures": [
+        "OID4VC_VP"
+      ],
+      "implementation": "Implemented",
+      "acceptanceCriteria": [
+        "OID4VP signed requests bind issuer client nonce state and response destination; selective disclosure and holder key binding complete real broker login without replay"
+      ],
+      "verificationProfiles": []
+    },
+    {
+      "id": "wallet-attestation",
+      "responsibility": "HostIntegration",
+      "upstreamFeatures": [
+        "CLIENT_AUTH_ABCA"
+      ],
+      "implementation": "Implemented",
+      "acceptanceCriteria": [
+        "A trusted attester and fresh holder proof authenticate the expected client and reject untrusted attesters foreign holder keys invalid audience and expired attestations"
+      ],
+      "verificationProfiles": []
+    },
+    {
+      "id": "signals",
+      "responsibility": "SdkProtocol",
+      "upstreamFeatures": [
+        "SSF"
+      ],
+      "implementation": "Implemented",
+      "acceptanceCriteria": [
+        "SSF discovery and stream lifecycle",
+        "SET signature, audience, replay and CAEP/RISC semantics"
+      ],
+      "verificationProfiles": []
+    },
+    {
+      "id": "docker-registry",
+      "responsibility": "SdkProtocol",
+      "upstreamFeatures": [
+        "DOCKER"
+      ],
+      "implementation": "Implemented",
+      "acceptanceCriteria": [
+        "Registry authentication challenge and access token flow"
+      ],
+      "verificationProfiles": []
+    },
+    {
+      "id": "browser-oidc",
+      "responsibility": "HostIntegration",
+      "upstreamFeatures": [],
+      "implementation": "Implemented",
+      "acceptanceCriteria": [
+        "Host OIDC integration and protected callback transaction store",
+        "JWT/JWKS validation, clock skew, issuer/audience and key rotation",
+        "Front-channel/back-channel logout and host sessions",
+        "MCP resource metadata and OAuth integration",
+        "Mandatory signed authentication assurance and local-session authentication freshness"
+      ],
+      "verificationProfiles": []
+    },
+    {
+      "id": "saml",
+      "responsibility": "HostIntegration",
+      "upstreamFeatures": [
+        "STEP_UP_AUTHENTICATION_SAML"
+      ],
+      "implementation": "Implemented",
+      "acceptanceCriteria": [
+        "SP metadata, signed browser bindings, Artifact SOAP, ECP and protected IdP initiation",
+        "Assertion decryption, signature, issuer, audience, recipient, time, NameID and request replay protection",
+        "SP and IdP initiated single logout, atomic host revocation and signed step-up assurance"
+      ],
+      "verificationProfiles": []
+    },
+    {
+      "id": "dpop",
+      "responsibility": "HostIntegration",
+      "upstreamFeatures": [
+        "DPOP"
+      ],
+      "implementation": "Implemented",
+      "acceptanceCriteria": [
+        "DPoP signing, htm/htu/ath, nonce, replay and key binding"
+      ],
+      "verificationProfiles": []
+    },
+    {
+      "id": "authentication",
+      "responsibility": "HostIntegration",
+      "upstreamFeatures": [],
+      "implementation": "Implemented",
+      "acceptanceCriteria": [
+        "Server-hosted authentication and application-initiated actions retain PKCE state nonce and verified identity without treating an action callback as proof of a persisted business change"
+      ],
+      "verificationProfiles": []
+    },
+    {
+      "id": "federated-client-auth",
+      "responsibility": "HostIntegration",
+      "upstreamFeatures": [
+        "CLIENT_AUTH_FEDERATED",
+        "KUBERNETES_SERVICE_ACCOUNTS"
+      ],
+      "implementation": "Implemented",
+      "acceptanceCriteria": [
+        "Signed client assertions and key rotation",
+        "Federated assertion trust, expiry and audience",
+        "Kubernetes projected credential integration"
+      ],
+      "verificationProfiles": []
+    },
+    {
+      "id": "runtime-openapi",
+      "responsibility": "SdkProtocol",
+      "upstreamFeatures": [
+        "OPENAPI"
+      ],
+      "implementation": "Implemented",
+      "acceptanceCriteria": [
+        "Runtime OpenAPI discovery at an explicit management endpoint",
+        "Specification identifies the pinned client API and schema subtypes without forwarding realm credentials"
+      ],
+      "verificationProfiles": []
+    },
+    {
+      "responsibility": "HostIntegration",
+      "upstreamFeatures": [],
+      "acceptanceCriteria": [
+        "mTLS certificate-bound tokens and authenticated TLS peer validation"
+      ],
+      "verificationProfiles": [],
+      "id": "mutual-tls",
+      "implementation": "Implemented"
+    },
+    {
+      "upstreamFeatures": [
+        "SPIFFE"
+      ],
+      "implementation": "Implemented",
+      "responsibility": "HostIntegration",
+      "acceptanceCriteria": [
+        "SPIFFE JWT-SVID assertion type trust-domain bundle rotation and mapped workload identity"
+      ],
+      "id": "spiffe-client-auth",
+      "verificationProfiles": []
+    },
+    {
+      "responsibility": "HostIntegration",
+      "implementation": "Implemented",
+      "acceptanceCriteria": [
+        "Browser federation verifies the downstream subject and exact linked upstream identity"
+      ],
+      "verificationProfiles": [],
+      "upstreamFeatures": [],
+      "id": "identity-broker-login"
+    },
+    {
+      "responsibility": "HostIntegration",
+      "implementation": "Implemented",
+      "acceptanceCriteria": [
+        "Application-initiated linking requires explicit consent preserves local identity and enforces self-service unlink"
+      ],
+      "verificationProfiles": [],
+      "upstreamFeatures": [],
+      "id": "identity-linking"
+    },
+    {
+      "id": "oidc-request-objects",
+      "responsibility": "SdkProtocol",
+      "upstreamFeatures": [],
+      "implementation": "Implemented",
+      "acceptanceCriteria": [
+        "Signed and encrypted request objects preserve the bound state nonce PKCE redirect and client identity and reject tampering"
+      ],
+      "verificationProfiles": []
+    },
+    {
+      "id": "oidc-signed-responses",
+      "responsibility": "SdkProtocol",
+      "upstreamFeatures": [],
+      "implementation": "Implemented",
+      "acceptanceCriteria": [
+        "JARM validates signature encryption issuer audience expiry state and every supported response transport before code redemption"
+      ],
+      "verificationProfiles": []
+    },
+    {
+      "id": "oidc-browser-compatibility",
+      "responsibility": "SdkProtocol",
+      "upstreamFeatures": [],
+      "implementation": "Implemented",
+      "acceptanceCriteria": [
+        "Implicit hybrid and none responses preserve explicit browser correlation validate nonce and token or code hashes and cannot substitute an unsolicited identity"
+      ],
+      "verificationProfiles": []
+    },
+    {
+      "id": "oidc-assurance",
+      "responsibility": "SdkProtocol",
+      "upstreamFeatures": [
+        "STEP_UP_AUTHENTICATION"
+      ],
+      "implementation": "Implemented",
+      "acceptanceCriteria": [
+        "Verified ID-token acr auth_time and amr enforce application assurance and reject stale or weaker protocol login identities"
+      ],
+      "verificationProfiles": []
+    },
+    {
+      "id": "authentication-webauthn",
+      "responsibility": "HostIntegration",
+      "upstreamFeatures": [
+        "WEB_AUTHN"
+      ],
+      "implementation": "Implemented",
+      "acceptanceCriteria": [
+        "WebAuthn registration and login bind challenge origin RP user verification and signature; invalid origins and signatures cannot produce application identities"
+      ],
+      "verificationProfiles": []
+    },
+    {
+      "id": "authentication-passkeys",
+      "responsibility": "HostIntegration",
+      "upstreamFeatures": [
+        "PASSKEYS"
+      ],
+      "implementation": "Implemented",
+      "acceptanceCriteria": [
+        "Resident user-verified passkeys complete passwordless login for the bound account through server-hosted browser mediation"
+      ],
+      "verificationProfiles": []
+    },
+    {
+      "id": "authentication-kerberos",
+      "responsibility": "HostIntegration",
+      "upstreamFeatures": [
+        "KERBEROS"
+      ],
+      "implementation": "Implemented",
+      "acceptanceCriteria": [
+        "SPNEGO negotiation validates the trusted Kerberos service ticket and maps its principal to the independently observed application identity"
+      ],
+      "verificationProfiles": []
+    },
+    {
+      "id": "authentication-recovery-codes",
+      "responsibility": "HostIntegration",
+      "upstreamFeatures": [
+        "RECOVERY_CODES"
+      ],
+      "implementation": "Implemented",
+      "acceptanceCriteria": [
+        "Recovery-code registration requires confirmation and one-time consumption prevents replay during second-factor login"
+      ],
+      "verificationProfiles": []
+    },
+    {
+      "id": "authentication-update-email",
+      "responsibility": "HostIntegration",
+      "upstreamFeatures": [
+        "UPDATE_EMAIL"
+      ],
+      "implementation": "Implemented",
+      "acceptanceCriteria": [
+        "Application-initiated email changes require server-hosted confirmation and independently persist only the verified target address"
+      ],
+      "verificationProfiles": []
+    },
+    {
+      "id": "authentication-transient-users",
+      "responsibility": "HostIntegration",
+      "upstreamFeatures": [
+        "TRANSIENT_USERS"
+      ],
+      "implementation": "Implemented",
+      "acceptanceCriteria": [
+        "Broker login verifies a transient identity without persisting a local user and cannot silently turn it into an ordinary stored account"
+      ],
+      "verificationProfiles": []
+    },
+    {
+      "id": "authentication-legacy-logout",
+      "responsibility": "HostIntegration",
+      "upstreamFeatures": [
+        "LOGOUT_ALL_SESSIONS_V1"
+      ],
+      "implementation": "Implemented",
+      "acceptanceCriteria": [
+        "Explicit legacy logout-other-sessions compatibility revokes regular sessions while retaining offline sessions and requires independent deprecated capability opt-in"
+      ],
+      "verificationProfiles": []
+    },
+    {
+      "id": "authentication-legacy-passkey-ui",
+      "responsibility": "HostIntegration",
+      "upstreamFeatures": [
+        "PASSKEYS_CONDITIONAL_UI_AUTHENTICATOR"
+      ],
+      "implementation": "Implemented",
+      "acceptanceCriteria": [
+        "Explicit deprecated conditional passkey UI retains challenge origin and credential binding without enabling ordinary stable login implicitly"
+      ],
+      "verificationProfiles": []
+    },
+    {
+      "id": "authentication-instagram",
+      "responsibility": "HostIntegration",
+      "upstreamFeatures": [
+        "INSTAGRAM_BROKER"
+      ],
+      "implementation": "Implemented",
+      "acceptanceCriteria": [
+        "Deprecated Instagram federation preserves server-side state and maps only the independently verified upstream identity"
+      ],
+      "verificationProfiles": []
+    },
+    {
+      "id": "authentication-twitter",
+      "responsibility": "HostIntegration",
+      "upstreamFeatures": [
+        "TWITTER_BROKER"
+      ],
+      "implementation": "Implemented",
+      "acceptanceCriteria": [
+        "Deprecated Twitter federation preserves server-side state and maps only the independently verified upstream identity"
+      ],
+      "verificationProfiles": []
+    }
+  ],
+  "boundaries": {
+    "ServerRuntime": "Keycloak server and deployment/observability tools own implementation and operations; SDK records the boundary, not client support.",
+    "ServerExtension": "Keycloak UI, theme and Java SPI implementation; SDK may manage configuration but does not execute server extensions.",
+    "HostIntegration": "Host/framework integration remains required work, not an exclusion from application coverage.",
+    "ThirdPartySpi": "Only extensions distributed in the pinned upstream source are enumerated; user-provided dynamic SPI endpoints require separate contracts."
+  }
+}

@@ -120,7 +120,8 @@ public static class CapabilityContracts
         Throws<ArgumentNullException>(() => Policy().Evaluate(HttpMethod.Get, null!));
         foreach (var stage in new[] { KeycloakFeatureStage.Preview, KeycloakFeatureStage.Experimental })
         {
-            var endpoint = KeycloakCapabilityCatalog.Find(KeycloakTarget.Version)!.Endpoints.First(e => e.Stage == stage && e.Support == KeycloakSupportStatus.NotSupported);
+            // A controlled unverified endpoint keeps this negative contract valid as production features graduate.
+            var endpoint = Entry(stage: stage, support: KeycloakSupportStatus.NotSupported, verification: KeycloakVerification.Contract);
             Check(Policy().EvaluateEndpoint(endpoint).Reason == KeycloakCapabilityReason.StageNotAllowed);
             Check(Policy(new(KeycloakTarget.Version, allowPreview: true, allowExperimental: true)).EvaluateEndpoint(endpoint).Reason == KeycloakCapabilityReason.NotSupported);
         }

@@ -8,7 +8,7 @@
 using System.Diagnostics;
 using System.Security.Cryptography;
 
-return await ScriptHost.ExecuteAsync(args, "dotnet run --file tools/Test-Feature.cs -- --feature=client-types [--native-aot] [--v1] [--guarded]",
+return await ScriptHost.ExecuteAsync(args, "dotnet run --file tools/Test-Feature.cs -- --feature=<client-types|ssf|oid4vc-vci> [--native-aot] [--v1] [--guarded]",
     ["--native-aot", "--v1", "--guarded", .. args.Where(a => a.StartsWith("--feature=", StringComparison.Ordinal))], async ct =>
 {
     string root = ScriptHost.RepositoryRoot(); var target = TargetBaseline.Load(root);
@@ -16,10 +16,12 @@ return await ScriptHost.ExecuteAsync(args, "dotnet run --file tools/Test-Feature
     var plan = FeatureValidationPlan.Load(root, id);
     bool native = args.Contains("--native-aot"); int version = args.Contains("--v1") ? 1 : 2;
     string route = version == 1 ? "fgap-v1-compat" : "fgap-v2-stable";
-    File.Delete(plan.ResultPath(root, route, native ? "native-aot" : "managed", native ? "linux-musl-x64" : null, args.Contains("--guarded")));
+    string resultPath = plan.ResultPath(root, route, native ? "native-aot" : "managed", native ? "linux-musl-x64" : null, args.Contains("--guarded"));
+    Directory.CreateDirectory(Path.GetDirectoryName(resultPath)!); File.Delete(resultPath);
     string nativeOutput = "artifacts/aot/feature-integration";
     if (native)
         await ScriptHost.RunCheckedAsync(root, "docker", ["build", .. target.DockerBuildArgs, "-f", "tests/Keycloak.Admin.Sdk.AotSmoke/Dockerfile", "--target", "integration-export", "--output", "type=local,dest=" + nativeOutput, "."], ct);
+    else await ScriptHost.RunCheckedAsync(root, "dotnet", ["build", "tests/Keycloak.Admin.Sdk.IntegrationTests", "-c", "Release", "--disable-build-servers"], ct);
     var image = await ScriptHost.RunAsync(root, "docker", ["image", "inspect", target.ServerImage], ct, capture: true);
     if (image.ExitCode != 0) await ScriptHost.RunCheckedAsync(root, "docker", ["pull", target.ServerImage], ct);
     string container = "keycloak-sdk-feature-" + Guid.NewGuid().ToString("N"), child = container + "-native";
@@ -44,16 +46,13 @@ return await ScriptHost.ExecuteAsync(args, "dotnet run --file tools/Test-Feature
             await Task.Delay(TimeSpan.FromSeconds(1), ct);
         }
         if (!ready) throw new TimeoutException("Isolated feature server did not become ready.");
-        var test = new Dictionary<string, string?> { ["KC_TEST_URL"] = native ? "http://127.0.0.1:8080/" : server.AbsoluteUri, ["KC_TEST_PASSWORD"] = password,
+        var test = new Dictionary<string, string?> { ["KC_TEST_URL"] = "http://127.0.0.1:8080/", ["KC_TEST_PASSWORD"] = password,
             ["KC_TEST_FEATURE"] = id, ["KC_TEST_FEATURE_GUARDED"] = args.Contains("--guarded") ? "1" : "0", ["KEYCLOAK_ADMIN_API_ROUTE"] = route, ["KC_TEST_FULL_ADMIN"] = null };
-        if (native)
-        {
-            childAttempted = true;
-            await ScriptHost.RunCheckedAsync(root, "docker", ["run", "--rm", "--name", child, "--network", "container:" + container, "-v", root + ":/workspace", "-w", "/workspace",
+        childAttempted = true;
+        await ScriptHost.RunCheckedAsync(root, "docker", ["run", "--rm", "--name", child, "--network", "container:" + container, "-v", root + ":/workspace", "-w", "/workspace",
                 "-e", "KC_TEST_URL", "-e", "KC_TEST_PASSWORD", "-e", "KC_TEST_FEATURE", "-e", "KC_TEST_FEATURE_GUARDED", "-e", "KEYCLOAK_ADMIN_API_ROUTE",
-                target.NativeRuntimeImage, "/workspace/" + nativeOutput + "/Keycloak.Admin.Sdk.IntegrationTests"], ct, environment: test);
-        }
-        else await ScriptHost.RunCheckedAsync(root, "dotnet", ["run", "--project", "tests/Keycloak.Admin.Sdk.IntegrationTests", "-c", "Release"], ct, environment: test);
+                target.NativeRuntimeImage, .. (native ? new[] { "/workspace/" + nativeOutput + "/Keycloak.Admin.Sdk.IntegrationTests" }
+                    : new[] { "dotnet", "/workspace/tests/Keycloak.Admin.Sdk.IntegrationTests/bin/Release/net10.0/Keycloak.Admin.Sdk.IntegrationTests.dll" })], ct, environment: test);
         succeeded = true;
     }
     finally

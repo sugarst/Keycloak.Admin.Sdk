@@ -50,15 +50,17 @@ dotnet run --file tools/Check-Coverage.cs -- --results=artifacts/test-results/ma
 | AutoFixture、Bogus | 请求样本、局部固定种子的用户数据 |
 | Moq、PasswordGenerator | token/策略交互次数、密码透传与错误脱敏 |
 
-`ManagedTestDataTests.cs` 中的测试数据工具只进入 MSTest 项目，不进入 AOT。关键字段、密码策略边界仍用明确样本；随机测试不依赖特定输出。核心包不引用测试依赖，`Verify.cs` 检查两个 nuspec 的直接依赖清单及包数量。
+`ManagedTestDataTests.cs` 中的测试数据工具只进入 MSTest 项目，不进入 AOT。关键字段、密码策略边界仍用明确样本；随机测试不依赖特定输出。核心包不引用测试依赖，`Verify.cs` 检查四个 nuspec 的直接依赖清单及包数量。
 
-`Verify.cs` 将本次两个包写入 `artifacts/packages/<packageVersion>/`。主包直接依赖 Microsoft.Extensions.Http 10.0.14 和 Microsoft.Extensions.Http.Resilience 10.11.0；FeatureManagement 包依赖主包和两个微软功能开关/遥测包。独立的版本目录避免混入早期五包产物。
+`Verify.cs` 在本开发分支将主包、FeatureManagement、Protocols 和 Hosting 四个包写入 `artifacts/packages/<packageVersion>/`。主包直接依赖 Microsoft.Extensions.Http 10.0.14 和 Microsoft.Extensions.Http.Resilience 10.11.0；FeatureManagement 依赖主包和微软功能开关/遥测包；Protocols 依赖主包、IdentityModel、COSE 和 CBOR；Hosting 依赖 Protocols、ASP.NET Core OIDC/JWT、ITfoxtec SAML、Pkcs 和 Xml，要求 ASP.NET Core 10.0.14 或更高的 10.0 补丁版本，仅声明 Managed 支持。Hosting 保留 Pkcs/Xml 10.0.14 的显式 NuGet 依赖，并用未声明直接 ASP.NET Core FrameworkReference 的独立消费项目验证实际恢复版本。独立的版本目录避免混入其他版本产物。
 
 `ResilienceContracts.cs` 的七组测试验证默认关闭、408/429/5xx/连接故障重试及响应释放、写入/内容/Token POST 排除、401 组合次数与策略单次判断、单次/总超时、Retry-After、取消、命名读熔断及流交付边界；校验所有配置限制。该文件同时链接到 AotSmoke，原生程序从本次 NuGet 包还原并实际启用管道，覆盖序列化关闭反射及裁剪边界。
 
 ## 原生与真实业务验收
 
-`Verify.cs` 的原生步骤通过 `SdkPackageFeed` 让 `AotSmoke` 引用本次本地 NuGet 主包，源码链接执行完整操作矩阵、模型和适用的运行时、DI、能力策略断言。直接构建 `AotSmoke` 项目时默认使用项目引用。托管通过后仍需实际发布并运行原生程序。FeatureManagement 及其遥测模块在托管模式验证，详见 [接入指南](feature-management.md)。
+`Verify.cs` 的原生步骤通过 `SdkPackageFeed` 让 `AotSmoke` 引用本次本地 NuGet 主包和 Protocols 包，源码链接执行完整管理操作矩阵、模型、适用的运行时、DI、能力策略及协议传输断言。直接构建 `AotSmoke` 项目时默认使用项目引用。托管通过后仍需实际发布并运行原生程序。FeatureManagement 及其遥测模块在托管模式验证，详见 [接入指南](feature-management.md)。
+
+应用协议使用独立的 `Keycloak.Admin.Sdk.Protocols.Tests` 测试集和 `Check-ProtocolCoverage.cs` 门禁，要求其源码行和分支覆盖率 100%。`Test-ApplicationProtocols.cs` 对固定版本的临时 Keycloak 实例运行选定真实工作流，原生加 `--native-aot`；这些结果不等于完整协议晋升。全能力覆盖情况见 [矩阵](contracts/platform-capability-matrix.md) 和 [实施说明](full-platform-coverage.md)。
 
 `Test-Integration.cs` 使用固定 digest、临时本机端口和隔离 realm，退出时清理容器。原生模式自动构建 Linux 程序；已有二进制可加 `--no-build-native`。需要持久化 PostgreSQL 时使用 [本地服务](../local/keycloak/README.md) 的 `test` / `test-native`，全量业务验收使用 `test-full` / `test-full-native`。
 

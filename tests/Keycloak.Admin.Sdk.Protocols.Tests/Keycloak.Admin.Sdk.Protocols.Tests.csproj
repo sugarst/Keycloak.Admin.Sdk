@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup><IsTestProject>true</IsTestProject><IsPackable>false</IsPackable></PropertyGroup>
+  <ItemGroup>
+    <Compile Include="../../tools/PlatformCoverage.cs" Link="PlatformCoverage.cs" />
+    <Compile Include="../../tools/ApplicationAcceptance.cs" Link="ApplicationAcceptance.cs" />
+    <Compile Include="../Keycloak.Admin.Sdk.IntegrationTests/LiveEvidence.cs" Link="LiveEvidence.cs" />
+    <Compile Include="../../tools/TargetBaseline.cs" Link="TargetBaseline.cs" />
+    <ProjectReference Include="../../src/Keycloak.Admin.Sdk.Protocols/Keycloak.Admin.Sdk.Protocols.csproj" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.11.0" PrivateAssets="all" />
+    <PackageReference Include="MSTest.TestAdapter" Version="4.5.2" PrivateAssets="all" />
+    <PackageReference Include="MSTest.TestFramework" Version="4.5.2" PrivateAssets="all" />
+    <PackageReference Include="coverlet.collector" Version="10.1.0" PrivateAssets="all" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <IsAotCompatible>true</IsAotCompatible>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <Description>Application protocol clients for the exact Keycloak target, with independently tracked runtime verification.</Description>
+  </PropertyGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="Keycloak.Admin.Sdk.Protocols.Tests" />
+    <ProjectReference Include="../Keycloak.Admin.Sdk/Keycloak.Admin.Sdk.csproj" />
+    <PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" Version="8.23.0" />
+    <PackageReference Include="System.Security.Cryptography.Cose" Version="10.0.14" />
+    <PackageReference Include="System.Formats.Cbor" Version="10.0.14" />
+    <None Update="README.md" Pack="true" PackagePath="/" />
+    <EmbeddedResource Include="../../contracts/platform-capabilities.json" LogicalName="Keycloak.Admin.Sdk.Protocols.PlatformCapabilities.json" />
+  </ItemGroup>
+  <Target Name="StampApplicationInputs" BeforeTargets="CoreCompile">
+    <Exec Command="dotnet run --file &quot;$(MSBuildProjectDirectory)/../../tools/Stamp-ApplicationInputs.cs&quot; -- &quot;$(MSBuildProjectDirectory)/../..&quot; &quot;$(MSBuildProjectDirectory)/$(IntermediateOutputPath)ApplicationBuildStamp.g.cs&quot;" />
+    <ItemGroup><Compile Include="$(IntermediateOutputPath)ApplicationBuildStamp.g.cs" /></ItemGroup>
+  </Target>
+</Project>

@@ -53,3 +53,22 @@ jobs:
           path: artifacts/full-live/
       - if: always()
         run: dotnet run --file local/keycloak/Service.cs -- down
+  application-protocols:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+      - run: dotnet run --file tools/Test-ApplicationProtocols.cs
+      - run: dotnet run --file tools/Test-ApplicationProtocols.cs -- --native-aot
+      - run: dotnet run --file tools/Check-ApplicationProtocols.cs
+      - run: dotnet run --file tools/Test-ApplicationProtocols.cs -- --legacy
+      - run: dotnet run --file tools/Test-ApplicationProtocols.cs -- --legacy --native-aot
+      - run: dotnet run --file tools/Check-ApplicationProtocols.cs -- --legacy
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: application-protocol-workflows
+          path: artifacts/application-protocols/*.json

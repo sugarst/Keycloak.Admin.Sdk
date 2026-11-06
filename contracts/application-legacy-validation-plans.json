@@ -1,0 +1,87 @@
+{
+  "schemaVersion": 1,
+  "serverVersion": "26.8.1",
+  "sourceCommit": "24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b",
+  "requiredServerFeatures": [
+    "ADMIN_API",
+    "ADMIN_FINE_GRAINED_AUTHZ",
+    "TOKEN_EXCHANGE",
+    "IDENTITY_BROKERING_API_V1"
+  ],
+  "expectedChecks": [
+    "Legacy internal exchange denies an otherwise authenticated client before FGAP v1 target permission exists",
+    "FGAP v1 approved internal exchange issues an independently verified token for the exact original subject and target audience",
+    "Legacy refresh-token exchange binds the returned refresh credential to the requesting client and preserves its verified subject",
+    "Legacy target permission does not authorize an unrelated confidential client",
+    "Revoking FGAP v1 target permission denies the next legacy exchange with the original still-valid subject token",
+    "Legacy user-token and direct impersonation both deny a client or user without explicit impersonation authority",
+    "Legacy authorized user impersonation issues a signature-verified token for the explicitly requested target identity",
+    "Revoking the impersonation role removes authority from the user's next freshly issued access token",
+    "Direct legacy impersonation requires actual FGAP v1 client permission and verifies the requested target subject",
+    "Revoking FGAP v1 client impersonation permission immediately prevents another direct impersonation",
+    "Legacy broker login preserves the linked local identity and refuses stored credentials without the user's broker read-token role",
+    "Legacy broker read-token authorization retrieves a stored upstream credential independently verified against its own issuer and audience",
+    "Legacy external-to-internal exchange requires provider-specific FGAP v1 permission in addition to a valid external token",
+    "Legacy external-to-internal exchange verifies the real provider token and resolves the exact persisted linked local subject",
+    "Legacy external ID-token and JWT exchange verify the configured provider signature and reject a tampered external assertion",
+    "Legacy internal-to-external exchange returns a credential for the independently verified linked upstream subject",
+    "Revoking provider exchange permission immediately denies both directions without relying on subject-token expiry",
+    "Revoking the broker read-token role prevents stored credential retrieval with the user's next freshly issued token",
+    "Disabling provider token storage immediately closes legacy credential retrieval even for a previously authorized access token",
+    "Closing legacy host flags prevents every exchange impersonation and broker request before reading credentials or sending HTTP"
+  ],
+  "capabilities": [
+    {
+      "id": "oidc-legacy-exchange",
+      "requiredServerFeatures": [
+        "ADMIN_FINE_GRAINED_AUTHZ",
+        "TOKEN_EXCHANGE"
+      ],
+      "criteria": [
+        {
+          "criterion": "Legacy internal external and impersonation exchange with explicit compatibility consent",
+          "checks": [
+            "Legacy internal exchange denies an otherwise authenticated client before FGAP v1 target permission exists",
+            "FGAP v1 approved internal exchange issues an independently verified token for the exact original subject and target audience",
+            "Legacy refresh-token exchange binds the returned refresh credential to the requesting client and preserves its verified subject",
+            "Legacy target permission does not authorize an unrelated confidential client",
+            "Revoking FGAP v1 target permission denies the next legacy exchange with the original still-valid subject token",
+            "Legacy user-token and direct impersonation both deny a client or user without explicit impersonation authority",
+            "Legacy authorized user impersonation issues a signature-verified token for the explicitly requested target identity",
+            "Revoking the impersonation role removes authority from the user's next freshly issued access token",
+            "Direct legacy impersonation requires actual FGAP v1 client permission and verifies the requested target subject",
+            "Revoking FGAP v1 client impersonation permission immediately prevents another direct impersonation",
+            "Legacy broker login preserves the linked local identity and refuses stored credentials without the user's broker read-token role",
+            "Legacy broker read-token authorization retrieves a stored upstream credential independently verified against its own issuer and audience",
+            "Legacy external-to-internal exchange requires provider-specific FGAP v1 permission in addition to a valid external token",
+            "Legacy external-to-internal exchange verifies the real provider token and resolves the exact persisted linked local subject",
+            "Legacy external ID-token and JWT exchange verify the configured provider signature and reject a tampered external assertion",
+            "Legacy internal-to-external exchange returns a credential for the independently verified linked upstream subject",
+            "Revoking provider exchange permission immediately denies both directions without relying on subject-token expiry",
+            "Revoking the broker read-token role prevents stored credential retrieval with the user's next freshly issued token",
+            "Disabling provider token storage immediately closes legacy credential retrieval even for a previously authorized access token",
+            "Closing legacy host flags prevents every exchange impersonation and broker request before reading credentials or sending HTTP"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "identity-brokering-legacy",
+      "requiredServerFeatures": [
+        "IDENTITY_BROKERING_API_V1"
+      ],
+      "criteria": [
+        {
+          "criterion": "Legacy broker token retrieval enforces the user read-token role and provider storage consent",
+          "checks": [
+            "Legacy broker login preserves the linked local identity and refuses stored credentials without the user's broker read-token role",
+            "Legacy broker read-token authorization retrieves a stored upstream credential independently verified against its own issuer and audience",
+            "Revoking the broker read-token role prevents stored credential retrieval with the user's next freshly issued token",
+            "Disabling provider token storage immediately closes legacy credential retrieval even for a previously authorized access token",
+            "Closing legacy host flags prevents every exchange impersonation and broker request before reading credentials or sending HTTP"
+          ]
+        }
+      ]
+    }
+  ]
+}

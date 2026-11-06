@@ -2,11 +2,58 @@
   "schemaVersion": 1,
   "serverVersion": "26.8.1",
   "plans": {
+    "oid4vc-vci": {
+      "featureId": "KeycloakSdk.Oid4vcVci",
+      "stage": "Preview",
+      "serverFeatures": ["OID4VC_VCI"],
+      "operations": [
+        "UserVerifiableCredential.GetCredentialsAsync",
+        "UserVerifiableCredential.CreateCredentialAsync",
+        "UserVerifiableCredential.SendCredentialOfferAsync",
+        "UserVerifiableCredential.RevokeCredentialAsync",
+        "UserVerifiableCredential.UpdateCredentialAsync",
+        "UserVerifiableCredential.GetIssuedCredentialsAsync",
+        "UserVerifiableCredential.RevokeIssuedCredentialAsync"
+      ]
+    },
     "client-types": {
       "featureId": "KeycloakSdk.ClientTypes",
       "stage": "Experimental",
-      "serverFeatures": ["CLIENT_TYPES"],
-      "operations": ["ClientTypes.GetClientTypesAsync", "ClientTypes.UpdateClientTypesAsync"]
+      "serverFeatures": [
+        "CLIENT_TYPES"
+      ],
+      "operations": [
+        "ClientTypes.GetClientTypesAsync",
+        "ClientTypes.UpdateClientTypesAsync"
+      ]
+    },
+    "ssf": {
+      "featureId": "KeycloakSdk.Ssf",
+      "stage": "Experimental",
+      "serverFeatures": [
+        "SSF"
+      ],
+      "operations": [
+        "SsfAdmin.DeleteClientEventsAsync",
+        "SsfAdmin.EmitEventAsync",
+        "SsfAdmin.DeleteClientQueuedEventsAsync",
+        "SsfAdmin.GetClientEventStatsAsync",
+        "SsfAdmin.GetPendingEventAsync",
+        "SsfAdmin.DeleteClientStreamAsync",
+        "SsfAdmin.GetClientStreamAsync",
+        "SsfAdmin.UpdateClientStreamAsync",
+        "SsfAdmin.CreateClientStreamAsync",
+        "SsfAdmin.UpdateClientStreamStatusAsync",
+        "SsfAdmin.VerifyClientStreamAsync",
+        "SsfAdmin.AddSubjectAsync",
+        "SsfAdmin.CheckSubjectAsync",
+        "SsfAdmin.IgnoreSubjectAsync",
+        "SsfAdmin.RemoveSubjectAsync",
+        "SsfAdmin.GetConfigAsync",
+        "SsfAdmin.DeleteEventsAsync",
+        "SsfAdmin.DeleteQueuedEventsAsync",
+        "SsfAdmin.GetEventStatsAsync"
+      ]
     }
   }
 }

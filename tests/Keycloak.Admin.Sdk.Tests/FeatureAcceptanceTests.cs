@@ -1,10 +1,29 @@
 using System.Text.Json.Nodes;
+using System.Text.Json;
 using Keycloak.Admin.Sdk;
+using Keycloak.Admin.Sdk.Capabilities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 [TestClass]
 public sealed class FeatureAcceptanceTests
 {
+    [TestMethod]
+    public void ResetCatalogRetainsUnverifiedOperationsWithoutSupportProfiles()
+    {
+        using var fixture = new Repository();
+        using var document = JsonDocument.Parse(File.ReadAllText(Path.Combine(fixture.Root, "contracts/capabilities.json")));
+        var catalog = KeycloakCapabilityCatalog.Read(document.RootElement);
+        var unverified = catalog.Endpoints.Where(e => e.FeatureId is "KeycloakSdk.ClientTypes" or "KeycloakSdk.Ssf").ToArray();
+        Assert.AreEqual(21, unverified.Length);
+        Assert.IsTrue(unverified.All(e => e.Support == KeycloakSupportStatus.NotSupported
+            && e.Verification == KeycloakVerification.Contract && e.SupportProfiles.Count == 0));
+        var policy = new KeycloakCapabilityPolicy(new Uri("https://keycloak.invalid/auth/"),
+            new(KeycloakTarget.Version, allowPreview: true, allowExperimental: true),
+            KeycloakServerCapabilities.FromServerInfo(CapabilityContracts.ServerInfo()));
+        foreach (var endpoint in unverified)
+            Assert.AreEqual(KeycloakCapabilityReason.NotSupported, policy.EvaluateEndpoint(endpoint).Reason);
+    }
+
     [TestMethod, DoNotParallelize]
     public async Task StaleValidationExecutableIsRejectedBeforeNetwork()
     {
@@ -127,16 +146,16 @@ public sealed class FeatureAcceptanceTests
         public string Root { get; } = Path.Combine(Path.GetTempPath(), "keycloak-feature-tests-" + Guid.NewGuid().ToString("N"));
         public Repository()
         {
-            foreach (string directory in new[] { "src", "tests/Keycloak.Admin.Sdk.IntegrationTests", "tests/Keycloak.Admin.Sdk.AotSmoke", "local/keycloak", "tools", "contracts" })
+            foreach (string directory in new[] { "src", "tests/Keycloak.Admin.Sdk.IntegrationTests", "tests/Keycloak.Admin.Sdk.Protocols.Tests", "tests/Keycloak.Admin.Sdk.Hosting.Tests", "tests/Keycloak.Admin.Sdk.AotSmoke", "local/keycloak", "tools", "contracts" })
                 Directory.CreateDirectory(Path.Combine(Root, directory));
             string source = ScriptHost.RepositoryRoot();
             foreach (string path in new[] { "contracts/baseline.json", "contracts/admin-api-routes.json", "contracts/capabilities.json", "contracts/capability-rules.json", "contracts/feature-validation-plans.json", "contracts/feature-management.example.json" })
                 File.Copy(Path.Combine(source, path), Path.Combine(Root, path));
             foreach (string path in new[] { "global.json", "Directory.Build.props", "Target.props", "tools/TargetBaseline.cs", "tools/ScriptSupport.cs", "contracts/source-files.sha256", "tests/Keycloak.Admin.Sdk.AotSmoke/Dockerfile" })
                 File.WriteAllText(Path.Combine(Root, path), "test-input");
-            // Begin with no Client Types verification, independently of the real catalog's current rollout.
+            // Begin with no Client Types or SSF verification, independently of the real catalog's current rollout.
             var catalog = JsonNode.Parse(File.ReadAllText(Path.Combine(Root, "contracts/capabilities.json")))!.AsObject();
-            foreach (var e in catalog["endpoints"]!.AsArray().Where(e => e!["featureId"]!.GetValue<string>() == "KeycloakSdk.ClientTypes"))
+            foreach (var e in catalog["endpoints"]!.AsArray().Where(e => e!["featureId"]!.GetValue<string>() is "KeycloakSdk.ClientTypes" or "KeycloakSdk.Ssf"))
             { e!["supportProfiles"] = new JsonArray(); e["support"] = "NotSupported"; e["verification"] = "Contract"; }
             File.WriteAllText(Path.Combine(Root, "contracts/capabilities.json"), CapabilityEvidence.Json(catalog));
         }
