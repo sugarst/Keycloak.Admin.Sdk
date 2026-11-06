@@ -2,13 +2,96 @@
   <PropertyGroup>
     <Description>Managed feature flags and opt-in Application Insights telemetry for Keycloak Admin SDK.</Description>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-    <PackageReleaseNotes>Keycloak.Admin.Sdk 的托管功能开关扩展，基于 Microsoft.FeatureManagement 4.8.0；先验证版本能力、服务端功能与 FGAP 路线，再检查宿主开关。
-使用 KeycloakFeatureManagedClient.CreateAsync 创建受策略保护的客户端。支持按需启用 Application Insights 功能评估遥测，默认关闭。
-本扩展面向托管应用；Native AOT 应用可使用主包提供的能力策略。
-接入与遥测配置：https://github.com/sugarst/Keycloak.Admin.Sdk/blob/main/docs/feature-management.md
-版本能力与 FGAP 路线：https://github.com/sugarst/Keycloak.Admin.Sdk/blob/main/docs/capability-policy.md
-版本变更：https://github.com/sugarst/Keycloak.Admin.Sdk/blob/main/CHANGELOG.md
-开源项目：https://github.com/sugarst/Keycloak.Admin.Sdk</PackageReleaseNotes>
+    <PackageReleaseNotes><![CDATA[
+## Keycloak.Admin.Sdk.FeatureManagement
+
+Keycloak.Admin.Sdk 的托管功能开关扩展，基于 Microsoft.FeatureManagement 4.8.0。先执行版本能力策略，再检查宿主总开关和目标功能开关，用于最终灰度开放和关闭。
+
+### 安装
+
+```shell
+dotnet add package Keycloak.Admin.Sdk.FeatureManagement
+```
+
+安装本包会自动引用主包。Native AOT 应用使用主包的能力策略及 `KeycloakFeatureSnapshotGate`。
+
+### 使用示例
+
+以下示例使用内存配置演示组织功能的开放与关闭。先设置 `KEYCLOAK_ACCESS_TOKEN`，再替换服务器地址和 realm；服务器须匹配目标版本及默认 FGAP v2 路线、启用组织功能，令牌须具备相应管理权限。
+
+```csharp
+using Keycloak.Admin.Sdk;
+using Keycloak.Admin.Sdk.Capabilities;
+using Keycloak.Admin.Sdk.FeatureManagement;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.FeatureManagement;
+
+var configuration = new ConfigurationBuilder().AddInMemoryCollection(
+    new Dictionary<string, string?>
+    {
+        ["feature_management:feature_flags:0:id"] = "KeycloakSdk.AdminApi",
+        ["feature_management:feature_flags:0:enabled"] = "true",
+        ["feature_management:feature_flags:1:id"] = "KeycloakSdk.Organizations",
+        ["feature_management:feature_flags:1:enabled"] = "true"
+    }).Build();
+using var configurationLifetime = (IDisposable)configuration;
+var services = new ServiceCollection();
+services.AddSingleton<IConfiguration>(configuration);
+services.AddFeatureManagement();
+using var provider = services.BuildServiceProvider();
+
+using var cancellation = new CancellationTokenSource(TimeSpan.FromSeconds(30));
+var ct = cancellation.Token;
+var server = new Uri("https://keycloak.example.com/");
+using var http = new HttpClient(new SocketsHttpHandler { AllowAutoRedirect = false });
+var tokens = new StaticAccessTokenProvider(
+    Environment.GetEnvironmentVariable("KEYCLOAK_ACCESS_TOKEN")
+    ?? throw new InvalidOperationException("请设置 KEYCLOAK_ACCESS_TOKEN"));
+var support = new KeycloakSupportConfiguration(
+    KeycloakTarget.Version, KeycloakRuntimeProfile.Managed);
+IKeycloakAdminClient sdk = await KeycloakFeatureManagedClient.CreateAsync(
+    http, server, tokens, support,
+    provider.GetRequiredService<IVariantFeatureManager>(), cancellationToken: ct);
+
+var organizations = await sdk.Organizations.SearchAsync(
+    "target-realm", max: 20, cancellationToken: ct);
+Console.WriteLine(organizations.Body?.Count ?? 0);
+
+// 关闭组织功能，后续调用在业务 HTTP 请求发送前被拒绝。
+configuration["feature_management:feature_flags:1:enabled"] = "false";
+configuration.Reload();
+try
+{
+    await sdk.Organizations.SearchAsync("target-realm", cancellationToken: ct);
+}
+catch (KeycloakCapabilityDeniedException error) when (
+    error.Decision.Reason == KeycloakCapabilityReason.DisabledByHost)
+{
+    Console.WriteLine("组织功能已关闭");
+}
+```
+
+### 开放规则
+
+- `KeycloakSdk.AdminApi` 总开关与目标功能的 `FeatureId` 开关必须同时允许；缺失或关闭均拒绝。
+- 工厂初始化先读取一次受认证的 `serverinfo`，再检查能力与总开关。配置变化影响后续逻辑请求，不撤销已发送请求。
+- 宿主管理配置提供方、过滤器、灰度范围和刷新机制；支持策略也可通过 `KeycloakSupportConfiguration.Parse` 读取 JSON。
+- 非 Stable 功能先完成独立业务验证和按环境晋升，再通过 schema 2 的 `previewCapabilities` 或 `experimentalCapabilities` 逐功能许可，最后由宿主开关控制开放。开关不会替代验证或修改上游阶段。
+
+### 可选遥测
+
+Application Insights 功能评估遥测默认关闭。启用时引入 `Keycloak.Admin.Sdk.FeatureManagement.ApplicationInsights` 命名空间，调用 `services.AddFeatureManagement().AddKeycloakApplicationInsightsTelemetry(enabled: true)`，为目标开关设置 `telemetry.enabled=true`，并由宿主注册 `TelemetryClient`、管理遥测生命周期及所注册 hosted services 的启动和停止。
+
+### 文档
+
+- [接入与遥测配置](https://github.com/sugarst/Keycloak.Admin.Sdk/blob/main/docs/feature-management.md)
+- [功能开关配置示例](https://github.com/sugarst/Keycloak.Admin.Sdk/blob/main/contracts/feature-management.example.json)
+- [非 Stable 功能验证与晋升](https://github.com/sugarst/Keycloak.Admin.Sdk/blob/main/docs/non-stable-feature-lifecycle.md)
+- [版本能力与 FGAP 路线](https://github.com/sugarst/Keycloak.Admin.Sdk/blob/main/docs/capability-policy.md)
+- [版本变更](https://github.com/sugarst/Keycloak.Admin.Sdk/blob/main/CHANGELOG.md)
+- [开源项目](https://github.com/sugarst/Keycloak.Admin.Sdk)
+    ]]></PackageReleaseNotes>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="../Keycloak.Admin.Sdk/Keycloak.Admin.Sdk.csproj" />

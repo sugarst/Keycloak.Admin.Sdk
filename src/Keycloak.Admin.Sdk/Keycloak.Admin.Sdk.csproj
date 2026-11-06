@@ -5,13 +5,57 @@
     <Description>Native AOT compatible .NET 10 client for Keycloak $(KeycloakTargetVersion) Admin REST API.</Description>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <PackageReleaseNotes>适用于 .NET 10 的 Keycloak $(KeycloakTargetVersion) Admin REST API 客户端，支持 Native AOT、服务账号认证、依赖注入、可选弹性策略和版本能力检查。
-使用 AddKeycloakAdminSdk 注册客户端，通过 IKeycloakAdminClient 调用用户、角色、客户端、组织、授权等管理接口。
-快速开始：https://github.com/sugarst/Keycloak.Admin.Sdk#快速开始
-认证与依赖注入：https://github.com/sugarst/Keycloak.Admin.Sdk/blob/main/docs/authentication-and-errors.md
-版本能力与 FGAP 路线：https://github.com/sugarst/Keycloak.Admin.Sdk/blob/main/docs/capability-policy.md
-版本变更：https://github.com/sugarst/Keycloak.Admin.Sdk/blob/main/CHANGELOG.md
-开源项目：https://github.com/sugarst/Keycloak.Admin.Sdk</PackageReleaseNotes>
+    <PackageReleaseNotes><![CDATA[
+## Keycloak.Admin.Sdk
+
+适用于 .NET 10 的 Keycloak $(KeycloakTargetVersion) Admin REST API 客户端，支持 Native AOT、服务账号认证、依赖注入、可选弹性策略和版本能力检查。
+
+常规管理接口调用推荐使用本包；托管应用需要动态开关和灰度控制时，可安装依赖本包的 `Keycloak.Admin.Sdk.FeatureManagement`。
+
+### 安装
+
+```shell
+dotnet add package Keycloak.Admin.Sdk
+```
+
+### 使用示例
+
+以下托管示例使用已有访问令牌。先设置 `KEYCLOAK_ACCESS_TOKEN`，再替换服务器地址和 realm；令牌须具有读取 serverinfo 和目标管理接口的权限，服务器须匹配目标版本及默认 FGAP v2 路线。
+
+```csharp
+using Keycloak.Admin.Sdk;
+using Keycloak.Admin.Sdk.Capabilities;
+
+using var cancellation = new CancellationTokenSource(TimeSpan.FromSeconds(30));
+var ct = cancellation.Token;
+var server = new Uri("https://keycloak.example.com/");
+using var http = new HttpClient(new SocketsHttpHandler { AllowAutoRedirect = false });
+var tokens = new StaticAccessTokenProvider(
+    Environment.GetEnvironmentVariable("KEYCLOAK_ACCESS_TOKEN")
+    ?? throw new InvalidOperationException("请设置 KEYCLOAK_ACCESS_TOKEN"));
+var support = new KeycloakSupportConfiguration(
+    KeycloakTarget.Version, KeycloakRuntimeProfile.Managed);
+
+IKeycloakAdminClient sdk = await KeycloakSupportedClient.CreateAsync(
+    http, server, tokens, support, cancellationToken: ct);
+var users = await sdk.Users.GetUsersAsync("target-realm", max: 20, cancellationToken: ct);
+foreach (var user in users.Body ?? [])
+    Console.WriteLine(user.Username);
+```
+
+- `KeycloakSupportedClient` 初始化时读取真实服务器能力，后续请求在发送前检查版本、阶段、FGAP 路线、服务器功能和验证证据。
+- 也可通过 `AddKeycloakAdminSdk` 注册并注入 `IKeycloakAdminClient`；直接构造客户端或默认 DI 注册不会自动安装上述支持策略，配置方式见能力策略文档。
+- Native AOT 应选择 `KeycloakRuntimeProfile.NativeAot`，并使用具有对应路线及 RID 验证证据的配置。
+- 服务账号认证可使用 `ClientCredentialsTokenProvider`；HTTP 客户端、认证提供方及调用生命周期由宿主管理。
+
+### 文档
+
+- [快速开始](https://github.com/sugarst/Keycloak.Admin.Sdk#快速开始)
+- [认证与依赖注入](https://github.com/sugarst/Keycloak.Admin.Sdk/blob/main/docs/authentication-and-errors.md)
+- [版本能力与 FGAP 路线](https://github.com/sugarst/Keycloak.Admin.Sdk/blob/main/docs/capability-policy.md)
+- [版本变更](https://github.com/sugarst/Keycloak.Admin.Sdk/blob/main/CHANGELOG.md)
+- [开源项目](https://github.com/sugarst/Keycloak.Admin.Sdk)
+    ]]></PackageReleaseNotes>
   </PropertyGroup>
   <ItemGroup>
     <EmbeddedResource Include="../../contracts/capabilities.json" LogicalName="Keycloak.Capabilities.Current.json" />
