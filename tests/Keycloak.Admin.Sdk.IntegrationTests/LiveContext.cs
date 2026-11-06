@@ -21,11 +21,13 @@ internal sealed record LiveReply(string Key, string Template, AdminResponse Resp
     public JsonNode? J => Response.Content.IsEmpty ? null : JsonNode.Parse(Response.Content.Span);
     public string Id => Uri.UnescapeDataString(Response.Location!.OriginalString.TrimEnd('/').Split('/').Last());
 }
-internal sealed class LiveContext(KeycloakAdminClient sdk, string realm, LiveLedger ledger)
+internal sealed class LiveContext(KeycloakAdminClient sdk, string realm, LiveLedger ledger, CancellationToken cancellationToken = default)
 {
     public string Realm { get; } = realm;
     public string RealmId { get; set; } = realm;
     public KeycloakAdminClient Sdk { get; } = sdk;
+    public CancellationToken Cancellation { get; } = cancellationToken;
+    public LiveContext WithCancellation(CancellationToken token) => new(Sdk, Realm, ledger, token) { RealmId = RealmId };
     public KeycloakRoute Route { get; } = KeycloakRoute.Load(Directory.GetCurrentDirectory());
     public void Evidence(string name, JsonNode? value) => ledger.Evidence[name] = value;
     public Task<LiveReply> Get(string route, JsonObject? query = null, params (string, string)[] paths) => Call("GET", route, null, query, null, paths);
@@ -41,7 +43,7 @@ internal sealed class LiveContext(KeycloakAdminClient sdk, string realm, LiveLed
         string key = LiveLedger.Key(method, template);
         try
         {
-            var response = await LiveRoutes.Invoke(Sdk, new(key, args, body, query, raw, default));
+            var response = await LiveRoutes.Invoke(Sdk, new(key, args, body, query, raw, Cancellation));
             ledger.Observe(key, (int)response.StatusCode);
             return new(key, template, response);
         }
@@ -78,7 +80,7 @@ internal sealed class LiveLedger
         if (status is < 200 or >= 300 || !observed.TryGetValue(key, out var values) || !values.Contains(status)) throw new InvalidOperationException("Acceptance requires a successful real SDK response.");
         accepted[key] = (status, proof);
     }
-    public async Task Write(bool requireAll)
+    public async Task Write(bool requireAll, CancellationToken cancellationToken = default)
     {
         string mode = System.Runtime.CompilerServices.RuntimeFeature.IsDynamicCodeSupported ? "managed" : "native-aot";
         var route = KeycloakRoute.Load(Directory.GetCurrentDirectory());
@@ -94,9 +96,9 @@ internal sealed class LiveLedger
             else missing.Add(endpoint.Method + "\t" + endpoint.Path);
         }
         string prefix = "artifacts/full-live/" + route.Id + "-" + mode;
-        await File.WriteAllLinesAsync(prefix + ".tsv", lines);
-        await File.WriteAllLinesAsync(prefix + "-missing.tsv", missing);
-        await File.WriteAllLinesAsync(prefix + "-excluded.tsv", excluded);
+        await File.WriteAllLinesAsync(prefix + ".tsv", lines, cancellationToken);
+        await File.WriteAllLinesAsync(prefix + "-missing.tsv", missing, cancellationToken);
+        await File.WriteAllLinesAsync(prefix + "-excluded.tsv", excluded, cancellationToken);
         string executable = System.Runtime.CompilerServices.RuntimeFeature.IsDynamicCodeSupported
             ? Path.Combine(AppContext.BaseDirectory, "Keycloak.Admin.Sdk.IntegrationTests.dll") : Environment.ProcessPath!;
         var manifest = new JsonObject
@@ -105,11 +107,11 @@ internal sealed class LiveLedger
             ["completed"] = requireAll && missing.Count == 0, ["accepted"] = lines.Count - 1, ["expected"] = AdminEndpointCatalog.All.Count - excluded.Count + 1,
             ["missing"] = missing.Count, ["excluded"] = excluded.Count - 1,
             ["sourceFingerprint"] = LiveEvidence.Fingerprint(Directory.GetCurrentDirectory()),
-            ["executableSha256"] = Convert.ToHexString(System.Security.Cryptography.SHA256.HashData(await File.ReadAllBytesAsync(executable))).ToLowerInvariant(),
-            ["ledgerSha256"] = Convert.ToHexString(System.Security.Cryptography.SHA256.HashData(await File.ReadAllBytesAsync(prefix + ".tsv"))).ToLowerInvariant(),
+            ["executableSha256"] = Convert.ToHexString(System.Security.Cryptography.SHA256.HashData(await File.ReadAllBytesAsync(executable, cancellationToken))).ToLowerInvariant(),
+            ["ledgerSha256"] = Convert.ToHexString(System.Security.Cryptography.SHA256.HashData(await File.ReadAllBytesAsync(prefix + ".tsv", cancellationToken))).ToLowerInvariant(),
             ["evidence"] = Evidence.DeepClone()
         };
-        await File.WriteAllTextAsync(prefix + ".json", LiveJson.String(manifest));
+        await File.WriteAllTextAsync(prefix + ".json", LiveJson.String(manifest), cancellationToken);
         Console.WriteLine($"Business-verified real operations ({route.Id}/{mode}): {accepted.Count}/{AdminEndpointCatalog.All.Count - excluded.Count + 1}; missing {missing.Count}; explicitly excluded {excluded.Count - 1}.");
         if (requireAll && missing.Count > 0) throw new InvalidOperationException("Full real-container acceptance is incomplete; see " + prefix + "-missing.tsv");
     }

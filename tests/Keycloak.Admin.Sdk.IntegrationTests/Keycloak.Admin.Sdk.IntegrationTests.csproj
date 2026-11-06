@@ -1,5 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <ItemGroup><Compile Include="../../tools/TargetBaseline.cs" Link="TargetBaseline.cs" /></ItemGroup>
+  <ItemGroup>
+    <Compile Include="../../tools/TargetBaseline.cs" Link="TargetBaseline.cs" />
+    <Compile Include="../../tools/ScriptSupport.cs" Link="ScriptSupport.cs" />
+    <InternalsVisibleTo Include="Keycloak.Admin.Sdk.Tests" />
+  </ItemGroup>
   <PropertyGroup><IsPackable>false</IsPackable><OutputType>Exe</OutputType><IsAotCompatible>true</IsAotCompatible></PropertyGroup>
   <ItemGroup><ProjectReference Include="../../src/Keycloak.Admin.Sdk/Keycloak.Admin.Sdk.csproj" /></ItemGroup>
   <PropertyGroup Condition="'$(PublishAot)' != 'true'">

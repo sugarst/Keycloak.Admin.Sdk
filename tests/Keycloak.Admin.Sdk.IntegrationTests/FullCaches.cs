@@ -9,15 +9,15 @@ internal static class FullCaches
 {
     public static async Task RunAsync(LiveContext c, LiveFacts f, HttpClient http, Uri server)
     {
-        await using (var pg = await PostgresFixture.Connect())
+        await using (var pg = await PostgresFixture.Connect(c.Cancellation))
         {
-            var version = await pg.Query("SELECT current_setting('server_version'),current_setting('server_version_num'),current_database()");
+            var version = await pg.Query("SELECT current_setting('server_version'),current_setting('server_version_num'),current_database()", c.Cancellation);
             c.Prove(version.Count == 1 && version[0][1] == "180000", "Real backing database reports PostgreSQL 18.0");
             c.Evidence("postgres", new JsonObject { ["version"] = version[0][0], ["versionNumber"] = version[0][1], ["database"] = version[0][2] });
             var realm = await c.Get(""); string previous = S(realm.J, "displayName");
             // Generated realm ID is escaped as a SQL literal; this touches only our isolated realm.
             string id = c.RealmId.Replace("'", "''", StringComparison.Ordinal);
-            var rows = await pg.Query("UPDATE realm SET display_name='External PostgreSQL cache mutation' WHERE id='" + id + "' RETURNING id");
+            var rows = await pg.Query("UPDATE realm SET display_name='External PostgreSQL cache mutation' WHERE id='" + id + "' RETURNING id", c.Cancellation);
             c.Prove(rows.Count == 1 && rows[0][0] == c.RealmId, "Actual PostgreSQL out-of-band mutation affects only isolated realm");
             var warm = await c.Get("");
             c.Prove(S(warm.J, "displayName") == previous, "Realm cache still holds old configuration before explicit eviction");
@@ -36,7 +36,7 @@ internal static class FullCaches
     }
     private static async Task Keys(LiveContext c, HttpClient http, Uri server)
     {
-        await using var callback = new CallbackFixture(); using var first = RSA.Create(2048); using var second = RSA.Create(2048);
+        await using var callback = new CallbackFixture(c.Cancellation); using var first = RSA.Create(2048); using var second = RSA.Create(2048);
         RSA active = first;
         callback.Responder = (_, _, _) => { var key = active.ExportParameters(false); return (200, "application/json", LiveJson.String(new JsonObject { ["keys"] = new JsonArray(new JsonObject { ["kid"] = "full-cache-key", ["kty"] = "RSA", ["use"] = "sig", ["alg"] = "RS256", ["n"] = B64(key.Modulus!), ["e"] = B64(key.Exponent!) }) })); };
         var client = await c.Post("clients", new JsonObject { ["clientId"] = "full-jwt-cache", ["enabled"] = true, ["publicClient"] = false, ["protocol"] = "openid-connect", ["clientAuthenticatorType"] = "client-jwt", ["serviceAccountsEnabled"] = true, ["attributes"] = new JsonObject { ["use.jwks.url"] = "true", ["jwks.url"] = callback.WebUrl + "/jwks" } });
@@ -45,8 +45,8 @@ internal static class FullCaches
             long now = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
             string assertion = Jwt(signing, new JsonObject { ["iss"] = "full-jwt-cache", ["sub"] = "full-jwt-cache", ["aud"] = new Uri(server, "realms/" + c.Realm + "/protocol/openid-connect/token").AbsoluteUri, ["iat"] = now, ["exp"] = now + 60, ["jti"] = Guid.NewGuid().ToString("N") }, "full-cache-key");
             using var form = new FormUrlEncodedContent(new Dictionary<string, string> { ["grant_type"] = "client_credentials", ["client_id"] = "full-jwt-cache", ["client_assertion_type"] = "urn:ietf:params:oauth:client-assertion-type:jwt-bearer", ["client_assertion"] = assertion });
-            using var reply = await http.PostAsync(new Uri(server, "realms/" + c.Realm + "/protocol/openid-connect/token"), form);
-            string body = await reply.Content.ReadAsStringAsync();
+            using var reply = await http.PostAsync(new Uri(server, "realms/" + c.Realm + "/protocol/openid-connect/token"), form, cancellationToken: c.Cancellation);
+            string body = await reply.Content.ReadAsStringAsync(cancellationToken: c.Cancellation);
             return reply.IsSuccessStatusCode && S(JsonNode.Parse(body), "access_token").Length > 100;
         }
         c.Prove(await Authenticate(first) && callback.Requests.Count == 1, "Real signed client assertion authenticates and warms remote public-key cache");
@@ -58,7 +58,7 @@ internal static class FullCaches
     }
     private static async Task Crl(LiveContext c, LiveFacts f, HttpClient http, Uri server)
     {
-        await using var callback = new CallbackFixture(); using var rsa = RSA.Create(2048);
+        await using var callback = new CallbackFixture(c.Cancellation); using var rsa = RSA.Create(2048);
         var request = new CertificateRequest("CN=full-user", rsa, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
         request.CertificateExtensions.Add(new X509BasicConstraintsExtension(true, false, 0, true));
         request.CertificateExtensions.Add(new X509KeyUsageExtension(X509KeyUsageFlags.CrlSign | X509KeyUsageFlags.DigitalSignature | X509KeyUsageFlags.KeyCertSign, true));
@@ -87,7 +87,7 @@ internal static class FullCaches
             using var message = new HttpRequestMessage(HttpMethod.Post, new Uri(server, "realms/" + c.Realm + "/protocol/openid-connect/token"));
             message.Headers.TryAddWithoutValidation("Client-Cert", Convert.ToBase64String(cert.RawData));
             message.Content = new FormUrlEncodedContent(new Dictionary<string, string> { ["grant_type"] = "password", ["client_id"] = "full-client", ["client_secret"] = "full-client-secret" });
-            using var reply = await http.SendAsync(message); return (reply.IsSuccessStatusCode, await reply.Content.ReadAsStringAsync());
+            using var reply = await http.SendAsync(message, cancellationToken: c.Cancellation); return (reply.IsSuccessStatusCode, await reply.Content.ReadAsStringAsync(cancellationToken: c.Cancellation));
         }
         var accepted = await Authenticate();
         c.Prove(accepted.Success && callback.Requests.Count == 1, "Actual X509 direct grant succeeds with downloaded unrevoked CRL: " + (accepted.Success ? "verified" : accepted.Error));

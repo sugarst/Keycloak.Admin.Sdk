@@ -5,21 +5,21 @@ internal static class FullStorage
 {
     public static async Task RunAsync(LiveContext c)
     {
-        await using var ldap = await LdapFixture.Connect();
+        await using var ldap = await LdapFixture.Connect(c.Cancellation);
         string baseDn = "ou=" + c.Realm + ",dc=example,dc=org", usersDn = "ou=users," + baseDn, groupsDn = "ou=groups," + baseDn;
         string userDn = "uid=full-ldap-user," + usersDn, groupDn = "cn=full-ldap-group," + groupsDn;
-        await ldap.Add(baseDn, ("objectClass", ["organizationalUnit"]), ("ou", [c.Realm]));
         try
         {
-            await ldap.Add(usersDn, ("objectClass", ["organizationalUnit"]), ("ou", ["users"]));
-            await ldap.Add(groupsDn, ("objectClass", ["organizationalUnit"]), ("ou", ["groups"]));
-            await ldap.Add(userDn, ("objectClass", ["inetOrgPerson"]), ("uid", ["full-ldap-user"]), ("cn", ["LDAP Initial"]), ("sn", ["Acceptance"]), ("givenName", ["LDAP"]), ("mail", ["ldap@example.invalid"]), ("userPassword", ["LDAP-test-password"]));
-            await ldap.Add(groupDn, ("objectClass", ["groupOfNames"]), ("cn", ["full-ldap-group"]), ("member", [userDn]));
+            await ldap.Add(baseDn, c.Cancellation, ("objectClass", ["organizationalUnit"]), ("ou", [c.Realm]));
+            await ldap.Add(usersDn, c.Cancellation, ("objectClass", ["organizationalUnit"]), ("ou", ["users"]));
+            await ldap.Add(groupsDn, c.Cancellation, ("objectClass", ["organizationalUnit"]), ("ou", ["groups"]));
+            await ldap.Add(userDn, c.Cancellation, ("objectClass", ["inetOrgPerson"]), ("uid", ["full-ldap-user"]), ("cn", ["LDAP Initial"]), ("sn", ["Acceptance"]), ("givenName", ["LDAP"]), ("mail", ["ldap@example.invalid"]), ("userPassword", ["LDAP-test-password"]));
+            await ldap.Add(groupDn, c.Cancellation, ("objectClass", ["groupOfNames"]), ("cn", ["full-ldap-group"]), ("member", [userDn]));
             var connection = new JsonObject { ["action"] = "testAuthentication", ["connectionUrl"] = "ldap://ldap:389", ["bindDn"] = "cn=admin,dc=example,dc=org", ["bindCredential"] = Environment.GetEnvironmentVariable("KC_TEST_LDAP_PASSWORD"), ["authType"] = "simple", ["startTls"] = "false", ["useTruststoreSpi"] = "never", ["connectionTimeout"] = "5000" };
             var test = await c.Post("testLDAPConnection", connection);
             connection["action"] = "queryServerCapabilities";
             var capabilities = await c.Post("ldap-server-capabilities", connection);
-            await File.WriteAllTextAsync("artifacts/ldap-capabilities.json", LiveJson.String(capabilities.J!));
+            await File.WriteAllTextAsync("artifacts/ldap-capabilities.json", LiveJson.String(capabilities.J!), cancellationToken: c.Cancellation);
             c.Prove(capabilities.J is JsonArray { Count: > 0 } && capabilities.J.AsArray().Any(n => S(n, "oid").StartsWith("1.3.6.", StringComparison.Ordinal)), "Keycloak binds to actual OpenLDAP and discovers root-DSE supported capabilities", test, capabilities);
             var config = new JsonObject();
             foreach (var (key, value) in new[] { ("enabled", "true"), ("priority", "0"), ("vendor", "other"), ("connectionUrl", "ldap://ldap:389"), ("bindDn", "cn=admin,dc=example,dc=org"), ("bindCredential", Environment.GetEnvironmentVariable("KC_TEST_LDAP_PASSWORD")!), ("authType", "simple"), ("usersDn", usersDn), ("usernameLDAPAttribute", "uid"), ("rdnLDAPAttribute", "uid"), ("uuidLDAPAttribute", "entryUUID"), ("userObjectClasses", "inetOrgPerson, organizationalPerson"), ("editMode", "READ_ONLY"), ("importEnabled", "true"), ("syncRegistrations", "false"), ("cachePolicy", "DEFAULT"), ("pagination", "true"), ("searchScope", "1"), ("connectionPooling", "false") }) config[key] = new JsonArray(value);
@@ -39,7 +39,7 @@ internal static class FullStorage
             string uid = S(users.J!.AsArray().Single(), "id");
             c.Prove(sync.J?["added"]?.GetValue<int>() == 1 && Has(users.J, "federationLink", id), "Full LDAP sync imports actual directory user with provider link", sync, users);
             // The released "other" vendor's default first-name mapper reads cn.
-            await ldap.Replace(userDn, "cn", "LDAP Changed");
+            await ldap.Replace(userDn, "cn", "LDAP Changed", c.Cancellation);
             var cache = await c.Post("clear-user-cache");
             var user = await c.Get("users/{user-id}", null, ("user-id", uid));
             c.Prove(S(user.J, "firstName") == "LDAP Changed", "Clearing user cache exposes external LDAP attribute mutation", cache, user);
@@ -64,7 +64,11 @@ internal static class FullStorage
         }
         finally
         {
-            await ldap.Delete(groupDn); await ldap.Delete(userDn); await ldap.Delete(groupsDn); await ldap.Delete(usersDn); await ldap.Delete(baseDn);
+            // Cancellation can leave an incomplete LDAP frame; clean up on a fresh connection.
+            using var cleanup = new CancellationTokenSource(TimeSpan.FromSeconds(30));
+            await using var cleanupLdap = await LdapFixture.Connect(cleanup.Token);
+            await cleanupLdap.Delete(groupDn, cleanup.Token, ignoreMissing: true); await cleanupLdap.Delete(userDn, cleanup.Token, ignoreMissing: true);
+            await cleanupLdap.Delete(groupsDn, cleanup.Token, ignoreMissing: true); await cleanupLdap.Delete(usersDn, cleanup.Token, ignoreMissing: true); await cleanupLdap.Delete(baseDn, cleanup.Token, ignoreMissing: true);
         }
         Console.WriteLine("PASS full LDAP storage: actual bind/capabilities, component lifecycle, user/group sync, external mutation/cache, unlink/remove.");
     }

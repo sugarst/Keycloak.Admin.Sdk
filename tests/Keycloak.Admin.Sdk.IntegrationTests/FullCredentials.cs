@@ -24,7 +24,7 @@ internal static class FullCredentials
         c.Prove(Has(credentials.J, "userLabel", "Acceptance password"), "Credential user label is persisted", label, credentials);
         const string changed = "Changed-acceptance-Password-987!";
         var reset = await c.Put("users/{user-id}/reset-password", new JsonObject { ["type"] = "password", ["value"] = changed, ["temporary"] = false }, p);
-        var token = await PasswordToken(http, server, c.Realm, changed);
+        var token = await PasswordToken(http, server, c.Realm, changed, c.Cancellation);
         c.Prove(S(token, "access_token").Length > 100, "Password reset allows real OIDC authentication with new password", reset);
         await c.Put("users/{user-id}/reset-password", new JsonObject { ["type"] = "password", ["value"] = f.Password, ["temporary"] = false }, p);
         // Two real OTP credentials make ordering assertions meaningful (password alone cannot).
@@ -51,11 +51,11 @@ internal static class FullCredentials
         c.Prove(await c.Missing("users/{user-id}", tp), "Deleting temporary user removes persisted user", deleted);
         Console.WriteLine("PASS full credentials: profile policy, unmanaged attributes, real password login, credential labels/order/delete and local disable delegation.");
     }
-    internal static async Task<JsonNode> PasswordToken(HttpClient http, Uri server, string realm, string password, string scope = "openid", string secret = "full-client-secret")
+    internal static async Task<JsonNode> PasswordToken(HttpClient http, Uri server, string realm, string password, CancellationToken cancellationToken, string scope = "openid", string secret = "full-client-secret")
     {
         using var form = new FormUrlEncodedContent(new Dictionary<string, string> { ["grant_type"] = "password", ["client_id"] = "full-client", ["client_secret"] = secret, ["username"] = "full-user", ["password"] = password, ["scope"] = scope });
-        using var reply = await http.PostAsync(new Uri(server, "realms/" + realm + "/protocol/openid-connect/token"), form);
-        string body = await reply.Content.ReadAsStringAsync();
+        using var reply = await http.PostAsync(new Uri(server, "realms/" + realm + "/protocol/openid-connect/token"), form, cancellationToken: cancellationToken);
+        string body = await reply.Content.ReadAsStringAsync(cancellationToken: cancellationToken);
         if (!reply.IsSuccessStatusCode) throw new InvalidOperationException("Real password grant failed: " + body);
         return JsonNode.Parse(body)!;
     }

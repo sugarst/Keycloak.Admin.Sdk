@@ -13,7 +13,7 @@ internal sealed class CallbackFixture : IAsyncDisposable
           </IDPSSODescriptor>
         </EntityDescriptor>
         """;
-    private readonly CancellationTokenSource stopping = new();
+    private readonly CancellationTokenSource stopping;
     private readonly TcpListener smtp = new(IPAddress.Any, 0);
     private readonly TcpListener web = new(IPAddress.Any, 0);
     private readonly ConcurrentBag<Task> connections = [];
@@ -31,8 +31,9 @@ internal sealed class CallbackFixture : IAsyncDisposable
     public string MetadataUrl => $"http://{Host}:{((IPEndPoint)web.LocalEndpoint).Port}/metadata";
     public string WebUrl => $"http://{Host}:{((IPEndPoint)web.LocalEndpoint).Port}";
 
-    public CallbackFixture()
+    public CallbackFixture(CancellationToken cancellationToken = default)
     {
+        stopping = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
         smtp.Start(); web.Start();
         smtpLoop = AcceptAsync(smtp, SmtpAsync);
         webLoop = AcceptAsync(web, MetadataAsync);
@@ -45,11 +46,21 @@ internal sealed class CallbackFixture : IAsyncDisposable
             while (!stopping.IsCancellationRequested)
             {
                 var client = await listener.AcceptTcpClientAsync(stopping.Token);
-                connections.Add(serve(client));
+                connections.Add(ServeAsync(client, serve));
             }
         }
         catch (OperationCanceledException) when (stopping.IsCancellationRequested) { }
         catch (SocketException) when (stopping.IsCancellationRequested) { }
+    }
+
+    private async Task ServeAsync(TcpClient client, Func<TcpClient, Task> serve)
+    {
+        using (client)
+        using (stopping.Token.Register(client.Dispose))
+        {
+            try { await serve(client); }
+            catch (Exception error) when (stopping.IsCancellationRequested && error is OperationCanceledException or IOException or SocketException or ObjectDisposedException) { }
+        }
     }
 
     private async Task SmtpAsync(TcpClient client)
@@ -59,21 +70,21 @@ internal sealed class CallbackFixture : IAsyncDisposable
             await using var stream = client.GetStream();
             using var input = new StreamReader(stream, Encoding.UTF8, leaveOpen: true);
             await using var output = new StreamWriter(stream, new UTF8Encoding(false), leaveOpen: true) { NewLine = "\r\n", AutoFlush = true };
-            await output.WriteLineAsync("220 fixture ESMTP");
+            await output.WriteLineAsync("220 fixture ESMTP".AsMemory(), stopping.Token);
             bool data = false;
             var message = new StringBuilder();
             while (await input.ReadLineAsync(stopping.Token) is { } line)
             {
                 if (data)
                 {
-                    if (line == ".") { data = false; Messages.Enqueue(message.ToString()); message.Clear(); Interlocked.Increment(ref mails); await output.WriteLineAsync("250 accepted"); }
+                    if (line == ".") { data = false; Messages.Enqueue(message.ToString()); message.Clear(); Interlocked.Increment(ref mails); await output.WriteLineAsync("250 accepted".AsMemory(), stopping.Token); }
                     else message.AppendLine(line.StartsWith("..", StringComparison.Ordinal) ? line[1..] : line);
                     continue;
                 }
                 string command = line.Split(' ', 2)[0].ToUpperInvariant();
-                if (command == "DATA") { data = true; await output.WriteLineAsync("354 end with dot"); }
-                else if (command == "QUIT") { await output.WriteLineAsync("221 closing"); break; }
-                else await output.WriteLineAsync("250 OK");
+                if (command == "DATA") { data = true; await output.WriteLineAsync("354 end with dot".AsMemory(), stopping.Token); }
+                else if (command == "QUIT") { await output.WriteLineAsync("221 closing".AsMemory(), stopping.Token); break; }
+                else await output.WriteLineAsync("250 OK".AsMemory(), stopping.Token);
             }
         }
     }

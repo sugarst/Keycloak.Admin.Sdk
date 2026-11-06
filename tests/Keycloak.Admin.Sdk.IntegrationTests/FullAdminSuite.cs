@@ -6,7 +6,7 @@ using static LiveContext;
 
 internal static class FullAdminSuite
 {
-    public static async Task RunAsync(HttpClient http, Uri server)
+    public static async Task RunAsync(HttpClient http, Uri server, CancellationToken cancellationToken = default)
     {
         using var tokens = new LivePasswordTokens(http, server);
         var declared = KeycloakRoute.Load(Directory.GetCurrentDirectory());
@@ -15,15 +15,15 @@ internal static class FullAdminSuite
 #if KEYCLOAK_FEATURE_MANAGEMENT
         using var flags = FullFeatureManagement.CreateHost();
         sdk = bootstrap ? new(http, server, tokens) : await Keycloak.Admin.Sdk.FeatureManagement.KeycloakFeatureManagedClient.CreateAsync(http, server, tokens, new KeycloakSupportConfiguration(KeycloakTarget.Version,
-            declared.FgapVersion == 1 ? KeycloakAdminRoute.FgapV1Compatibility : KeycloakAdminRoute.FgapV2Stable), flags.Manager);
-        if (!bootstrap) await FullFeatureManagement.VerifyAsync(sdk, flags.Configuration);
+            declared.FgapVersion == 1 ? KeycloakAdminRoute.FgapV1Compatibility : KeycloakAdminRoute.FgapV2Stable), flags.Manager, cancellationToken: cancellationToken);
+        if (!bootstrap) await FullFeatureManagement.VerifyAsync(sdk, flags.Configuration, cancellationToken);
 #else
         sdk = bootstrap ? new(http, server, tokens) : await KeycloakSupportedClient.CreateAsync(http, server, tokens, new KeycloakSupportConfiguration(KeycloakTarget.Version,
-            declared.FgapVersion == 1 ? KeycloakAdminRoute.FgapV1Compatibility : KeycloakAdminRoute.FgapV2Stable));
+            declared.FgapVersion == 1 ? KeycloakAdminRoute.FgapV1Compatibility : KeycloakAdminRoute.FgapV2Stable), cancellationToken: cancellationToken);
 #endif
         var ledger = new LiveLedger();
         string realm = "sdk-full-" + Guid.NewGuid().ToString("N");
-        var c = new LiveContext(sdk, realm, ledger);
+        var c = new LiveContext(sdk, realm, ledger, cancellationToken);
         c.Evidence("supportPolicy", System.Text.Json.Nodes.JsonValue.Create(bootstrap ? "bootstrap-wire" : "catalog-conjunctive-v1"));
 #if KEYCLOAK_FEATURE_MANAGEMENT
         c.Evidence("featureManagement", System.Text.Json.Nodes.JsonValue.Create(bootstrap ? "not-loaded-bootstrap" : "microsoft-4.8.0"));
@@ -32,8 +32,8 @@ internal static class FullAdminSuite
         c.Evidence("featureManagement", System.Text.Json.Nodes.JsonValue.Create("not-loaded-native-aot"));
         c.Evidence("featureManagementBusinessGuards", System.Text.Json.Nodes.JsonValue.Create(false));
 #endif
-        var serverInfo = await sdk.ServerInfoAdmin.GetInfoAsync();
-        if (!bootstrap) await FullCapabilities.VerifyAsync(http, server, tokens, declared.FgapVersion == 1 ? KeycloakAdminRoute.FgapV1Compatibility : KeycloakAdminRoute.FgapV2Stable, serverInfo.Content);
+        var serverInfo = await sdk.ServerInfoAdmin.GetInfoAsync(cancellationToken);
+        if (!bootstrap) await FullCapabilities.VerifyAsync(http, server, tokens, declared.FgapVersion == 1 ? KeycloakAdminRoute.FgapV1Compatibility : KeycloakAdminRoute.FgapV2Stable, serverInfo.Content, cancellationToken);
         c.Evidence("supportPolicyLocalGuards", System.Text.Json.Nodes.JsonValue.Create(!bootstrap));
         using (var actual = JsonDocument.Parse(serverInfo.Content))
         {
@@ -43,15 +43,15 @@ internal static class FullAdminSuite
         }
         c.Evidence("realm", System.Text.Json.Nodes.JsonValue.Create(realm));
         Console.WriteLine("Acceptance route: " + c.Route.Id + "; no preview or experimental features enabled.");
-        bool created = false, completed = false;
+        bool createAttempted = false, completed = false;
         try
         {
+            createAttempted = true;
             var create = await c.Post("/admin/realms", new System.Text.Json.Nodes.JsonObject
             {
                 ["realm"] = realm, ["enabled"] = true, ["organizationsEnabled"] = true,
                 ["eventsEnabled"] = true, ["adminEventsEnabled"] = true, ["adminEventsDetailsEnabled"] = true
             });
-            created = true;
             var get = await c.Get("");
             c.RealmId = S(get.J, "id");
             c.Prove(S(get.J, "realm") == realm, "Created realm is persisted and readable by its unique name", create, get);
@@ -77,12 +77,25 @@ internal static class FullAdminSuite
         }
         finally
         {
-            if (created)
+            try
             {
-                var deleted = await c.Delete("");
-                c.Prove(await c.Missing(""), "Deleting the isolated realm removes its persisted state", deleted);
+                if (createAttempted)
+                {
+                    using var cleanup = new CancellationTokenSource(TimeSpan.FromSeconds(30));
+                    var cleanupContext = c.WithCancellation(cleanup.Token);
+                    try
+                    {
+                        var deleted = await cleanupContext.Delete("");
+                        c.Prove(await cleanupContext.Missing(""), "Deleting the isolated realm removes its persisted state", deleted);
+                    }
+                    catch (InvalidOperationException error) when (error.InnerException is KeycloakAdminException { StatusCode: HttpStatusCode.NotFound }) { }
+                }
             }
-            await ledger.Write(completed);
+            finally
+            {
+                using var evidence = new CancellationTokenSource(TimeSpan.FromSeconds(30));
+                await ledger.Write(completed, evidence.Token);
+            }
         }
     }
 }

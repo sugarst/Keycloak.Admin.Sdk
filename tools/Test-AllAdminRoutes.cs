@@ -22,6 +22,7 @@ return await ScriptHost.ExecuteAsync(args, "dotnet run --file tools/Test-AllAdmi
     finally
     {
         // Restore the ordinary stable-v2 service (without the X509 acceptance override).
-        await ScriptHost.RunCheckedAsync(root, "dotnet", ["run", "--file", "local/keycloak/Service.cs", "--", "up"], CancellationToken.None, environment: stable);
+        using var cleanup = new CancellationTokenSource(TimeSpan.FromMinutes(5));
+        await ScriptHost.RunCheckedAsync(root, "dotnet", ["run", "--file", "local/keycloak/Service.cs", "--", "up"], cleanup.Token, environment: stable);
     }
 });

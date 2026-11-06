@@ -8,21 +8,22 @@ internal static class FullMail
 {
     public static async Task RunAsync(LiveContext c, LiveFacts f)
     {
-        await using var callback = new CallbackFixture();
+        await using var callback = new CallbackFixture(c.Cancellation);
         var smtp = new JsonObject { ["host"] = callback.Host, ["port"] = callback.SmtpPort.ToString(CultureInfo.InvariantCulture), ["from"] = "acceptance@example.invalid", ["auth"] = "false", ["ssl"] = "false", ["starttls"] = "false" };
         await c.Put("", new JsonObject { ["smtpServer"] = smtp.DeepClone() });
-        var admin = (await c.Sdk.Users.GetUsersAsync("master", username: Environment.GetEnvironmentVariable("KC_TEST_USERNAME") ?? "admin", exact: true)).Body!.Single();
+        var admin = (await c.Sdk.Users.GetUsersAsync("master", username: Environment.GetEnvironmentVariable("KC_TEST_USERNAME") ?? "admin", exact: true, cancellationToken: c.Cancellation)).Body!.Single();
         try
         {
-            await c.Sdk.User.UpdateUserAsync("master", admin.Id!, new UserRepresentation { Email = "full-admin@example.invalid" });
+            await c.Sdk.User.UpdateUserAsync("master", admin.Id!, new UserRepresentation { Email = "full-admin@example.invalid" }, cancellationToken: c.Cancellation);
             var test = await c.Call("POST", "testSMTPConnection", raw: new StringContent(LiveJson.String(smtp), Encoding.UTF8, "application/json"));
             var legacy = await c.Call("POST", "testSMTPConnection", raw: new FormUrlEncodedContent(new Dictionary<string, string> { ["config"] = LiveJson.String(smtp) }));
             c.Prove(callback.MailCount == 2 && callback.Messages.All(m => m.Contains("full-admin@example.invalid", StringComparison.Ordinal)), "JSON and form SMTP tests deliver actual messages to authenticated admin", test, legacy);
         }
         finally
         {
-            await c.Sdk.User.UpdateUserAsync("master", admin.Id!, new UserRepresentation { Email = admin.Email ?? "", EmailVerified = admin.EmailVerified });
-            var restored = (await c.Sdk.User.GetUserAsync("master", admin.Id!)).Body!;
+            using var cleanup = new CancellationTokenSource(TimeSpan.FromSeconds(30));
+            await c.Sdk.User.UpdateUserAsync("master", admin.Id!, new UserRepresentation { Email = admin.Email ?? "", EmailVerified = admin.EmailVerified }, cancellationToken: cleanup.Token);
+            var restored = (await c.Sdk.User.GetUserAsync("master", admin.Id!, cancellationToken: cleanup.Token)).Body!;
             c.Prove(string.Equals(restored.Email ?? "", admin.Email ?? "", StringComparison.Ordinal), "SMTP fixture restores bootstrap admin email");
         }
         foreach (var (path, body) in new (string, JsonNode?)[] { ("execute-actions-email", new JsonArray("UPDATE_PASSWORD")), ("reset-password-email", null), ("send-verify-email", null) })

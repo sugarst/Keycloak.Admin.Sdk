@@ -21,13 +21,13 @@ internal static class FullFgap
         await c.Post("users/{user-id}/role-mappings/clients/{client-id}", new JsonArray(queryRole.J!.DeepClone()), paths: [("user-id", admin), ("client-id", managementId)]);
         await c.Post("clients", O("""{"clientId":"full-delegated-login","publicClient":false,"protocol":"openid-connect","secret":"full-delegated-secret","directAccessGrantsEnabled":true,"fullScopeAllowed":true}"""));
         using var form = new FormUrlEncodedContent(new Dictionary<string, string> { ["grant_type"] = "password", ["client_id"] = "full-delegated-login", ["client_secret"] = "full-delegated-secret", ["username"] = "full-delegated-admin", ["password"] = "Delegated-admin-Password-123!" });
-        using var login = await http.PostAsync(new Uri(server, "realms/" + c.Realm + "/protocol/openid-connect/token"), form);
+        using var login = await http.PostAsync(new Uri(server, "realms/" + c.Realm + "/protocol/openid-connect/token"), form, cancellationToken: c.Cancellation);
         login.EnsureSuccessStatusCode();
-        var token = JsonNode.Parse(await login.Content.ReadAsStringAsync());
+        var token = JsonNode.Parse(await login.Content.ReadAsStringAsync(cancellationToken: c.Cancellation));
         var delegated = new KeycloakAdminClient(http, server, new StaticAccessTokenProvider(S(token, "access_token")));
         async Task Denied()
         {
-            try { await delegated.User.UpdateUserAsync(c.Realm, f.User, new UserRepresentation { FirstName = "Unauthorized change" }); }
+            try { await delegated.User.UpdateUserAsync(c.Realm, f.User, new UserRepresentation { FirstName = "Unauthorized change" }, cancellationToken: c.Cancellation); }
             catch (KeycloakAdminException e) when (e.StatusCode == HttpStatusCode.Forbidden) { return; }
             throw new InvalidOperationException("Delegated admin mutation must be denied without FGAP grant.");
         }
@@ -65,9 +65,9 @@ internal static class FullFgap
                 await c.Put(root + "/permission/{policy-type}/{id}", edit, permissionPaths);
             }
         }
-        await delegated.User.UpdateUserAsync(c.Realm, f.User, new UserRepresentation { FirstName = "FGAP delegated update" });
+        await delegated.User.UpdateUserAsync(c.Realm, f.User, new UserRepresentation { FirstName = "FGAP delegated update" }, cancellationToken: c.Cancellation);
         var persisted = await c.Get("users/{user-id}", null, ("user-id", f.User));
-        var viewed = await delegated.User.GetUserAsync(c.Realm, f.User);
+        var viewed = await delegated.User.GetUserAsync(c.Realm, f.User, cancellationToken: c.Cancellation);
         c.Prove(S(persisted.J, "firstName") == "FGAP delegated update" && viewed.Body!.FirstName == "FGAP delegated update", "Declared FGAP v" + c.Route.FgapVersion + " policy grants real delegated admin read/write after an initial 403", policy, persisted);
         var remove = await c.Delete(root + "/policy/{id}", [.. p, ("id", policyId)]);
         await Denied(); persisted = await c.Get("users/{user-id}", null, ("user-id", f.User));

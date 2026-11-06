@@ -12,7 +12,7 @@ internal static class FullSessions
         var setEvents = await c.Put("events/config", config);
         var getEvents = await c.Get("events/config");
         c.Prove(getEvents.J?["eventsExpiration"]?.GetValue<int>() == 3600 && getEvents.J?["enabledEventTypes"]?.AsArray().Any(n => n?.GetValue<string>() == "LOGIN") == true, "Event configuration persists retention and enabled event types", setEvents, getEvents);
-        var token = await FullCredentials.PasswordToken(http, server, c.Realm, f.Password, "openid offline_access");
+        var token = await FullCredentials.PasswordToken(http, server, c.Realm, f.Password, c.Cancellation, "openid offline_access");
         c.Prove(S(token, "refresh_token").Length > 100, "Actual OIDC offline grant returns refresh token");
         var sessions = await c.Get("users/{user-id}/sessions", null, up);
         var clientSessions = await c.Get("clients/{client-uuid}/user-sessions", null, cp);
@@ -30,7 +30,7 @@ internal static class FullSessions
         var deleted = await c.Delete("sessions/{session}", ("session", sid));
         sessions = await c.Get("users/{user-id}/sessions", null, up);
         c.Prove(!Has(sessions.J, "id", sid), "Deleting session removes selected persisted user session", deleted, sessions);
-        await FullCredentials.PasswordToken(http, server, c.Realm, f.Password);
+        await FullCredentials.PasswordToken(http, server, c.Realm, f.Password, c.Cancellation);
         var logout = await c.Post("users/{user-id}/logout", paths: up);
         sessions = await c.Get("users/{user-id}/sessions", null, up);
         c.Prove(sessions.J is JsonArray { Count: 0 }, "User logout invalidates all regular sessions for that user", logout, sessions);
@@ -44,19 +44,19 @@ internal static class FullSessions
         async Task FailLogin()
         {
             using var form = new FormUrlEncodedContent(new Dictionary<string, string> { ["grant_type"] = "password", ["client_id"] = "full-client", ["client_secret"] = "full-client-secret", ["username"] = "full-user", ["password"] = "deliberately-incorrect-password" });
-            using var response = await http.PostAsync(new Uri(server, "realms/" + c.Realm + "/protocol/openid-connect/token"), form);
+            using var response = await http.PostAsync(new Uri(server, "realms/" + c.Realm + "/protocol/openid-connect/token"), form, cancellationToken: c.Cancellation);
             c.Prove(response.StatusCode == HttpStatusCode.BadRequest, "Actual incorrect-password login is rejected");
         }
         await FailLogin(); await FailLogin();
         LiveReply status = await c.Get("attack-detection/brute-force/users/{userId}", null, ("userId", f.User));
-        for (int i = 0; i < 30 && (status.J?["numFailures"]?.GetValue<int>() ?? 0) == 0; i++) { await Task.Delay(100); status = await c.Get("attack-detection/brute-force/users/{userId}", null, ("userId", f.User)); }
+        for (int i = 0; i < 30 && (status.J?["numFailures"]?.GetValue<int>() ?? 0) == 0; i++) { await Task.Delay(100, cancellationToken: c.Cancellation); status = await c.Get("attack-detection/brute-force/users/{userId}", null, ("userId", f.User)); }
         c.Prove(status.J?["numFailures"]?.GetValue<int>() > 0, "Failed real logins produce persisted brute-force failure count", status);
         var bruteUi = await c.Get("ui-ext/brute-force-user", O("""{"username":"full-user","exact":true}"""));
         c.Prove(Has(bruteUi.J, "id", f.User), "UI brute-force search resolves actual failed-login user", bruteUi);
         var clear = await c.Delete("attack-detection/brute-force/users/{userId}", ("userId", f.User));
         status = await c.Get("attack-detection/brute-force/users/{userId}", null, ("userId", f.User));
         c.Prove(status.J?["numFailures"]?.GetValue<int>() == 0, "Clearing selected user's attacks resets recorded failures", clear, status);
-        await FailLogin(); await Task.Delay(200);
+        await FailLogin(); await Task.Delay(200, cancellationToken: c.Cancellation);
         clear = await c.Delete("attack-detection/brute-force/users"); status = await c.Get("attack-detection/brute-force/users/{userId}", null, ("userId", f.User));
         c.Prove(status.J?["numFailures"]?.GetValue<int>() == 0, "Clearing realm attacks resets newly recorded failures", clear, status);
         var events = await c.Get("events", new JsonObject { ["user"] = f.User, ["max"] = 100 });
@@ -85,36 +85,36 @@ internal static class FullSessions
             if (cookies.Count > 0) browser.DefaultRequestHeaders.TryAddWithoutValidation("Cookie", string.Join("; ", cookies.Select(p => p.Key + "=" + p.Value)));
         }
         string auth = new Uri(server, "realms/" + c.Realm + "/protocol/openid-connect/auth?client_id=full-client&redirect_uri=http%3A%2F%2Flocalhost%2Fcallback&response_type=code&scope=openid%20profile%20email&state=full-consent").AbsoluteUri;
-        using var page = await browser.GetAsync(auth);
+        using var page = await browser.GetAsync(auth, cancellationToken: c.Cancellation);
         ReceiveCookies(page);
-        string html = await page.Content.ReadAsStringAsync();
+        string html = await page.Content.ReadAsStringAsync(cancellationToken: c.Cancellation);
         c.Prove(cookies.ContainsKey("AUTH_SESSION_ID"), "Actual login response establishes authentication-session cookie");
         static string Action(string pageText) => WebUtility.HtmlDecode(Regex.Match(pageText, "<form[^>]*action=\"([^\"]+)\"", RegexOptions.IgnoreCase).Groups[1].Value);
         string action = Action(html);
         if (action.Length == 0) throw new InvalidOperationException("OIDC login form missing: " + html[..Math.Min(html.Length, 300)]);
         using var credentials = new FormUrlEncodedContent(new Dictionary<string, string> { ["username"] = "full-user", ["password"] = f.Password, ["credentialId"] = "" });
-        using var login = await browser.PostAsync(action, credentials);
+        using var login = await browser.PostAsync(action, credentials, cancellationToken: c.Cancellation);
         ReceiveCookies(login);
-        html = await login.Content.ReadAsStringAsync();
+        html = await login.Content.ReadAsStringAsync(cancellationToken: c.Cancellation);
         var location = login.Headers.Location;
         for (int redirects = 0; location is not null && redirects < 8; redirects++)
         {
             var target = location.IsAbsoluteUri ? location : new Uri(server, location);
             if (target.GetLeftPart(UriPartial.Authority) != server.GetLeftPart(UriPartial.Authority)) throw new InvalidOperationException("Consent must be shown before external authorization redirect.");
-            using var next = await browser.GetAsync(target); ReceiveCookies(next);
-            html = await next.Content.ReadAsStringAsync(); location = next.Headers.Location;
+            using var next = await browser.GetAsync(target, cancellationToken: c.Cancellation); ReceiveCookies(next);
+            html = await next.Content.ReadAsStringAsync(cancellationToken: c.Cancellation); location = next.Headers.Location;
         }
         action = Action(html);
         if (html.Contains("name=\"password\"", StringComparison.Ordinal) && !html.Contains("consent", StringComparison.OrdinalIgnoreCase))
         {
             using var secondForm = new FormUrlEncodedContent(new Dictionary<string, string> { ["username"] = "full-user", ["password"] = f.Password, ["credentialId"] = "" });
-            using var secondLogin = await browser.PostAsync(action, secondForm);
+            using var secondLogin = await browser.PostAsync(action, secondForm, cancellationToken: c.Cancellation);
             ReceiveCookies(secondLogin);
-            html = await secondLogin.Content.ReadAsStringAsync(); action = Action(html);
+            html = await secondLogin.Content.ReadAsStringAsync(cancellationToken: c.Cancellation); action = Action(html);
         }
         if (action.Length == 0 || !html.Contains("consent", StringComparison.OrdinalIgnoreCase)) throw new InvalidOperationException("OIDC consent page missing after real login: " + html[..Math.Min(html.Length, 300)]);
         using var accept = new FormUrlEncodedContent(new Dictionary<string, string> { ["accept"] = "Yes" });
-        using var consent = await browser.PostAsync(action, accept);
+        using var consent = await browser.PostAsync(action, accept, cancellationToken: c.Cancellation);
         c.Prove(consent.StatusCode == HttpStatusCode.Found && consent.Headers.Location?.OriginalString.Contains("code=", StringComparison.Ordinal) == true, "Actual browser login and consent issue authorization code");
         var grants = await c.Get("users/{user-id}/consents", null, ("user-id", f.User));
         c.Prove(grants.J is JsonArray { Count: > 0 } && grants.J.AsArray().Any(n => S(n?["client"], "clientId") == "full-client" || S(n, "clientId") == "full-client"), "Consent API reads persisted browser-approved client grant", grants);

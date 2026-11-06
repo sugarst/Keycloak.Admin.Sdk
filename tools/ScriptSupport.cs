@@ -41,6 +41,7 @@ internal static class ScriptHost
     public static async Task<CommandResult> RunAsync(string root, string executable, IEnumerable<string> arguments,
         CancellationToken cancellationToken, bool capture = false, IReadOnlyDictionary<string, string?>? environment = null)
     {
+        cancellationToken.ThrowIfCancellationRequested();
         var start = new ProcessStartInfo(executable)
         {
             WorkingDirectory = root,
@@ -54,18 +55,27 @@ internal static class ScriptHost
             foreach (var (name, value) in environment)
                 if (value is null) start.Environment.Remove(name); else start.Environment[name] = value;
         using var process = Process.Start(start) ?? throw new InvalidOperationException($"Cannot start {executable}.");
-        var stdout = capture ? process.StandardOutput.ReadToEndAsync() : ForwardAsync(process.StandardOutput, Console.Out);
-        var stderr = capture ? process.StandardError.ReadToEndAsync() : ForwardAsync(process.StandardError, Console.Error);
-        try { await process.WaitForExitAsync(cancellationToken); }
-        catch (OperationCanceledException)
+        var stdout = capture ? process.StandardOutput.ReadToEndAsync(cancellationToken) : ForwardAsync(process.StandardOutput, Console.Out, cancellationToken);
+        var stderr = capture ? process.StandardError.ReadToEndAsync(cancellationToken) : ForwardAsync(process.StandardError, Console.Error, cancellationToken);
+        try
+        {
+            await process.WaitForExitAsync(cancellationToken);
+            await Task.WhenAll(stdout, stderr);
+            return new(process.ExitCode, await stdout, await stderr);
+        }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
         {
             try { if (!process.HasExited) process.Kill(entireProcessTree: true); }
             catch (InvalidOperationException) { }
-            await process.WaitForExitAsync(CancellationToken.None);
-            await Task.WhenAll(stdout, stderr);
+            using var cleanup = new CancellationTokenSource(TimeSpan.FromSeconds(30));
+            try { await process.WaitForExitAsync(cleanup.Token); }
+            finally
+            {
+                try { await Task.WhenAll(stdout, stderr); }
+                catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) { }
+            }
             throw;
         }
-        return new(process.ExitCode, await stdout, await stderr);
     }
 
     public static async Task<CommandResult> RunCheckedAsync(string root, string executable, IEnumerable<string> arguments,
@@ -79,14 +89,14 @@ internal static class ScriptHost
 
     public static JsonDocument Baseline(string root) => JsonDocument.Parse(File.ReadAllText(Path.Combine(root, "contracts/baseline.json")));
 
-    private static async Task<string> ForwardAsync(StreamReader source, TextWriter destination)
+    private static async Task<string> ForwardAsync(StreamReader source, TextWriter destination, CancellationToken cancellationToken)
     {
         var buffer = new char[4096];
         int count;
-        while ((count = await source.ReadAsync(buffer)) > 0)
+        while ((count = await source.ReadAsync(buffer.AsMemory(), cancellationToken)) > 0)
         {
-            await destination.WriteAsync(buffer.AsMemory(0, count));
-            await destination.FlushAsync();
+            await destination.WriteAsync(buffer.AsMemory(0, count), cancellationToken);
+            await destination.FlushAsync(cancellationToken);
         }
         return "";
     }

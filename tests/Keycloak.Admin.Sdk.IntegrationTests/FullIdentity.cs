@@ -8,7 +8,7 @@ internal static class FullIdentity
 {
     public static async Task RunAsync(LiveContext c, LiveFacts f, Uri server)
     {
-        await using var callback = new CallbackFixture();
+        await using var callback = new CallbackFixture(c.Cancellation);
         using var rsa = RSA.Create(2048);
         var publicKey = rsa.ExportParameters(false);
         string kid = "full-jwk-one";
@@ -43,7 +43,7 @@ internal static class FullIdentity
         c.Prove(reload.J!.GetValue<bool>() && callback.Requests.Any(r => r.Path == "/jwks"), "Reload keys fetches a real RSA JWKS over HTTP", reload);
         kid = "full-jwk-two";
         // The real storage provider enforces a 10-second minimum JWKS refresh interval.
-        await Task.Delay(TimeSpan.FromSeconds(11));
+        await Task.Delay(TimeSpan.FromSeconds(11), cancellationToken: c.Cancellation);
         var reloadAgain = await c.Get("identity-provider/instances/{alias}/reload-keys", null, ("alias", "full-oidc-idp"));
         c.Prove(reloadAgain.J!.GetValue<bool>() && callback.Requests.Count(r => r.Path == "/jwks") >= 2, "Reload refetches changed remote key set", reloadAgain);
         var types = await c.Get("identity-provider/instances/{alias}/mapper-types", null, ("alias", "full-saml-idp"));
