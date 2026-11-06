@@ -2,7 +2,7 @@
 
 记录可分发版本的变化；本地候选通过验收后生成的机器记录见 [docs/releases](docs/releases/README.md)。实际发布以对应发布记录中的 NuGet 链接和发布时间为准。
 
-## 26.8.1-preview.2（本地候选，未发布）
+## 26.8.1-preview.2（已发布至 NuGet）
 
 **中文：相较 26.8.1-preview.1**
 
@@ -15,7 +15,7 @@
 - Client Types 两个操作完成托管 v2 的独立验证与晋升，仍保留 Experimental 阶段并默认关闭；AOT 和 v1 组合不继承该支持状态。
 - 两个包的发布说明采用 Markdown 并提供可编译的使用示例；FeatureManagement 包补充包内 README。
 - 测试从 preview.1 对应源码的 567 项增加至 586 项。本版本已通过全部测试、覆盖率门禁、严格 Native AOT、两条 FGAP 路线各自的托管/原生业务验收及 Client Types 受保护复验；v2 各 478/478，v1 各 492/492。
-- SSF 和 OID4VC VCI 尚未晋升支持；本候选不会自动打开非 Stable 功能。当前尚未上传 NuGet。
+- SSF 和 OID4VC VCI 尚未晋升支持；非 Stable 功能不会自动开启。两个包已发布至 NuGet：[主包](https://www.nuget.org/packages/Keycloak.Admin.Sdk/26.8.1-preview.2)、[FeatureManagement 扩展](https://www.nuget.org/packages/Keycloak.Admin.Sdk.FeatureManagement/26.8.1-preview.2)。
 
 **English: changes since 26.8.1-preview.1**
 
@@ -28,9 +28,9 @@ The exact Keycloak target remains 26.8.1, with 520 generated operations. The def
 - Verify and promote both Client Types operations for Managed / FGAP v2 only. They remain Experimental and disabled by default; Native AOT and FGAP v1 do not inherit this support.
 - Provide Markdown package release notes with compilable examples for both packages, and include a README in the FeatureManagement package.
 - Increase tests from 567 on the preview.1 source to 586. All tests, coverage gates, strict Native AOT, both routes in managed/native modes and guarded Client Types acceptance pass: 478/478 per v2 run and 492/492 per v1 run.
-- SSF and OID4VC VCI remain unpromoted. Non-stable features are not enabled automatically. This is a local candidate; preview.2 has not been uploaded to NuGet.
+- SSF and OID4VC VCI remain unpromoted. Non-stable features are not enabled automatically. Both preview.2 packages have been published to NuGet: [core](https://www.nuget.org/packages/Keycloak.Admin.Sdk/26.8.1-preview.2) and [FeatureManagement](https://www.nuget.org/packages/Keycloak.Admin.Sdk.FeatureManagement/26.8.1-preview.2).
 
-候选、源码指纹及两个包的 SHA256 / Candidate, source fingerprint and package SHA256: [发布记录 / release record](docs/releases/26.8.1-preview.2/83bb57fe71297c43802b47e945f9efb8acc594d50c226f6ef4c531ecc7d0d402.json)。
+本地验收候选、源码指纹及候选包 SHA256 / Local acceptance candidate, source fingerprint and candidate package SHA256: [候选记录 / candidate record](docs/releases/26.8.1-preview.2/83bb57fe71297c43802b47e945f9efb8acc594d50c226f6ef4c531ecc7d0d402.json)。实际发布状态与公开包信息 / Publication status and public package information: [发布记录 / publication record](docs/releases/26.8.1-preview.2/publication.json)。
 
 ## 26.8.1-preview.1（已在 NuGet 提供）
 

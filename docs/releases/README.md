@@ -15,6 +15,8 @@
 
 候选状态固定为 `local-candidate`、`published=false`。相同版本、不同源码指纹各保留一份；相同指纹重跑更新该记录，Git 保留修改历史。失败不会写入本次成功记录，已有记录只代表其对应的历史成功执行。
 
+`26.8.1-preview.2` 两个包已由维护者手动发布至 NuGet，见[实际发布记录](26.8.1-preview.2/publication.json)。候选记录仍保留运行验收时的原始状态；公开包与本地候选的文件哈希分别记录，未知信息不作推断。
+
 ## 单独保存的制品
 
 `.nupkg`、`.snupkg`、完整日志、TRX、Cobertura、缓存和 AOT 二进制继续由 `.gitignore` 排除。本地候选位于 `artifacts/releases/<packageVersion>/<sourceFingerprint>/`，清理前如需保存，应复制到长期制品存储。CI 会上传候选及测试附件，但 CI 附件会按保留策略过期，不能作为唯一的长期存档。

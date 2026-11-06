@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "status": "published",
+  "packageVersion": "26.8.1-preview.2",
+  "source": "https://api.nuget.org/v3/index.json",
+  "publicationConfirmedBy": "package owner",
+  "publishedUtc": null,
+  "publishedUtcNote": "Exact publication time has not been independently verified.",
+  "candidateRecord": "83bb57fe71297c43802b47e945f9efb8acc594d50c226f6ef4c531ecc7d0d402.json",
+  "candidateRelationship": "Local acceptance candidate for this version; exact byte identity with the published packages has not been established.",
+  "candidateSourceFingerprint": "83bb57fe71297c43802b47e945f9efb8acc594d50c226f6ef4c531ecc7d0d402",
+  "versionTag": null,
+  "packages": [
+    {
+      "id": "Keycloak.Admin.Sdk",
+      "url": "https://www.nuget.org/packages/Keycloak.Admin.Sdk/26.8.1-preview.2",
+      "publishedPackageSha256": "ca452a08c91415d2ae5cd06a38e0c20f3c47a258fa1a8ddf39a0fcbe9ef77db1",
+      "repositoryCommitInPackage": "df2934e169da150a2a993192a90f41d3b61da113",
+      "nugetPackageSigned": true
+    },
+    {
+      "id": "Keycloak.Admin.Sdk.FeatureManagement",
+      "url": "https://www.nuget.org/packages/Keycloak.Admin.Sdk.FeatureManagement/26.8.1-preview.2",
+      "publishedPackageSha256": null,
+      "repositoryCommitInPackage": null,
+      "nugetPackageSigned": null
+    }
+  ],
+  "notes": "The public core package was downloaded and hashed. Its signed package hash differs from the local candidate package hash. The FeatureManagement public package hash, exact publication time and version tag remain unverified. The candidate manifest records a dirty working tree at build time; its SDK commit alone does not reproduce the candidate."
+}
