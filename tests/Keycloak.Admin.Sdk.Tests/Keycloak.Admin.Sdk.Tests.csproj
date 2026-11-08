@@ -2,7 +2,6 @@
   <PropertyGroup>
     <IsTestProject>true</IsTestProject>
     <IsPackable>false</IsPackable>
-    <DefineConstants>$(DefineConstants);KEYCLOAK_FEATURE_MANAGEMENT</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
@@ -10,7 +9,7 @@
     <PackageReference Include="Bogus" Version="35.6.5" PrivateAssets="all" />
     <PackageReference Include="Moq" Version="4.21.0" PrivateAssets="all" />
     <PackageReference Include="PasswordGenerator" Version="3.0.0" PrivateAssets="all" />
-    <ProjectReference Include="../../src/Keycloak.Admin.Sdk.FeatureManagement/Keycloak.Admin.Sdk.FeatureManagement.csproj" />
+    <ProjectReference Include="../../src/Keycloak.Admin.Sdk.Platform/Keycloak.Admin.Sdk.Platform.csproj" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.11.0" PrivateAssets="all" />
     <PackageReference Include="MSTest.TestAdapter" Version="4.5.2" PrivateAssets="all" />
     <PackageReference Include="MSTest.TestFramework" Version="4.5.2" PrivateAssets="all" />

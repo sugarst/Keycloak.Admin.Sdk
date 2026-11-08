@@ -11,7 +11,7 @@
 | OID4VP 出示 | Experimental | `WalletPresentation` |
 | Attestation-Based Client Authentication | Experimental | `WalletAttestation` |
 
-`ProtocolTransport.CreateSupported` 先检查独立支持证据、实际版本、运行时/RID、服务端特性和对应能力的 Preview/Experimental opt-in，再读取 FeatureManagement 的最终开关。总开关 `KeycloakSdk.Protocols` 同时必须打开。普通传输构造器仅用于明确的开发与候选验证，不会产生支持证据。
+`ProtocolTransport.CreateSupported` 先检查独立支持证据、实际版本、运行时/RID、服务端特性和对应能力的 Preview/Experimental opt-in，再读取平台开关面的最终开关。总开关 `KeycloakSdk.Protocols` 同时必须打开。普通传输构造器仅用于明确的开发与候选验证，不会产生支持证据。
 
 ## 签发和验证
 

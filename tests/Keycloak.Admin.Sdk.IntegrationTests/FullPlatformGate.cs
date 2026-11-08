@@ -3,35 +3,29 @@ using System.Text;
 using System.Text.Json;
 using Keycloak.Admin.Sdk;
 using Keycloak.Admin.Sdk.Capabilities;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.FeatureManagement;
+using Keycloak.Admin.Sdk.Platform;
 
-internal static class FullFeatureManagement
+internal static class FullPlatformGate
 {
-    public sealed class Host(ConfigurationRoot configuration, ServiceProvider services) : IDisposable
+    public static (KeycloakPlatformOptions Options, Dictionary<string, bool> Flags) Create(KeycloakAdminRoute route)
     {
-        public ConfigurationRoot Configuration { get; } = configuration;
-        public IVariantFeatureManager Manager { get; } = services.GetRequiredService<IVariantFeatureManager>();
-        public void Dispose() { services.Dispose(); Configuration.Dispose(); }
-    }
-    public static Host CreateHost()
-    {
-        using var parsed = (ConfigurationRoot)new ConfigurationBuilder().AddJsonFile(Path.Combine(Directory.GetCurrentDirectory(), "contracts/feature-management.example.json")).Build();
-        var config = (ConfigurationRoot)new ConfigurationBuilder().AddInMemoryCollection(parsed.AsEnumerable()).Build();
-        var services = new ServiceCollection();
-        services.AddSingleton<IConfiguration>(config);
-        services.AddFeatureManagement();
-        return new(config, services.BuildServiceProvider());
+        var catalog = new KeycloakFeatureFlagCatalog();
+        var flags = catalog.All.ToDictionary(id => id, _ => true);
+        return (new KeycloakPlatformOptions
+        {
+            Support = new KeycloakSupportConfiguration(KeycloakTarget.Version, route),
+            Flags = flags, Catalog = catalog
+        }, flags);
     }
 
-    public static async Task VerifyAsync(KeycloakAdminClient sdk, IConfigurationRoot config, CancellationToken cancellationToken = default)
+    public static async Task VerifyAsync(KeycloakPlatformHost host, Dictionary<string, bool> flags, CancellationToken cancellationToken = default)
     {
+        var sdk = host.Admin;
+        var gate = (KeycloakFeatureSnapshotGate)host.Gate;
         void Set(string id, bool value)
         {
-            var flag = config.GetSection("feature_management:feature_flags").GetChildren().Single(f => f["id"] == id);
-            config[flag.Path + ":enabled"] = value ? "true" : "false";
-            config.Reload();
+            flags[id] = value;
+            KeycloakPlatformGate.Replace(gate, flags, host.Catalog);
         }
         async Task Denied(Func<Task> action)
         {
@@ -87,7 +81,7 @@ internal static class FullFeatureManagement
                 catch (KeycloakAdminException error) when (error.StatusCode == HttpStatusCode.NotFound) { }
             }
         }
-        Console.WriteLine("PASS live FeatureManagement: disabled create leaves no realm; enabled create persists; disabled delete preserves realm; reload allows delete; feature switch is isolated; raw/generated/stream denials send zero HTTP.");
+        Console.WriteLine("PASS live platform gate: disabled create leaves no realm; enabled create persists; disabled delete preserves realm; reload allows delete; feature switch is isolated; raw/generated/stream denials send zero HTTP.");
         StringContent Body() => new("{\"realm\":\"" + realm + "\",\"enabled\":true,\"organizationsEnabled\":true}", Encoding.UTF8, "application/json");
         async Task Persisted()
         {

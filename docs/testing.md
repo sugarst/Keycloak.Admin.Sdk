@@ -25,7 +25,7 @@ Windows 原生发布需要 Visual Studio C++ 桌面工具链和 Windows SDK；Li
 
 每个生成操作有一个独立 MSTest 入口，映射见 [测试矩阵](contracts/admin-api-test-matrix.md)。期望值冻结在 [admin-api-test-matrix.json](../contracts/admin-api-test-matrix.json)，来自独立 Java token 扫描和发布定义。查询参数逐一隔离测试，以检出同类型参数互换；模型同时检查嵌套往返与单字段 wire 映射，避免对称读写错误相互抵消。媒体类型、动态分派等另有 [手写专项断言](../tests/Keycloak.Admin.Sdk.Tests/AlignmentContracts.cs)。
 
-操作矩阵通过 `IKeycloakAdminClient` 及生成资源接口调用。托管测试核对接口与实现的签名、参数名及默认值，并用 Moq 验证资源替换；DI 别名和六个原始入口的接口调用同时进入 Native AOT 验证。支持策略及功能开关工厂另验证返回值可通过接口使用。
+操作矩阵通过 `IKeycloakAdminClient` 及生成资源接口调用。托管测试核对接口与实现的签名、参数名及默认值，并用 Moq 验证资源替换；DI 别名和六个原始入口的接口调用同时进入 Native AOT 验证。支持策略及平台开关面工厂另验证返回值可通过接口使用。
 
 `Verify.cs` 检查生成一致性和门禁负向控制，再运行 MSTest，将本次目录写入 `artifacts/test-results/latest.txt`。覆盖率门禁只读取该次 TRX 引用的 Cobertura；操作缺失、重复、跳过、失败或低于 [coverage-policy.json](../tests/coverage-policy.json) 均返回非零。当前测试总数、实测指标及统计口径仅在 [覆盖率报告](contracts/test-coverage.md) 维护。
 
@@ -46,19 +46,19 @@ dotnet run --file tools/Check-Coverage.cs -- --results=artifacts/test-results/ma
 | --- | --- |
 | Microsoft.NET.Test.Sdk、MSTest.TestAdapter、MSTest.TestFramework | 测试发现、运行及断言 |
 | coverlet.collector | Cobertura 覆盖率 |
-| Microsoft.Extensions.Configuration.Json | FeatureManagement 配置；托管集成程序也直接引用 |
+| Microsoft.Extensions.Configuration.Json | 旧托管扩展的配置绑定；平台开关面改由宿主直接提供快照，测试项目已不再引用 |
 | AutoFixture、Bogus | 请求样本、局部固定种子的用户数据 |
 | Moq、PasswordGenerator | token/策略交互次数、密码透传与错误脱敏 |
 
 `ManagedTestDataTests.cs` 中的测试数据工具只进入 MSTest 项目，不进入 AOT。关键字段、密码策略边界仍用明确样本；随机测试不依赖特定输出。核心包不引用测试依赖，`Verify.cs` 检查四个 nuspec 的直接依赖清单及包数量。
 
-`Verify.cs` 在本开发分支将主包、FeatureManagement、Protocols 和 Hosting 四个包写入 `artifacts/packages/<packageVersion>/`。主包直接依赖 Microsoft.Extensions.Http 10.0.14 和 Microsoft.Extensions.Http.Resilience 10.11.0；FeatureManagement 依赖主包和微软功能开关/遥测包；Protocols 依赖主包、IdentityModel、COSE 和 CBOR；Hosting 依赖 Protocols、ASP.NET Core OIDC/JWT、ITfoxtec SAML、Pkcs 和 Xml，要求 ASP.NET Core 10.0.14 或更高的 10.0 补丁版本，仅声明 Managed 支持。Hosting 保留 Pkcs/Xml 10.0.14 的显式 NuGet 依赖，并用未声明直接 ASP.NET Core FrameworkReference 的独立消费项目验证实际恢复版本。独立的版本目录避免混入其他版本产物。
+`Verify.cs` 在本开发分支将主包、Platform、Protocols 和 Hosting 四个包写入 `artifacts/packages/<packageVersion>/`。主包直接依赖 Microsoft.Extensions.Http 10.0.14 和 Microsoft.Extensions.Http.Resilience 10.11.0；Platform 通过两条 `ProjectReference` 引用主包与 Protocols，零 NuGet 依赖并声明 `IsAotCompatible=true`；Protocols 依赖主包、IdentityModel、COSE 和 CBOR；Hosting 依赖 Protocols、ASP.NET Core OIDC/JWT、ITfoxtec SAML、Pkcs 和 Xml，要求 ASP.NET Core 10.0.14 或更高的 10.0 补丁版本，仅声明 Managed 支持。Hosting 保留 Pkcs/Xml 10.0.14 的显式 NuGet 依赖，并用未声明直接 ASP.NET Core FrameworkReference 的独立消费项目验证实际恢复版本。独立的版本目录避免混入其他版本产物。
 
 `ResilienceContracts.cs` 的七组测试验证默认关闭、408/429/5xx/连接故障重试及响应释放、写入/内容/Token POST 排除、401 组合次数与策略单次判断、单次/总超时、Retry-After、取消、命名读熔断及流交付边界；校验所有配置限制。该文件同时链接到 AotSmoke，原生程序从本次 NuGet 包还原并实际启用管道，覆盖序列化关闭反射及裁剪边界。
 
 ## 原生与真实业务验收
 
-`Verify.cs` 的原生步骤通过 `SdkPackageFeed` 让 `AotSmoke` 引用本次本地 NuGet 主包和 Protocols 包，源码链接执行完整管理操作矩阵、模型、适用的运行时、DI、能力策略及协议传输断言。直接构建 `AotSmoke` 项目时默认使用项目引用。托管通过后仍需实际发布并运行原生程序。FeatureManagement 及其遥测模块在托管模式验证，详见 [接入指南](feature-management.md)。
+`Verify.cs` 的原生步骤通过 `SdkPackageFeed` 让 `AotSmoke` 引用本次本地 NuGet 主包、Platform 和 Protocols 包，源码链接执行完整管理操作矩阵、模型、适用的运行时、DI、能力策略及协议传输断言。直接构建 `AotSmoke` 项目时默认使用项目引用。托管通过后仍需实际发布并运行原生程序。平台开关面在托管与 Native AOT 下走同一代码路径，两种模式统一记录 `snapshot-v1` 证据，详见 [平台开关面](platform-feature-gate.md)。
 
 应用协议使用独立的 `Keycloak.Admin.Sdk.Protocols.Tests` 测试集和 `Check-ProtocolCoverage.cs` 门禁，要求其源码行和分支覆盖率 100%。`Test-ApplicationProtocols.cs` 对固定版本的临时 Keycloak 实例运行选定真实工作流，原生加 `--native-aot`；这些结果不等于完整协议晋升。全能力覆盖情况见 [矩阵](contracts/platform-capability-matrix.md) 和 [实施说明](full-platform-coverage.md)。
 
@@ -66,4 +66,4 @@ dotnet run --file tools/Check-Coverage.cs -- --results=artifacts/test-results/ma
 
 全量场景位于手写的 `Full*.cs`；生成的 `LiveRoutes.g.cs` 仅分派调用。`LiveLedger` 要求成功 SDK 响应及已通过的业务断言，未完成项非空即失败。验收数量、协议效果、排除项及执行时间见 [真实验收](contracts/full-live-acceptance.md)，不重复维护在本页。
 
-`Check-FullAcceptance.cs` 核对源码指纹、版本、路线和唯一完整的业务记录；`Test-AcceptanceGate.cs` 在副本中注入十三类缺陷，验证缺失、重复、失败、空证明、过期代码、错误模式/排除项及缺少权限撤销、支持策略或功能开关证明均被拒绝。CI 的 [verify.yaml](../.github/workflows/verify.yaml) 运行 Windows/Linux 常规及原生检查，并按两条路线执行真实 PostgreSQL 托管/AOT 验收。
+`Check-FullAcceptance.cs` 核对源码指纹、版本、路线和唯一完整的业务记录；`Test-AcceptanceGate.cs` 在副本中注入十三类缺陷，验证缺失、重复、失败、空证明、过期代码、错误模式/排除项及缺少权限撤销、支持策略或平台 gate 业务守卫证明均被拒绝。CI 的 [verify.yaml](../.github/workflows/verify.yaml) 运行 Windows/Linux 常规及原生检查，并按两条路线执行真实 PostgreSQL 托管/AOT 验收。

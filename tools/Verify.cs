@@ -20,7 +20,7 @@ return await ScriptHost.ExecuteAsync(args,
         throw new InvalidDataException("Use .yaml for repository YAML files:\n" + string.Join('\n', legacyYaml.Select(file => Path.GetRelativePath(root, file))));
     // Release.cs can be the parent process. Do not overwrite its running apphost on Windows.
     string toolsOutput = "artifacts/tool-check/" + Guid.NewGuid().ToString("N");
-    foreach (string script in new[] { "Release.cs", "Upgrade.cs", "Test-Workflow.cs", "Generate-ValidationList.cs", "Test-Integration.cs", "Update-Contracts.cs", "Update-Verification.cs", "Audit-Contracts.cs", "Generate-TestMatrix.cs", "Check-Coverage.cs", "Generate-LiveRoutes.cs", "Check-AdminRoutes.cs", "Check-FullAcceptance.cs", "Test-AcceptanceGate.cs", "Test-AllAdminRoutes.cs", "Generate-CapabilityCatalog.cs", "Test-Feature.cs", "Check-FeatureAcceptance.cs", "Test-SupportedFeatures.cs", "Generate-PlatformMatrix.cs", "Check-ProtocolCoverage.cs", "Test-ApplicationProtocols.cs", "Check-ApplicationProtocols.cs" })
+    foreach (string script in new[] { "Release.cs", "Upgrade.cs", "Test-Workflow.cs", "Generate-ValidationList.cs", "Test-Integration.cs", "Update-Contracts.cs", "Update-Verification.cs", "Audit-Contracts.cs", "Generate-TestMatrix.cs", "Check-Coverage.cs", "Generate-LiveRoutes.cs", "Check-AdminRoutes.cs", "Check-FullAcceptance.cs", "Test-AcceptanceGate.cs", "Test-AllAdminRoutes.cs", "Generate-CapabilityCatalog.cs", "Test-Feature.cs", "Check-FeatureAcceptance.cs", "Test-SupportedFeatures.cs", "Generate-PlatformMatrix.cs", "Generate-FeatureCatalog.cs", "Check-ProtocolCoverage.cs", "Test-ApplicationProtocols.cs", "Check-ApplicationProtocols.cs" })
         await ScriptHost.RunCheckedAsync(root, "dotnet", ["build", "tools/" + script, "-o", toolsOutput + "/" + Path.GetFileNameWithoutExtension(script)], ct);
     await ScriptHost.RunCheckedAsync(root, "dotnet", ["build", "local/keycloak/Service.cs", "-o", toolsOutput + "/Service"], ct);
     await ScriptHost.RunCheckedAsync(root, "dotnet", ["build", "Keycloak.Admin.Sdk.slnx", "-c", "Release"], ct);
@@ -29,6 +29,7 @@ return await ScriptHost.ExecuteAsync(args,
     await ScriptHost.RunCheckedAsync(root, "dotnet", ["run", "--file", "tools/Check-AdminRoutes.cs"], ct);
     await ScriptHost.RunCheckedAsync(root, "dotnet", ["run", "--file", "tools/Generate-CapabilityCatalog.cs", "--", "--check"], ct);
     await ScriptHost.RunCheckedAsync(root, "dotnet", ["run", "--file", "tools/Generate-PlatformMatrix.cs", "--", "--check"], ct);
+    await ScriptHost.RunCheckedAsync(root, "dotnet", ["run", "--file", "tools/Generate-FeatureCatalog.cs", "--", "--check"], ct);
     await ScriptHost.RunCheckedAsync(root, "dotnet", ["run", "--file", "tools/Check-Coverage.cs", "--", "--self-test"], ct);
     // A fresh directory makes stale TRX/coverage evidence impossible to reuse accidentally.
     string testResults = "artifacts/test-results/verify-" + Guid.NewGuid().ToString("N");
@@ -47,7 +48,7 @@ return await ScriptHost.ExecuteAsync(args,
     var dependencies = new Dictionary<string, string[]>
     {
         ["Keycloak.Admin.Sdk"] = ["Microsoft.Extensions.Http", "Microsoft.Extensions.Http.Resilience"],
-        ["Keycloak.Admin.Sdk.FeatureManagement"] = ["Keycloak.Admin.Sdk", "Microsoft.FeatureManagement", "Microsoft.FeatureManagement.Telemetry.ApplicationInsights"],
+        ["Keycloak.Admin.Sdk.Platform"] = ["Keycloak.Admin.Sdk", "Keycloak.Admin.Sdk.Protocols"],
         ["Keycloak.Admin.Sdk.Protocols"] = ["Keycloak.Admin.Sdk", "Microsoft.IdentityModel.JsonWebTokens", "System.Security.Cryptography.Cose", "System.Formats.Cbor"],
         ["Keycloak.Admin.Sdk.Hosting"] = ["Keycloak.Admin.Sdk.Protocols", "ITfoxtec.Identity.Saml2", "System.Security.Cryptography.Pkcs", "System.Security.Cryptography.Xml", "Microsoft.AspNetCore.Authentication.OpenIdConnect", "Microsoft.AspNetCore.Authentication.JwtBearer"]
     };

@@ -18,7 +18,7 @@ return await ScriptHost.ExecuteAsync(args, "dotnet run --file tools/Test-Workflo
     }
     var target = TargetBaseline.Load(root); Directory.CreateDirectory(target.Cache(fixture)); File.Copy(target.Archive(root), target.Archive(fixture));
     string bundle = ScriptHost.Within(fixture, "artifacts/candidate"); Directory.CreateDirectory(bundle);
-    foreach (string name in new[] { "baseline.json", "admin-api-routes.json", "capability-rules.json", "feature-validation-plans.json", "platform-coverage-rules.json", "application-validation-plans.json", "overrides.json", "support-policy.example.json", "support-policy.managed.example.json", "support-policy.native-aot.example.json", "feature-management.example.json", "openapi.json" }) File.Copy(Path.Combine(root, "contracts", name), Path.Combine(bundle, name));
+    foreach (string name in new[] { "baseline.json", "admin-api-routes.json", "capability-rules.json", "feature-validation-plans.json", "platform-coverage-rules.json", "application-validation-plans.json", "overrides.json", "support-policy.example.json", "support-policy.managed.example.json", "support-policy.native-aot.example.json", "platform-feature-flags.example.json", "openapi.json" }) File.Copy(Path.Combine(root, "contracts", name), Path.Combine(bundle, name));
     string sentinel = Path.Combine(fixture, "src/Keycloak.Admin.Sdk/Generated/RetiredApi.g.cs");
     await File.WriteAllTextAsync(sentinel, "// obsolete generated file, must disappear on complete replacement", ct);
     string obsoleteEvidence = Path.Combine(fixture, "docs/contracts/full-live-evidence/obsolete.json");

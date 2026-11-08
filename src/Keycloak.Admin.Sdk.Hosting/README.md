@@ -4,7 +4,7 @@
 
 要求 .NET/ASP.NET Core 10.0.14 或更新的 10.0 补丁版本。
 
-通过 `ProtocolTransport.CreateSupported` 创建传输后，宿主集成也必须先通过独立支持策略和最后的 FeatureManagement 开关。普通构造传输只用于显式协议开发及候选验收。
+通过 `ProtocolTransport.CreateSupported` 创建传输后，宿主集成也必须先通过独立支持策略和 `Keycloak.Admin.Sdk.Platform` 的统一开关面。普通构造传输只用于显式协议开发及候选验收。
 
 宿主管理 HTTPS、代理信任、签名/解密证书的生命周期、各浏览器会话绑定和持久化原子重放存储。本模块不声明 Native AOT 支持。
 

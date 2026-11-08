@@ -7,16 +7,13 @@
   <PropertyGroup><IsPackable>false</IsPackable><OutputType>Exe</OutputType><IsAotCompatible>true</IsAotCompatible></PropertyGroup>
   <ItemGroup><ProjectReference Include="../../src/Keycloak.Admin.Sdk/Keycloak.Admin.Sdk.csproj" /></ItemGroup>
   <ItemGroup><ProjectReference Include="../../src/Keycloak.Admin.Sdk.Protocols/Keycloak.Admin.Sdk.Protocols.csproj" /></ItemGroup>
+  <ItemGroup><ProjectReference Include="../../src/Keycloak.Admin.Sdk.Platform/Keycloak.Admin.Sdk.Platform.csproj" /></ItemGroup>
   <PropertyGroup Condition="'$(PublishAot)' != 'true'">
-    <DefineConstants>$(DefineConstants);KEYCLOAK_FEATURE_MANAGEMENT;KEYCLOAK_HOSTING</DefineConstants>
+    <DefineConstants>$(DefineConstants);KEYCLOAK_HOSTING</DefineConstants>
   </PropertyGroup>
   <ItemGroup Condition="'$(PublishAot)' != 'true'">
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
     <ProjectReference Include="../../src/Keycloak.Admin.Sdk.Hosting/Keycloak.Admin.Sdk.Hosting.csproj" />
-    <ProjectReference Include="../../src/Keycloak.Admin.Sdk.FeatureManagement/Keycloak.Admin.Sdk.FeatureManagement.csproj" />
-  </ItemGroup>
-  <ItemGroup Condition="'$(PublishAot)' == 'true'">
-    <Compile Remove="FullFeatureManagement.cs" />
   </ItemGroup>
   <Target Name="StampFeatureValidationInputs" BeforeTargets="CoreCompile">
     <Exec Command="dotnet run --file &quot;$(MSBuildProjectDirectory)/../../tools/Stamp-ValidationInputs.cs&quot; -- &quot;$(MSBuildProjectDirectory)/../..&quot; &quot;$(MSBuildProjectDirectory)/$(IntermediateOutputPath)FeatureValidationBuildStamp.g.cs&quot;" />

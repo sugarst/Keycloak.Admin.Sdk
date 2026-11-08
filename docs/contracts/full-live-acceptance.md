@@ -11,7 +11,7 @@
 
 逐接口结果和业务断言见 [full-live-acceptance.tsv](full-live-acceptance.tsv)。排除项不计入成功。范围和排除数量以当前基线及上述实测表为准。
 
-托管入口使用 Microsoft FeatureManagement 4.8.0，在目录判断后检查总开关及功能开关，并实际验证关闭创建无数据、开启创建持久化、关闭删除保留数据和刷新后删除成功。Native AOT 入口编译时排除托管功能开关扩展，仍使用能力策略；manifest 分别标识 microsoft-4.8.0 和 not-loaded-native-aot。Application Insights 仅做本地事件测试，未启用云端投递。
+托管与 Native AOT 入口走同一代码路径：统一使用平台开关面的 `KeycloakFeatureSnapshotGate`，在能力策略判断后检查两个总闸及功能开关，并实际验证关闭创建无数据、开启创建持久化、关闭删除保留数据和刷新后删除成功。两种模式的 `evidence.platformGate` 统一记录为 `snapshot-v1`、`platformGateBusinessGuards` 为 true；首次 bootstrap 证据为 `not-loaded-bootstrap` 且业务守卫为 false。
 
 全部结果来自真实 SDK 请求。写操作核对持久化或协议侧效果；只读操作核对已知真实资源、关系或已安装提供方。认证、SMTP、HTTP/JWKS、LDAP、X509/CRL 和 PostgreSQL 缓存验证均实际通信。外部协议夹具由 .NET 10 实现，LDAP 使用独立真实 OpenLDAP 容器。完整 wire 契约单测仍覆盖完整发布清单，政策排除不代表漏写单测。
 

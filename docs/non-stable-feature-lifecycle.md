@@ -1,6 +1,6 @@
 # 非 Stable 功能的验证、晋升与灰度
 
-非 Stable 功能通过独立的业务验证获得 SDK 支持资格，再由 `Keycloak.Admin.Sdk.FeatureManagement` 决定最后的灰度开放和关闭。验证通过、晋升支持和打开开关是三个独立动作。
+非 Stable 功能通过独立的业务验证获得 SDK 支持资格，再由 `Keycloak.Admin.Sdk.Platform` 的统一开关面决定最后的灰度开放和关闭。验证通过、晋升支持和打开开关是三个独立动作。
 
 ## 职责与晋升含义
 
@@ -10,11 +10,11 @@
 | 验证工具与业务工作流 | 按审阅后的计划执行隔离测试，产出带版本、输入指纹及操作证明的候选报告 |
 | 晋升工具与支持目录 | 校验证据、归档原件，只给已验证操作的路线、运行模式和 RID 增加支持记录 |
 | 能力策略 | 请求前检查精确版本、阶段许可、支持证据、运行环境、路线和真实服务器功能 |
-| FeatureManagement | 在能力策略允许后，通过宿主配置、过滤器和刷新机制决定本次调用是否开放 |
+| 平台开关面 | 在能力策略允许后，通过宿主提供的开关快照决定本次调用是否开放 |
 
-这里的“晋升”指 **SDK 对指定环境和操作提供支持**。Experimental 功能通过验证后仍是 Experimental，Preview 功能仍是 Preview。上游转为 Stable 需要升级精确目标、审阅新版本并重新验收；不能通过晋升命令或 FeatureManagement 修改阶段。
+这里的“晋升”指 **SDK 对指定环境和操作提供支持**。Experimental 功能通过验证后仍是 Experimental，Preview 功能仍是 Preview。上游转为 Stable 需要升级精确目标、审阅新版本并重新验收；不能通过晋升命令或平台开关面修改阶段。
 
-FeatureManagement 不生成验证证据、不修改支持目录，也不自动开关 Keycloak 服务端功能。功能开关为 true 时，仍须满足能力策略的全部条件。Native AOT 宿主使用主包的快照门禁，职责同样限于最后的开放和关闭，见 [门禁接入](feature-management.md)。
+平台开关面不生成验证证据、不修改支持目录，也不自动开关 Keycloak 服务端功能。功能开关为 true 时，仍须满足能力策略的全部条件。托管与 Native AOT 走同一代码路径，共用主包的 `KeycloakFeatureSnapshotGate`，职责同样限于最后的开放和关闭，见 [平台开关面](platform-feature-gate.md)。
 
 ## 当前落地范围
 
@@ -59,7 +59,7 @@ dotnet run --file tools/Check-FeatureAcceptance.cs -- --evidence=artifacts/featu
 
 此命令将原始证据按内容 SHA256 归档到 `docs/contracts/capability-evidence/`，更新 `contracts/capabilities.json` 中对应操作的 `supportProfiles`。晋升只覆盖报告中的目标版本、操作、FGAP 路线、运行模式及原生 RID；其他组合仍需各自验证。应审阅并一同提交计划、工作流、证据原件和目录变化。
 
-晋升不修改 FeatureManagement 配置，也不修改 Preview / Experimental 阶段许可。候选报告不能充当最终受策略保护的验收结果。
+晋升不修改平台开关配置，也不修改 Preview / Experimental 阶段许可。候选报告不能充当最终受策略保护的验收结果。
 
 ### 4. 使用受支持客户端复验
 
@@ -85,7 +85,7 @@ var support = new KeycloakSupportConfiguration(
     experimentalCapabilities: ["KeycloakSdk.ClientTypes"]);
 ```
 
-再通过 [FeatureManagement 接入](feature-management.md#接入) 安装支持策略和宿主门禁。`KeycloakSdk.AdminApi` 总开关及 `KeycloakSdk.ClientTypes` 功能开关必须同时允许；非 Stable 功能的示例默认关闭。灰度人群、比例及配置刷新由宿主管理，SDK 消费最终布尔结果。
+再通过 [平台开关面接入](platform-feature-gate.md#接入) 安装支持策略和宿主门禁。`KeycloakSdk.AdminApi` 总开关及 `KeycloakSdk.ClientTypes` 功能开关必须同时允许；非 Stable 功能仍须单独声明阶段许可。灰度范围与快照刷新由宿主管理，SDK 消费最终布尔结果。
 
 宿主可以按“关闭 → 小范围开放 → 扩大范围 → 全量开放”推进，并随时关闭功能开关。关闭只影响后续逻辑请求，不撤销已发送请求，也不删除已有验证证据；重新开放仍须通过能力策略。紧急关闭优先使用功能开关，整体停用使用总开关，无需重新晋升目录。
 

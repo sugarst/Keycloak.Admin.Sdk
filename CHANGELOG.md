@@ -4,17 +4,19 @@
 
 ## 26.8.1-preview.3（开发中，未发布 / In development, unpublished）
 
+- **架构变更（preview.3，破坏性）**：移除 `Keycloak.Admin.Sdk.FeatureManagement`，新增 `Keycloak.Admin.Sdk.Platform`。新包仅依赖主包与 Protocols、零外部特性管理引擎、声明 Native AOT 兼容，用一个宿主开关面同时控制 Admin 与协议能力；开关目录由 `Generate-FeatureCatalog.cs` 生成，共 66 项。验收证据改用 `platformGate` / `platformGateBusinessGuards`，覆盖率分类改用 `platformGate*`。已发布 preview.2 的范围不变。
 - 建立独立于 Admin API 的全能力矩阵：固定源码的 80 个功能开关及 52 个独立应用协议／宿主集成能力族，明确服务端责任边界；52/52 完成实现与晋升，完整覆盖门禁通过。
 - 新增 Protocols 模块：OIDC、标准/委托/旧版/JWT 授权、Device/CIBA、PAR、JAR/JARM、兼容响应、认证强度、资源指示器、参数化 scope、客户端断言、SCIM、账户、注册、UMA、AuthZen、Client Admin v2、OpenAPI、Docker、DPoP、身份代理与 SSF。
 - 补齐钱包 JWT VC、SD-JWT、mdoc、加密签发、Offer/二维码、预授权、刷新/撤销、OID4VP 和客户端 attestation；增加 WebAuthn、Passkey、Kerberos、恢复码、邮箱确认、临时用户和独立控制的弃用兼容入口。
 - 新增 Managed Hosting 模块：ASP.NET Core OIDC/资源令牌、服务端票据、前/后通道注销、MCP 资源元数据和 SAML SP 签名/加密/单点注销。Managed 专属证据不能晋升 Native AOT。
-- 协议源码行和分支覆盖率要求 100%，真实流程验证用户同意、独立验签、持久化结果、拒绝、撤销、过期和重放。能力按固定版本、输入指纹、运行模式/RID 独立晋升，FeatureManagement 最后开放或关闭。
+- 协议源码行和分支覆盖率要求 100%，真实流程验证用户同意、独立验签、持久化结果、拒绝、撤销、过期和重放。能力按固定版本、输入指纹、运行模式/RID 独立晋升，由 `Keycloak.Admin.Sdk.Platform` 的统一开关面最后开放或关闭。
 - 标准应用验收 Managed 434/434、Native AOT 391/391；旧版兼容计划各 20/20。Client Types、SSF、OID4VC 的 28 个 Admin 操作完成 v2 托管及原生独立晋升与受保护复验；14 个 FGAP v1 专用操作继续保留兼容阶段，默认稳定路线不扩大。
 - 单元测试共 706 项：核心 587、协议 105、宿主 14；协议源码行／分支覆盖均为 100%。补充未晋升目录的关闭状态测试，并按服务端异步提交语义等待工作流持久化，避免重复发送写操作。
 - 所有 Preview、Experimental 和 Deprecated 能力仍须明确选择，并通过对应服务器功能及最终宿主开关；晋升不修改上游阶段。preview.3 尚未发布，已发布 preview.2 的功能范围不变。
+- **Architecture (preview.3, breaking)**: Replace `Keycloak.Admin.Sdk.FeatureManagement` with the AOT-compatible `Keycloak.Admin.Sdk.Platform`, which references only the core and Protocols packages, has no external feature-management engine, and shares one 66-flag host switch surface across the Admin and protocol chains. Acceptance evidence and coverage metrics now use `platformGate*`. Published preview.2 scope is unchanged.
 - Add separate matrices for 80 pinned upstream features and 52 application capability families. All 52 reviewed families are implemented and independently promoted; the complete-coverage gate passes within the documented server/host responsibilities and verified runtimes.
 - Add Protocols and Managed Hosting, including secure OIDC/OAuth, delegation, SAML, authorization, account, provisioning, wallets, WebAuthn/Passkeys, Kerberos, transient users and explicitly controlled legacy compatibility. Standard workflows pass 434 Managed / 391 Native AOT checks, with 20 legacy checks per runtime. Independently promote and guard all 28 optional Admin operations for v2 Managed / Native AOT; retain 14 FGAP v1 compatibility operations.
-- Preserve explicit per-capability non-Stable opt-ins and current-input/runtime evidence. FeatureManagement controls final exposure. preview.3 remains unpublished; published preview.2 capabilities are unchanged.
+- Preserve explicit per-capability non-Stable opt-ins and current-input/runtime evidence. The `Keycloak.Admin.Sdk.Platform` switch surface controls final exposure. preview.3 remains unpublished; published preview.2 capabilities are unchanged.
 - Pass 706 unit tests: 587 core, 105 protocol and 14 hosting tests, with 100% protocol source line/branch coverage. Verify unpromoted catalog entries remain closed, and await asynchronous workflow persistence without replaying writes.
 
 ## 26.8.1-preview.2（已发布至 NuGet）

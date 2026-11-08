@@ -65,36 +65,7 @@ internal sealed class ApplicationSupportPolicy
             && catalog.GetProperty("sourceCommit").GetString() == KeycloakTarget.SourceCommit, KeycloakCapabilityReason.VersionMismatch);
         Require(config.Runtime == (native ? KeycloakRuntimeProfile.NativeAot : KeycloakRuntimeProfile.Managed)
             && (!native || config.RuntimeIdentifier == rid), KeycloakCapabilityReason.RuntimeMismatch);
-        string id = feature switch
-        {
-            "KeycloakSdk.Protocols.Oidc" => "oidc", "KeycloakSdk.Protocols.Account" => "account", "KeycloakSdk.Protocols.Scim" => "scim",
-            "KeycloakSdk.Protocols.OidcStandardExchange" => "oidc-standard-exchange", "KeycloakSdk.Protocols.OidcLegacyExchange" => "oidc-legacy-exchange",
-            "KeycloakSdk.Protocols.OidcDelegation" => "oidc-delegation", "KeycloakSdk.Protocols.OidcJwtGrant" => "oidc-jwt-grant",
-            "KeycloakSdk.Protocols.OidcDevice" => "oidc-device", "KeycloakSdk.Protocols.OidcCiba" => "oidc-ciba", "KeycloakSdk.Protocols.OidcPar" => "oidc-par",
-            "KeycloakSdk.Protocols.OidcResources" => "oidc-resources", "KeycloakSdk.Protocols.OidcParameterizedScopes" => "oidc-parameterized-scopes",
-            "KeycloakSdk.Protocols.OidcIdentityAssertion" => "oidc-identity-assertion", "KeycloakSdk.Protocols.OidcClientMetadata" => "oidc-client-metadata",
-            "KeycloakSdk.Protocols.OidcRequestObjects" => "oidc-request-objects", "KeycloakSdk.Protocols.OidcSignedResponses" => "oidc-signed-responses",
-            "KeycloakSdk.Protocols.OidcBrowserCompatibility" => "oidc-browser-compatibility",
-            "KeycloakSdk.Protocols.OidcAssurance" => "oidc-assurance",
-            "KeycloakSdk.Protocols.IdentityBrokeringLegacy" => "identity-brokering-legacy",
-            "KeycloakSdk.Protocols.BrowserOidc" or "KeycloakSdk.Protocols.BrowserOidcAssurance" => "browser-oidc", "KeycloakSdk.Protocols.Saml" or "KeycloakSdk.Protocols.SamlStepUp" => "saml", "KeycloakSdk.Protocols.Authentication" => "authentication",
-            "KeycloakSdk.Protocols.FederatedClientAuth" => "federated-client-auth",
-            "KeycloakSdk.Protocols.SpiffeClientAuth" => "spiffe-client-auth",
-            "KeycloakSdk.Protocols.IdentityBrokerLogin" => "identity-broker-login", "KeycloakSdk.Protocols.IdentityLinking" => "identity-linking",
-            "KeycloakSdk.Protocols.ClientRegistration" => "registration", "KeycloakSdk.Protocols.Uma" => "uma", "KeycloakSdk.Protocols.AuthZen" => "authzen",
-            "KeycloakSdk.Protocols.ClientAdminV2" => "client-admin-v2", "KeycloakSdk.Protocols.IdentityBrokering" => "identity-brokering",
-            "KeycloakSdk.Protocols.OpenApi" => "runtime-openapi",
-            "KeycloakSdk.Protocols.Dpop" => "dpop", "KeycloakSdk.Protocols.MutualTls" => "mutual-tls",
-            "KeycloakSdk.Protocols.Wallet" => "wallet", "KeycloakSdk.Protocols.WalletPreAuthorized" => "wallet-pre-authorized",
-            "KeycloakSdk.Protocols.WalletOffers" => "wallet-offers", "KeycloakSdk.Protocols.WalletMdoc" => "wallet-mdoc",
-            "KeycloakSdk.Protocols.WalletPresentation" => "wallet-presentation", "KeycloakSdk.Protocols.WalletAttestation" => "wallet-attestation",
-            "KeycloakSdk.Protocols.AuthenticationWebAuthn" => "authentication-webauthn", "KeycloakSdk.Protocols.AuthenticationPasskeys" => "authentication-passkeys",
-            "KeycloakSdk.Protocols.AuthenticationKerberos" => "authentication-kerberos", "KeycloakSdk.Protocols.AuthenticationRecoveryCodes" => "authentication-recovery-codes",
-            "KeycloakSdk.Protocols.AuthenticationUpdateEmail" => "authentication-update-email", "KeycloakSdk.Protocols.AuthenticationTransientUsers" => "authentication-transient-users",
-            "KeycloakSdk.Protocols.AuthenticationLegacyLogoutAllSessions" => "authentication-legacy-logout", "KeycloakSdk.Protocols.AuthenticationLegacyConditionalPasskeyUi" => "authentication-legacy-passkey-ui",
-            "KeycloakSdk.Protocols.AuthenticationInstagram" => "authentication-instagram", "KeycloakSdk.Protocols.AuthenticationTwitter" => "authentication-twitter",
-            "KeycloakSdk.Protocols.Signals" => "signals", "KeycloakSdk.Protocols.Docker" => "docker-registry", _ => ""
-        };
+        string id = ApplicationFeatureMap.Resolve(feature);
         var capability = catalog.GetProperty("applicationCapabilities").EnumerateArray().FirstOrDefault(c => c.GetProperty("id").GetString() == id);
         Require(capability.ValueKind == JsonValueKind.Object, KeycloakCapabilityReason.UnknownEndpoint);
         Require(capability.GetProperty("implementation").GetString() == "Implemented", KeycloakCapabilityReason.NotImplemented);

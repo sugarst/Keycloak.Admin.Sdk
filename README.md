@@ -52,7 +52,7 @@ DI 入口 `AddKeycloakAdminSdk` 提供 `options.Resilience`，默认关闭。开
 
 功能开关包依赖微软遥测组件，遥测默认关闭。
 
-`new KeycloakAdminClient(...)` 提供底层 API 传输。需要在发送前限制支持范围时，使用 `KeycloakSupportedClient.CreateAsync`；托管功能开关使用 `KeycloakFeatureManagedClient.CreateAsync`。配置见 [能力策略](docs/capability-policy.md)、[功能开关与遥测](docs/feature-management.md)，DI 见 [认证与错误处理](docs/authentication-and-errors.md)。
+`new KeycloakAdminClient(...)` 提供底层 API 传输。需要在发送前限制支持范围时，使用 `KeycloakSupportedClient.CreateAsync`；统一宿主开关面使用 `Keycloak.Admin.Sdk.Platform` 的 `KeycloakPlatformHost.CreateAsync`。配置见 [能力策略](docs/capability-policy.md)、[平台开关面](docs/platform-feature-gate.md)，DI 见 [认证与错误处理](docs/authentication-and-errors.md)。
 
 ## 请求与响应约定
 
@@ -73,7 +73,7 @@ DI 入口 `AddKeycloakAdminSdk` 提供 `options.Resilience`，默认关闭。开
 | `Keycloak.Admin.Sdk` | 管理接口、服务账号认证与支持策略 |
 | `Keycloak.Admin.Sdk.Protocols` | 应用 OIDC/OAuth、账户、SCIM、授权、钱包及身份代理；支持 Managed 和已验证的 Linux Native AOT |
 | `Keycloak.Admin.Sdk.Hosting` | ASP.NET Core 登录、资源令牌、注销、MCP 元数据及 SAML；仅 Managed |
-| `Keycloak.Admin.Sdk.FeatureManagement` | 在支持策略之后执行宿主的动态灰度开放和关闭 |
+| `Keycloak.Admin.Sdk.Platform` | 一个宿主开关面控制 Admin 与协议链的全部能力；托管与 Native AOT 均可用 |
 
 preview.3 仍是未发布的开发版本；新增模块使用项目引用或本地构建包。已发布 preview.2 的范围见 [CHANGELOG](CHANGELOG.md)。钱包和认证接入分别见[钱包集成](docs/wallet-integration.md)和[认证集成](docs/authentication-integration.md)。
 
@@ -93,7 +93,7 @@ preview.3 仍是未发布的开发版本；新增模块使用项目引用或本�
 | `ssf` | Experimental | 19 | v2 路线 Managed／Linux Native AOT 独立验证；需逐功能 Experimental 许可与宿主开关 |
 | `client-types` | Experimental | 2 | v2 路线 Managed／Linux Native AOT 独立验证；默认关闭，需 schema 2 显式许可和宿主开关 |
 
-schema 2 支持 Managed、NativeAot 和 Portable 验证配置。托管使用 FeatureManagement，原生可使用主包的 `KeycloakFeatureSnapshotGate`；开关不能覆盖版本、阶段或证据拒绝。旧配置保持同时要求托管和 AOT 证据。接入见[能力策略](docs/capability-policy.md#按运行环境开放schema-2)；独立验证、晋升与最后的灰度开关见[非 Stable 功能流程](docs/non-stable-feature-lifecycle.md)。
+schema 2 支持 Managed、NativeAot 和 Portable 验证配置。托管与 Native AOT 统一使用 `Keycloak.Admin.Sdk.Platform` 的 `KeycloakFeatureSnapshotGate`；开关不能覆盖版本、阶段或证据拒绝。旧配置保持同时要求托管和 AOT 证据。接入见[能力策略](docs/capability-policy.md#按运行环境开放schema-2)；独立验证、晋升与最后的灰度开关见[非 Stable 功能流程](docs/non-stable-feature-lifecycle.md)。
 
 默认 v2 路线另外排除 14 个 FGAP v1 专用接口；这些接口已在 v1 兼容路线上通过验收。**生成方法存在不等于 SDK 承诺支持该接口**：使用 `KeycloakSupportedClient.CreateAsync` 可在发送请求前执行版本、成熟度、路线、服务器功能及验证状态检查。直接构造 `KeycloakAdminClient` 提供底层传输，不自动应用支持策略。
 

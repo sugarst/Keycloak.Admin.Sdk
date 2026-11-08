@@ -1,0 +1,222 @@
+{
+  "schemaVersion": 1,
+  "description": "Single source mapping host protocol feature flags to application capability families. Generated once from the reviewed policy switch; Generate-FeatureCatalog.cs validates and consumes it.",
+  "flags": [
+    {
+      "id": "KeycloakSdk.Protocols.Account",
+      "capability": "account"
+    },
+    {
+      "id": "KeycloakSdk.Protocols.AuthZen",
+      "capability": "authzen"
+    },
+    {
+      "id": "KeycloakSdk.Protocols.Authentication",
+      "capability": "authentication"
+    },
+    {
+      "id": "KeycloakSdk.Protocols.AuthenticationInstagram",
+      "capability": "authentication-instagram"
+    },
+    {
+      "id": "KeycloakSdk.Protocols.AuthenticationKerberos",
+      "capability": "authentication-kerberos"
+    },
+    {
+      "id": "KeycloakSdk.Protocols.AuthenticationLegacyConditionalPasskeyUi",
+      "capability": "authentication-legacy-passkey-ui"
+    },
+    {
+      "id": "KeycloakSdk.Protocols.AuthenticationLegacyLogoutAllSessions",
+      "capability": "authentication-legacy-logout"
+    },
+    {
+      "id": "KeycloakSdk.Protocols.AuthenticationPasskeys",
+      "capability": "authentication-passkeys"
+    },
+    {
+      "id": "KeycloakSdk.Protocols.AuthenticationRecoveryCodes",
+      "capability": "authentication-recovery-codes"
+    },
+    {
+      "id": "KeycloakSdk.Protocols.AuthenticationTransientUsers",
+      "capability": "authentication-transient-users"
+    },
+    {
+      "id": "KeycloakSdk.Protocols.AuthenticationTwitter",
+      "capability": "authentication-twitter"
+    },
+    {
+      "id": "KeycloakSdk.Protocols.AuthenticationUpdateEmail",
+      "capability": "authentication-update-email"
+    },
+    {
+      "id": "KeycloakSdk.Protocols.AuthenticationWebAuthn",
+      "capability": "authentication-webauthn"
+    },
+    {
+      "id": "KeycloakSdk.Protocols.BrowserOidc",
+      "capability": "browser-oidc"
+    },
+    {
+      "id": "KeycloakSdk.Protocols.BrowserOidcAssurance",
+      "capability": "browser-oidc"
+    },
+    {
+      "id": "KeycloakSdk.Protocols.ClientAdminV2",
+      "capability": "client-admin-v2"
+    },
+    {
+      "id": "KeycloakSdk.Protocols.ClientRegistration",
+      "capability": "registration"
+    },
+    {
+      "id": "KeycloakSdk.Protocols.Docker",
+      "capability": "docker-registry"
+    },
+    {
+      "id": "KeycloakSdk.Protocols.Dpop",
+      "capability": "dpop"
+    },
+    {
+      "id": "KeycloakSdk.Protocols.FederatedClientAuth",
+      "capability": "federated-client-auth"
+    },
+    {
+      "id": "KeycloakSdk.Protocols.IdentityBrokerLogin",
+      "capability": "identity-broker-login"
+    },
+    {
+      "id": "KeycloakSdk.Protocols.IdentityBrokering",
+      "capability": "identity-brokering"
+    },
+    {
+      "id": "KeycloakSdk.Protocols.IdentityBrokeringLegacy",
+      "capability": "identity-brokering-legacy"
+    },
+    {
+      "id": "KeycloakSdk.Protocols.IdentityLinking",
+      "capability": "identity-linking"
+    },
+    {
+      "id": "KeycloakSdk.Protocols.MutualTls",
+      "capability": "mutual-tls"
+    },
+    {
+      "id": "KeycloakSdk.Protocols.Oidc",
+      "capability": "oidc"
+    },
+    {
+      "id": "KeycloakSdk.Protocols.OidcAssurance",
+      "capability": "oidc-assurance"
+    },
+    {
+      "id": "KeycloakSdk.Protocols.OidcBrowserCompatibility",
+      "capability": "oidc-browser-compatibility"
+    },
+    {
+      "id": "KeycloakSdk.Protocols.OidcCiba",
+      "capability": "oidc-ciba"
+    },
+    {
+      "id": "KeycloakSdk.Protocols.OidcClientMetadata",
+      "capability": "oidc-client-metadata"
+    },
+    {
+      "id": "KeycloakSdk.Protocols.OidcDelegation",
+      "capability": "oidc-delegation"
+    },
+    {
+      "id": "KeycloakSdk.Protocols.OidcDevice",
+      "capability": "oidc-device"
+    },
+    {
+      "id": "KeycloakSdk.Protocols.OidcIdentityAssertion",
+      "capability": "oidc-identity-assertion"
+    },
+    {
+      "id": "KeycloakSdk.Protocols.OidcJwtGrant",
+      "capability": "oidc-jwt-grant"
+    },
+    {
+      "id": "KeycloakSdk.Protocols.OidcLegacyExchange",
+      "capability": "oidc-legacy-exchange"
+    },
+    {
+      "id": "KeycloakSdk.Protocols.OidcPar",
+      "capability": "oidc-par"
+    },
+    {
+      "id": "KeycloakSdk.Protocols.OidcParameterizedScopes",
+      "capability": "oidc-parameterized-scopes"
+    },
+    {
+      "id": "KeycloakSdk.Protocols.OidcRequestObjects",
+      "capability": "oidc-request-objects"
+    },
+    {
+      "id": "KeycloakSdk.Protocols.OidcResources",
+      "capability": "oidc-resources"
+    },
+    {
+      "id": "KeycloakSdk.Protocols.OidcSignedResponses",
+      "capability": "oidc-signed-responses"
+    },
+    {
+      "id": "KeycloakSdk.Protocols.OidcStandardExchange",
+      "capability": "oidc-standard-exchange"
+    },
+    {
+      "id": "KeycloakSdk.Protocols.OpenApi",
+      "capability": "runtime-openapi"
+    },
+    {
+      "id": "KeycloakSdk.Protocols.Saml",
+      "capability": "saml"
+    },
+    {
+      "id": "KeycloakSdk.Protocols.SamlStepUp",
+      "capability": "saml"
+    },
+    {
+      "id": "KeycloakSdk.Protocols.Scim",
+      "capability": "scim"
+    },
+    {
+      "id": "KeycloakSdk.Protocols.Signals",
+      "capability": "signals"
+    },
+    {
+      "id": "KeycloakSdk.Protocols.SpiffeClientAuth",
+      "capability": "spiffe-client-auth"
+    },
+    {
+      "id": "KeycloakSdk.Protocols.Uma",
+      "capability": "uma"
+    },
+    {
+      "id": "KeycloakSdk.Protocols.Wallet",
+      "capability": "wallet"
+    },
+    {
+      "id": "KeycloakSdk.Protocols.WalletAttestation",
+      "capability": "wallet-attestation"
+    },
+    {
+      "id": "KeycloakSdk.Protocols.WalletMdoc",
+      "capability": "wallet-mdoc"
+    },
+    {
+      "id": "KeycloakSdk.Protocols.WalletOffers",
+      "capability": "wallet-offers"
+    },
+    {
+      "id": "KeycloakSdk.Protocols.WalletPreAuthorized",
+      "capability": "wallet-pre-authorized"
+    },
+    {
+      "id": "KeycloakSdk.Protocols.WalletPresentation",
+      "capability": "wallet-presentation"
+    }
+  ]
+}

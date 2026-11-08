@@ -75,7 +75,7 @@ public sealed class FeatureAcceptanceTests
     {
         using var fixture = new Repository();
         string catalogPath = Path.Combine(fixture.Root, "contracts/capabilities.json");
-        string rolloutPath = Path.Combine(fixture.Root, "contracts/feature-management.example.json");
+        string rolloutPath = Path.Combine(fixture.Root, "contracts/platform-feature-flags.example.json");
         string catalogBefore = CapabilityEvidence.Digest(catalogPath), rolloutBefore = CapabilityEvidence.Digest(rolloutPath);
         var candidate = fixture.Report();
         FeatureAcceptance.Validate(fixture.Root, candidate, false);
@@ -149,7 +149,7 @@ public sealed class FeatureAcceptanceTests
             foreach (string directory in new[] { "src", "tests/Keycloak.Admin.Sdk.IntegrationTests", "tests/Keycloak.Admin.Sdk.Protocols.Tests", "tests/Keycloak.Admin.Sdk.Hosting.Tests", "tests/Keycloak.Admin.Sdk.AotSmoke", "local/keycloak", "tools", "contracts" })
                 Directory.CreateDirectory(Path.Combine(Root, directory));
             string source = ScriptHost.RepositoryRoot();
-            foreach (string path in new[] { "contracts/baseline.json", "contracts/admin-api-routes.json", "contracts/capabilities.json", "contracts/capability-rules.json", "contracts/feature-validation-plans.json", "contracts/feature-management.example.json" })
+            foreach (string path in new[] { "contracts/baseline.json", "contracts/admin-api-routes.json", "contracts/capabilities.json", "contracts/capability-rules.json", "contracts/feature-validation-plans.json", "contracts/platform-feature-flags.example.json" })
                 File.Copy(Path.Combine(source, path), Path.Combine(Root, path));
             foreach (string path in new[] { "global.json", "Directory.Build.props", "Target.props", "tools/TargetBaseline.cs", "tools/ScriptSupport.cs", "contracts/source-files.sha256", "tests/Keycloak.Admin.Sdk.AotSmoke/Dockerfile" })
                 File.WriteAllText(Path.Combine(Root, path), "test-input");
@@ -171,7 +171,7 @@ public sealed class FeatureAcceptanceTests
                 ["validationFingerprint"] = LiveEvidence.ValidationFingerprint(Root), ["mode"] = "managed", ["nativePublished"] = false,
                 ["runtimeIdentifier"] = null, ["route"] = "fgap-v2-stable", ["phase"] = "candidate", ["executableSha256"] = new string('a', 64),
                 ["catalogSha256"] = CapabilityEvidence.Digest(Path.Combine(Root, "contracts/capabilities.json")),
-                ["flagDenialVerified"] = true, ["gate"] = "microsoft-feature-management", ["operations"] = operations,
+                ["flagDenialVerified"] = true, ["gate"] = "platform-snapshot", ["operations"] = operations,
                 ["serverInfo"] = JsonNode.Parse($$"""{"systemInfo":{"version":"{{KeycloakTarget.Version}}"},"profileInfo":{"disabledFeatures":["ADMIN_FINE_GRAINED_AUTHZ"]},"features":[{"name":"ADMIN_API","type":"DEFAULT","enabled":true},{"name":"ADMIN_FINE_GRAINED_AUTHZ_V2","type":"DEFAULT","enabled":true},{"name":"CLIENT_TYPES","type":"EXPERIMENTAL","enabled":true}]}""")
             };
         }

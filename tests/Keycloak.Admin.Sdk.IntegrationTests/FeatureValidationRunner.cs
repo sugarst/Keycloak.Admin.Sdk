@@ -5,12 +5,7 @@ using System.Security.Cryptography;
 using System.Text.Json.Nodes;
 using Keycloak.Admin.Sdk;
 using Keycloak.Admin.Sdk.Capabilities;
-#if KEYCLOAK_FEATURE_MANAGEMENT
-using Keycloak.Admin.Sdk.FeatureManagement;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.FeatureManagement;
-#endif
+using Keycloak.Admin.Sdk.Platform;
 
 internal static class FeatureValidationRunner
 {
@@ -37,26 +32,18 @@ internal static class FeatureValidationRunner
         var support = new KeycloakSupportConfiguration(KeycloakTarget.Version, native ? KeycloakRuntimeProfile.NativeAot : KeycloakRuntimeProfile.Managed,
             route.FgapVersion == 1 ? KeycloakAdminRoute.FgapV1Compatibility : KeycloakAdminRoute.FgapV2Stable, rid,
             plan.Stage == KeycloakFeatureStage.Preview ? [plan.FeatureId] : [], plan.Stage == KeycloakFeatureStage.Experimental ? [plan.FeatureId] : []);
-        IKeycloakFeatureGate gate;
-#if KEYCLOAK_FEATURE_MANAGEMENT
-        using var flags = (ConfigurationRoot)new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string?>
+        var catalog = new KeycloakFeatureFlagCatalog();
+        if (!catalog.IsKnown(plan.FeatureId)) throw new InvalidDataException("Validation feature is missing from the platform switch catalog.");
+        var flags = catalog.All.ToDictionary(id => id, _ => true, StringComparer.Ordinal);
+        flags[plan.FeatureId] = false;
+        var snapshot = KeycloakPlatformGate.Create(flags, catalog);
+        IKeycloakFeatureGate gate = snapshot;
+        void Enable(bool value)
         {
-            ["feature_management:feature_flags:0:id"] = KeycloakFeatureGatePolicy.AdminApiFeature,
-            ["feature_management:feature_flags:0:enabled"] = "true",
-            ["feature_management:feature_flags:1:id"] = plan.FeatureId,
-            ["feature_management:feature_flags:1:enabled"] = "false"
-        }).Build();
-        var services = new ServiceCollection(); services.AddSingleton<IConfiguration>(flags); services.AddFeatureManagement();
-        using var provider = services.BuildServiceProvider();
-        gate = new KeycloakMicrosoftFeatureGate(provider.GetRequiredService<IVariantFeatureManager>());
-        void Enable(bool value) { flags["feature_management:feature_flags:1:enabled"] = value ? "true" : "false"; flags.Reload(); }
-        string gateName = "microsoft-feature-management";
-#else
-        var snapshot = new KeycloakFeatureSnapshotGate(new Dictionary<string, bool> { [KeycloakFeatureGatePolicy.AdminApiFeature] = true });
-        gate = snapshot;
-        void Enable(bool value) => snapshot.Replace(new Dictionary<string, bool> { [KeycloakFeatureGatePolicy.AdminApiFeature] = true, [plan.FeatureId] = value });
-        string gateName = "snapshot";
-#endif
+            flags[plan.FeatureId] = value;
+            KeycloakPlatformGate.Replace(snapshot, flags, catalog);
+        }
+        string gateName = "platform-snapshot";
         var sdk = guarded ? await KeycloakSupportedClient.CreateAsync(http, server, tokens, support, gate, cancellationToken: cancellationToken) : wire;
         string realm = "sdk-feature-" + Guid.NewGuid().ToString("N");
         var proofs = new JsonArray();

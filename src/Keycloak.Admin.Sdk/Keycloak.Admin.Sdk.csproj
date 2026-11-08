@@ -10,7 +10,7 @@
 
 适用于 .NET 10 的 Keycloak $(KeycloakTargetVersion) Admin REST API 客户端，支持 Native AOT、服务账号认证、依赖注入、可选弹性策略和版本能力检查。
 
-常规管理接口调用推荐使用本包；托管应用需要动态开关和灰度控制时，可安装依赖本包的 `Keycloak.Admin.Sdk.FeatureManagement`。
+常规管理接口调用推荐使用本包；宿主需要统一的动态开关和灰度控制时，可安装 `Keycloak.Admin.Sdk.Platform`。
 
 ### 安装
 

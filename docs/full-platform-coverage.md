@@ -17,7 +17,7 @@
 
 - `Keycloak.Admin.Sdk`：管理接口和服务账号管理认证。
 - `Keycloak.Admin.Sdk.Protocols`：realm 绑定协议传输、显式客户端认证、用户令牌、钱包签发及出示，以及服务器托管认证的应用入口。开发包尚未发布。
-- `Keycloak.Admin.Sdk.FeatureManagement`：宿主的最后开放与关闭；协议模块可注入 `KeycloakMicrosoftFeatureGate`，Native AOT 可用快照 gate。
+- `Keycloak.Admin.Sdk.Platform`：统一宿主开关面；Admin 链与协议链共享一次 serverinfo 引导、同一份开关目录和同一个 `KeycloakFeatureSnapshotGate`，零 NuGet 依赖，托管与 Native AOT 走同一代码路径。
 - `Keycloak.Admin.Sdk.Hosting`：Managed ASP.NET Core OIDC/JWT、服务端票据、注销接收、MCP 资源元数据和 SAML SP；依赖 ASP.NET Core 与 ITfoxtec。该包不声明 Native AOT 支持，各宿主能力仍须逐项晋升。
 
 管理 token 不会自动传入用户协议调用。每个用户的令牌、刷新和交换状态由各自调用上下文持有；协议模块不跨用户缓存，也不把解析 JWT 当作验证身份。
@@ -58,7 +58,7 @@ dotnet run --file tools/Verify.cs -- --native-container
 4. 针对明确运行模式和原生 RID，完成真实业务效果、权限拒绝、取消和宿主开关关闭场景。
 5. 归档与当前输入及构建程序绑定的证据，并完成独立应用能力晋升。
 
-独立晋升计划维护于 `contracts/application-validation-plans.json`。`Check-ApplicationProtocols.cs -- --archive` 验证两种运行模式后，将证据内容寻址归档，并更新 `contracts/application-verification-profiles.json`；只有实现完成且全部验收标准都有证明的能力族才获得对应支持配置。宿主断言放入 Managed 专属检查组，不能晋升 Native AOT。旧报告、缺失断言、错误 RID、篡改哈希、未启用的服务器特性均不能晋升。FeatureManagement 仍只负责最终开放与关闭。
+独立晋升计划维护于 `contracts/application-validation-plans.json`。`Check-ApplicationProtocols.cs -- --archive` 验证两种运行模式后，将证据内容寻址归档，并更新 `contracts/application-verification-profiles.json`；只有实现完成且全部验收标准都有证明的能力族才获得对应支持配置。宿主断言放入 Managed 专属检查组，不能晋升 Native AOT。旧报告、缺失断言、错误 RID、篡改哈希、未启用的服务器特性均不能晋升。平台开关面仍只负责最终开放与关闭。
 
 验证输入包含协议与宿主安全测试及 AOT smoke。生成的 Admin/平台支持目录和应用证据注册表不作为验证输入，避免晋升改变自身指纹；规则、计划、目标与实现仍全部绑定。修改这些输入后旧证据自动退出当前支持，历史归档保留。
 

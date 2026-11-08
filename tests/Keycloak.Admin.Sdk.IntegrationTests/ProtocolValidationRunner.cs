@@ -4,6 +4,7 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using Keycloak.Admin.Sdk;
 using Keycloak.Admin.Sdk.Capabilities;
+using Keycloak.Admin.Sdk.Platform;
 using Keycloak.Admin.Sdk.Protocols;
 
 internal static class ProtocolValidationRunner
@@ -55,14 +56,8 @@ internal static class ProtocolValidationRunner
             var management = (await admin.Clients.GetClientsAsync(realm, clientId: "realm-management", cancellationToken: ct)).Body!.Single();
             var role = (await admin.RoleContainer.GetRoleAsync(realm, management.Id!, "manage-users", ct)).Body!;
             await admin.ClientRoleMappings.AddClientRoleMappingPOSTAdminRealmsRealmUsersUserIdRoleMappingsClientsClientIdAsync(realm, serviceUser.Id!, management.Id!, [role], ct);
-            var flags = new KeycloakFeatureSnapshotGate(new Dictionary<string, bool> { ["KeycloakSdk.Protocols"] = true,
-                ["KeycloakSdk.Protocols.Oidc"] = true, ["KeycloakSdk.Protocols.OidcStandardExchange"] = true, ["KeycloakSdk.Protocols.OidcDelegation"] = true, ["KeycloakSdk.Protocols.OidcPar"] = true, ["KeycloakSdk.Protocols.OidcDevice"] = true, ["KeycloakSdk.Protocols.OidcCiba"] = true, ["KeycloakSdk.Protocols.Scim"] = true,
-                ["KeycloakSdk.Protocols.Account"] = true, ["KeycloakSdk.Protocols.ClientRegistration"] = true, ["KeycloakSdk.Protocols.AuthZen"] = true, ["KeycloakSdk.Protocols.Uma"] = true,
-                ["KeycloakSdk.Protocols.ClientAdminV2"] = true, ["KeycloakSdk.Protocols.OpenApi"] = true, ["KeycloakSdk.Protocols.Docker"] = true, ["KeycloakSdk.Protocols.Dpop"] = true,
-                ["KeycloakSdk.Protocols.IdentityBrokering"] = true, ["KeycloakSdk.Protocols.Signals"] = true, ["KeycloakSdk.Protocols.Saml"] = true, ["KeycloakSdk.Protocols.BrowserOidc"] = true, ["KeycloakSdk.Protocols.OidcResources"] = true,
-                ["KeycloakSdk.Protocols.OidcParameterizedScopes"] = true, ["KeycloakSdk.Protocols.OidcJwtGrant"] = true, ["KeycloakSdk.Protocols.FederatedClientAuth"] = true, ["KeycloakSdk.Protocols.SpiffeClientAuth"] = true,
-                ["KeycloakSdk.Protocols.IdentityBrokerLogin"] = true, ["KeycloakSdk.Protocols.IdentityLinking"] = true, ["KeycloakSdk.Protocols.OidcIdentityAssertion"] = true,
-                ["KeycloakSdk.Protocols.OidcRequestObjects"] = true, ["KeycloakSdk.Protocols.OidcSignedResponses"] = true, ["KeycloakSdk.Protocols.OidcBrowserCompatibility"] = true, ["KeycloakSdk.Protocols.SamlStepUp"] = true, ["KeycloakSdk.Protocols.OidcAssurance"] = true });
+            var catalog = new KeycloakFeatureFlagCatalog();
+            var flags = KeycloakPlatformGate.Create(catalog.All.ToDictionary(id => id, _ => true, StringComparer.Ordinal), catalog);
             var transport = new ProtocolTransport(http, server, realm, flags);
             var oidc = new OidcClient(transport);
             var discovery = await oidc.DiscoverAsync(ct);
@@ -193,7 +188,7 @@ internal static class ProtocolValidationRunner
             await ProtocolAccountWorkflows.RunAsync(admin, http, server, transport, realm, secret, userAccessToken, Check, ct);
             await ProtocolWalletWorkflows.RunAsync(admin, http, transport, realm, secret, Check, ct);
             await ProtocolAuthenticationWorkflows.RunAsync(admin, http, transport, secret, Check, ct);
-            flags.Replace([]);
+            KeycloakPlatformGate.Replace(flags, catalog.All.ToDictionary(id => id, _ => false, StringComparer.Ordinal), catalog);
             int before = RecordingHandler.SentCount;
             try { await oidc.ClientCredentialsAsync(authentication, cancellationToken: ct); throw new InvalidOperationException("Expected local protocol denial."); }
             catch (InvalidOperationException e) when (e.Message.StartsWith("Protocol disabled by host:", StringComparison.Ordinal)) { }

@@ -32,7 +32,7 @@ HTTP 客户端和 token 的初始化/释放见 [认证说明](authentication-and
 | `KEYCLOAK_ADMIN_ALLOW_EXPERIMENTAL` | 允许进入实验阶段检查，默认 false |
 | `KEYCLOAK_ADMIN_DISABLED_CAPABILITIES` | 逗号分隔的能力 ID，未知 ID 拒绝 |
 
-配置与服务器快照不可变，可并发使用；服务器版本、feature 或路线变化后须重新初始化。部署启动配置由 [路线声明](../contracts/admin-api-routes.json) 管理，SDK 以真实 serverinfo 核验。能力 ID 见 [功能开关示例](../contracts/feature-management.example.json)；禁用 `KeycloakSdk.AdminApi` 阻断全部接口，其余 ID 阻断对应功能。
+配置与服务器快照不可变，可并发使用；服务器版本、feature 或路线变化后须重新初始化。部署启动配置由 [路线声明](../contracts/admin-api-routes.json) 管理，SDK 以真实 serverinfo 核验。能力 ID 见 [平台开关示例](../contracts/platform-feature-flags.example.json)；禁用 `KeycloakSdk.AdminApi` 阻断全部接口，其余 ID 阻断对应功能。
 
 ## 目录与开放条件
 
@@ -91,7 +91,7 @@ var validationSupport = new KeycloakSupportConfiguration(
 
 ## 非 Stable 功能的验证与晋升
 
-完整的职责分工、当前缺口、逐步操作和失败处理见 [非 Stable 功能流程](non-stable-feature-lifecycle.md)。验证和晋升由独立工具完成；FeatureManagement 负责完成这些步骤之后的灰度开放和关闭。
+完整的职责分工、当前缺口、逐步操作和失败处理见 [非 Stable 功能流程](non-stable-feature-lifecycle.md)。验证和晋升由独立工具完成；平台开关面负责完成这些步骤之后的灰度开放和关闭。
 
 [验证计划](../contracts/feature-validation-plans.json) 独立于 FGAP 路线和运行模式，声明功能、阶段、必需服务端功能和操作白名单。当前提供 Client Types 的真实查询、写入、持久化读取和替换删除工作流。新增其他功能须先添加经过审阅的业务工作流；仅增加计划不会执行未经实现的测试。
 
@@ -117,4 +117,4 @@ dotnet run --file tools/Check-FeatureAcceptance.cs -- --supported
 
 `Generate-CapabilityCatalog.cs -- --check` 检查快照，`--seed` 仅登记契约证据，`--promote` 核验当前源码的真实验收后晋升。规则在 [capability-rules.json](../contracts/capability-rules.json)，与上游 `Profile.java` 核验。更换目标完整替换目录，流程见 [单基线升级](single-target-workflow.md)。
 
-独立测试覆盖目录、配置、各拒绝原因、原始/流入口、内容释放和重放，并链接进 Native AOT 程序；真实验收确认本地拒绝未发送 HTTP。[覆盖率](contracts/test-coverage.md) 与 [业务证据](contracts/full-live-acceptance.md) 分别维护结果。托管宿主可叠加 [FeatureManagement](feature-management.md)，开关只收紧目录结果。
+独立测试覆盖目录、配置、各拒绝原因、原始/流入口、内容释放和重放，并链接进 Native AOT 程序；真实验收确认本地拒绝未发送 HTTP。[覆盖率](contracts/test-coverage.md) 与 [业务证据](contracts/full-live-acceptance.md) 分别维护结果。托管与 Native AOT 宿主可叠加 [平台开关面](platform-feature-gate.md)，共享同一份快照门禁，开关只收紧目录结果。

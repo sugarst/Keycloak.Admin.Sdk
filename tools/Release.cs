@@ -50,7 +50,7 @@ return await ScriptHost.ExecuteAsync(args, "dotnet run --file tools/Release.cs -
     string output = ScriptHost.Within(root, "artifacts/releases/" + target.PackageVersion + "/" + fingerprint);
     Directory.CreateDirectory(output);
     var packages = new JsonArray();
-    foreach (string id in new[] { "Keycloak.Admin.Sdk", "Keycloak.Admin.Sdk.FeatureManagement", "Keycloak.Admin.Sdk.Protocols", "Keycloak.Admin.Sdk.Hosting" })
+    foreach (string id in new[] { "Keycloak.Admin.Sdk", "Keycloak.Admin.Sdk.Platform", "Keycloak.Admin.Sdk.Protocols", "Keycloak.Admin.Sdk.Hosting" })
     {
         string filename = id + "." + target.PackageVersion + ".nupkg";
         string source = Path.Combine(root, "artifacts/packages", target.PackageVersion, filename);

@@ -58,7 +58,7 @@ var refreshedIdentity = await idTokenValidator.ValidateRefreshedIdTokenAsync(
 
 固定源码中的 `TWITTER_BROKER` 同时具有 Stable 类型和 `deprecated=true` 标记，因此支持策略仍要求单独的 Deprecated 许可。`logout-all-sessions:v1` 的旧行为只退出其他普通会话，保留离线会话；当前验收同时检查被撤销的普通刷新凭据和仍可用的离线刷新凭据，保留这一服务端兼容语义。
 
-使用生产支持工厂时，流程先检查固定版本、当前源码对应的独立运行时验收、服务端功能状态及每项非稳定能力的显式选择，再检查 FeatureManagement 的最终主开关和能力开关。仅开启 `KeycloakSdk.Protocols.Authentication` 不会连带开放其非稳定子能力。原始 `ProtocolTransport` 构造函数用于开发与候选验证，不能代替支持策略工厂。
+使用生产支持工厂时，流程先检查固定版本、当前源码对应的独立运行时验收、服务端功能状态及每项非稳定能力的显式选择，再检查平台开关面的最终主开关和能力开关。仅开启 `KeycloakSdk.Protocols.Authentication` 不会连带开放其非稳定子能力。原始 `ProtocolTransport` 构造函数用于开发与候选验证，不能代替支持策略工厂。
 
 ## 对实际认证强度提出要求
 

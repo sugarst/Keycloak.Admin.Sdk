@@ -2,7 +2,7 @@
   <Folder Name="/src/">
     <Project Path="src/Keycloak.Admin.Sdk.Hosting/Keycloak.Admin.Sdk.Hosting.csproj" />
     <Project Path="src/Keycloak.Admin.Sdk.Protocols/Keycloak.Admin.Sdk.Protocols.csproj" />
-    <Project Path="src/Keycloak.Admin.Sdk.FeatureManagement/Keycloak.Admin.Sdk.FeatureManagement.csproj" />
+    <Project Path="src/Keycloak.Admin.Sdk.Platform/Keycloak.Admin.Sdk.Platform.csproj" />
     <Project Path="src/Keycloak.Admin.Sdk/Keycloak.Admin.Sdk.csproj" />
   </Folder>
   <Folder Name="/tests/">

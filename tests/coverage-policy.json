@@ -11,10 +11,7 @@
   "capabilityMethodPercent": 100,
   "capabilityLinePercent": 100,
   "capabilityBranchPercent": 100,
-  "featureManagementMethodPercent": 100,
-  "featureManagementLinePercent": 100,
-  "featureManagementBranchPercent": 100,
-  "featureTelemetryMethodPercent": 100,
-  "featureTelemetryLinePercent": 100,
-  "featureTelemetryBranchPercent": 100
+  "platformGateMethodPercent": 100,
+  "platformGateLinePercent": 100,
+  "platformGateBranchPercent": 100
 }

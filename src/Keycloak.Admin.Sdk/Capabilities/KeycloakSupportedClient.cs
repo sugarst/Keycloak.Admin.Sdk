@@ -8,7 +8,7 @@ public static class KeycloakSupportedClient
         KeycloakSupportConfiguration configuration, bool enableUnauthorizedRecovery = false, CancellationToken cancellationToken = default)
         => await CreateCoreAsync(http, server, tokens, configuration, null, enableUnauthorizedRecovery, cancellationToken).ConfigureAwait(false);
 
-    /// <summary>Version/runtime support policy plus a host gate, without Microsoft.FeatureManagement dependencies.</summary>
+    /// <summary>Version/runtime support policy plus a host gate, without any external feature-flag engine.</summary>
     public static Task<KeycloakAdminClient> CreateAsync(HttpClient http, Uri server, IAccessTokenProvider tokens,
         KeycloakSupportConfiguration configuration, IKeycloakFeatureGate gate, bool enableUnauthorizedRecovery = false,
         CancellationToken cancellationToken = default)

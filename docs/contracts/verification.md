@@ -9,7 +9,7 @@
 | 两条路线的托管 / Linux Native AOT 业务验收 | [逐项结果与执行时间](full-live-acceptance.md)、[支持及排除原因](admin-api-support-matrix.tsv) |
 | 六条特殊路径的回归契约 | [媒体类型、动态查询与列表响应](six-path-fixes.md) |
 
-核心与能力策略已实际在 `linux-musl-x64` 发布并运行；Windows 本机缺少 C++ 链接器和 Windows SDK，尚无本机 `win-x64` 原生通过记录。功能开关及其遥测模块仅面向托管宿主；Application Insights 已验证官方 publisher 的本地事件，未验证 Azure 云端投递。
+核心与能力策略已实际在 `linux-musl-x64` 发布并运行；Windows 本机缺少 C++ 链接器和 Windows SDK，尚无本机 `win-x64` 原生通过记录。平台开关面 `Keycloak.Admin.Sdk.Platform` 面向托管与 Native AOT 宿主，不依赖外部特性管理引擎，也不提供遥测；旧托管扩展的 Application Insights 本地事件验证仅属历史记录。
 
 ## 发布限制
 
