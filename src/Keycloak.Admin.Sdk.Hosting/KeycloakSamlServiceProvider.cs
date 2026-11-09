@@ -31,7 +31,7 @@ public sealed partial class KeycloakSamlServiceProvider
     public KeycloakSamlServiceProvider(ProtocolTransport transport, string entityId, Uri assertionConsumerService, IEnumerable<X509Certificate2> trustedSigningCertificates,
         ISecurityTokenReplayStore replayStore, X509Certificate2? signingCertificate = null, IEnumerable<X509Certificate2>? decryptionCertificates = null, Uri? singleLogoutService = null)
     {
-        if (!RuntimeFeature.IsDynamicCodeSupported) throw new PlatformNotSupportedException("SAML host integration is verified independently for Managed only.");
+        EnsureManagedRuntime(RuntimeFeature.IsDynamicCodeSupported);
         this.transport = transport ?? throw new ArgumentNullException(nameof(transport));
         ArgumentException.ThrowIfNullOrWhiteSpace(entityId);
         if (!Uri.TryCreate(entityId, UriKind.Absolute, out _)) throw new ArgumentException("An absolute SAML entity URI is required.", nameof(entityId));
@@ -85,32 +85,47 @@ public sealed partial class KeycloakSamlServiceProvider
                 new Saml2RedirectBinding().Unbind(new ITfoxtec.Identity.Saml2.Http.HttpRequest { Method = "GET", Query = ReadQuery(redirectResponse.Query), QueryString = redirectResponse.Query }, response);
             }
             ct.ThrowIfCancellationRequested();
-            if (response.Status != Saml2StatusCodes.Success || response.Destination != callback || response.InResponseTo?.Value != requestId)
-                throw new InvalidDataException("Invalid SAML response correlation.");
+            var (notAfter, authenticationContext) = ValidateAuthenticationResponse(response, requestId, expectedContexts);
+            ValidateAuthenticationEnvelope(ReadXml(response.XmlDocument.OuterXml));
             var assertion = response.Saml2SecurityToken.Assertion;
-            if (assertion.Issuer.Value != transport.Issuer.AbsoluteUri || assertion.Subject.NameId is null || string.IsNullOrWhiteSpace(assertion.Subject.NameId.Value)
-                || assertion.Conditions?.NotOnOrAfter is not { } notAfter || notAfter <= DateTime.UtcNow || notAfter > DateTime.UtcNow.AddDays(1))
-                throw new InvalidDataException("Invalid SAML assertion identity or lifetime.");
-            bool confirmed = assertion.Subject.SubjectConfirmations.Any(c => c.Method.OriginalString == "urn:oasis:names:tc:SAML:2.0:cm:bearer" && c.SubjectConfirmationData is { } data
-                && data.Recipient == callback && data.InResponseTo?.Value == requestId && data.NotOnOrAfter > DateTime.UtcNow);
-            if (!confirmed) throw new InvalidDataException("Invalid SAML bearer subject confirmation.");
-            if (assertion.Conditions.AudienceRestrictions.Count == 0 || assertion.Conditions.AudienceRestrictions.Any(r => !r.Audiences.Any(a => a == entityId)))
-                throw new InvalidDataException("SAML audience must exactly match this service provider.");
-            var authentication = assertion.Statements.OfType<Saml2AuthenticationStatement>().Single();
-            string? authenticationContext = authentication.AuthenticationContext.ClassReference?.OriginalString;
-            if (expectedContexts.Length != 0 && !expectedContexts.Contains(authenticationContext, StringComparer.Ordinal)) throw new InvalidDataException("SAML authentication assurance requirement was not met.");
-            var responseXml = ReadXml(response.XmlDocument.OuterXml);
-            var assertionElements = responseXml.Descendants(Assertion + "Assertion").ToArray();
-            bool directAssertion = assertionElements.Length == 1 && (assertionElements[0].Parent == responseXml.Root
-                || (assertionElements[0].Parent?.Name == Assertion + "EncryptedAssertion" && assertionElements[0].Parent!.Parent == responseXml.Root));
-            if (responseXml.Root?.Name != Protocol + "Response" || responseXml.Root.Element(Assertion + "Issuer")?.Value != transport.Issuer.AbsoluteUri
-                || !directAssertion) throw new InvalidDataException("Unexpected SAML signed envelope.");
             string key = Convert.ToHexStringLower(SHA256.HashData(Encoding.UTF8.GetBytes("saml\n" + transport.Issuer.AbsoluteUri + "\n" + assertion.Id.Value)));
             if (!await replay.TryUseAsync(key, new DateTimeOffset(DateTime.SpecifyKind(notAfter, DateTimeKind.Utc)), ct).ConfigureAwait(false)) throw new InvalidDataException("Replayed SAML assertion.");
             return new(response.ClaimsIdentity, assertion.Subject.NameId, response.SessionIndex, transport.Issuer.AbsoluteUri, entityId, authenticationContext);
         }
         catch (Exception error) when (error is not (OperationCanceledException or InvalidDataException))
         { throw new InvalidDataException("SAML authentication response validation failed."); }
+    }
+    internal static void ValidateMessageId(string? id)
+    { if (string.IsNullOrWhiteSpace(id)) throw new InvalidDataException("A verified SAML message ID is required."); }
+    internal static void EnsureManagedRuntime(bool dynamicCodeSupported)
+    { if (!dynamicCodeSupported) throw new PlatformNotSupportedException("SAML host integration is verified independently for Managed only."); }
+
+    // These checks follow signature verification and are also tested independently of IdP/library rejection order.
+    internal (DateTime NotAfter, string? AuthenticationContext) ValidateAuthenticationResponse(Saml2AuthnResponse response, string? requestId, string[] expectedContexts)
+    {
+        if (response.Status != Saml2StatusCodes.Success || response.Destination != callback || response.InResponseTo?.Value != requestId)
+            throw new InvalidDataException("Invalid SAML response correlation.");
+        var assertion = response.Saml2SecurityToken.Assertion;
+        if (assertion.Issuer.Value != transport.Issuer.AbsoluteUri || assertion.Subject.NameId is null || string.IsNullOrWhiteSpace(assertion.Subject.NameId.Value)
+            || assertion.Conditions?.NotOnOrAfter is not { } notAfter || notAfter <= DateTime.UtcNow || notAfter > DateTime.UtcNow.AddDays(1))
+            throw new InvalidDataException("Invalid SAML assertion identity or lifetime.");
+        bool confirmed = assertion.Subject.SubjectConfirmations.Any(c => c.Method.OriginalString == "urn:oasis:names:tc:SAML:2.0:cm:bearer" && c.SubjectConfirmationData is { } data
+            && data.Recipient == callback && data.InResponseTo?.Value == requestId && data.NotOnOrAfter > DateTime.UtcNow);
+        if (!confirmed) throw new InvalidDataException("Invalid SAML bearer subject confirmation.");
+        if (assertion.Conditions.AudienceRestrictions.Count == 0 || assertion.Conditions.AudienceRestrictions.Any(r => !r.Audiences.Any(a => a == entityId)))
+            throw new InvalidDataException("SAML audience must exactly match this service provider.");
+        var authentication = assertion.Statements.OfType<Saml2AuthenticationStatement>().Single();
+        string? authenticationContext = authentication.AuthenticationContext.ClassReference?.OriginalString;
+        if (expectedContexts.Length != 0 && !expectedContexts.Contains(authenticationContext, StringComparer.Ordinal)) throw new InvalidDataException("SAML authentication assurance requirement was not met.");
+        return (notAfter, authenticationContext);
+    }
+    internal void ValidateAuthenticationEnvelope(XDocument responseXml)
+    {
+        var assertionElements = responseXml.Descendants(Assertion + "Assertion").ToArray();
+        bool directAssertion = assertionElements.Length == 1 && (assertionElements[0].Parent == responseXml.Root
+            || (assertionElements[0].Parent?.Name == Assertion + "EncryptedAssertion" && assertionElements[0].Parent!.Parent == responseXml.Root));
+        if (responseXml.Root?.Name != Protocol + "Response" || responseXml.Root.Element(Assertion + "Issuer")?.Value != transport.Issuer.AbsoluteUri
+            || !directAssertion) throw new InvalidDataException("Unexpected SAML signed envelope.");
     }
     public string CreateMetadata()
     {

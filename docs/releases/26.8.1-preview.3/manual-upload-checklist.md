@@ -5,37 +5,39 @@
 - 可公开的博客正文：`docs/blog/26.8.1-preview.3-release.md`。
 - 博客按维护者要求，直接采用“26.8.1-preview.3 已发布到 NuGet”的口径，适合四包实际发布并可安装后公开。
 - 本清单只说明手动操作。完整候选已通过验收并生成四包，NuGet 尚未上传，状态保持 `local-candidate` / `published=false`。
-- 对应本次工程整理后的成功候选，源码指纹：`26cc27b4007fba61b31df93be4d3432235abd85d24a282a8141cd89b8ccd3faa`。工程结构与中英文说明见 [工程结构](../../project-architecture.md)。
+- 对应本次工程整理后的成功候选，源码指纹：`e5965dacad7c2bdb66f4791e1e9aab8307f243df41097ff60cd27133db8d9aeb`。工程结构与中英文说明见 [工程结构](../../project-architecture.md)。
 
 ## 1. 优先使用已经完成验收的四包
 
 本次完整 `Release.cs --bootstrap` 已生成的候选目录：
 
 ```text
-artifacts/releases/26.8.1-preview.3/26cc27b4007fba61b31df93be4d3432235abd85d24a282a8141cd89b8ccd3faa/
+artifacts/releases/26.8.1-preview.3/e5965dacad7c2bdb66f4791e1e9aab8307f243df41097ff60cd27133db8d9aeb/
 ```
 
-本次通过 707 项测试（核心 567、协议 96、Hosting 14、Platform 5、工程与证据 25）、双路线 Admin 业务验收、标准/兼容应用协议、六套非 Stable 受保护复验及实际包消费。
+Hosting 的 35 项测试使源码方法、行和分支覆盖率均达到 100%，三项发布门槛均固定为 100%。
+
+本次通过 728 项测试（核心 567、协议 96、Hosting 35、Platform 5、工程与证据 25）、双路线 Admin 业务验收、标准/兼容应用协议、六套非 Stable 受保护复验及实际包消费。
 
 该目录中的四个 `.nupkg` 与 `release-manifest.json` 属于同一次成功候选。建议从这个目录选择上传文件，避免混入其他尝试产生的同版本包。完整记录：
 
 ```text
-docs/releases/26.8.1-preview.3/26cc27b4007fba61b31df93be4d3432235abd85d24a282a8141cd89b8ccd3faa.json
+docs/releases/26.8.1-preview.3/e5965dacad7c2bdb66f4791e1e9aab8307f243df41097ff60cd27133db8d9aeb.json
 ```
 
 | 建议上传顺序 | 包文件 | SHA-256 |
 | --- | --- | --- |
-| 1 | `Keycloak.Admin.Sdk.26.8.1-preview.3.nupkg` | `c6fe9fd07093668a953b4a189acac521484fa2618b86da319a28ad22dd6ed9c8` |
-| 2 | `Keycloak.Admin.Sdk.Protocols.26.8.1-preview.3.nupkg` | `1b0225a90248b373c014bd58ab203c0db757903c6b644af686e739e9100c6aa3` |
-| 3 | `Keycloak.Admin.Sdk.Hosting.26.8.1-preview.3.nupkg` | `5a6b93945398e26643d825fb5d46bd142931156a59f29e6f8465c4c3e11d65a6` |
-| 4 | `Keycloak.Admin.Sdk.Platform.26.8.1-preview.3.nupkg` | `78fa0742d4e9a5aa1e52c768d4293fab8889cde144f5e094463c92368af6d229` |
+| 1 | `Keycloak.Admin.Sdk.26.8.1-preview.3.nupkg` | `1211a8a1e6eebbd099c8baaec468bc5cef5ddc3c05fda81ed48120301bcbe251` |
+| 2 | `Keycloak.Admin.Sdk.Protocols.26.8.1-preview.3.nupkg` | `98ea91ce561e2531fba07c2d10c709d48906518d4b16f6461d885689bc9c186d` |
+| 3 | `Keycloak.Admin.Sdk.Hosting.26.8.1-preview.3.nupkg` | `16d4ec5bc9c77ebc3ce4a95de498a83d0bdd02c2daa1486bd8475f15c27ba3d3` |
+| 4 | `Keycloak.Admin.Sdk.Platform.26.8.1-preview.3.nupkg` | `86f8403b10128bd122bcf68de0d08952ec4a84c2e4ed2af9b43980ec68eee7b9` |
 
 Hosting 与 Platform 互不依赖，二者的先后可以交换。优先发布主包和 Protocols，等依赖包可见后再发布两个扩展包。
 
 上传前在仓库根目录核对文件：
 
 ```powershell
-$candidate = Join-Path $PWD 'artifacts/releases/26.8.1-preview.3/26cc27b4007fba61b31df93be4d3432235abd85d24a282a8141cd89b8ccd3faa'
+$candidate = Join-Path $PWD 'artifacts/releases/26.8.1-preview.3/e5965dacad7c2bdb66f4791e1e9aab8307f243df41097ff60cd27133db8d9aeb'
 $manifest = Get-Content -Raw (Join-Path $candidate 'release-manifest.json') | ConvertFrom-Json
 
 if (!$manifest.allGatesPassed -or $manifest.packageVersion -ne '26.8.1-preview.3') {

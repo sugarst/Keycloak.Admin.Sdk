@@ -53,7 +53,7 @@ public sealed partial class KeycloakSamlServiceProvider
     {
         cancellationToken.ThrowIfCancellationRequested(); XNamespace soap = "http://schemas.xmlsoap.org/soap/envelope/";
         var document = ReadXml(soapEnvelope);
-        if (document.Root?.Name != soap + "Envelope" || document.Descendants(soap + "Body").Count() != 1) throw new InvalidDataException("Invalid SAML logout SOAP envelope.");
+        if (document.Root!.Name != soap + "Envelope" || document.Descendants(soap + "Body").Count() != 1) throw new InvalidDataException("Invalid SAML logout SOAP envelope.");
         var request = document.Root.Element(soap + "Body")?.Elements(Protocol + "LogoutRequest").SingleOrDefault() ?? throw new InvalidDataException("Expected one SOAP logout request.");
         var reply = await HandleLogoutPostAsync(actualCallback, Convert.ToBase64String(Encoding.UTF8.GetBytes(request.ToString(SaveOptions.DisableFormatting))), null, sessions, cancellationToken).ConfigureAwait(false);
         var response = ReadXml(Encoding.UTF8.GetString(Convert.FromBase64String(reply.FormFields!["SAMLResponse"])));
@@ -80,16 +80,7 @@ public sealed partial class KeycloakSamlServiceProvider
                 await ValidateDeflateAsync(encoded, ct).ConfigureAwait(false);
                 new Saml2RedirectBinding().Unbind(new ITfoxtec.Identity.Saml2.Http.HttpRequest { Method = "GET", Query = ReadQuery(redirect.Query), QueryString = redirect.Query }, request);
             }
-            var now = DateTimeOffset.UtcNow; var xml = ReadXml(request.XmlDocument.OuterXml);
-            // ITfoxtec 4.21 does not populate NotOnOrAfter while reading. Keycloak may omit this optional attribute;
-            // in that case bound the request by its verified IssueInstant, never by the library constructor's default.
-            DateTimeOffset expires = xml.Root?.Attribute("NotOnOrAfter") is { } expiryAttribute ? System.Xml.XmlConvert.ToDateTimeOffset(expiryAttribute.Value) : request.IssueInstant.AddMinutes(5);
-            if (request.Destination != logoutCallback || request.Issuer != transport.Issuer.AbsoluteUri || string.IsNullOrWhiteSpace(request.IdAsString)
-                || string.IsNullOrWhiteSpace(request.NameId?.Value) || string.IsNullOrWhiteSpace(request.SessionIndex) || request.IssueInstant < now.AddMinutes(-5) || request.IssueInstant > now.AddSeconds(30)
-                || expires <= now || expires > now.AddMinutes(10) || xml.Root?.Name != Protocol + "LogoutRequest" || xml.Root.Elements(Protocol + "SessionIndex").Count() != 1
-                || xml.Root.Elements(Assertion + "NameID").Count() != 1 || xml.Root.Elements(Assertion + "Issuer").Count() != 1)
-                throw new InvalidDataException("Invalid SAML logout identity session correlation or lifetime.");
-            notification = new(transport.Issuer.AbsoluteUri, entityId, request.NameId.Value, request.NameId.Format?.OriginalString, request.SessionIndex, request.IdAsString, expires.AddSeconds(30));
+            notification = ValidateIncomingLogoutRequest(request, ReadXml(request.XmlDocument.OuterXml));
         }
         catch (Exception error) when (error is not (OperationCanceledException or InvalidDataException)) { throw new InvalidDataException("SAML logout request validation failed."); }
         await sessions.RevokeOnceAsync(notification, ct).ConfigureAwait(false);
@@ -104,5 +95,19 @@ public sealed partial class KeycloakSamlServiceProvider
         var fields = new Dictionary<string, string> { ["SAMLResponse"] = Convert.ToBase64String(Encoding.UTF8.GetBytes(post.XmlDocument.OuterXml)) };
         if (relayState is not null) fields.Add("RelayState", relayState);
         return new(response.Destination, fields.ToFrozenDictionary(StringComparer.Ordinal));
+    }
+    internal SamlLogoutNotification ValidateIncomingLogoutRequest(Saml2LogoutRequest request, XDocument xml)
+    {
+        ValidateMessageId(request.IdAsString);
+        var now = DateTimeOffset.UtcNow;
+        // ITfoxtec 4.21 does not populate NotOnOrAfter while reading. Keycloak may omit this optional attribute;
+        // in that case bound the request by its verified IssueInstant, never by the library constructor's default.
+        DateTimeOffset expires = xml.Root!.Attribute("NotOnOrAfter") is { } expiryAttribute ? System.Xml.XmlConvert.ToDateTimeOffset(expiryAttribute.Value) : request.IssueInstant.AddMinutes(5);
+        if (request.Destination != logoutCallback || request.Issuer != transport.Issuer.AbsoluteUri
+            || string.IsNullOrWhiteSpace(request.NameId?.Value) || string.IsNullOrWhiteSpace(request.SessionIndex) || request.IssueInstant < now.AddMinutes(-5) || request.IssueInstant > now.AddSeconds(30)
+            || expires <= now || expires > now.AddMinutes(10) || xml.Root!.Name != Protocol + "LogoutRequest" || xml.Root.Elements(Protocol + "SessionIndex").Count() != 1
+            || xml.Root.Elements(Assertion + "NameID").Count() != 1 || xml.Root.Elements(Assertion + "Issuer").Count() != 1)
+            throw new InvalidDataException("Invalid SAML logout identity session correlation or lifetime.");
+        return new(transport.Issuer.AbsoluteUri, entityId, request.NameId.Value, request.NameId.Format?.OriginalString, request.SessionIndex, request.IdAsString, expires.AddSeconds(30));
     }
 }

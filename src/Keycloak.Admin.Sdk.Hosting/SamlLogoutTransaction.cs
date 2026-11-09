@@ -55,15 +55,20 @@ public sealed partial class KeycloakSamlServiceProvider
                 new Saml2RedirectBinding().Unbind(new ITfoxtec.Identity.Saml2.Http.HttpRequest { Method = "GET", Query = query, QueryString = actualCallback.Query }, response);
             }
             ct.ThrowIfCancellationRequested();
-            if (response.Status != Saml2StatusCodes.Success || response.Destination != logoutCallback || response.InResponseTo?.Value != requestId || response.Issuer != transport.Issuer.AbsoluteUri
-                || response.IssueInstant < DateTimeOffset.UtcNow.AddMinutes(-5) || response.IssueInstant > DateTimeOffset.UtcNow.AddSeconds(30) || string.IsNullOrWhiteSpace(response.IdAsString))
-                throw new InvalidDataException("Invalid SAML logout response correlation or lifetime.");
+            ValidateLogoutResponse(response, requestId);
             string key = Convert.ToHexStringLower(SHA256.HashData(Encoding.UTF8.GetBytes("saml-logout\n" + transport.Issuer.AbsoluteUri + "\n" + response.IdAsString)));
             if (!await replay.TryUseAsync(key, DateTimeOffset.UtcNow.AddMinutes(6), ct).ConfigureAwait(false)) throw new InvalidDataException("Replayed SAML logout response.");
         }
         catch (Exception error) when (error is not (OperationCanceledException or InvalidDataException)) { throw new InvalidDataException("SAML logout response validation failed."); }
     }
-    private static NameValueCollection ReadQuery(string query)
+    internal void ValidateLogoutResponse(Saml2LogoutResponse response, string requestId)
+    {
+        ValidateMessageId(response.IdAsString);
+        if (response.Status != Saml2StatusCodes.Success || response.Destination != logoutCallback || response.InResponseTo?.Value != requestId || response.Issuer != transport.Issuer.AbsoluteUri
+            || response.IssueInstant < DateTimeOffset.UtcNow.AddMinutes(-5) || response.IssueInstant > DateTimeOffset.UtcNow.AddSeconds(30))
+            throw new InvalidDataException("Invalid SAML logout response correlation or lifetime.");
+    }
+    internal static NameValueCollection ReadQuery(string query)
     {
         if (query.Length > 350000) throw new InvalidDataException("SAML redirect exceeds its bound.");
         var result = new NameValueCollection(StringComparer.Ordinal);

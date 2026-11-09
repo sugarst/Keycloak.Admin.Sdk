@@ -33,9 +33,10 @@ public sealed partial class KeycloakSamlServiceProvider
             using var response = await bounded.SendAsync(request, cancellationToken).ConfigureAwait(false);
             if (!response.IsSuccessStatusCode) throw new InvalidDataException("SAML ECP authentication failed.");
             var document = ReadXml(await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false));
-            var header = document.Root?.Element(soap + "Header")?.Elements(ecp + "Response").SingleOrDefault();
+            var header = document.Root!.Element(soap + "Header")?.Elements(ecp + "Response").SingleOrDefault();
             if (header is null || (string?)header.Attribute("AssertionConsumerServiceURL") != callback.AbsoluteUri) throw new InvalidDataException("ECP assertion consumer endpoint mismatch.");
-            var inner = document.Root?.Element(soap + "Body")?.Elements(Protocol + "Response").SingleOrDefault() ?? throw new InvalidDataException("Expected one signed ECP authentication response.");
+            // ArtifactHttpHandler has already required one direct SOAP Body, including for chunked responses.
+            var inner = document.Root!.Element(soap + "Body")!.Elements(Protocol + "Response").SingleOrDefault() ?? throw new InvalidDataException("Expected one signed ECP authentication response.");
             return await transaction.CompleteAsync(callback, Convert.ToBase64String(Encoding.UTF8.GetBytes(inner.ToString(SaveOptions.DisableFormatting))), transaction.FormFields["RelayState"], cancellationToken).ConfigureAwait(false);
         }
         catch (Exception error) when (error is not (OperationCanceledException or InvalidDataException)) { throw new InvalidDataException("SAML ECP response validation failed."); }

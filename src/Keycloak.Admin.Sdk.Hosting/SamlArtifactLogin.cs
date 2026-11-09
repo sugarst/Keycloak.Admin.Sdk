@@ -28,17 +28,23 @@ public sealed partial class KeycloakSamlServiceProvider
             using var bounded = new HttpClient(new ArtifactHttpHandler(http, endpoint, token => EnsureSamlLoginAsync(contexts, token)));
             var response = await new Saml2SoapEnvelope().ResolveAsync(new FixedArtifactClient(bounded), resolve, new Saml2AuthnResponse(configuration), ct).ConfigureAwait(false);
             ct.ThrowIfCancellationRequested();
-            if (response.Status != Saml2StatusCodes.Success || response.InResponseTo?.Value != resolve.IdAsString || response.Issuer != transport.Issuer.AbsoluteUri
-                || response.IssueInstant < DateTimeOffset.UtcNow.AddMinutes(-5) || response.IssueInstant > DateTimeOffset.UtcNow.AddSeconds(30)) throw new InvalidDataException("Invalid artifact response correlation or lifetime.");
+            ValidateArtifactResponse(response, resolve.IdAsString);
             var document = ReadXml(response.XmlDocument.OuterXml);
-            var inner = document.Root?.Elements(Protocol + "Response").SingleOrDefault() ?? throw new InvalidDataException("Expected one inner SAML response.");
+            var inner = ArtifactAuthenticationResponse(document);
             return await CompleteAsync(requestId, state, expiry, contexts, () => { }, callback,
                 Convert.ToBase64String(Encoding.UTF8.GetBytes(inner.ToString(System.Xml.Linq.SaveOptions.DisableFormatting))), relayState, ct).ConfigureAwait(false);
         }
         catch (Exception error) when (error is not (OperationCanceledException or InvalidDataException)) { throw new InvalidDataException("SAML artifact validation failed."); }
     }
+    internal static System.Xml.Linq.XElement ArtifactAuthenticationResponse(System.Xml.Linq.XDocument document)
+        => document.Root!.Elements(Protocol + "Response").SingleOrDefault() ?? throw new InvalidDataException("Expected one inner SAML response.");
+    internal void ValidateArtifactResponse(Saml2ArtifactResponse response, string requestId)
+    {
+        if (response.Status != Saml2StatusCodes.Success || response.InResponseTo?.Value != requestId || response.Issuer != transport.Issuer.AbsoluteUri
+            || response.IssueInstant < DateTimeOffset.UtcNow.AddMinutes(-5) || response.IssueInstant > DateTimeOffset.UtcNow.AddSeconds(30)) throw new InvalidDataException("Invalid artifact response correlation or lifetime.");
+    }
     private sealed class FixedArtifactClient(HttpClient http) : IHttpClientFactory { public HttpClient CreateClient(string name) => http; }
-    private sealed class ArtifactHttpHandler(HttpClient http, Uri endpoint, Func<CancellationToken, ValueTask> gate) : HttpMessageHandler
+    internal sealed class ArtifactHttpHandler(HttpClient http, Uri endpoint, Func<CancellationToken, ValueTask> gate) : HttpMessageHandler
     {
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken ct)
         {
@@ -58,7 +64,7 @@ public sealed partial class KeycloakSamlServiceProvider
             int read; while ((read = await stream.ReadAsync(block, ct).ConfigureAwait(false)) != 0)
             { if (buffer.Length + read > 262144) throw new InvalidDataException("SAML SOAP response exceeds its bound."); buffer.Write(block, 0, read); }
             string body = Encoding.UTF8.GetString(buffer.ToArray()); var document = ReadXml(body); System.Xml.Linq.XNamespace soap = "http://schemas.xmlsoap.org/soap/envelope/";
-            if (document.Root?.Name != soap + "Envelope" || document.Root.Elements(soap + "Body").Count() != 1 || document.Descendants(soap + "Body").Count() != 1) throw new InvalidDataException("Invalid artifact SOAP envelope.");
+            if (document.Root!.Name != soap + "Envelope" || document.Root.Elements(soap + "Body").Count() != 1 || document.Descendants(soap + "Body").Count() != 1) throw new InvalidDataException("Invalid artifact SOAP envelope.");
             return new(response.StatusCode) { Content = new StringContent(body, Encoding.UTF8, "text/xml") };
         }
     }

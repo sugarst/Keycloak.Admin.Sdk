@@ -63,3 +63,9 @@ var session = await login.CompleteAsync(actualCallback,
 认证上下文须配置到服务端实际 LoA/认证流程，并检查签名断言达到要求；独立开关 `KeycloakSdk.Protocols.SamlStepUp` 可关闭逐级认证。`StartIdpInitiatedLoginAsync` 仍要求宿主保存预先创建的浏览器事务，禁止按外来的 RelayState 重建。Artifact 解析只访问固定 realm 的 SOAP 端点；ECP 在开关检查后才读取每次调用的用户凭据，生产环境强制 HTTPS。
 
 入站注销使用 `HandleLogoutPostAsync`、`HandleLogoutRedirectAsync` 或 `HandleLogoutSoapAsync`，配合宿主 `ISamlLogoutSessionStore`。宿主须在同一个持久化事务中完成指定 issuer/SP/NameID/session-index 的会话失效与 `ReplayKey` 收据记录；重复请求成功返回，存储失败不能占用收据，也不能确认成功。SDK 在验证签名、目标、身份、时效后才调用存储，提交成功后才生成签名响应。固定目标可能省略可选 `NotOnOrAfter`，此时严格限制已签名 IssueInstant 的五分钟期限。证据仍须与当前源码、Managed 运行模式一致后才能晋升；该模块不声明 Native AOT 支持。
+
+## 验证门禁 / Verification
+
+Hosting 的 35 项独立测试要求自有源码方法、行和分支覆盖率均为 100%。测试包含框架事件与 Options 重建、注销存储、MCP 元数据、签名 SAML Redirect/Artifact/ECP、签名后校验与 XML/HTTP 边界。覆盖率不包含第三方库和 `obj/` 生成代码，真实 Keycloak 业务与包消费还须通过单独发布门禁。
+
+The 35 Hosting tests enforce 100% source method, line and branch coverage. Signed SAML bindings, host events, logout, resource metadata and failure boundaries are tested independently; live Keycloak acceptance and package consumption remain separate release gates.

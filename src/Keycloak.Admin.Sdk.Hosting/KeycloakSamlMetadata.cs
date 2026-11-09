@@ -30,8 +30,9 @@ public static class KeycloakSamlMetadata
         buffer.Position = 0;
         using var reader = XmlReader.Create(buffer, new XmlReaderSettings { DtdProcessing = DtdProcessing.Prohibit, XmlResolver = null, MaxCharactersInDocument = 262144 });
         var xml = XDocument.Load(reader); XNamespace metadata = "urn:oasis:names:tc:SAML:2.0:metadata", ds = "http://www.w3.org/2000/09/xmldsig#";
+        // XDocument.Load requires a document element; an empty XML document has already failed above.
         var root = xml.Root;
-        if (root?.Name != metadata + "EntityDescriptor" || (string?)root.Attribute("entityID") != issuer.AbsoluteUri) throw new InvalidDataException("SAML metadata issuer mismatch.");
+        if (root!.Name != metadata + "EntityDescriptor" || (string?)root.Attribute("entityID") != issuer.AbsoluteUri) throw new InvalidDataException("SAML metadata issuer mismatch.");
         var descriptor = root.Element(metadata + "IDPSSODescriptor") ?? throw new InvalidDataException("Missing SAML IdP descriptor.");
         var endpoints = descriptor.Elements(metadata + "SingleSignOnService").ToArray();
         if (!endpoints.Any(e => (string?)e.Attribute("Binding") == "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect"

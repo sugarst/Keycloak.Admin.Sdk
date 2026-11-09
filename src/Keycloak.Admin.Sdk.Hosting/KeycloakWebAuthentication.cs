@@ -105,6 +105,7 @@ public static class KeycloakWebAuthentication
                 await oidc.EnsureAuthorizationEnabledAsync(KeycloakAuthenticationProperties.Read(context.Properties), cancellationToken: context.HttpContext.RequestAborted).ConfigureAwait(false);
                 // The framework skips ValidateTokenResponse after HandleCodeRedemption; our gated transport owns redemption.
                 // Explicitly preserve its nonce and token-response binding checks instead of merely reading the nonce cookie.
+                JsonElement verifiedClaims;
                 try
                 {
                     var signed = context.SecurityToken?.InnerToken ?? context.SecurityToken;
@@ -115,6 +116,8 @@ public static class KeycloakWebAuthentication
                     options.ProtocolValidator.ValidateTokenResponse(new OpenIdConnectProtocolValidationContext { ClientId = client.ClientId,
                         ProtocolMessage = context.TokenEndpointResponse ?? throw new InvalidDataException("Missing redeemed OIDC response."),
                         ValidatedIdToken = context.SecurityToken, Nonce = context.Nonce });
+                    // Keep assurance bound to this exact validated token across the asynchronous session-store call.
+                    verifiedClaims = payload.RootElement.Clone();
                 }
                 catch (Exception error) when (error is OpenIdConnectProtocolException or InvalidDataException or JsonException)
                 { context.Fail("Invalid Keycloak OIDC token binding."); return; }
@@ -124,12 +127,10 @@ public static class KeycloakWebAuthentication
                 if (requiredAssurance is not null)
                     try
                     {
-                        var jwt = context.SecurityToken ?? throw new InvalidDataException("A verified JSON Web Token is required.");
-                        using var document = JsonDocument.Parse(Base64UrlEncoder.DecodeBytes((jwt.InnerToken ?? jwt).RawPayload));
-                        requiredAssurance.ValidateVerifiedClaims(document.RootElement);
+                        requiredAssurance.ValidateVerifiedClaims(verifiedClaims);
                         var snapshot = new JsonObject();
                         foreach (string name in new[] { "acr", "auth_time", "amr" })
-                            if (document.RootElement.TryGetProperty(name, out var value)) snapshot[name] = JsonNode.Parse(value.GetRawText());
+                            if (verifiedClaims.TryGetProperty(name, out var value)) snapshot[name] = JsonNode.Parse(value.GetRawText());
                         // AuthenticationProperties stay in the required protected server ticket, independently of framework claim conversions.
                         var properties = context.Properties ?? throw new InvalidDataException("Protected OIDC transaction properties are required.");
                         properties.Items[AssuranceSnapshot] = snapshot.ToJsonString();
@@ -182,7 +183,8 @@ public static class KeycloakWebAuthentication
     private static bool TrySession(ClaimsPrincipal? principal, out string sid, out string sub, out DateTimeOffset issued)
     {
         sid = principal?.FindFirst("sid")?.Value ?? ""; sub = principal?.FindFirst("sub")?.Value ?? ""; issued = default;
-        if (sid.Length == 0 || sub.Length == 0 || !long.TryParse(principal?.FindFirst("iat")?.Value, NumberStyles.None, CultureInfo.InvariantCulture, out long seconds) || seconds is < 0 or > 253402300799) return false;
+        // Nonempty sid/sub prove principal exists; NumberStyles.None also rejects negative and signed integers.
+        if (sid.Length == 0 || sub.Length == 0 || !long.TryParse(principal!.FindFirst("iat")?.Value, NumberStyles.None, CultureInfo.InvariantCulture, out long seconds) || seconds > 253402300799) return false;
         issued = DateTimeOffset.FromUnixTimeSeconds(seconds); return true;
     }
 

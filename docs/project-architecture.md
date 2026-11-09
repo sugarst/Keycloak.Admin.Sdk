@@ -37,7 +37,7 @@ Core、Protocols 保持 Native AOT 支持；Hosting、Platform 声明 Managed �
 
 ## 验证与发布
 
-`Verify.cs` 依次验证生成一致性、五个 MSTest 测试工程、四个生产包的依赖清单、Managed 包消费与可选的原生包消费。Core、Protocols、Platform、Hosting 分别输出覆盖率报告；Hosting 的门禁基于当前覆盖率，不宣称全部路径达到 100%。
+`Verify.cs` 依次验证生成一致性、五个 MSTest 测试工程、四个生产包的依赖清单、Managed 包消费与可选的原生包消费。Core、Protocols、Platform、Hosting 分别输出覆盖率报告；Hosting 与 Platform 的自有源码方法、行和分支覆盖率门槛均为 100%；第三方实现与 `obj/` 生成代码不包含在该口径中。
 
 源码指纹覆盖全部 `src`、`tests`、`tools` 中相关源码、项目、共享构建属性与 JSON 配置，并包含解决方案文件。Docker 构建复制整个测试和工具目录，因此包含新共享文件和测试构建属性。调整这些输入后，旧证据会失效，需要重新运行真实验收。
 
@@ -46,3 +46,5 @@ Core、Protocols 保持 Native AOT 支持；Hosting、Platform 声明 Managed �
 ## English change notes
 
 The four shipping packages retain their existing responsibility and dependency boundaries. Platform tests and engineering acceptance tests now have dedicated projects. Shared AOT-safe assertions and tool infrastructure have explicit locations; MSTest and Coverlet versions are centralized. Both package-consumption projects are visible in the solution, and Platform and Hosting have independent coverage gates. Input fingerprints include the new shared sources and build imports, so fresh live acceptance is required before publishing preview.3.
+
+Hosting now has 35 tests and mandatory 100% source method, line and branch coverage gates. Post-signature SAML validators are independently testable, and OIDC assurance reuses the exact bound token claims across asynchronous session lookup. The shipping package count remains four.

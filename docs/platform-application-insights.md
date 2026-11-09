@@ -45,6 +45,6 @@ customEvents
 
 原生 smoke 不再引用 Platform。原生集成夹具只引用主包/Protocols，并使用核心 KeycloakFeatureSnapshotGate，证据标识 core-snapshot-v1 / core-snapshot；不能据此宣称 Platform 支持 AOT。源码和证据语义改变后的真实业务证据已重新生成，历史结果不代替当前输入。
 
-本次验证：解决方案 Release 构建零警告、零错误；核心 567/567、协议 96/96、Hosting 14/14、Platform 5/5、工程与证据 25/25，共 707 项通过。12 项核心覆盖率门禁及独立 Platform、Hosting 门禁全通过，Platform 源码方法/行/分支及协议源码行/分支均为 100%；四包 nuspec 依赖和默认关闭的完整 66 项配置示例校验通过。排除 Platform 后的主包/Protocols `linux-musl-x64` Native AOT 本地包消费、发布与执行通过；原生集成夹具和真实 Keycloak 业务验收均已通过：v2 两种运行时各 478/478，v1 各 492/492；Managed 流程另外实际执行微软开关创建/删除、配置刷新、协议关闭及官方本地遥测事件检查。每条路线 14 项负向控制通过，完整 Release.cs --bootstrap 发布候选门禁通过。Azure 云端投递仍未纳入本地验收。
+本次验证：解决方案 Release 构建零警告、零错误；核心 567/567、协议 96/96、Hosting 35/35、Platform 5/5、工程与证据 25/25，共 728 项通过。12 项核心覆盖率门禁及独立 Platform、Hosting 门禁全通过，Platform、Hosting 源码方法/行/分支及协议源码行/分支均为 100%；四包 nuspec 依赖和默认关闭的完整 66 项配置示例校验通过。排除 Platform 后的主包/Protocols `linux-musl-x64` Native AOT 本地包消费、发布与执行通过；原生集成夹具和真实 Keycloak 业务验收均已通过：v2 两种运行时各 478/478，v1 各 492/492；Managed 流程另外实际执行微软开关创建/删除、配置刷新、协议关闭及官方本地遥测事件检查。每条路线 14 项负向控制通过，完整 Release.cs --bootstrap 发布候选门禁通过。Azure 云端投递仍未纳入本地验收。
 
 官方依据：[.NET Feature Management 遥测](https://learn.microsoft.com/en-us/azure/azure-app-configuration/feature-management-dotnet-reference#telemetry)、[官方适配器 4.8.0 依赖](https://www.nuget.org/packages/Microsoft.FeatureManagement.Telemetry.ApplicationInsights/4.8.0)、[Application Insights 3.x 迁移限制](https://github.com/microsoft/ApplicationInsights-dotnet/blob/main/BreakingChanges.md)。

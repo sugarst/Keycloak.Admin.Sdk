@@ -35,7 +35,7 @@ Windows 原生发布需要 Visual Studio C++ 桌面工具链和 Windows SDK；Li
 
 `Verify.cs` 检查生成一致性和门禁负向控制，再运行 MSTest，将本次目录写入 `artifacts/test-results/latest.txt`。覆盖率门禁只读取该次 TRX 引用的 Cobertura；操作缺失、重复、跳过、失败或低于 [coverage-policy.json](../tests/coverage-policy.json) 均返回非零。当前测试总数、实测指标及统计口径仅在 [覆盖率报告](contracts/test-coverage.md) 维护。
 
-Platform 与 Hosting 分别由 `Check-ModuleCoverage.cs` 读取独立 TRX/Cobertura，报告见 [Platform](contracts/platform-coverage.md)、[Hosting](contracts/hosting-coverage.md)。Platform 保持方法/行/分支 100%；Hosting 根据现有实测设防退化门槛（方法 90%、行 79%、分支 75%），不宣称 100%。策略见 [module-coverage-policy.json](../tests/module-coverage-policy.json)。
+Platform 与 Hosting 分别由 `Check-ModuleCoverage.cs` 读取独立 TRX/Cobertura，报告见 [Platform](contracts/platform-coverage.md)、[Hosting](contracts/hosting-coverage.md)。Platform 与 Hosting 均要求源码方法、行、分支覆盖率 100%；Hosting 的 35 项测试包含框架事件与 Options 重建、签名 SAML 完整绑定、独立签名后校验、HTTP/XML 边界、证书清理及乱序注销存储。策略见 [module-coverage-policy.json](../tests/module-coverage-policy.json)。
 
 需要单独收集覆盖率时：
 

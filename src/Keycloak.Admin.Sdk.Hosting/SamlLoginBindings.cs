@@ -50,7 +50,7 @@ public sealed partial class KeycloakSamlServiceProvider
     }
     private ValueTask EnsureSamlLoginAsync(string[] contexts, CancellationToken ct)
         => transport.EnsureEnabledAsync(contexts.Length == 0 ? ["KeycloakSdk.Protocols.Saml"] : new[] { "KeycloakSdk.Protocols.Saml", "KeycloakSdk.Protocols.SamlStepUp" }, ct);
-    private static string BindingUri(SamlBrowserBinding binding) => binding switch
+    internal static string BindingUri(SamlBrowserBinding binding) => binding switch
     {
         SamlBrowserBinding.Redirect => "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect",
         SamlBrowserBinding.Post => "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST",

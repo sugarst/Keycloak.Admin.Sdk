@@ -8,9 +8,9 @@
   },
   "hosting": {
     "assembly": "Keycloak.Admin.Sdk.Hosting",
-    "minimumTests": 14,
-    "methodPercent": 90,
-    "linePercent": 79,
-    "branchPercent": 75
+    "minimumTests": 35,
+    "methodPercent": 100,
+    "linePercent": 100,
+    "branchPercent": 100
   }
 }

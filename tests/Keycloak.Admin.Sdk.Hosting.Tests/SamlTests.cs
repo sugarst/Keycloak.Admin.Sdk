@@ -13,7 +13,7 @@ using Microsoft.IdentityModel.Tokens.Saml2;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 [TestClass]
-public sealed class SamlTests
+public sealed partial class SamlTests
 {
     private static readonly Uri Callback = new("https://app.invalid/saml/callback");
     private const string Issuer = "https://identity.invalid/realms/r", Entity = "urn:app:saml";
@@ -273,8 +273,9 @@ public sealed class SamlTests
     private sealed class Handler : HttpMessageHandler
     {
         internal string Response = "", Url = ""; internal HttpStatusCode Status = HttpStatusCode.OK; internal int Calls;
+        internal Func<HttpRequestMessage, CancellationToken, Task<HttpResponseMessage>>? Respond;
         protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
-        { cancellationToken.ThrowIfCancellationRequested(); Calls++; Url = request.RequestUri!.AbsoluteUri; return Task.FromResult(new HttpResponseMessage(Status) { Content = new StringContent(Response) }); }
+        { cancellationToken.ThrowIfCancellationRequested(); Calls++; Url = request.RequestUri!.AbsoluteUri; return Respond is null ? Task.FromResult(new HttpResponseMessage(Status) { Content = new StringContent(Response) }) : Respond(request, cancellationToken); }
     }
     private sealed class LogoutStore : ISamlLogoutSessionStore
     {
