@@ -19,6 +19,24 @@
     <Project Path="tests/Keycloak.Admin.Sdk.AotSmoke/Keycloak.Admin.Sdk.AotSmoke.csproj" />
     <Project Path="tests/Keycloak.Admin.Sdk.Hosting.Tests/PackageSmoke/PackageSmoke.csproj" />
   </Folder>
+  <Folder Name="/tests/Shared/">
+    <File Path="tests/Shared/CoreContracts.props" />
+  </Folder>
+  <Folder Name="/tests/Shared/Contracts/">
+    <File Path="tests/Shared/Contracts/AlignmentContracts.cs" />
+    <File Path="tests/Shared/Contracts/CapabilityContracts.cs" />
+    <File Path="tests/Shared/Contracts/ContractSuite.cs" />
+    <File Path="tests/Shared/Contracts/DependencyInjectionContracts.cs" />
+    <File Path="tests/Shared/Contracts/EndpointCase.cs" />
+    <File Path="tests/Shared/Contracts/InterfaceContracts.cs" />
+    <File Path="tests/Shared/Contracts/RecoveryContracts.cs" />
+    <File Path="tests/Shared/Contracts/ResilienceContracts.cs" />
+    <File Path="tests/Shared/Contracts/RuntimeCapabilityContracts.cs" />
+    <File Path="tests/Shared/Contracts/RuntimeContracts.cs" />
+  </Folder>
+  <Folder Name="/tests/Shared/Fixtures/">
+    <File Path="tests/Shared/Fixtures/CapabilityTestData.cs" />
+  </Folder>
   <Folder Name="/tools/">
     <Project Path="tools/Keycloak.Admin.Sdk.Generator/Keycloak.Admin.Sdk.Generator.csproj" />
   </Folder>
