@@ -12,8 +12,8 @@
 | `src/Keycloak.Admin.Sdk/Generated` | 生成的 API、DTO、端点目录及 JSON 上下文 |
 | `src/Keycloak.Admin.Sdk/DependencyInjection` | Microsoft DI、Options、HttpClientFactory、显式开启的读取弹性管道 |
 | `src/Keycloak.Admin.Sdk/Capabilities` | 不可变版本目录与请求支持策略 |
-| `src/Keycloak.Admin.Sdk.FeatureManagement` | 托管功能开关与可选评估遥测 |
-| `src/Keycloak.Admin.Sdk.FeatureManagement/ApplicationInsights` | 默认关闭的遥测注册适配器 |
+| `src/Keycloak.Admin.Sdk.Platform` | 统一宿主开关面：`KeycloakPlatformHost`、快照门禁与一次 serverinfo 引导 |
+| `src/Keycloak.Admin.Sdk.Platform/KeycloakFeatureFlagCatalog.cs` | 生成的开关目录及启动时的 fail-closed 校验 |
 | `tests/Keycloak.Admin.Sdk.Tests` | MSTest 契约矩阵及运行时行为检查 |
 | `tests/Keycloak.Admin.Sdk.AotSmoke` | 源码链接共用断言的独立 Native AOT 程序 |
 | `tests/Keycloak.Admin.Sdk.IntegrationTests` | 真实服务端业务及协议断言 |
@@ -38,9 +38,9 @@
 - client credentials 使用实例内缓存及共享获取；401 恢复可选，写入不自动重放。并发、超时和生命周期见 [认证说明](authentication-and-errors.md)。
 - 请求策略在最终 URI 构造后、token 获取和 HTTP 发送前执行。支持策略、宿主功能开关依次收紧开放结果，详见 [能力策略](capability-policy.md)。
 
-主包直接引用 Microsoft.Extensions.Http 10.0.14 和 Microsoft.Extensions.Http.Resilience 10.11.0。DI 的 `options.Resilience` 将读取弹性策略封装为一个 ResilienceHandler，按命名客户端隔离状态，默认关闭。写入、带内容请求和 Token POST 选择空管道，读熔断不会阻断这些请求；具体规则见 [认证与弹性配置](authentication-and-errors.md#http-弹性策略)。Diagnostics 与 Polly 作为 Resilience 的传递依赖还原，不重复添加旧的 Http.Polly 适配器。托管扩展依赖主包、Microsoft.FeatureManagement 及微软的 Application Insights 遥测适配器。
+主包直接引用 Microsoft.Extensions.Http 10.0.14 和 Microsoft.Extensions.Http.Resilience 10.11.0。DI 的 `options.Resilience` 将读取弹性策略封装为一个 ResilienceHandler，按命名客户端隔离状态，默认关闭。写入、带内容请求和 Token POST 选择空管道，读熔断不会阻断这些请求；具体规则见 [认证与弹性配置](authentication-and-errors.md#http-弹性策略)。Diagnostics 与 Polly 作为 Resilience 的传递依赖还原，不重复添加旧的 Http.Polly 适配器。Platform 直接引用 Protocols、Microsoft.FeatureManagement 4.8.0 和 Microsoft.FeatureManagement.Telemetry.ApplicationInsights 4.8.0，主包通过 Protocols 传递引用；Platform 面向 Managed，`IsAotCompatible=false`。Admin 与协议链共享一次 serverinfo 引导、目录和 gate，可选择原子布尔快照或微软引擎。官方 Application Insights publisher 默认不注册，需明确启用并逐开关开启 telemetry，见[遥测说明](platform-application-insights.md)。主包和 Protocols 的 Native AOT 测试继续独立执行，不引用 Platform。
 
-仅这两个库项目可生成本地 NuGet 包，测试与生成器项目不打包。项目尚未发布 NuGet 包；客户端与功能开关介绍见 [README](../README.md#客户端与功能开关)。
+四个库项目（主包、Platform、Protocols、Hosting）可生成本地 NuGet 包，测试与生成器项目不打包。`26.8.1-preview.2` 已发布 NuGet 包；客户端与开关面介绍见 [README](../README.md#客户端与功能开关)。
 
 ## 范围边界
 

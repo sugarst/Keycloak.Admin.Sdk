@@ -19,11 +19,6 @@ public sealed class ContractTests
     [TestMethod] public Task ReadCircuitAndNamedClientIsolation() => ResilienceContracts.CircuitAsync();
     [TestMethod] public Task StreamResilienceBeforeDeliveryOnly() => ResilienceContracts.StreamsAsync();
     [TestMethod] public void ResilienceConfigurationValidation() => ResilienceContracts.Validation();
-    [TestMethod] public Task FeatureFlagsCannotPromoteAnyCatalogEndpoint() => FeatureManagementContracts.DecisionsAsync();
-    [TestMethod] public Task FeatureFlagsOnlyRollOutPromotedNonStableCapabilities() => FeatureManagementContracts.NonStableRolloutAsync();
-    [TestMethod] public Task FeatureFlagTransportReloadAndReplay() => FeatureManagementContracts.TransportAsync();
-    [TestMethod] public Task FeatureManagedClientBootstrap() => FeatureManagementContracts.BootstrapAsync();
-    [TestMethod, DoNotParallelize] public Task OptionalApplicationInsightsFeatureEvaluations() => FeatureManagementContracts.TelemetryAsync();
     [TestMethod] public void VersionCapabilityCatalog() => CapabilityContracts.Catalog();
     [TestMethod] public void SupportConfigurationAndOverrides() => CapabilityContracts.Configuration();
     [TestMethod] public void ConjunctiveSupportDecisions() => CapabilityContracts.Decisions();

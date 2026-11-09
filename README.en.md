@@ -62,9 +62,9 @@ Only bodyless GET/HEAD requests use transient retry, timeout and circuit-breakin
 
 ## Client and feature flags
 
-The feature package depends on Microsoft telemetry components; telemetry is opt-in.
+Platform integrates Microsoft.FeatureManagement and its official Application Insights publisher in the same package, with telemetry disabled by default. Platform targets Managed hosts; core and Protocols retain their independent Native AOT support. See [telemetry configuration and delivery](docs/platform-application-insights.md).
 
-`new KeycloakAdminClient(...)` provides the underlying API transport. Use `KeycloakSupportedClient.CreateAsync` to enforce the supported scope before sending requests, or `KeycloakFeatureManagedClient.CreateAsync` for managed feature flags. See [capability policy](docs/capability-policy.md), [feature flags and telemetry](docs/feature-management.md), and [authentication, errors and DI](docs/authentication-and-errors.md).
+`new KeycloakAdminClient(...)` provides the underlying API transport. Use `KeycloakSupportedClient.CreateAsync` to enforce the supported scope before sending requests, or `Keycloak.Admin.Sdk.Platform` / `KeycloakPlatformHost.CreateAsync` for one host switch surface. See [capability policy](docs/capability-policy.md), [platform feature gate](docs/platform-feature-gate.md), and [authentication, errors and DI](docs/authentication-and-errors.md).
 
 ## Request and response conventions
 
@@ -76,6 +76,19 @@ The feature package depends on Microsoft telemetry components; telemetry is opt-
 
 ## Keycloak 26.8.1 capability boundaries
 
+This development branch maintains two separate matrices: [Admin API operations](docs/contracts/admin-api-support-matrix.tsv) and [platform capabilities](docs/contracts/platform-capability-matrix.md), covering 80 pinned upstream feature flags and 52 application capability families. Application capabilities are independently verified for an exact version and runtime. Deployment, databases, clustering, server UI and Java SPI responsibilities are documented in the [implementation scope](docs/full-platform-coverage.md). The 520-operation count below applies only to the Admin API.
+
+Current inputs have fresh independent promotion for all 52 application families: standard protocols pass 434/434 Managed and 391/391 Linux Native AOT checks, plus 20/20 legacy checks per runtime. Admin v2 passes 478/478 and v1 492/492 in both modes. The full release gate and 14 negative controls per route pass. Managed live acceptance also verifies the Microsoft engine and official local telemetry channel. Support remains specific to version, runtime, RID and current-input evidence.
+
+| Package | Use |
+| --- | --- |
+| `Keycloak.Admin.Sdk` | Admin API, service-account authentication and support policy |
+| `Keycloak.Admin.Sdk.Protocols` | Application OIDC/OAuth, Account, SCIM, authorization, wallets and identity brokering; Managed and verified Linux Native AOT |
+| `Keycloak.Admin.Sdk.Hosting` | ASP.NET Core login, resource tokens, logout, MCP metadata and SAML; Managed only |
+| `Keycloak.Admin.Sdk.Platform` | Managed host switches for Admin and protocols, with Microsoft's engine and optional official Application Insights telemetry |
+
+preview.3 is an unpublished development version. Use project references or locally built packages for the new modules. Published preview.2 capabilities remain documented in the [changelog](CHANGELOG.md). See [wallet integration](docs/wallet-integration.md) and [authentication integration](docs/authentication-integration.md) for the new application flows.
+
 The main package generates 520 Admin API operations, counted by HTTP method and path. Supported areas include realms, users, groups, roles, clients, client scopes, identity providers, authentication flows, authorization policies, organizations, workflows and admin console extensions. Availability also depends on the declared FGAP route, server features and account permissions.
 
 | Scope | Operations | Verification |
@@ -86,17 +99,17 @@ The main package generates 520 Admin API operations, counted by HTTP method and 
 
 The following APIs remain outside the default formal acceptance scope. Non-stable capabilities use separate, runtime-specific validation plans:
 
-| Keycloak feature | Stage | Operations | Reason |
+| Keycloak feature | Stage | Operations | Independent support scope |
 | --- | --- | ---: | --- |
-| `oid4vc-vci` | Preview | 7 | Credential management is preview and excluded by the current support policy |
-| `ssf` | Experimental | 19 | Experimental functionality is excluded by the current support policy |
-| `client-types` | Experimental | 2 | Independently validated and promoted for managed v2 only; off by default, requiring a schema-2 opt-in and host flag. AOT/v1 have not been promoted |
+| `oid4vc-vci` | Preview | 7 | Independent v2 Managed / Linux Native AOT validation; requires an explicit per-capability Preview opt-in and host flag |
+| `ssf` | Experimental | 19 | Independent v2 Managed / Linux Native AOT validation; requires an explicit per-capability Experimental opt-in and host flag |
+| `client-types` | Experimental | 2 | Independent v2 Managed / Linux Native AOT validation; off by default, requiring a schema-2 opt-in and host flag |
 
-Schema 2 supports Managed, NativeAot and Portable verification profiles. Managed applications use FeatureManagement; native applications can use the main package's `KeycloakFeatureSnapshotGate`. Host flags cannot override version, stage or evidence denials. Existing configurations retain their requirement for both managed and AOT evidence. See the [capability policy](docs/capability-policy.md) for configuration and per-operation promotion.
+Schema 2 supports Managed, NativeAot and Portable verification profiles. Managed applications may use Platform snapshots or Microsoft's engine. Native AOT uses the core `KeycloakFeatureSnapshotGate` without referencing Platform. Host flags cannot override version, stage or evidence denials. Existing configurations retain their requirement for both managed and AOT evidence. See the [capability policy](docs/capability-policy.md) for configuration and per-operation promotion.
 
 The default v2 route also excludes 14 FGAP v1-only operations; those have passed acceptance on the v1 compatibility route. **A generated method does not itself imply SDK support.** Use `KeycloakSupportedClient.CreateAsync` to check version, maturity, route, server features and verification before sending a request. Constructing `KeycloakAdminClient` directly provides the underlying transport without applying the support policy automatically.
 
-The scope is the Keycloak 26.8.1 Admin API. It excludes console static assets, standalone OAuth/OIDC, Account, SCIM and experimental Admin API v2 protocols, and cannot enumerate third-party SPI extensions in advance. Results do not automatically apply to other Keycloak versions or cover every permission and configuration combination.
+The core package covers the Keycloak 26.8.1 Admin API. Standalone OAuth/OIDC, Account, SCIM and Client Admin API v2 are provided and independently promoted by Protocols / Hosting. Console static assets and third-party SPI implementations remain server responsibilities. Results do not automatically apply to other Keycloak versions or exhaust every permission and configuration combination.
 
 See the [support matrix](docs/contracts/admin-api-support-matrix.tsv) for per-operation status and exclusion reasons, the [verification index](docs/contracts/admin-api-validation-list.md) for a summary, and [live acceptance](docs/contracts/full-live-acceptance.md) for tested environments and evidence. See [capability policy](docs/capability-policy.md) for integration.
 
@@ -122,3 +135,5 @@ The detailed guides and generated reports below are maintained in Chinese; the e
 - [Endpoints and source mapping](docs/contracts/endpoint-inventory.md) · [Source alignment audit](docs/contracts/keycloak-26.8.1-alignment-audit.md)
 
 [Apache License 2.0](LICENSE). See [third-party notices](THIRD_PARTY_NOTICES.md) for contract provenance and attribution.
+
+See [preview.3 project structure](docs/project-architecture.md) for package boundaries and test organization.

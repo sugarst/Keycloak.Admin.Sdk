@@ -1,8 +1,8 @@
 #!/usr/bin/env -S dotnet --
 #:property TargetFramework=net10.0
 #:property PublishAot=false
-#:include ScriptSupport.cs
-#:include TargetBaseline.cs
+#:include Shared/ScriptSupport.cs
+#:include Shared/TargetBaseline.cs
 using System.Security.Cryptography;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -49,7 +49,7 @@ return await ScriptHost.ExecuteAsync(args, "dotnet run --file tools/Check-Baseli
     using var support = JsonDocument.Parse(File.ReadAllText(Path.Combine(root, "contracts/support-policy.example.json")));
     using var capabilities = JsonDocument.Parse(File.ReadAllText(Path.Combine(root, "contracts/capabilities.json")));
     using var rules = JsonDocument.Parse(File.ReadAllText(Path.Combine(root, "contracts/capability-rules.json")));
-    foreach (string name in new[] { "feature-validation-plans.json", "support-policy.managed.example.json", "support-policy.native-aot.example.json" })
+    foreach (string name in new[] { "feature-validation-plans.json", "support-policy.managed.example.json", "support-policy.native-aot.example.json", "platform-coverage-rules.json", "application-validation-plans.json", "application-verification-profiles.json" })
     {
         using var reviewed = JsonDocument.Parse(File.ReadAllText(Path.Combine(root, "contracts", name)));
         if (reviewed.RootElement.GetProperty("serverVersion").GetString() != target.Version)

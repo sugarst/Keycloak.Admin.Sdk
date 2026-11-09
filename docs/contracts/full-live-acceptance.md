@@ -4,14 +4,14 @@
 
 | 路线 | 执行方式 | 业务断言通过 | 未完成 | 政策排除 | 完成时间 UTC |
 | --- | --- | --- | --- | --- | --- |
-| `fgap-v2-stable` | managed | 478/478 | 0 | 42 | 2026-11-06T06:58:12.2451841+00:00 |
-| `fgap-v2-stable` | native-aot | 478/478 | 0 | 42 | 2026-11-06T06:58:37.8878022+00:00 |
-| `fgap-v1-compat` | managed | 492/492 | 0 | 28 | 2026-11-06T06:56:50.7749002+00:00 |
-| `fgap-v1-compat` | native-aot | 492/492 | 0 | 28 | 2026-11-06T06:57:18.5370817+00:00 |
+| `fgap-v2-stable` | managed | 478/478 | 0 | 42 | 2026-11-09T07:54:34.8655439+00:00 |
+| `fgap-v2-stable` | native-aot | 478/478 | 0 | 42 | 2026-11-09T07:55:01.4427453+00:00 |
+| `fgap-v1-compat` | managed | 492/492 | 0 | 28 | 2026-11-09T07:52:04.0882261+00:00 |
+| `fgap-v1-compat` | native-aot | 492/492 | 0 | 28 | 2026-11-09T07:53:42.0658407+00:00 |
 
 逐接口结果和业务断言见 [full-live-acceptance.tsv](full-live-acceptance.tsv)。排除项不计入成功。范围和排除数量以当前基线及上述实测表为准。
 
-托管入口使用 Microsoft FeatureManagement 4.8.0，在目录判断后检查总开关及功能开关，并实际验证关闭创建无数据、开启创建持久化、关闭删除保留数据和刷新后删除成功。Native AOT 入口编译时排除托管功能开关扩展，仍使用能力策略；manifest 分别标识 microsoft-4.8.0 和 not-loaded-native-aot。Application Insights 仅做本地事件测试，未启用云端投递。
+托管入口使用 Managed Platform 的快照模式，标识 snapshot-v1；Native AOT 入口不引用 Platform，使用主包快照门禁，标识 core-snapshot-v1。两者均在能力目录判断后检查总闸与功能开关，并验证关闭创建无数据、开启创建持久化、关闭删除保留数据和刷新后删除成功；bootstrap 标识 not-loaded-bootstrap。Managed 还使用微软引擎执行真实创建、关闭拦截、恢复删除和协议总闸检查，并验证官方 FeatureEvaluation 到达本地遥测通道，microsoftFeatureManagementBusinessGuards 必须为 true；Native AOT 该项必须为 false。此本地通道不代表 Azure 云端投递。
 
 全部结果来自真实 SDK 请求。写操作核对持久化或协议侧效果；只读操作核对已知真实资源、关系或已安装提供方。认证、SMTP、HTTP/JWKS、LDAP、X509/CRL 和 PostgreSQL 缓存验证均实际通信。外部协议夹具由 .NET 10 实现，LDAP 使用独立真实 OpenLDAP 容器。完整 wire 契约单测仍覆盖完整发布清单，政策排除不代表漏写单测。
 

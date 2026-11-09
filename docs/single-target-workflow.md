@@ -19,11 +19,12 @@ baseline.json
 admin-api-routes.json
 capability-rules.json
 feature-validation-plans.json
+platform-coverage-rules.json
 overrides.json
 support-policy.example.json
 support-policy.managed.example.json
 support-policy.native-aot.example.json
-feature-management.example.json
+platform-feature-flags.example.json
 openapi.json                       # 可选，省略时下载该版本官方定义
 ```
 
@@ -40,6 +41,8 @@ dotnet run --file tools/Upgrade.cs -- --candidate=artifacts/candidate --apply
 
 ## 发布候选验收
 
+本开发分支以应用全覆盖为发布目标，`Release.cs` 在其他发布步骤前执行 `Generate-PlatformMatrix.cs -- --require-complete`；应用协议与宿主集成尚未晋升时拒绝发布。Admin API 的既有验收不能代替该门禁。新增 Protocols 包及全平台矩阵见 [实施说明](full-platform-coverage.md)。
+
 ```shell
 dotnet run --file tools/Release.cs
 ```
@@ -49,9 +52,9 @@ dotnet run --file tools/Release.cs
 1. 核验基线、完整重建、自检升级流程，在线核验官方 tag/OpenAPI 并审计源码。
 2. 新目录尚未验收时，执行两路线、托管/AOT 的首次业务验收，再晋升能力支持。
 3. 执行构建、单测、覆盖率、打包、包依赖检查及严格 Native AOT。
-4. 用最终能力策略客户端重跑四套真实验收，包含本地拦截及托管功能开关的数据断言。
-5. 验证两路线各十三项门禁负向控制，更新逐项清单并核对源码指纹。
-6. 从 `artifacts/packages/<packageVersion>/` 收集主包、FeatureManagement 包及证据，写入含 SDK/Keycloak 来源、指纹、包 SHA256 和验收摘要的 `release-manifest.json`，同步到 Git 跟踪的 `docs/releases/<packageVersion>/<sourceFingerprint>.json`。
+4. 用最终能力策略客户端重跑四套真实验收，包含本地拦截及平台开关面的数据断言。
+5. 验证两路线各十四项门禁负向控制，更新逐项清单并核对源码指纹。
+6. 从 `artifacts/packages/<packageVersion>/` 收集主包、Platform、Protocols、Hosting 四个包及独立应用证据，写入含 SDK/Keycloak 来源、指纹、包 SHA256、应用矩阵哈希和验收摘要的 `release-manifest.json`，同步到 Git 跟踪的 `docs/releases/<packageVersion>/<sourceFingerprint>.json`。
 
 首次验收只在测试程序显式使用 `bootstrap-wire`，业务断言不减少，但没有最终策略拦截证明，不能导出为发布证据。`--promote` 核验四份首次证据，晋升后必须重跑最终客户端。`Release.cs -- --bootstrap` 可强制演练。
 

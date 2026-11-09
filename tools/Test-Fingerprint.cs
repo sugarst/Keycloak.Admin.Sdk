@@ -1,8 +1,8 @@
 #!/usr/bin/env -S dotnet --
 #:property TargetFramework=net10.0
 #:property PublishAot=false
-#:include ScriptSupport.cs
-#:include TargetBaseline.cs
+#:include Shared/ScriptSupport.cs
+#:include Shared/TargetBaseline.cs
 #:include ../tests/Keycloak.Admin.Sdk.IntegrationTests/LiveEvidence.cs
 
 return await ScriptHost.ExecuteAsync(args, "dotnet run --file tools/Test-Fingerprint.cs", [], async ct =>

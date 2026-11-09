@@ -1,0 +1,472 @@
+{
+  "ApplicationInsights": {
+    "Enabled": false,
+    "ConnectionString": null
+  },
+  "feature_management": {
+    "feature_flags": [
+      {
+        "id": "KeycloakSdk.AdminApi",
+        "enabled": true,
+        "telemetry": {
+          "enabled": false
+        }
+      },
+      {
+        "id": "KeycloakSdk.AdminUi",
+        "enabled": true,
+        "telemetry": {
+          "enabled": false
+        }
+      },
+      {
+        "id": "KeycloakSdk.Authorization",
+        "enabled": true,
+        "telemetry": {
+          "enabled": false
+        }
+      },
+      {
+        "id": "KeycloakSdk.ClientPolicies",
+        "enabled": true,
+        "telemetry": {
+          "enabled": false
+        }
+      },
+      {
+        "id": "KeycloakSdk.ClientTypes",
+        "enabled": true,
+        "telemetry": {
+          "enabled": false
+        }
+      },
+      {
+        "id": "KeycloakSdk.FgapV1",
+        "enabled": true,
+        "telemetry": {
+          "enabled": false
+        }
+      },
+      {
+        "id": "KeycloakSdk.Impersonation",
+        "enabled": true,
+        "telemetry": {
+          "enabled": false
+        }
+      },
+      {
+        "id": "KeycloakSdk.Oid4vcVci",
+        "enabled": true,
+        "telemetry": {
+          "enabled": false
+        }
+      },
+      {
+        "id": "KeycloakSdk.Organizations",
+        "enabled": true,
+        "telemetry": {
+          "enabled": false
+        }
+      },
+      {
+        "id": "KeycloakSdk.Protocols",
+        "enabled": true,
+        "telemetry": {
+          "enabled": false
+        }
+      },
+      {
+        "id": "KeycloakSdk.Protocols.Account",
+        "enabled": true,
+        "telemetry": {
+          "enabled": false
+        }
+      },
+      {
+        "id": "KeycloakSdk.Protocols.AuthZen",
+        "enabled": true,
+        "telemetry": {
+          "enabled": false
+        }
+      },
+      {
+        "id": "KeycloakSdk.Protocols.Authentication",
+        "enabled": true,
+        "telemetry": {
+          "enabled": false
+        }
+      },
+      {
+        "id": "KeycloakSdk.Protocols.AuthenticationInstagram",
+        "enabled": true,
+        "telemetry": {
+          "enabled": false
+        }
+      },
+      {
+        "id": "KeycloakSdk.Protocols.AuthenticationKerberos",
+        "enabled": true,
+        "telemetry": {
+          "enabled": false
+        }
+      },
+      {
+        "id": "KeycloakSdk.Protocols.AuthenticationLegacyConditionalPasskeyUi",
+        "enabled": true,
+        "telemetry": {
+          "enabled": false
+        }
+      },
+      {
+        "id": "KeycloakSdk.Protocols.AuthenticationLegacyLogoutAllSessions",
+        "enabled": true,
+        "telemetry": {
+          "enabled": false
+        }
+      },
+      {
+        "id": "KeycloakSdk.Protocols.AuthenticationPasskeys",
+        "enabled": true,
+        "telemetry": {
+          "enabled": false
+        }
+      },
+      {
+        "id": "KeycloakSdk.Protocols.AuthenticationRecoveryCodes",
+        "enabled": true,
+        "telemetry": {
+          "enabled": false
+        }
+      },
+      {
+        "id": "KeycloakSdk.Protocols.AuthenticationTransientUsers",
+        "enabled": true,
+        "telemetry": {
+          "enabled": false
+        }
+      },
+      {
+        "id": "KeycloakSdk.Protocols.AuthenticationTwitter",
+        "enabled": true,
+        "telemetry": {
+          "enabled": false
+        }
+      },
+      {
+        "id": "KeycloakSdk.Protocols.AuthenticationUpdateEmail",
+        "enabled": true,
+        "telemetry": {
+          "enabled": false
+        }
+      },
+      {
+        "id": "KeycloakSdk.Protocols.AuthenticationWebAuthn",
+        "enabled": true,
+        "telemetry": {
+          "enabled": false
+        }
+      },
+      {
+        "id": "KeycloakSdk.Protocols.BrowserOidc",
+        "enabled": true,
+        "telemetry": {
+          "enabled": false
+        }
+      },
+      {
+        "id": "KeycloakSdk.Protocols.BrowserOidcAssurance",
+        "enabled": true,
+        "telemetry": {
+          "enabled": false
+        }
+      },
+      {
+        "id": "KeycloakSdk.Protocols.ClientAdminV2",
+        "enabled": true,
+        "telemetry": {
+          "enabled": false
+        }
+      },
+      {
+        "id": "KeycloakSdk.Protocols.ClientRegistration",
+        "enabled": true,
+        "telemetry": {
+          "enabled": false
+        }
+      },
+      {
+        "id": "KeycloakSdk.Protocols.Docker",
+        "enabled": true,
+        "telemetry": {
+          "enabled": false
+        }
+      },
+      {
+        "id": "KeycloakSdk.Protocols.Dpop",
+        "enabled": true,
+        "telemetry": {
+          "enabled": false
+        }
+      },
+      {
+        "id": "KeycloakSdk.Protocols.FederatedClientAuth",
+        "enabled": true,
+        "telemetry": {
+          "enabled": false
+        }
+      },
+      {
+        "id": "KeycloakSdk.Protocols.IdentityBrokerLogin",
+        "enabled": true,
+        "telemetry": {
+          "enabled": false
+        }
+      },
+      {
+        "id": "KeycloakSdk.Protocols.IdentityBrokering",
+        "enabled": true,
+        "telemetry": {
+          "enabled": false
+        }
+      },
+      {
+        "id": "KeycloakSdk.Protocols.IdentityBrokeringLegacy",
+        "enabled": true,
+        "telemetry": {
+          "enabled": false
+        }
+      },
+      {
+        "id": "KeycloakSdk.Protocols.IdentityLinking",
+        "enabled": true,
+        "telemetry": {
+          "enabled": false
+        }
+      },
+      {
+        "id": "KeycloakSdk.Protocols.MutualTls",
+        "enabled": true,
+        "telemetry": {
+          "enabled": false
+        }
+      },
+      {
+        "id": "KeycloakSdk.Protocols.Oidc",
+        "enabled": true,
+        "telemetry": {
+          "enabled": false
+        }
+      },
+      {
+        "id": "KeycloakSdk.Protocols.OidcAssurance",
+        "enabled": true,
+        "telemetry": {
+          "enabled": false
+        }
+      },
+      {
+        "id": "KeycloakSdk.Protocols.OidcBrowserCompatibility",
+        "enabled": true,
+        "telemetry": {
+          "enabled": false
+        }
+      },
+      {
+        "id": "KeycloakSdk.Protocols.OidcCiba",
+        "enabled": true,
+        "telemetry": {
+          "enabled": false
+        }
+      },
+      {
+        "id": "KeycloakSdk.Protocols.OidcClientMetadata",
+        "enabled": true,
+        "telemetry": {
+          "enabled": false
+        }
+      },
+      {
+        "id": "KeycloakSdk.Protocols.OidcDelegation",
+        "enabled": true,
+        "telemetry": {
+          "enabled": false
+        }
+      },
+      {
+        "id": "KeycloakSdk.Protocols.OidcDevice",
+        "enabled": true,
+        "telemetry": {
+          "enabled": false
+        }
+      },
+      {
+        "id": "KeycloakSdk.Protocols.OidcIdentityAssertion",
+        "enabled": true,
+        "telemetry": {
+          "enabled": false
+        }
+      },
+      {
+        "id": "KeycloakSdk.Protocols.OidcJwtGrant",
+        "enabled": true,
+        "telemetry": {
+          "enabled": false
+        }
+      },
+      {
+        "id": "KeycloakSdk.Protocols.OidcLegacyExchange",
+        "enabled": true,
+        "telemetry": {
+          "enabled": false
+        }
+      },
+      {
+        "id": "KeycloakSdk.Protocols.OidcPar",
+        "enabled": true,
+        "telemetry": {
+          "enabled": false
+        }
+      },
+      {
+        "id": "KeycloakSdk.Protocols.OidcParameterizedScopes",
+        "enabled": true,
+        "telemetry": {
+          "enabled": false
+        }
+      },
+      {
+        "id": "KeycloakSdk.Protocols.OidcRequestObjects",
+        "enabled": true,
+        "telemetry": {
+          "enabled": false
+        }
+      },
+      {
+        "id": "KeycloakSdk.Protocols.OidcResources",
+        "enabled": true,
+        "telemetry": {
+          "enabled": false
+        }
+      },
+      {
+        "id": "KeycloakSdk.Protocols.OidcSignedResponses",
+        "enabled": true,
+        "telemetry": {
+          "enabled": false
+        }
+      },
+      {
+        "id": "KeycloakSdk.Protocols.OidcStandardExchange",
+        "enabled": true,
+        "telemetry": {
+          "enabled": false
+        }
+      },
+      {
+        "id": "KeycloakSdk.Protocols.OpenApi",
+        "enabled": true,
+        "telemetry": {
+          "enabled": false
+        }
+      },
+      {
+        "id": "KeycloakSdk.Protocols.Saml",
+        "enabled": true,
+        "telemetry": {
+          "enabled": false
+        }
+      },
+      {
+        "id": "KeycloakSdk.Protocols.SamlStepUp",
+        "enabled": true,
+        "telemetry": {
+          "enabled": false
+        }
+      },
+      {
+        "id": "KeycloakSdk.Protocols.Scim",
+        "enabled": true,
+        "telemetry": {
+          "enabled": false
+        }
+      },
+      {
+        "id": "KeycloakSdk.Protocols.Signals",
+        "enabled": true,
+        "telemetry": {
+          "enabled": false
+        }
+      },
+      {
+        "id": "KeycloakSdk.Protocols.SpiffeClientAuth",
+        "enabled": true,
+        "telemetry": {
+          "enabled": false
+        }
+      },
+      {
+        "id": "KeycloakSdk.Protocols.Uma",
+        "enabled": true,
+        "telemetry": {
+          "enabled": false
+        }
+      },
+      {
+        "id": "KeycloakSdk.Protocols.Wallet",
+        "enabled": true,
+        "telemetry": {
+          "enabled": false
+        }
+      },
+      {
+        "id": "KeycloakSdk.Protocols.WalletAttestation",
+        "enabled": true,
+        "telemetry": {
+          "enabled": false
+        }
+      },
+      {
+        "id": "KeycloakSdk.Protocols.WalletMdoc",
+        "enabled": true,
+        "telemetry": {
+          "enabled": false
+        }
+      },
+      {
+        "id": "KeycloakSdk.Protocols.WalletOffers",
+        "enabled": true,
+        "telemetry": {
+          "enabled": false
+        }
+      },
+      {
+        "id": "KeycloakSdk.Protocols.WalletPreAuthorized",
+        "enabled": true,
+        "telemetry": {
+          "enabled": false
+        }
+      },
+      {
+        "id": "KeycloakSdk.Protocols.WalletPresentation",
+        "enabled": true,
+        "telemetry": {
+          "enabled": false
+        }
+      },
+      {
+        "id": "KeycloakSdk.Ssf",
+        "enabled": true,
+        "telemetry": {
+          "enabled": false
+        }
+      },
+      {
+        "id": "KeycloakSdk.Workflows",
+        "enabled": true,
+        "telemetry": {
+          "enabled": false
+        }
+      }
+    ]
+  }
+}

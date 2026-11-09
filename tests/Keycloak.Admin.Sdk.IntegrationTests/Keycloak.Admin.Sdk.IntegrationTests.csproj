@@ -1,20 +1,22 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
-    <Compile Include="../../tools/TargetBaseline.cs" Link="TargetBaseline.cs" />
-    <Compile Include="../../tools/ScriptSupport.cs" Link="ScriptSupport.cs" />
-    <InternalsVisibleTo Include="Keycloak.Admin.Sdk.Tests" />
+    <Compile Include="../../tools/Shared/TargetBaseline.cs" Link="TargetBaseline.cs" />
+    <Compile Include="../../tools/Shared/ScriptSupport.cs" Link="ScriptSupport.cs" />
+    <InternalsVisibleTo Include="Keycloak.Admin.Sdk.Engineering.Tests" />
   </ItemGroup>
   <PropertyGroup><IsPackable>false</IsPackable><OutputType>Exe</OutputType><IsAotCompatible>true</IsAotCompatible></PropertyGroup>
   <ItemGroup><ProjectReference Include="../../src/Keycloak.Admin.Sdk/Keycloak.Admin.Sdk.csproj" /></ItemGroup>
+  <ItemGroup><ProjectReference Include="../../src/Keycloak.Admin.Sdk.Protocols/Keycloak.Admin.Sdk.Protocols.csproj" /></ItemGroup>
   <PropertyGroup Condition="'$(PublishAot)' != 'true'">
-    <DefineConstants>$(DefineConstants);KEYCLOAK_FEATURE_MANAGEMENT</DefineConstants>
+    <DefineConstants>$(DefineConstants);KEYCLOAK_HOSTING;KEYCLOAK_PLATFORM</DefineConstants>
   </PropertyGroup>
   <ItemGroup Condition="'$(PublishAot)' != 'true'">
-    <ProjectReference Include="../../src/Keycloak.Admin.Sdk.FeatureManagement/Keycloak.Admin.Sdk.FeatureManagement.csproj" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="10.0.11" />
+    <ProjectReference Include="../../src/Keycloak.Admin.Sdk.Platform/Keycloak.Admin.Sdk.Platform.csproj" />
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <ProjectReference Include="../../src/Keycloak.Admin.Sdk.Hosting/Keycloak.Admin.Sdk.Hosting.csproj" />
   </ItemGroup>
   <ItemGroup Condition="'$(PublishAot)' == 'true'">
-    <Compile Remove="FullFeatureManagement.cs" />
+    <EmbeddedResource Include="../../contracts/feature-flag-catalog.json" LogicalName="NativeFixture.FeatureFlagCatalog.json" />
   </ItemGroup>
   <Target Name="StampFeatureValidationInputs" BeforeTargets="CoreCompile">
     <Exec Command="dotnet run --file &quot;$(MSBuildProjectDirectory)/../../tools/Stamp-ValidationInputs.cs&quot; -- &quot;$(MSBuildProjectDirectory)/../..&quot; &quot;$(MSBuildProjectDirectory)/$(IntermediateOutputPath)FeatureValidationBuildStamp.g.cs&quot;" />

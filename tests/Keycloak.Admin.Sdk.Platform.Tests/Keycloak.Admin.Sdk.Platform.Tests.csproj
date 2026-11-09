@@ -1,0 +1,7 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <ProjectReference Include="../../src/Keycloak.Admin.Sdk.Platform/Keycloak.Admin.Sdk.Platform.csproj" />
+    <Compile Include="../Shared/Fixtures/CapabilityTestData.cs" Link="Fixtures/CapabilityTestData.cs" />
+  </ItemGroup>
+</Project>

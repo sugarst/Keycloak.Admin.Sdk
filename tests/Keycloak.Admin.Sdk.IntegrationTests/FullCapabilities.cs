@@ -21,11 +21,15 @@ internal static class FullCapabilities
         await Denied(KeycloakCapabilityReason.UnknownEndpoint, async () => await normal.SendAsync(HttpMethod.Get, "/admin/unknown/vendor", cancellationToken: cancellationToken));
         await Denied(KeycloakCapabilityReason.StageNotAllowed, async () => await normal.SendAsync(HttpMethod.Get, "/admin/realms/master/client-types", cancellationToken: cancellationToken));
         var optIn = Client(new(KeycloakTarget.Version, route, allowPreview: true, allowExperimental: true));
-        await Denied(KeycloakCapabilityReason.NotSupported, async () => await optIn.SendAsync(HttpMethod.Get, "/admin/realms/master/users/fixture/vc/credentials", cancellationToken: cancellationToken));
-        await Denied(KeycloakCapabilityReason.NotSupported, async () => await optIn.SendAsync(HttpMethod.Get, "/admin/realms/master/ssf/config", cancellationToken: cancellationToken));
+        // Independently promoted non-stable operations still need this exact route and enabled server features.
+        // Both default-route servers deliberately disable Preview/Experimental features.
+        var optInDenial = route == KeycloakAdminRoute.FgapV1Compatibility
+            ? KeycloakCapabilityReason.InsufficientVerification : KeycloakCapabilityReason.ServerFeatureDisabled;
+        await Denied(optInDenial, async () => await optIn.SendAsync(HttpMethod.Get, "/admin/realms/master/users/fixture/vc/credentials", cancellationToken: cancellationToken));
+        await Denied(optInDenial, async () => await optIn.SendAsync(HttpMethod.Get, "/admin/realms/master/ssf/config", cancellationToken: cancellationToken));
         var unknownVersion = Client(new("unsupported-release", route));
         await Denied(KeycloakCapabilityReason.UnknownVersion, async () => await unknownVersion.Users.GetUsersAsync("master", cancellationToken: cancellationToken));
         if (RecordingHandler.SentCount != before) throw new InvalidOperationException("Rejected requests reached the real HTTP transport.");
-        Console.WriteLine("PASS live capability guards: host disable, raw/stream paths, unknown version/endpoint and unverified preview/experimental opt-in send zero HTTP requests.");
+        Console.WriteLine("PASS live capability guards: host disable, raw/stream paths, unknown version/endpoint and non-stable opt-in without matching route evidence or enabled server features send zero HTTP requests.");
     }
 }

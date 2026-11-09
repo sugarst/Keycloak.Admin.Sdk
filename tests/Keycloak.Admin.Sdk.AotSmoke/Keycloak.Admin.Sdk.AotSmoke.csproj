@@ -6,20 +6,10 @@
     <RestoreAdditionalProjectSources Condition="'$(SdkPackageFeed)' != ''">$(SdkPackageFeed);$(RestoreAdditionalProjectSources)</RestoreAdditionalProjectSources>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="../Keycloak.Admin.Sdk.Tests/CapabilityContracts.cs" Link="CapabilityContracts.cs" />
-    <Compile Include="../Keycloak.Admin.Sdk.Tests/RuntimeCapabilityContracts.cs" Link="RuntimeCapabilityContracts.cs" />
     <PackageReference Condition="'$(SdkPackageFeed)' != ''" Include="Keycloak.Admin.Sdk" Version="[$(Version)]" />
+    <PackageReference Condition="'$(SdkPackageFeed)' != ''" Include="Keycloak.Admin.Sdk.Protocols" Version="[$(Version)]" />
     <ProjectReference Condition="'$(SdkPackageFeed)' == ''" Include="../../src/Keycloak.Admin.Sdk/Keycloak.Admin.Sdk.csproj" />
-    <Compile Include="../Keycloak.Admin.Sdk.Tests/ContractSuite.cs" Link="ContractSuite.cs" />
-    <Compile Include="../Keycloak.Admin.Sdk.Tests/Endpoints.g.cs" Link="Endpoints.g.cs" />
-    <Compile Include="../Keycloak.Admin.Sdk.Tests/AlignmentContracts.cs" Link="AlignmentContracts.cs" />
-    <Compile Include="../Keycloak.Admin.Sdk.Tests/EndpointCase.cs" Link="EndpointCase.cs" />
-    <Compile Include="../Keycloak.Admin.Sdk.Tests/RuntimeContracts.cs" Link="RuntimeContracts.cs" />
-    <Compile Include="../Keycloak.Admin.Sdk.Tests/RecoveryContracts.cs" Link="RecoveryContracts.cs" />
-    <Compile Include="../Keycloak.Admin.Sdk.Tests/DependencyInjectionContracts.cs" Link="DependencyInjectionContracts.cs" />
-    <Compile Include="../Keycloak.Admin.Sdk.Tests/InterfaceContracts.cs" Link="InterfaceContracts.cs" />
-    <Compile Include="../Keycloak.Admin.Sdk.Tests/ResilienceContracts.cs" Link="ResilienceContracts.cs" />
-    <Compile Include="../Keycloak.Admin.Sdk.Tests/EndpointMatrix.g.cs" Link="EndpointMatrix.g.cs" />
-    <Compile Include="../Keycloak.Admin.Sdk.Tests/ModelMatrix.g.cs" Link="ModelMatrix.g.cs" />
+    <ProjectReference Condition="'$(SdkPackageFeed)' == ''" Include="../../src/Keycloak.Admin.Sdk.Protocols/Keycloak.Admin.Sdk.Protocols.csproj" />
   </ItemGroup>
+  <Import Project="../Shared/CoreContracts.props" />
 </Project>

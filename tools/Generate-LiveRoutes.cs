@@ -1,8 +1,8 @@
 #!/usr/bin/env -S dotnet --
 #:property TargetFramework=net10.0
 #:property PublishAot=false
-#:include ScriptSupport.cs
-#:include TargetBaseline.cs
+#:include Shared/ScriptSupport.cs
+#:include Shared/TargetBaseline.cs
 #:project ../src/Keycloak.Admin.Sdk/Keycloak.Admin.Sdk.csproj
 using System.Text;
 using System.Text.Json;

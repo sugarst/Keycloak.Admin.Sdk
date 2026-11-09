@@ -1,8 +1,8 @@
 #!/usr/bin/env -S dotnet --
 #:property TargetFramework=net10.0
 #:property PublishAot=false
-#:include ScriptSupport.cs
-#:include TargetBaseline.cs
+#:include Shared/ScriptSupport.cs
+#:include Shared/TargetBaseline.cs
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Security.Cryptography;
@@ -14,7 +14,7 @@ return await ScriptHost.ExecuteAsync(args, "dotnet run --file tools/Upgrade.cs -
     var next = TargetBaseline.Parse(File.ReadAllText(Path.Combine(candidate, "baseline.json")));
     var previous = TargetBaseline.Load(root);
     if (next.Version != previous.Version && next.PackageVersion == previous.PackageVersion) throw new InvalidDataException("A new upstream target requires a new immutable SDK package version.");
-    string[] reviewed = ["baseline.json", "admin-api-routes.json", "capability-rules.json", "feature-validation-plans.json", "overrides.json", "support-policy.example.json", "support-policy.managed.example.json", "support-policy.native-aot.example.json", "feature-management.example.json"];
+    string[] reviewed = ["baseline.json", "admin-api-routes.json", "capability-rules.json", "feature-validation-plans.json", "platform-coverage-rules.json", "application-validation-plans.json", "overrides.json", "support-policy.example.json", "support-policy.managed.example.json", "support-policy.native-aot.example.json", "platform-feature-flags.example.json"];
     foreach (string name in reviewed) if (!File.Exists(Path.Combine(candidate, name))) throw new InvalidDataException("Missing reviewed input: " + name);
     string stage = ScriptHost.Within(root, "artifacts/upgrade/" + Guid.NewGuid().ToString("N")); Directory.CreateDirectory(stage);
     // Prepare a complete isolated tree. Active contracts and code are untouched until all generation succeeds.
@@ -49,7 +49,9 @@ return await ScriptHost.ExecuteAsync(args, "dotnet run --file tools/Upgrade.cs -
         ["endpoints"] = new JsonArray()
     };
     await File.WriteAllTextAsync(Path.Combine(stage, "contracts/capabilities.json"), emptyCatalog.ToJsonString(), ct);
-    foreach (string script in new[] { "Update-Contracts.cs", "Generate-CapabilityCatalog.cs", "Generate-TestMatrix.cs", "Generate-LiveRoutes.cs" })
+    var emptyApplications = new JsonObject { ["schemaVersion"] = 1, ["serverVersion"] = next.Version, ["sourceCommit"] = next.Commit, ["profiles"] = new JsonArray() };
+    await File.WriteAllTextAsync(Path.Combine(stage, "contracts/application-verification-profiles.json"), emptyApplications.ToJsonString(), ct);
+    foreach (string script in new[] { "Update-Contracts.cs", "Generate-CapabilityCatalog.cs", "Generate-TestMatrix.cs", "Generate-LiveRoutes.cs", "Generate-PlatformMatrix.cs", "Generate-FeatureCatalog.cs" })
     {
         string[] mode = script == "Generate-TestMatrix.cs" ? ["--", "--refresh-contracts"] : script == "Generate-CapabilityCatalog.cs" ? ["--", "--seed"] : [];
         await ScriptHost.RunCheckedAsync(stage, "dotnet", ["run", "--file", "tools/" + script, .. mode], ct);
@@ -68,13 +70,14 @@ return await ScriptHost.ExecuteAsync(args, "dotnet run --file tools/Upgrade.cs -
     Console.WriteLine("Prepared replacement and contract diff: " + stage);
     if (!args.Contains("--apply")) { Console.WriteLine("Active tree unchanged. Review upgrade-diff.json; --apply prepares and installs a fresh replacement."); return; }
     string[] fixedFiles = [.. reviewed.Select(n => "contracts/" + n), "contracts/openapi.json", "contracts/source-files.sha256", "contracts/source-signatures.json", "contracts/source-dispatches.json",
-        "contracts/admin-api-test-matrix.json", "contracts/capabilities.json", "Target.props", "global.json", "src/Keycloak.Admin.Sdk/KeycloakTarget.g.cs",
+        "contracts/admin-api-test-matrix.json", "contracts/capabilities.json", "contracts/platform-capabilities.json", "contracts/feature-flag-catalog.json", "contracts/application-verification-profiles.json", "docs/contracts/platform-capability-matrix.md", "Target.props", "global.json", "src/Keycloak.Admin.Sdk/KeycloakTarget.g.cs",
         "tests/Keycloak.Admin.Sdk.Tests/Endpoints.g.cs", "tests/Keycloak.Admin.Sdk.Tests/EndpointMatrix.g.cs", "tests/Keycloak.Admin.Sdk.Tests/EndpointMatrixTests.g.cs", "tests/Keycloak.Admin.Sdk.Tests/ModelMatrix.g.cs",
         "tests/Keycloak.Admin.Sdk.IntegrationTests/LiveRoutes.g.cs", "docs/contracts/endpoint-inventory.md", "docs/contracts/admin-api-test-matrix.md", "docs/contracts/source-routes.tsv", "docs/contracts/unresolved-locators.txt"];
     var generated = Directory.EnumerateFiles(Path.Combine(stage, "src/Keycloak.Admin.Sdk/Generated"), "*.g.cs").Select(p => Path.GetRelativePath(stage, p));
     var installedGenerated = Directory.EnumerateFiles(Path.Combine(root, "src/Keycloak.Admin.Sdk/Generated"), "*.g.cs").Select(p => Path.GetRelativePath(root, p));
     string[] staleEvidence = [.. Directory.EnumerateFiles(Path.Combine(root, "docs/contracts/full-live-evidence")).Select(p => Path.GetRelativePath(root, p)),
-        "docs/contracts/full-live-acceptance.md", "docs/contracts/full-live-acceptance.tsv", "docs/contracts/admin-api-validation-list.md", "docs/contracts/test-coverage.md"];
+        "docs/contracts/full-live-acceptance.md", "docs/contracts/full-live-acceptance.tsv", "docs/contracts/admin-api-validation-list.md", "docs/contracts/test-coverage.md",
+        "docs/contracts/application-protocol-workflows.md", "docs/contracts/protocol-coverage.md"];
     var changes = fixedFiles.Concat(generated).Concat(installedGenerated).Concat(staleEvidence).Distinct().ToArray();
     var backup = changes.ToDictionary(p => p, p => File.Exists(ScriptHost.Within(root, p)) ? File.ReadAllBytes(ScriptHost.Within(root, p)) : null);
     try

@@ -1,0 +1,18 @@
+<Project>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Contracts/CapabilityContracts.cs" Link="Contracts/CapabilityContracts.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Contracts/RuntimeCapabilityContracts.cs" Link="Contracts/RuntimeCapabilityContracts.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Contracts/ContractSuite.cs" Link="Contracts/ContractSuite.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Contracts/AlignmentContracts.cs" Link="Contracts/AlignmentContracts.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Contracts/EndpointCase.cs" Link="Contracts/EndpointCase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Contracts/RuntimeContracts.cs" Link="Contracts/RuntimeContracts.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Contracts/RecoveryContracts.cs" Link="Contracts/RecoveryContracts.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Contracts/DependencyInjectionContracts.cs" Link="Contracts/DependencyInjectionContracts.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Contracts/InterfaceContracts.cs" Link="Contracts/InterfaceContracts.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Contracts/ResilienceContracts.cs" Link="Contracts/ResilienceContracts.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)../Keycloak.Admin.Sdk.Tests/Endpoints.g.cs" Link="Contracts/Endpoints.g.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)../Keycloak.Admin.Sdk.Tests/EndpointMatrix.g.cs" Link="Contracts/EndpointMatrix.g.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)../Keycloak.Admin.Sdk.Tests/ModelMatrix.g.cs" Link="Contracts/ModelMatrix.g.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Fixtures/CapabilityTestData.cs" Link="Fixtures/CapabilityTestData.cs" />
+  </ItemGroup>
+</Project>

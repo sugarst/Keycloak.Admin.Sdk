@@ -1,0 +1,1977 @@
+{
+  "schemaVersion": 1,
+  "serverVersion": "26.8.1",
+  "sourceCommit": "24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b",
+  "requiredServerFeatures": [
+    "ADMIN_API",
+    "ACCOUNT_API",
+    "SCIM_API",
+    "AUTHZEN",
+    "TOKEN_EXCHANGE_DELEGATION",
+    "PARAMETERIZED_SCOPES",
+    "AUTHORIZATION",
+    "CLIENT_ADMIN_API_V2",
+    "OPENAPI",
+    "DOCKER",
+    "DPOP",
+    "IDENTITY_BROKERING_API_V2",
+    "SSF",
+    "PAR",
+    "TOKEN_EXCHANGE_STANDARD_V2",
+    "ADMIN_FINE_GRAINED_AUTHZ_V2",
+    "DEVICE_FLOW",
+    "CIBA",
+    "RESOURCE_INDICATORS",
+    "JWT_AUTHORIZATION_GRANT",
+    "CLIENT_AUTH_FEDERATED",
+    "KUBERNETES_SERVICE_ACCOUNTS",
+    "SPIFFE",
+    "IDENTITY_ASSERTION_JWT",
+    "CIMD",
+    "OID4VC_VCI",
+    "OID4VC_VCI_REST_CREDENTIAL_OFFER",
+    "OID4VC_VCI_PREAUTH_CODE",
+    "OID4VC_MDOC",
+    "OID4VC_VP",
+    "CLIENT_AUTH_ABCA",
+    "WEB_AUTHN",
+    "PASSKEYS",
+    "RECOVERY_CODES",
+    "UPDATE_EMAIL",
+    "TRANSIENT_USERS",
+    "KERBEROS",
+    "LOGOUT_ALL_SESSIONS_V1",
+    "PASSKEYS_CONDITIONAL_UI_AUTHENTICATOR",
+    "TWITTER_BROKER",
+    "INSTAGRAM_BROKER"
+  ],
+  "expectedChecks": [
+    "OIDC discovery returns the exact issuer",
+    "JWKS returns published signing keys",
+    "Client credentials and introspection identify the expected service account",
+    "SCIM create persists and can be read through the independent API",
+    "SCIM PATCH disables the persisted user",
+    "SCIM delete removes the resource",
+    "Account API reads the actual user's profile without an admin token",
+    "Account profile update persists for the same user",
+    "An ordinary account user cannot read the privileged service account through SCIM",
+    "SCIM discovery negotiates actual PATCH filter bulk schema and resource-type capabilities",
+    "SCIM individual schema and resource-type discovery resolve declared identifiers",
+    "SCIM enterprise extension mapping survives create and independent read",
+    "SCIM filtering pagination and POST search return the actual persisted user set",
+    "SCIM projection returns requested extension attributes without unrelated user fields",
+    "SCIM user replace and extension PATCH persist independently",
+    "SCIM group create and membership PATCH persist an actual user membership",
+    "SCIM group replace PATCH and search operate on the same stored resource",
+    "SCIM membership removal is confirmed through the independent Admin API",
+    "SCIM uniqueness filter errors and ordinary-user group denial fail with the expected protocol statuses",
+    "SCIM denies ordinary-user mutations and leaves both protected resources unchanged",
+    "SCIM rejects a correctly signed token from another realm",
+    "SCIM user and group deletion remove every created resource",
+    "Browser authorization code PKCE state nonce and ID token signature validation succeed",
+    "A browser callback transaction cannot be redeemed twice",
+    "Refresh and userinfo preserve the authenticated subject",
+    "Refresh-token logout invalidates the server session",
+    "Pushed authorization request completes with the original PKCE state and nonce",
+    "OIDC revocation invalidates the real refresh credential and prevents a subsequent refresh",
+    "Client delegation requires real user consent and issues may_act for the FGAP v2 authorized actor",
+    "Delegated exchange preserves the subject and records act without a refresh token",
+    "Standard exchange rejects may_act tokens and cannot bypass delegation",
+    "Client delegated tokens cannot call Admin APIs",
+    "Revoking FGAP v2 delegation strips may_act when the subject token is refreshed",
+    "The refreshed subject token cannot delegate after FGAP v2 permission revocation",
+    "Standard exchange issues an independently signature-verified audience-narrowed token for the original subject without inventing an actor",
+    "Administrator delegation enforces real user consent and the FGAP-authorized human actor while preserving the subject",
+    "Administrator delegation rejects an unrelated actor and removes delegation authority on refresh after permission revocation",
+    "Resource indicators narrow a real client-credentials token to exactly the requested authorized resource",
+    "Resource indicators reject an audience that was never granted to the client",
+    "Resource indicators bind the actual browser authorization code and its verified access-token audience",
+    "Resource-constrained refresh inherits the original audience and refuses switching to another otherwise authorized resource",
+    "Parameterized browser scopes require actual user consent and preserve the allowed parameter in a verified token claim and scope",
+    "Parameterized scopes reject parameters outside the server regex and conflicting values for a non-repeatable scope",
+    "Explicitly repeatable parameterized scopes preserve both authorized values in the verified multivalued claim",
+    "Removing a parameterized client-scope assignment prevents its next use",
+    "JWT authorization grant maps a trusted signed external assertion to the linked local user and limits the verified access-token lifetime",
+    "JWT authorization grant rejects reuse of the same signed assertion jti",
+    "JWT authorization grant rejects an untrusted external issuer",
+    "JWT authorization grant rejects an assertion for a foreign audience",
+    "JWT authorization grant rejects a real expired assertion",
+    "JWT authorization grant rejects a signature from an unconfigured key",
+    "JWT authorization grant refuses to invent a local identity for an unlinked external subject",
+    "ID-JAG consumption preserves the trusted external subject and authenticates the exact client_id relying party in the signed identity assertion",
+    "ID-JAG refuses assertion replay even when the external provider permits ordinary JWT assertion reuse",
+    "ID-JAG rejects a foreign or missing client_id and a missing iat instead of falling back to ordinary JWT grant semantics",
+    "Disabling the trusted assertion provider prevents subsequent JWT authorization grants",
+    "CIMD authorization fetches a public metadata document without Admin pre-registration and completes a verified PKCE login for its exact client identity and redirect",
+    "CIMD public-client refresh authenticates the same dynamically registered metadata identity",
+    "CIMD private_key_jwt uses the public metadata JWKS and returns a verified user identity without publishing a client secret",
+    "CIMD token redemption refuses a private client assertion signed by an unconfigured key",
+    "CIMD private-client signing-key rotation uses the updated pinned metadata JWKS",
+    "CIMD refuses a fresh assertion from a retired metadata signing key",
+    "CIMD refuses an authorization redirect absent from the exact published metadata allow-list",
+    "CIMD refuses metadata whose client_id does not exactly match the requested document URL",
+    "CIMD server policy refuses a public metadata document containing client_secret",
+    "CIMD server policy refuses document domains outside the explicitly trusted domain list",
+    "Private-key JWT client authentication issues a signature-verified token for the configured service account",
+    "Client authentication rejects reuse of a real signed assertion jti",
+    "Client authentication rejects incorrect signing keys expired assertions and a foreign token-endpoint audience",
+    "Client signing-key rotation accepts the new credential and rejects a freshly signed assertion from the retired key",
+    "Client-secret JWT authentication verifies the configured HMAC assertion without treating it as a resource access token",
+    "mTLS client authentication uses a trusted real TLS certificate and issues a signature-verified token bound to that exact certificate thumbprint",
+    "Keycloak userinfo accepts a certificate-bound token only on the matching authenticated TLS connection",
+    "mTLS client authentication rejects a trusted certificate with the wrong configured subject",
+    "mTLS client authentication rejects a request without a client certificate",
+    "Keycloak refuses a copied certificate-bound access token on another trusted certificate or a connection without a client certificate",
+    "mTLS test client validates the actual server certificate chain and rejects an untrusted TLS server root",
+    "Kubernetes provider validates a projected credential through controlled OIDC discovery and JWKS and authenticates only its mapped service account",
+    "Kubernetes projected credentials follow the upstream reusable bounded-lifetime assertion semantics",
+    "Kubernetes federation rejects foreign audience unmapped subjects expiry and untrusted signatures",
+    "Kubernetes federation rejects an assertion issuer that differs from the configured discovery issuer",
+    "Kubernetes credential file replacement and issuer key rotation are read on the next authentication request",
+    "Kubernetes federation refuses a fresh assertion from the retired issuer key",
+    "Disabling the Kubernetes trust provider immediately prevents new client authentication",
+    "SPIFFE provider validates a projected JWT-SVID against the controlled trust-domain bundle using the distinct jwt-spiffe assertion type",
+    "SPIFFE JWT-SVID reuse without a jti follows the upstream bounded-lifetime workload semantics",
+    "SPIFFE federation rejects foreign audience unmapped SPIFFE identities expiry and untrusted signatures",
+    "SPIFFE credential file replacement and trust-bundle key rotation are read on the next authentication request",
+    "SPIFFE federation refuses a fresh JWT-SVID from the retired bundle key",
+    "Disabling the SPIFFE trust provider immediately prevents new client authentication",
+    "Device flow reports real authorization_pending and slow_down before the user approves the request",
+    "Device flow requires actual browser login and explicit user consent for the verification code",
+    "Device polling completes with an independently verified token for the consenting user",
+    "Device authorization credentials cannot be redeemed again after successful issuance",
+    "Device consent denial yields access_denied and no user credential",
+    "Device authorization rejects a real server-expired device credential",
+    "CIBA poll remains pending until a separately authenticated device approves the bound user request",
+    "CIBA rejects an invalid authentication-device credential and issues a verified user token after valid approval",
+    "CIBA authentication request credentials cannot be redeemed twice",
+    "CIBA user denial yields access_denied without issuing credentials",
+    "CIBA authentication-device cancellation yields access_denied without issuing credentials",
+    "CIBA rejects a server-expired authentication request",
+    "CIBA ping authenticates the notification secret correlates auth_req_id rejects replay and then redeems the approved user credential",
+    "CIBA accepts a signed authentication request bound to the configured client realm audience and numeric expiry",
+    "AuthZen discovery pins PDP single and batch endpoints to the realm",
+    "AuthZen permits the persisted user resource and scope policy",
+    "AuthZen returns decision false for an unknown resource",
+    "AuthZen execute_all merges defaults and preserves mixed permit and deny decisions",
+    "AuthZen short-circuit and empty-batch semantics match the pinned server",
+    "AuthZen rejects ordinary user tokens as PDP callers",
+    "AuthZen policy revocation changes the real decision from permit to deny",
+    "UMA discovery pins issuer and protection endpoints to the realm",
+    "UMA protection registers an actual resource and resolves it by id and name",
+    "UMA protection resource replacement persists",
+    "UMA protection issues a permission ticket for a persisted resource and scope",
+    "UMA persistent permission-ticket creation list and count reflect actual state",
+    "UMA ticket update persists the resource owner's grant",
+    "UMA runtime decision permits the user under the actual resource and scope policy",
+    "UMA permission-ticket grant returns an RPT and explicit runtime permissions",
+    "UMA rejects an unrelated user token as a protection credential without deleting the resource",
+    "UMA ticket and policy revocation change a real runtime permit to deny",
+    "UMA owner-managed policy creation read and list refer to a persisted resource policy",
+    "UMA owner-managed policy update persists and permits the intended user",
+    "UMA owner-managed policy deletion restores runtime denial",
+    "UMA protection deletion removes the registered resource",
+    "UMA account ownership listing resource detail and owner lookup use the current user's identity",
+    "UMA owner sees the actual pending requester and scoped user lookup",
+    "UMA account permission approval persists and updates both sides of resource sharing",
+    "UMA requester cannot change the owner's resource permissions",
+    "UMA account permission revocation removes the persisted share",
+    "OIDC dynamic registration persists and uses its registration access token",
+    "Dynamic registration delete removes the admin-visible client",
+    "OIDC registration read update and rotated registration-token lifecycle persist",
+    "OIDC registration refuses an unrelated token without deleting the client",
+    "OIDC registration lifecycle cleanup removes the updated client",
+    "Default compatibility registration read update and registration-token lifecycle persist",
+    "Adapter installation compatibility provider returns the registered client's configuration",
+    "Default registration refuses an unrelated token without deleting the client",
+    "Default registration lifecycle cleanup removes the updated client",
+    "SAML descriptor compatibility registration stores the declared SP and assertion-consumer endpoint",
+    "SAML descriptor registration credentials authorize only its own client cleanup",
+    "Runtime OpenAPI uses a management client without default realm authorization or session cookies",
+    "Runtime OpenAPI management endpoint publishes the actual Client Admin v2 contract",
+    "Runtime OpenAPI preserves the pinned OIDC and SAML schema discrimination and subtype inheritance",
+    "Client Admin v2 creates and reads a declarative OIDC client by clientId",
+    "Client Admin v2 rejects duplicates and does not confuse internal UUID with clientId",
+    "Client Admin v2 query projection sorting and pagination preserve the requested fields",
+    "Client Admin v2 replacement reconciles the existing client without changing its UUID",
+    "Client Admin v2 JSON merge patch preserves unspecified configuration",
+    "Client Admin v2 invalid and unauthorized mutations leave the existing client unchanged",
+    "Client Admin v2 upsert creation and SAML subtype creation both persist",
+    "Client Admin v2 deletion removes every declarative test client",
+    "Docker registry challenge returns a token with a valid pinned-realm signature issuer audience and lifetime",
+    "Docker registry token preserves the authenticated username and requested repository pull scope",
+    "Docker registry rejects invalid credentials and malformed repository scopes",
+    "Removing Docker scope-grant policy produces no repository access grants despite successful authentication",
+    "Keycloak issues a signature-verified DPoP access token bound to the supplied public-key thumbprint",
+    "Keycloak userinfo accepts a valid DPoP scheme proof method URI and access-token hash",
+    "Keycloak rejects a DPoP token presented as an ordinary bearer token",
+    "Public-client DPoP refresh rejects a key different from the original token binding",
+    "DPoP refresh with the correct key preserves subject and confirmation binding",
+    "SDK resource-server DPoP validation rejects replay wrong methods and mismatched proof keys for a real Keycloak token",
+    "SDK resource-server DPoP nonce policy accepts the expected nonce and rejects a mismatched one",
+    "Broker login validates the downstream ID token and retains the exact upstream linked identity",
+    "Broker v2 returns an upstream credential independently verified against its own issuer audience and signing keys",
+    "Broker v2 requires independent client authentication a valid user token and an explicitly approved identity provider",
+    "Disabling broker external-token access takes effect for the next request even with an existing user token",
+    "Broker linked identity cleanup removes the upstream association",
+    "Application-initiated broker linking respects explicit user cancellation and leaves the authenticated local identity unlinked",
+    "Application-initiated broker linking requires actual confirmation and upstream login while preserving the signed local subject and exact external association",
+    "A user-linked broker credential belongs to the independently verified upstream identity rather than replacing the local application subject",
+    "Account self-service unlink removes the persisted external association and immediately prevents retrieval with the existing local access token",
+    "SSF discovery binds the transmitter issuer and stream endpoint to the pinned realm",
+    "SSF receiver stream creation persists with transmitter-assigned identity audience and poll endpoint",
+    "SSF PATCH preserves unspecified stream delivery configuration",
+    "SSF PUT reconciles the receiver stream and collection read reflects the persisted replacement",
+    "SSF refuses cross-client polling unauthorized receivers and mutations to transmitter-owned identity",
+    "SSF polled SET identifier agrees with its independently verified signed jti",
+    "SSF poll delivers a signature issuer audience and state-verified SET whose replay is rejected",
+    "SSF acknowledges processed SETs and does not redeliver acknowledged verification events",
+    "SSF status updates persist and can pause delivery",
+    "SSF stream deletion removes the receiver-owned stream",
+    "Account profile projection and realm locales use the authenticated user context",
+    "Account groups show the user's actual persisted membership",
+    "Account organizations expose the user's real organization membership",
+    "Account consent writes persist and make the application visible",
+    "Account consent revocation removes the persisted grant",
+    "Account linked-account discovery reflects the real federated identity",
+    "Account unlink removes only the current user's federated identity",
+    "Account credential label updates persist on the user's actual OTP credential",
+    "Account credential deletion removes the selected OTP while preserving password authentication",
+    "Account application-session revocation removes browser-app sessions without ending the current session",
+    "Account single-session deletion persists and device discovery remains authorized",
+    "Account cross-user session and credential operations leave the other user's data unchanged",
+    "Account logout-other-sessions preserves the authenticated current session",
+    "Account logout-all-sessions invalidates the current account token",
+    "Protocol shutdown sends no token or business HTTP request",
+    "Standard ID-token exchange validates its signed issuer audience lifetime and original subject without treating the exchanged identity as a browser login",
+    "Standard refresh-token exchange refuses issuance before the requesting client explicitly enables this response type",
+    "Explicitly enabled standard refresh-token exchange issues a usable client-bound refresh credential for the original online user session",
+    "SSF storage failure does not reserve the signed event or acknowledge an uncommitted local business effect",
+    "A real Keycloak CAEP logout event binds its verified issuer user and exact revoked session before the application persists its effect",
+    "Reopening the receiver's persisted inbox prevents duplicate business effects when the same signed SET is retried before acknowledgement",
+    "Real password reset disable enable and purge operations deliver independently verified CAEP and RISC events for the exact persisted subject before poll acknowledgement",
+    "The verified CAEP credential-change payload identifies the actual changed password credential without exposing credential material",
+    "SSF push validates and commits a real SSE-CAEP compatibility event before HTTP success while preserving the exact issuer and subject namespace",
+    "The transmitter refuses a push delivery URL outside the receiver's exact configured allow-list",
+    "SSF receiver subject subscription rejects a foreign issuer and persists the exact local subject notification attribute",
+    "SSF receiver removal clears the explicit subscription and persists the server's removal-grace timestamp without claiming immediate revocation",
+    "Re-subscribing an SSF subject restores its persisted notification and clears the previous removal-grace timestamp",
+    "Signed request objects retain their original PKCE state nonce and verified user across Query responses",
+    "Signed request objects retain their original PKCE state nonce and verified user across Fragment responses",
+    "Signed request objects retain their original PKCE state nonce and verified user across FormPost responses",
+    "Signed request objects retain their original PKCE state nonce and verified user across QueryJwt responses",
+    "Signed request objects retain their original PKCE state nonce and verified user across FragmentJwt responses",
+    "Signed request objects retain their original PKCE state nonce and verified user across FormPostJwt responses",
+    "Signed request objects retain their original PKCE state nonce and verified user across Jwt responses",
+    "Keycloak refuses a request object signed by a key outside the registered client trust",
+    "A client requiring signed requests refuses an unsigned authorization downgrade",
+    "Keycloak decrypts a signed request object with its pinned realm key before returning an encrypted and verified browser identity",
+    "A registered request_uri serves the original signed request and retains its bound browser identity through real Keycloak retrieval",
+    "Real RSA-OAEP encrypted JARM and ID tokens require the host decryption key before yielding the original verified subject",
+    "Real RSA-OAEP-256 encrypted JARM and ID tokens require the host decryption key before yielding the original verified subject",
+    "A tampered real JARM signature is rejected before the intact original authorization response can redeem its code",
+    "Browser IdToken via Fragment enforces its requested credentials correlation nonce and token or code hashes without inventing an identity",
+    "Browser IdToken via Fragment callback cannot be consumed twice",
+    "Browser IdToken via FormPost enforces its requested credentials correlation nonce and token or code hashes without inventing an identity",
+    "Browser IdToken via FormPost callback cannot be consumed twice",
+    "Browser IdToken via Jwt enforces its requested credentials correlation nonce and token or code hashes without inventing an identity",
+    "Browser IdToken via Jwt callback cannot be consumed twice",
+    "Browser Token via Fragment enforces its requested credentials correlation nonce and token or code hashes without inventing an identity",
+    "Browser Token via Fragment callback cannot be consumed twice",
+    "Browser Token via FormPost enforces its requested credentials correlation nonce and token or code hashes without inventing an identity",
+    "Browser Token via FormPost callback cannot be consumed twice",
+    "Browser Token via Jwt enforces its requested credentials correlation nonce and token or code hashes without inventing an identity",
+    "Browser Token via Jwt callback cannot be consumed twice",
+    "Browser IdTokenToken via Fragment enforces its requested credentials correlation nonce and token or code hashes without inventing an identity",
+    "Browser IdTokenToken via Fragment callback cannot be consumed twice",
+    "Browser IdTokenToken via FormPost enforces its requested credentials correlation nonce and token or code hashes without inventing an identity",
+    "Browser IdTokenToken via FormPost callback cannot be consumed twice",
+    "Browser IdTokenToken via Jwt enforces its requested credentials correlation nonce and token or code hashes without inventing an identity",
+    "Browser IdTokenToken via Jwt callback cannot be consumed twice",
+    "Browser CodeIdToken via Fragment enforces its requested credentials correlation nonce and token or code hashes without inventing an identity",
+    "Browser CodeIdToken via Fragment callback cannot be consumed twice",
+    "Browser CodeIdToken via FormPost enforces its requested credentials correlation nonce and token or code hashes without inventing an identity",
+    "Browser CodeIdToken via FormPost callback cannot be consumed twice",
+    "Browser CodeIdToken via Jwt enforces its requested credentials correlation nonce and token or code hashes without inventing an identity",
+    "Browser CodeIdToken via Jwt callback cannot be consumed twice",
+    "Browser CodeToken via Fragment enforces its requested credentials correlation nonce and token or code hashes without inventing an identity",
+    "Browser CodeToken via Fragment callback cannot be consumed twice",
+    "Browser CodeToken via FormPost enforces its requested credentials correlation nonce and token or code hashes without inventing an identity",
+    "Browser CodeToken via FormPost callback cannot be consumed twice",
+    "Browser CodeToken via Jwt enforces its requested credentials correlation nonce and token or code hashes without inventing an identity",
+    "Browser CodeToken via Jwt callback cannot be consumed twice",
+    "Browser CodeIdTokenToken via Fragment enforces its requested credentials correlation nonce and token or code hashes without inventing an identity",
+    "Browser CodeIdTokenToken via Fragment callback cannot be consumed twice",
+    "Browser CodeIdTokenToken via FormPost enforces its requested credentials correlation nonce and token or code hashes without inventing an identity",
+    "Browser CodeIdTokenToken via FormPost callback cannot be consumed twice",
+    "Browser CodeIdTokenToken via Jwt enforces its requested credentials correlation nonce and token or code hashes without inventing an identity",
+    "Browser CodeIdTokenToken via Jwt callback cannot be consumed twice",
+    "Browser None via Fragment enforces its requested credentials correlation nonce and token or code hashes without inventing an identity",
+    "Browser None via Fragment callback cannot be consumed twice",
+    "Browser None via FormPost enforces its requested credentials correlation nonce and token or code hashes without inventing an identity",
+    "Browser None via FormPost callback cannot be consumed twice",
+    "Browser None via Jwt enforces its requested credentials correlation nonce and token or code hashes without inventing an identity",
+    "Browser None via Jwt callback cannot be consumed twice",
+    "A real hybrid ID token rejects substitution of its bound code before code redemption",
+    "A real hybrid ID token rejects substitution of its bound access_token before code redemption",
+    "OIDC required assurance verifies the signed password context auth_time and actual pwd method for the independently observed user",
+    "A correctly signed password-only OIDC identity cannot satisfy an application requirement for level two and OTP",
+    "OIDC step-up retains its original user and browser session but requires a real OTP before signed acr and amr can satisfy level two",
+    "An already verified OIDC identity expires against signed auth_time independently of a newly issued token or an existing application session",
+    "A real password-and-OTP ID token cannot invent the hardware authentication method required by a stronger application policy",
+    "Closing the OIDC assurance host flag prevents a new assurance transaction before reading client credentials or sending any protocol request",
+    "Explicit realm scope configuration removes protocol-less SSF scopes before Keycloak 26.8.1 wallet offer lookup",
+    "Admin credential entitlement creation persists the expected sdk-jwt configuration for the independent account user",
+    "Credential authorization code and PKCE bind the expected user and exact sdk-jwt configuration",
+    "Real jwt_vc_json issuance verifies the pinned issuer signature disclosed user claims and exact wallet holder key",
+    "A modified real jwt_vc_json issuer signature cannot produce a verified credential",
+    "A valid jwt_vc_json credential bound to one wallet is refused for another holder",
+    "Keycloak refuses jwt_vc_json issuance without the configured holder proof",
+    "A real jwt_vc_json proof batch returns two independently verified holder-bound credentials",
+    "A consumed jwt_vc_json issuance nonce cannot be replayed even with a previously valid wallet proof",
+    "OID4VCI refresh preserves jwt_vc_json credential authorization and remains usable for holder-bound issuance",
+    "The current account independently observes its own sdk-jwt credential entitlement",
+    "Admin credential entitlement creation persists the expected sdk-sd configuration for the independent account user",
+    "Credential authorization code and PKCE bind the expected user and exact sdk-sd configuration",
+    "Real dc+sd-jwt issuance verifies the pinned issuer signature disclosed user claims and exact wallet holder key",
+    "A modified real dc+sd-jwt issuer signature cannot produce a verified credential",
+    "A valid dc+sd-jwt credential bound to one wallet is refused for another holder",
+    "Keycloak refuses dc+sd-jwt issuance without the configured holder proof",
+    "A real dc+sd-jwt proof batch returns two independently verified holder-bound credentials",
+    "A consumed dc+sd-jwt issuance nonce cannot be replayed even with a previously valid wallet proof",
+    "An SD-JWT wallet discloses no optional claims unless selected and binds its presentation to the verifier and fresh nonce",
+    "OID4VCI refresh preserves dc+sd-jwt credential authorization and remains usable for holder-bound issuance",
+    "The current account independently observes its own sdk-sd credential entitlement",
+    "Both canonical credential and JWT issuer metadata endpoints describe the pinned realm",
+    "Signed credential metadata verifies its type issuer subject lifetime and independently fetched realm signature",
+    "Real sdk-jwt request encryption authenticates its content and still independently verifies issuer and holder binding",
+    "Real sdk-jwt both encryption authenticates its content and still independently verifies issuer and holder binding",
+    "A signed sdk-jwt proof with an invalid issuer nonce cannot obtain a credential",
+    "Real sdk-sd request encryption authenticates its content and still independently verifies issuer and holder binding",
+    "Real sdk-sd both encryption authenticates its content and still independently verifies issuer and holder binding",
+    "A signed sdk-sd proof with an invalid issuer nonce cannot obtain a credential",
+    "Credential authorization code and PKCE bind the expected user and exact sdk-mdoc configuration",
+    "Real mdoc issuance verifies the trusted CA chain COSE issuer signature signed data digests validity and exact P-256 device key",
+    "A real mdoc credential cannot be accepted for another device key",
+    "An embedded mdoc issuer certificate never establishes trust without the application's configured CA",
+    "Credential authorization code and PKCE bind the expected user and exact sdk-sd configuration for presentation",
+    "The plain same-device wallet link identifies the independently pinned verifier certificate",
+    "The plain same-device signed wallet request verifies its certificate signature audience nonce state and response destination",
+    "The plain same-device wallet refuses omitted required claims before signing or sending a presentation",
+    "The plain same-device verifier atomically consumes the wallet request and rejects a second real presentation",
+    "A real plain same-device wallet presentation completes only its original browser login and independently mapped user",
+    "The plain cross-device wallet link identifies the independently pinned verifier certificate",
+    "The plain cross-device signed wallet request verifies its certificate signature audience nonce state and response destination",
+    "The plain cross-device wallet refuses omitted required claims before signing or sending a presentation",
+    "The plain cross-device verifier atomically consumes the wallet request and rejects a second real presentation",
+    "A real plain cross-device wallet presentation completes only its original browser login and independently mapped user",
+    "The encrypted same-device wallet link identifies the independently pinned verifier certificate",
+    "The encrypted same-device signed wallet request verifies its certificate signature audience nonce state and response destination",
+    "The encrypted same-device wallet refuses omitted required claims before signing or sending a presentation",
+    "The encrypted same-device verifier atomically consumes the wallet request and rejects a second real presentation",
+    "A real encrypted same-device wallet presentation completes only its original browser login and independently mapped user",
+    "The encrypted cross-device wallet link identifies the independently pinned verifier certificate",
+    "The encrypted cross-device signed wallet request verifies its certificate signature audience nonce state and response destination",
+    "The encrypted cross-device wallet refuses omitted required claims before signing or sending a presentation",
+    "The encrypted cross-device verifier atomically consumes the wallet request and rejects a second real presentation",
+    "A real encrypted cross-device wallet presentation completes only its original browser login and independently mapped user",
+    "Trusted wallet attestation and a fresh client proof authenticate the independently observed service account",
+    "Wallet attestation refuses an untrusted attester before issuing a client token",
+    "Wallet attestation refuses a foreign holder before issuing a client token",
+    "Wallet attestation refuses the wrong audience before issuing a client token",
+    "Wallet attestation refuses an expired attestation before issuing a client token",
+    "Closing wallet attestation blocks its credential provider and HTTP request independently of ordinary OIDC",
+    "Credential authorization code and PKCE bind the expected user and exact sdk-sd configuration for credential offer",
+    "An authorization-code credential offer preserves issuer_state through PKCE and delivers only its authorized configuration",
+    "Real credential offers return a bounded PNG QR representation through Qr",
+    "Real credential offers return a bounded PNG QR representation through UriWithQr",
+    "An ordinary wallet user cannot create a targeted credential offer for another account",
+    "A real pre-authorized offer issues a holder-bound credential for the original independently observed user",
+    "A pre-authorized credential code is consumed atomically and cannot be redeemed twice",
+    "An expired pre-authorized offer cannot issue a credential and is never retried",
+    "Account-issued credential revocation independently removes the exact persisted Admin record",
+    "An account-revoked issued credential cannot be obtained again with its original issuance token",
+    "Account entitlement revocation independently removes the user's persisted credential grant",
+    "A revoked pre-authorized offer preserves the pinned server's terminal 500 without issuing any credential or retrying the consumed grant",
+    "Closing the independent Wallet host flag stops its workflow before credentials or HTTP",
+    "Closing the independent WalletOffers host flag stops its workflow before credentials or HTTP",
+    "Closing the independent WalletPreAuthorized host flag stops its workflow before credentials or HTTP",
+    "Closing the independent WalletMdoc host flag stops its workflow before credentials or HTTP",
+    "Closing the independent WalletPresentation host flag stops its workflow before credentials or HTTP",
+    "Canceled wallet operations terminate before contacting the issuer",
+    "A real WebAuthn registration persists its public credential only after the bound PKCE login and server-verified ceremony",
+    "WebAuthn login verifies a fresh challenge RP origin user presence verification and authenticator signature before the application accepts its signed subject",
+    "An assertion from a foreign WebAuthn origin cannot produce a verified application login",
+    "A modified real WebAuthn assertion signature cannot produce a verified application login",
+    "Passkey registration persists a resident user-verified public credential through the protected application-initiated action",
+    "A discoverable passkey authenticates its bound account without sending an account password to the application or authenticator",
+    "The explicitly enabled deprecated conditional Passkey authenticator preserves its resident credential challenge signature and original verified account",
+    "The deprecated conditional Passkey authenticator cannot turn a foreign-origin assertion into a verified application identity",
+    "Recovery codes are generated and explicitly confirmed in the server-hosted action before their credential is persisted",
+    "A real one-time recovery code completes the configured second-factor login for the original verified user",
+    "A consumed recovery code cannot authenticate a subsequent application login",
+    "An application-initiated email update sends a bound confirmation to the new address while the independently observed account retains its old email",
+    "A modified email action token cannot confirm or replace the account address",
+    "Only the valid email confirmation persists the verified target address and the next signature-verified login preserves the original account identity",
+    "A consumed email confirmation action token is rejected on replay without another account change",
+    "A signature-verified transient broker identity retains a marked server session without persisting an ordinary local user",
+    "Refreshing a transient identity preserves its verified session subject without silently storing a local account",
+    "Transient logout invalidates its refresh credential and a subsequent broker login creates a distinct session identity without a persistent user",
+    "A Kerberos-only login issues a real Negotiate challenge and cannot create an application identity without a service ticket",
+    "A real MIT Kerberos SPNEGO service ticket maps only its configured principal to the independently observed signature-verified application identity",
+    "Replaying a consumed Kerberos service authenticator cannot create another application login",
+    "A modified Kerberos service authenticator cannot create a verified application identity",
+    "Explicit deprecated logout-other-sessions compatibility revokes the independently observed regular session after the user confirms a password change",
+    "The pinned logout-all-sessions v1 behavior deliberately retains the real offline session and cannot be described as revoking every credential",
+    "Controlled twitter federation rejects a corrupted broker state without replacing the persisted external identity association",
+    "Controlled twitter federation completes the pinned upstream wire contract and independently verifies only its exact linked local application subject",
+    "Controlled instagram federation rejects a corrupted broker state without replacing the persisted external identity association",
+    "Controlled instagram federation completes the pinned upstream wire contract and independently verifies only its exact linked local application subject",
+    "Closing the independent WebAuthn authentication flag prevents authorization initiation before protocol HTTP",
+    "Closing the independent Passkeys authentication flag prevents authorization initiation before protocol HTTP",
+    "Closing the independent Kerberos authentication flag prevents authorization initiation before protocol HTTP",
+    "Closing the independent RecoveryCodes authentication flag prevents authorization initiation before protocol HTTP",
+    "Closing the independent UpdateEmail authentication flag prevents authorization initiation before protocol HTTP",
+    "Closing the independent TransientUsers authentication flag prevents authorization initiation before protocol HTTP",
+    "Closing the independent LegacyLogoutAllSessions authentication flag prevents authorization initiation before protocol HTTP",
+    "Closing the independent LegacyConditionalPasskeyUi authentication flag prevents authorization initiation before protocol HTTP",
+    "Closing the independent Instagram authentication flag prevents authorization initiation before protocol HTTP",
+    "Closing the independent Twitter authentication flag prevents authorization initiation before protocol HTTP"
+  ],
+  "capabilities": [
+    {
+      "id": "authzen",
+      "requiredServerFeatures": [
+        "AUTHZEN"
+      ],
+      "criteria": [
+        {
+          "criterion": "Discovery, single and batch evaluations",
+          "checks": [
+            "AuthZen discovery pins PDP single and batch endpoints to the realm",
+            "AuthZen permits the persisted user resource and scope policy",
+            "AuthZen execute_all merges defaults and preserves mixed permit and deny decisions",
+            "AuthZen short-circuit and empty-batch semantics match the pinned server"
+          ]
+        },
+        {
+          "criterion": "Decision semantics and authorization denial",
+          "checks": [
+            "AuthZen returns decision false for an unknown resource",
+            "AuthZen rejects ordinary user tokens as PDP callers",
+            "AuthZen policy revocation changes the real decision from permit to deny",
+            "Protocol shutdown sends no token or business HTTP request"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "scim",
+      "requiredServerFeatures": [
+        "SCIM_API"
+      ],
+      "criteria": [
+        {
+          "criterion": "Users and Groups CRUD/PATCH/search and extension schemas",
+          "checks": [
+            "SCIM create persists and can be read through the independent API",
+            "SCIM PATCH disables the persisted user",
+            "SCIM delete removes the resource",
+            "SCIM discovery negotiates actual PATCH filter bulk schema and resource-type capabilities",
+            "SCIM individual schema and resource-type discovery resolve declared identifiers",
+            "SCIM enterprise extension mapping survives create and independent read",
+            "SCIM filtering pagination and POST search return the actual persisted user set",
+            "SCIM projection returns requested extension attributes without unrelated user fields",
+            "SCIM user replace and extension PATCH persist independently",
+            "SCIM group create and membership PATCH persist an actual user membership",
+            "SCIM group replace PATCH and search operate on the same stored resource",
+            "SCIM membership removal is confirmed through the independent Admin API",
+            "SCIM uniqueness filter errors and ordinary-user group denial fail with the expected protocol statuses",
+            "SCIM denies ordinary-user mutations and leaves both protected resources unchanged",
+            "SCIM rejects a correctly signed token from another realm",
+            "SCIM user and group deletion remove every created resource"
+          ]
+        },
+        {
+          "criterion": "Pagination, filtering, errors, discovery and capability negotiation",
+          "checks": [
+            "SCIM create persists and can be read through the independent API",
+            "SCIM PATCH disables the persisted user",
+            "SCIM delete removes the resource",
+            "SCIM discovery negotiates actual PATCH filter bulk schema and resource-type capabilities",
+            "SCIM individual schema and resource-type discovery resolve declared identifiers",
+            "SCIM enterprise extension mapping survives create and independent read",
+            "SCIM filtering pagination and POST search return the actual persisted user set",
+            "SCIM projection returns requested extension attributes without unrelated user fields",
+            "SCIM user replace and extension PATCH persist independently",
+            "SCIM group create and membership PATCH persist an actual user membership",
+            "SCIM group replace PATCH and search operate on the same stored resource",
+            "SCIM membership removal is confirmed through the independent Admin API",
+            "SCIM uniqueness filter errors and ordinary-user group denial fail with the expected protocol statuses",
+            "SCIM denies ordinary-user mutations and leaves both protected resources unchanged",
+            "SCIM rejects a correctly signed token from another realm",
+            "SCIM user and group deletion remove every created resource"
+          ]
+        },
+        {
+          "criterion": "Cross-user and cross-realm authorization denial",
+          "checks": [
+            "SCIM create persists and can be read through the independent API",
+            "SCIM PATCH disables the persisted user",
+            "SCIM delete removes the resource",
+            "SCIM discovery negotiates actual PATCH filter bulk schema and resource-type capabilities",
+            "SCIM individual schema and resource-type discovery resolve declared identifiers",
+            "SCIM enterprise extension mapping survives create and independent read",
+            "SCIM filtering pagination and POST search return the actual persisted user set",
+            "SCIM projection returns requested extension attributes without unrelated user fields",
+            "SCIM user replace and extension PATCH persist independently",
+            "SCIM group create and membership PATCH persist an actual user membership",
+            "SCIM group replace PATCH and search operate on the same stored resource",
+            "SCIM membership removal is confirmed through the independent Admin API",
+            "SCIM uniqueness filter errors and ordinary-user group denial fail with the expected protocol statuses",
+            "SCIM denies ordinary-user mutations and leaves both protected resources unchanged",
+            "SCIM rejects a correctly signed token from another realm",
+            "SCIM user and group deletion remove every created resource"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "account",
+      "requiredServerFeatures": [
+        "ACCOUNT_API"
+      ],
+      "criteria": [
+        {
+          "criterion": "User-owned profile, credentials and sessions",
+          "checks": [
+            "Account API reads the actual user's profile without an admin token",
+            "Account profile update persists for the same user",
+            "Account profile projection and realm locales use the authenticated user context",
+            "Account groups show the user's actual persisted membership",
+            "Account organizations expose the user's real organization membership",
+            "Account consent writes persist and make the application visible",
+            "Account consent revocation removes the persisted grant",
+            "Account linked-account discovery reflects the real federated identity",
+            "Account unlink removes only the current user's federated identity",
+            "Account credential label updates persist on the user's actual OTP credential",
+            "Account credential deletion removes the selected OTP while preserving password authentication",
+            "Account application-session revocation removes browser-app sessions without ending the current session",
+            "Account single-session deletion persists and device discovery remains authorized",
+            "Account cross-user session and credential operations leave the other user's data unchanged",
+            "Account logout-other-sessions preserves the authenticated current session",
+            "Account logout-all-sessions invalidates the current account token"
+          ]
+        },
+        {
+          "criterion": "Linked accounts, consent and application access",
+          "checks": [
+            "Account API reads the actual user's profile without an admin token",
+            "Account profile update persists for the same user",
+            "Account profile projection and realm locales use the authenticated user context",
+            "Account groups show the user's actual persisted membership",
+            "Account organizations expose the user's real organization membership",
+            "Account consent writes persist and make the application visible",
+            "Account consent revocation removes the persisted grant",
+            "Account linked-account discovery reflects the real federated identity",
+            "Account unlink removes only the current user's federated identity",
+            "Account credential label updates persist on the user's actual OTP credential",
+            "Account credential deletion removes the selected OTP while preserving password authentication",
+            "Account application-session revocation removes browser-app sessions without ending the current session",
+            "Account single-session deletion persists and device discovery remains authorized",
+            "Account cross-user session and credential operations leave the other user's data unchanged",
+            "Account logout-other-sessions preserves the authenticated current session",
+            "Account logout-all-sessions invalidates the current account token"
+          ]
+        },
+        {
+          "criterion": "Read/write authorization and cross-user denial",
+          "checks": [
+            "Account API reads the actual user's profile without an admin token",
+            "Account profile update persists for the same user",
+            "Account profile projection and realm locales use the authenticated user context",
+            "Account groups show the user's actual persisted membership",
+            "Account organizations expose the user's real organization membership",
+            "Account consent writes persist and make the application visible",
+            "Account consent revocation removes the persisted grant",
+            "Account linked-account discovery reflects the real federated identity",
+            "Account unlink removes only the current user's federated identity",
+            "Account credential label updates persist on the user's actual OTP credential",
+            "Account credential deletion removes the selected OTP while preserving password authentication",
+            "Account application-session revocation removes browser-app sessions without ending the current session",
+            "Account single-session deletion persists and device discovery remains authorized",
+            "Account cross-user session and credential operations leave the other user's data unchanged",
+            "Account logout-other-sessions preserves the authenticated current session",
+            "Account logout-all-sessions invalidates the current account token"
+          ]
+        }
+      ]
+    },
+    {
+      "requiredServerFeatures": [
+        "ADMIN_API"
+      ],
+      "criteria": [
+        {
+          "criterion": "Default and OIDC dynamic registration",
+          "checks": [
+            "OIDC dynamic registration persists and uses its registration access token",
+            "Dynamic registration delete removes the admin-visible client",
+            "OIDC registration read update and rotated registration-token lifecycle persist",
+            "OIDC registration refuses an unrelated token without deleting the client",
+            "OIDC registration lifecycle cleanup removes the updated client",
+            "Default compatibility registration read update and registration-token lifecycle persist",
+            "Adapter installation compatibility provider returns the registered client's configuration",
+            "Default registration refuses an unrelated token without deleting the client",
+            "Default registration lifecycle cleanup removes the updated client",
+            "SAML descriptor compatibility registration stores the declared SP and assertion-consumer endpoint",
+            "SAML descriptor registration credentials authorize only its own client cleanup"
+          ]
+        },
+        {
+          "criterion": "Registration access token lifecycle and SAML metadata provider",
+          "checks": [
+            "OIDC dynamic registration persists and uses its registration access token",
+            "Dynamic registration delete removes the admin-visible client",
+            "OIDC registration read update and rotated registration-token lifecycle persist",
+            "OIDC registration refuses an unrelated token without deleting the client",
+            "OIDC registration lifecycle cleanup removes the updated client",
+            "Default compatibility registration read update and registration-token lifecycle persist",
+            "Adapter installation compatibility provider returns the registered client's configuration",
+            "Default registration refuses an unrelated token without deleting the client",
+            "Default registration lifecycle cleanup removes the updated client",
+            "SAML descriptor compatibility registration stores the declared SP and assertion-consumer endpoint",
+            "SAML descriptor registration credentials authorize only its own client cleanup"
+          ]
+        }
+      ],
+      "id": "registration"
+    },
+    {
+      "requiredServerFeatures": [
+        "AUTHORIZATION"
+      ],
+      "criteria": [
+        {
+          "criterion": "Protection API resource and permission ticket lifecycle",
+          "checks": [
+            "UMA discovery pins issuer and protection endpoints to the realm",
+            "UMA protection registers an actual resource and resolves it by id and name",
+            "UMA protection resource replacement persists",
+            "UMA protection issues a permission ticket for a persisted resource and scope",
+            "UMA persistent permission-ticket creation list and count reflect actual state",
+            "UMA ticket update persists the resource owner's grant",
+            "UMA runtime decision permits the user under the actual resource and scope policy",
+            "UMA permission-ticket grant returns an RPT and explicit runtime permissions",
+            "UMA rejects an unrelated user token as a protection credential without deleting the resource",
+            "UMA ticket and policy revocation change a real runtime permit to deny",
+            "UMA owner-managed policy creation read and list refer to a persisted resource policy",
+            "UMA owner-managed policy update persists and permits the intended user",
+            "UMA owner-managed policy deletion restores runtime denial",
+            "UMA protection deletion removes the registered resource",
+            "UMA account ownership listing resource detail and owner lookup use the current user's identity",
+            "UMA owner sees the actual pending requester and scoped user lookup",
+            "UMA account permission approval persists and updates both sides of resource sharing",
+            "UMA requester cannot change the owner's resource permissions",
+            "UMA account permission revocation removes the persisted share"
+          ]
+        },
+        {
+          "criterion": "RPT grant and runtime policy decisions",
+          "checks": [
+            "UMA discovery pins issuer and protection endpoints to the realm",
+            "UMA protection registers an actual resource and resolves it by id and name",
+            "UMA protection resource replacement persists",
+            "UMA protection issues a permission ticket for a persisted resource and scope",
+            "UMA persistent permission-ticket creation list and count reflect actual state",
+            "UMA ticket update persists the resource owner's grant",
+            "UMA runtime decision permits the user under the actual resource and scope policy",
+            "UMA permission-ticket grant returns an RPT and explicit runtime permissions",
+            "UMA rejects an unrelated user token as a protection credential without deleting the resource",
+            "UMA ticket and policy revocation change a real runtime permit to deny",
+            "UMA owner-managed policy creation read and list refer to a persisted resource policy",
+            "UMA owner-managed policy update persists and permits the intended user",
+            "UMA owner-managed policy deletion restores runtime denial",
+            "UMA protection deletion removes the registered resource",
+            "UMA account ownership listing resource detail and owner lookup use the current user's identity",
+            "UMA owner sees the actual pending requester and scoped user lookup",
+            "UMA account permission approval persists and updates both sides of resource sharing",
+            "UMA requester cannot change the owner's resource permissions",
+            "UMA account permission revocation removes the persisted share"
+          ]
+        },
+        {
+          "criterion": "PAT authorization and least-privilege checks",
+          "checks": [
+            "UMA discovery pins issuer and protection endpoints to the realm",
+            "UMA protection registers an actual resource and resolves it by id and name",
+            "UMA protection resource replacement persists",
+            "UMA protection issues a permission ticket for a persisted resource and scope",
+            "UMA persistent permission-ticket creation list and count reflect actual state",
+            "UMA ticket update persists the resource owner's grant",
+            "UMA runtime decision permits the user under the actual resource and scope policy",
+            "UMA permission-ticket grant returns an RPT and explicit runtime permissions",
+            "UMA rejects an unrelated user token as a protection credential without deleting the resource",
+            "UMA ticket and policy revocation change a real runtime permit to deny",
+            "UMA owner-managed policy creation read and list refer to a persisted resource policy",
+            "UMA owner-managed policy update persists and permits the intended user",
+            "UMA owner-managed policy deletion restores runtime denial",
+            "UMA protection deletion removes the registered resource",
+            "UMA account ownership listing resource detail and owner lookup use the current user's identity",
+            "UMA owner sees the actual pending requester and scoped user lookup",
+            "UMA account permission approval persists and updates both sides of resource sharing",
+            "UMA requester cannot change the owner's resource permissions",
+            "UMA account permission revocation removes the persisted share"
+          ]
+        }
+      ],
+      "id": "uma"
+    },
+    {
+      "requiredServerFeatures": [
+        "ADMIN_API",
+        "CLIENT_ADMIN_API_V2"
+      ],
+      "criteria": [
+        {
+          "criterion": "Declarative OIDC and SAML client lifecycle",
+          "checks": [
+            "Client Admin v2 creates and reads a declarative OIDC client by clientId",
+            "Client Admin v2 rejects duplicates and does not confuse internal UUID with clientId",
+            "Client Admin v2 query projection sorting and pagination preserve the requested fields",
+            "Client Admin v2 replacement reconciles the existing client without changing its UUID",
+            "Client Admin v2 JSON merge patch preserves unspecified configuration",
+            "Client Admin v2 invalid and unauthorized mutations leave the existing client unchanged",
+            "Client Admin v2 upsert creation and SAML subtype creation both persist",
+            "Client Admin v2 deletion removes every declarative test client"
+          ]
+        },
+        {
+          "criterion": "Configuration reconciliation and validation failures",
+          "checks": [
+            "Client Admin v2 creates and reads a declarative OIDC client by clientId",
+            "Client Admin v2 rejects duplicates and does not confuse internal UUID with clientId",
+            "Client Admin v2 query projection sorting and pagination preserve the requested fields",
+            "Client Admin v2 replacement reconciles the existing client without changing its UUID",
+            "Client Admin v2 JSON merge patch preserves unspecified configuration",
+            "Client Admin v2 invalid and unauthorized mutations leave the existing client unchanged",
+            "Client Admin v2 upsert creation and SAML subtype creation both persist",
+            "Client Admin v2 deletion removes every declarative test client"
+          ]
+        }
+      ],
+      "id": "client-admin-v2"
+    },
+    {
+      "requiredServerFeatures": [
+        "DOCKER"
+      ],
+      "criteria": [
+        {
+          "criterion": "Registry authentication challenge and access token flow",
+          "checks": [
+            "Docker registry challenge returns a token with a valid pinned-realm signature issuer audience and lifetime",
+            "Docker registry token preserves the authenticated username and requested repository pull scope",
+            "Docker registry rejects invalid credentials and malformed repository scopes",
+            "Removing Docker scope-grant policy produces no repository access grants despite successful authentication"
+          ]
+        }
+      ],
+      "id": "docker-registry"
+    },
+    {
+      "requiredServerFeatures": [
+        "CLIENT_ADMIN_API_V2",
+        "OPENAPI"
+      ],
+      "criteria": [
+        {
+          "criterion": "Runtime OpenAPI discovery at an explicit management endpoint",
+          "checks": [
+            "Runtime OpenAPI management endpoint publishes the actual Client Admin v2 contract",
+            "Runtime OpenAPI uses a management client without default realm authorization or session cookies",
+            "Runtime OpenAPI preserves the pinned OIDC and SAML schema discrimination and subtype inheritance"
+          ]
+        },
+        {
+          "criterion": "Specification identifies the pinned client API and schema subtypes without forwarding realm credentials",
+          "checks": [
+            "Runtime OpenAPI management endpoint publishes the actual Client Admin v2 contract",
+            "Runtime OpenAPI uses a management client without default realm authorization or session cookies",
+            "Runtime OpenAPI preserves the pinned OIDC and SAML schema discrimination and subtype inheritance"
+          ]
+        }
+      ],
+      "id": "runtime-openapi"
+    },
+    {
+      "requiredServerFeatures": [
+        "PAR"
+      ],
+      "criteria": [
+        {
+          "criterion": "PAR completes the original authorization transaction without replacing state nonce or PKCE",
+          "checks": [
+            "Pushed authorization request completes with the original PKCE state and nonce"
+          ]
+        }
+      ],
+      "id": "oidc-par"
+    },
+    {
+      "requiredServerFeatures": [
+        "DPOP"
+      ],
+      "criteria": [
+        {
+          "criterion": "DPoP signing, htm/htu/ath, nonce, replay and key binding",
+          "checks": [
+            "Keycloak issues a signature-verified DPoP access token bound to the supplied public-key thumbprint",
+            "Keycloak userinfo accepts a valid DPoP scheme proof method URI and access-token hash",
+            "Keycloak rejects a DPoP token presented as an ordinary bearer token",
+            "Public-client DPoP refresh rejects a key different from the original token binding",
+            "DPoP refresh with the correct key preserves subject and confirmation binding",
+            "SDK resource-server DPoP validation rejects replay wrong methods and mismatched proof keys for a real Keycloak token",
+            "SDK resource-server DPoP nonce policy accepts the expected nonce and rejects a mismatched one"
+          ]
+        }
+      ],
+      "id": "dpop"
+    },
+    {
+      "requiredServerFeatures": [],
+      "id": "oidc",
+      "criteria": [
+        {
+          "checks": [
+            "OIDC discovery returns the exact issuer",
+            "JWKS returns published signing keys"
+          ],
+          "criterion": "Discovery and pinned issuer metadata"
+        },
+        {
+          "checks": [
+            "Browser authorization code PKCE state nonce and ID token signature validation succeed",
+            "A browser callback transaction cannot be redeemed twice"
+          ],
+          "criterion": "Authorization code + PKCE + state/nonce and ID token validation"
+        },
+        {
+          "checks": [
+            "Client credentials and introspection identify the expected service account",
+            "Refresh and userinfo preserve the authenticated subject",
+            "Refresh-token logout invalidates the server session",
+            "OIDC revocation invalidates the real refresh credential and prevents a subsequent refresh"
+          ],
+          "criterion": "Client credentials, refresh, token introspection and revocation"
+        }
+      ]
+    },
+    {
+      "requiredServerFeatures": [
+        "TOKEN_EXCHANGE_STANDARD_V2"
+      ],
+      "id": "oidc-standard-exchange",
+      "criteria": [
+        {
+          "checks": [
+            "Standard exchange issues an independently signature-verified audience-narrowed token for the original subject without inventing an actor",
+            "Standard exchange rejects may_act tokens and cannot bypass delegation",
+            "Standard ID-token exchange validates its signed issuer audience lifetime and original subject without treating the exchanged identity as a browser login",
+            "Standard refresh-token exchange refuses issuance before the requesting client explicitly enables this response type",
+            "Explicitly enabled standard refresh-token exchange issues a usable client-bound refresh credential for the original online user session"
+          ],
+          "criterion": "Standard token exchange preserves authorized subject audience and scopes"
+        }
+      ]
+    },
+    {
+      "requiredServerFeatures": [
+        "TOKEN_EXCHANGE_DELEGATION",
+        "ADMIN_FINE_GRAINED_AUTHZ_V2"
+      ],
+      "id": "oidc-delegation",
+      "criteria": [
+        {
+          "checks": [
+            "Client delegation requires real user consent and issues may_act for the FGAP v2 authorized actor",
+            "Delegated exchange preserves the subject and records act without a refresh token",
+            "Standard exchange rejects may_act tokens and cannot bypass delegation",
+            "Client delegated tokens cannot call Admin APIs",
+            "Revoking FGAP v2 delegation strips may_act when the subject token is refreshed",
+            "The refreshed subject token cannot delegate after FGAP v2 permission revocation",
+            "Administrator delegation enforces real user consent and the FGAP-authorized human actor while preserving the subject",
+            "Administrator delegation rejects an unrelated actor and removes delegation authority on refresh after permission revocation"
+          ],
+          "criterion": "Client and administrator delegation enforce may_act actor consent and revocation"
+        }
+      ]
+    },
+    {
+      "requiredServerFeatures": [
+        "DEVICE_FLOW"
+      ],
+      "id": "oidc-device",
+      "criteria": [
+        {
+          "checks": [
+            "Device flow reports real authorization_pending and slow_down before the user approves the request",
+            "Device flow requires actual browser login and explicit user consent for the verification code",
+            "Device polling completes with an independently verified token for the consenting user",
+            "Device authorization credentials cannot be redeemed again after successful issuance",
+            "Device consent denial yields access_denied and no user credential",
+            "Device authorization rejects a real server-expired device credential"
+          ],
+          "criterion": "Device authorization completes user approval and bounded pending slow-down denial expiry polling"
+        }
+      ]
+    },
+    {
+      "requiredServerFeatures": [
+        "CIBA"
+      ],
+      "id": "oidc-ciba",
+      "criteria": [
+        {
+          "checks": [
+            "CIBA poll remains pending until a separately authenticated device approves the bound user request",
+            "CIBA rejects an invalid authentication-device credential and issues a verified user token after valid approval",
+            "CIBA authentication request credentials cannot be redeemed twice",
+            "CIBA user denial yields access_denied without issuing credentials",
+            "CIBA authentication-device cancellation yields access_denied without issuing credentials",
+            "CIBA rejects a server-expired authentication request",
+            "CIBA ping authenticates the notification secret correlates auth_req_id rejects replay and then redeems the approved user credential",
+            "CIBA accepts a signed authentication request bound to the configured client realm audience and numeric expiry"
+          ],
+          "criterion": "CIBA poll and ping authenticate notifications and enforce request lifecycle"
+        }
+      ]
+    },
+    {
+      "id": "oidc-resources",
+      "criteria": [
+        {
+          "criterion": "Authorization and token resource indicators narrow the verified audience",
+          "checks": [
+            "Resource indicators narrow a real client-credentials token to exactly the requested authorized resource",
+            "Resource indicators reject an audience that was never granted to the client",
+            "Resource indicators bind the actual browser authorization code and its verified access-token audience",
+            "Resource-constrained refresh inherits the original audience and refuses switching to another otherwise authorized resource"
+          ]
+        }
+      ],
+      "requiredServerFeatures": [
+        "RESOURCE_INDICATORS"
+      ]
+    },
+    {
+      "id": "oidc-parameterized-scopes",
+      "criteria": [
+        {
+          "criterion": "Parameterized client scopes enforce allowed parameters and consent",
+          "checks": [
+            "Parameterized browser scopes require actual user consent and preserve the allowed parameter in a verified token claim and scope",
+            "Parameterized scopes reject parameters outside the server regex and conflicting values for a non-repeatable scope",
+            "Explicitly repeatable parameterized scopes preserve both authorized values in the verified multivalued claim",
+            "Removing a parameterized client-scope assignment prevents its next use"
+          ]
+        }
+      ],
+      "requiredServerFeatures": [
+        "PARAMETERIZED_SCOPES"
+      ]
+    },
+    {
+      "id": "oidc-jwt-grant",
+      "criteria": [
+        {
+          "criterion": "JWT authorization grants validate trusted issuer audience signature expiry and replay",
+          "checks": [
+            "JWT authorization grant maps a trusted signed external assertion to the linked local user and limits the verified access-token lifetime",
+            "JWT authorization grant rejects reuse of the same signed assertion jti",
+            "JWT authorization grant rejects an untrusted external issuer",
+            "JWT authorization grant rejects an assertion for a foreign audience",
+            "JWT authorization grant rejects a real expired assertion",
+            "JWT authorization grant rejects a signature from an unconfigured key",
+            "JWT authorization grant refuses to invent a local identity for an unlinked external subject",
+            "Disabling the trusted assertion provider prevents subsequent JWT authorization grants"
+          ]
+        }
+      ],
+      "requiredServerFeatures": [
+        "JWT_AUTHORIZATION_GRANT"
+      ]
+    },
+    {
+      "runtime": "managed",
+      "id": "browser-oidc",
+      "criteria": [
+        {
+          "criterion": "Host OIDC integration and protected callback transaction store",
+          "checks": [
+            "Host OIDC challenge uses PKCE nonce and protected browser correlation without disclosing a client secret",
+            "Host OIDC rejects a real callback without its initiating browser correlation cookie",
+            "Host OIDC completes a real signed Keycloak login and stores the authenticated ticket on the server",
+            "Host browser cookie contains an opaque protected ticket reference rather than ID access or refresh tokens",
+            "Host OIDC callback replay cannot create a second authenticated ticket",
+            "Host resource authentication accepts the exact verified audience and refuses ID-token substitution",
+            "Host resource authentication refreshes pinned realm JWKS and accepts an actually rotated Keycloak signing key",
+            "Host resource authentication stops trusting a retired Keycloak signing key even for a previously valid unexpired token",
+            "MCP protected-resource metadata and Bearer challenge advertise the exact resource and pinned Keycloak authorization server",
+            "Host back-channel logout rejects an unsigned forged notification without invalidating the victim session",
+            "Host front-channel logout refuses an issuer query targeting an unrelated browser session",
+            "Host front-channel logout clears only the initiating browser ticket whose signed session identifier matches the notification",
+            "A real Keycloak back-channel logout revokes the matching local host ticket before the next authenticated request",
+            "Host custom code redemption refuses a real signed callback that retains protected correlation but loses its initiating nonce cookie"
+          ]
+        },
+        {
+          "criterion": "JWT/JWKS validation, clock skew, issuer/audience and key rotation",
+          "checks": [
+            "Host OIDC challenge uses PKCE nonce and protected browser correlation without disclosing a client secret",
+            "Host OIDC rejects a real callback without its initiating browser correlation cookie",
+            "Host OIDC completes a real signed Keycloak login and stores the authenticated ticket on the server",
+            "Host browser cookie contains an opaque protected ticket reference rather than ID access or refresh tokens",
+            "Host OIDC callback replay cannot create a second authenticated ticket",
+            "Host resource authentication accepts the exact verified audience and refuses ID-token substitution",
+            "Host resource authentication refreshes pinned realm JWKS and accepts an actually rotated Keycloak signing key",
+            "Host resource authentication stops trusting a retired Keycloak signing key even for a previously valid unexpired token",
+            "MCP protected-resource metadata and Bearer challenge advertise the exact resource and pinned Keycloak authorization server",
+            "Host back-channel logout rejects an unsigned forged notification without invalidating the victim session",
+            "Host front-channel logout refuses an issuer query targeting an unrelated browser session",
+            "Host front-channel logout clears only the initiating browser ticket whose signed session identifier matches the notification",
+            "A real Keycloak back-channel logout revokes the matching local host ticket before the next authenticated request"
+          ]
+        },
+        {
+          "criterion": "Front-channel/back-channel logout and host sessions",
+          "checks": [
+            "Host OIDC challenge uses PKCE nonce and protected browser correlation without disclosing a client secret",
+            "Host OIDC rejects a real callback without its initiating browser correlation cookie",
+            "Host OIDC completes a real signed Keycloak login and stores the authenticated ticket on the server",
+            "Host browser cookie contains an opaque protected ticket reference rather than ID access or refresh tokens",
+            "Host OIDC callback replay cannot create a second authenticated ticket",
+            "Host resource authentication accepts the exact verified audience and refuses ID-token substitution",
+            "Host resource authentication refreshes pinned realm JWKS and accepts an actually rotated Keycloak signing key",
+            "Host resource authentication stops trusting a retired Keycloak signing key even for a previously valid unexpired token",
+            "MCP protected-resource metadata and Bearer challenge advertise the exact resource and pinned Keycloak authorization server",
+            "Host back-channel logout rejects an unsigned forged notification without invalidating the victim session",
+            "Host front-channel logout refuses an issuer query targeting an unrelated browser session",
+            "Host front-channel logout clears only the initiating browser ticket whose signed session identifier matches the notification",
+            "A real Keycloak back-channel logout revokes the matching local host ticket before the next authenticated request"
+          ]
+        },
+        {
+          "criterion": "MCP resource metadata and OAuth integration",
+          "checks": [
+            "Host OIDC challenge uses PKCE nonce and protected browser correlation without disclosing a client secret",
+            "Host OIDC rejects a real callback without its initiating browser correlation cookie",
+            "Host OIDC completes a real signed Keycloak login and stores the authenticated ticket on the server",
+            "Host browser cookie contains an opaque protected ticket reference rather than ID access or refresh tokens",
+            "Host OIDC callback replay cannot create a second authenticated ticket",
+            "Host resource authentication accepts the exact verified audience and refuses ID-token substitution",
+            "Host resource authentication refreshes pinned realm JWKS and accepts an actually rotated Keycloak signing key",
+            "Host resource authentication stops trusting a retired Keycloak signing key even for a previously valid unexpired token",
+            "MCP protected-resource metadata and Bearer challenge advertise the exact resource and pinned Keycloak authorization server",
+            "Host back-channel logout rejects an unsigned forged notification without invalidating the victim session",
+            "Host front-channel logout refuses an issuer query targeting an unrelated browser session",
+            "Host front-channel logout clears only the initiating browser ticket whose signed session identifier matches the notification",
+            "A real Keycloak back-channel logout revokes the matching local host ticket before the next authenticated request"
+          ]
+        },
+        {
+          "criterion": "Mandatory signed authentication assurance and local-session authentication freshness",
+          "checks": [
+            "Host OIDC rejects a real lower-assurance signed ID token even when the browser changes acr_values while preserving valid protected correlation",
+            "Host OIDC creates its opaque server ticket only after a real OTP and signed acr auth_time and amr satisfy the application policy",
+            "A local host cookie cannot outlive the mandatory signed authentication freshness even while its application ticket has remaining lifetime",
+            "Closing host OIDC assurance blocks its next challenge before metadata HTTP or client credential access independently of ordinary browser login"
+          ]
+        }
+      ],
+      "requiredServerFeatures": []
+    },
+    {
+      "id": "mutual-tls",
+      "requiredServerFeatures": [],
+      "criteria": [
+        {
+          "checks": [
+            "mTLS client authentication uses a trusted real TLS certificate and issues a signature-verified token bound to that exact certificate thumbprint",
+            "Keycloak userinfo accepts a certificate-bound token only on the matching authenticated TLS connection",
+            "mTLS client authentication rejects a trusted certificate with the wrong configured subject",
+            "mTLS client authentication rejects a request without a client certificate",
+            "Keycloak refuses a copied certificate-bound access token on another trusted certificate or a connection without a client certificate",
+            "mTLS test client validates the actual server certificate chain and rejects an untrusted TLS server root"
+          ],
+          "criterion": "mTLS certificate-bound tokens and authenticated TLS peer validation"
+        }
+      ]
+    },
+    {
+      "id": "federated-client-auth",
+      "requiredServerFeatures": [
+        "CLIENT_AUTH_FEDERATED",
+        "KUBERNETES_SERVICE_ACCOUNTS"
+      ],
+      "criteria": [
+        {
+          "checks": [
+            "Private-key JWT client authentication issues a signature-verified token for the configured service account",
+            "Client authentication rejects reuse of a real signed assertion jti",
+            "Client authentication rejects incorrect signing keys expired assertions and a foreign token-endpoint audience",
+            "Client signing-key rotation accepts the new credential and rejects a freshly signed assertion from the retired key",
+            "Client-secret JWT authentication verifies the configured HMAC assertion without treating it as a resource access token"
+          ],
+          "criterion": "Signed client assertions and key rotation"
+        },
+        {
+          "checks": [
+            "Kubernetes provider validates a projected credential through controlled OIDC discovery and JWKS and authenticates only its mapped service account",
+            "Kubernetes projected credentials follow the upstream reusable bounded-lifetime assertion semantics",
+            "Kubernetes federation rejects foreign audience unmapped subjects expiry and untrusted signatures",
+            "Kubernetes federation rejects an assertion issuer that differs from the configured discovery issuer",
+            "Kubernetes credential file replacement and issuer key rotation are read on the next authentication request",
+            "Kubernetes federation refuses a fresh assertion from the retired issuer key",
+            "Disabling the Kubernetes trust provider immediately prevents new client authentication"
+          ],
+          "criterion": "Federated assertion trust, expiry and audience"
+        },
+        {
+          "checks": [
+            "Kubernetes provider validates a projected credential through controlled OIDC discovery and JWKS and authenticates only its mapped service account",
+            "Kubernetes projected credentials follow the upstream reusable bounded-lifetime assertion semantics",
+            "Kubernetes federation rejects foreign audience unmapped subjects expiry and untrusted signatures",
+            "Kubernetes federation rejects an assertion issuer that differs from the configured discovery issuer",
+            "Kubernetes credential file replacement and issuer key rotation are read on the next authentication request",
+            "Kubernetes federation refuses a fresh assertion from the retired issuer key",
+            "Disabling the Kubernetes trust provider immediately prevents new client authentication"
+          ],
+          "criterion": "Kubernetes projected credential integration"
+        }
+      ]
+    },
+    {
+      "id": "spiffe-client-auth",
+      "requiredServerFeatures": [
+        "CLIENT_AUTH_FEDERATED",
+        "SPIFFE"
+      ],
+      "criteria": [
+        {
+          "checks": [
+            "SPIFFE provider validates a projected JWT-SVID against the controlled trust-domain bundle using the distinct jwt-spiffe assertion type",
+            "SPIFFE JWT-SVID reuse without a jti follows the upstream bounded-lifetime workload semantics",
+            "SPIFFE federation rejects foreign audience unmapped SPIFFE identities expiry and untrusted signatures",
+            "SPIFFE credential file replacement and trust-bundle key rotation are read on the next authentication request",
+            "SPIFFE federation refuses a fresh JWT-SVID from the retired bundle key",
+            "Disabling the SPIFFE trust provider immediately prevents new client authentication"
+          ],
+          "criterion": "SPIFFE JWT-SVID assertion type trust-domain bundle rotation and mapped workload identity"
+        }
+      ]
+    },
+    {
+      "id": "oidc-identity-assertion",
+      "requiredServerFeatures": [
+        "IDENTITY_ASSERTION_JWT",
+        "JWT_AUTHORIZATION_GRANT"
+      ],
+      "criteria": [
+        {
+          "criterion": "Identity assertions bind the verified upstream subject and relying party",
+          "checks": [
+            "ID-JAG consumption preserves the trusted external subject and authenticates the exact client_id relying party in the signed identity assertion",
+            "ID-JAG refuses assertion replay even when the external provider permits ordinary JWT assertion reuse",
+            "ID-JAG rejects a foreign or missing client_id and a missing iat instead of falling back to ordinary JWT grant semantics"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "oidc-client-metadata",
+      "requiredServerFeatures": [
+        "CIMD"
+      ],
+      "criteria": [
+        {
+          "criterion": "Client ID metadata documents bind client identity redirects and authentication keys",
+          "checks": [
+            "CIMD authorization fetches a public metadata document without Admin pre-registration and completes a verified PKCE login for its exact client identity and redirect",
+            "CIMD public-client refresh authenticates the same dynamically registered metadata identity",
+            "CIMD private_key_jwt uses the public metadata JWKS and returns a verified user identity without publishing a client secret",
+            "CIMD token redemption refuses a private client assertion signed by an unconfigured key",
+            "CIMD private-client signing-key rotation uses the updated pinned metadata JWKS",
+            "CIMD refuses a fresh assertion from a retired metadata signing key",
+            "CIMD refuses an authorization redirect absent from the exact published metadata allow-list",
+            "CIMD refuses metadata whose client_id does not exactly match the requested document URL",
+            "CIMD server policy refuses a public metadata document containing client_secret",
+            "CIMD server policy refuses document domains outside the explicitly trusted domain list"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "identity-brokering",
+      "requiredServerFeatures": [
+        "IDENTITY_BROKERING_API_V2"
+      ],
+      "criteria": [
+        {
+          "criterion": "Confidential-client external token retrieval and downstream identity validation",
+          "checks": [
+            "Broker login validates the downstream ID token and retains the exact upstream linked identity",
+            "Broker v2 returns an upstream credential independently verified against its own issuer audience and signing keys",
+            "Broker v2 requires independent client authentication a valid user token and an explicitly approved identity provider",
+            "Disabling broker external-token access takes effect for the next request even with an existing user token"
+          ]
+        },
+        {
+          "criterion": "Client user and provider authorization and immediate access shutdown",
+          "checks": [
+            "Broker login validates the downstream ID token and retains the exact upstream linked identity",
+            "Broker v2 returns an upstream credential independently verified against its own issuer audience and signing keys",
+            "Broker v2 requires independent client authentication a valid user token and an explicitly approved identity provider",
+            "Disabling broker external-token access takes effect for the next request even with an existing user token"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "identity-broker-login",
+      "requiredServerFeatures": [],
+      "criteria": [
+        {
+          "criterion": "Browser federation verifies the downstream subject and exact linked upstream identity",
+          "checks": [
+            "Broker login validates the downstream ID token and retains the exact upstream linked identity"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "identity-linking",
+      "requiredServerFeatures": [],
+      "criteria": [
+        {
+          "criterion": "Application-initiated linking requires explicit consent preserves local identity and enforces self-service unlink",
+          "checks": [
+            "Application-initiated broker linking respects explicit user cancellation and leaves the authenticated local identity unlinked",
+            "Application-initiated broker linking requires actual confirmation and upstream login while preserving the signed local subject and exact external association",
+            "A user-linked broker credential belongs to the independently verified upstream identity rather than replacing the local application subject",
+            "Account self-service unlink removes the persisted external association and immediately prevents retrieval with the existing local access token"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "signals",
+      "requiredServerFeatures": [
+        "SSF"
+      ],
+      "criteria": [
+        {
+          "criterion": "SSF discovery and stream lifecycle",
+          "checks": [
+            "SSF discovery binds the transmitter issuer and stream endpoint to the pinned realm",
+            "SSF receiver stream creation persists with transmitter-assigned identity audience and poll endpoint",
+            "SSF PATCH preserves unspecified stream delivery configuration",
+            "SSF PUT reconciles the receiver stream and collection read reflects the persisted replacement",
+            "SSF refuses cross-client polling unauthorized receivers and mutations to transmitter-owned identity",
+            "SSF polled SET identifier agrees with its independently verified signed jti",
+            "SSF poll delivers a signature issuer audience and state-verified SET whose replay is rejected",
+            "SSF acknowledges processed SETs and does not redeliver acknowledged verification events",
+            "SSF status updates persist and can pause delivery",
+            "SSF stream deletion removes the receiver-owned stream",
+            "SSF storage failure does not reserve the signed event or acknowledge an uncommitted local business effect",
+            "A real Keycloak CAEP logout event binds its verified issuer user and exact revoked session before the application persists its effect",
+            "Reopening the receiver's persisted inbox prevents duplicate business effects when the same signed SET is retried before acknowledgement",
+            "Real password reset disable enable and purge operations deliver independently verified CAEP and RISC events for the exact persisted subject before poll acknowledgement",
+            "The verified CAEP credential-change payload identifies the actual changed password credential without exposing credential material",
+            "SSF push validates and commits a real SSE-CAEP compatibility event before HTTP success while preserving the exact issuer and subject namespace",
+            "SSF receiver subject subscription rejects a foreign issuer and persists the exact local subject notification attribute",
+            "SSF receiver removal clears the explicit subscription and persists the server's removal-grace timestamp without claiming immediate revocation",
+            "Re-subscribing an SSF subject restores its persisted notification and clears the previous removal-grace timestamp"
+          ]
+        },
+        {
+          "criterion": "SET signature, audience, replay and CAEP/RISC semantics",
+          "checks": [
+            "SSF discovery binds the transmitter issuer and stream endpoint to the pinned realm",
+            "SSF receiver stream creation persists with transmitter-assigned identity audience and poll endpoint",
+            "SSF PATCH preserves unspecified stream delivery configuration",
+            "SSF PUT reconciles the receiver stream and collection read reflects the persisted replacement",
+            "SSF refuses cross-client polling unauthorized receivers and mutations to transmitter-owned identity",
+            "SSF polled SET identifier agrees with its independently verified signed jti",
+            "SSF poll delivers a signature issuer audience and state-verified SET whose replay is rejected",
+            "SSF acknowledges processed SETs and does not redeliver acknowledged verification events",
+            "SSF status updates persist and can pause delivery",
+            "SSF stream deletion removes the receiver-owned stream",
+            "SSF storage failure does not reserve the signed event or acknowledge an uncommitted local business effect",
+            "A real Keycloak CAEP logout event binds its verified issuer user and exact revoked session before the application persists its effect",
+            "Reopening the receiver's persisted inbox prevents duplicate business effects when the same signed SET is retried before acknowledgement",
+            "Real password reset disable enable and purge operations deliver independently verified CAEP and RISC events for the exact persisted subject before poll acknowledgement",
+            "The verified CAEP credential-change payload identifies the actual changed password credential without exposing credential material",
+            "SSF push validates and commits a real SSE-CAEP compatibility event before HTTP success while preserving the exact issuer and subject namespace",
+            "SSF receiver subject subscription rejects a foreign issuer and persists the exact local subject notification attribute",
+            "SSF receiver removal clears the explicit subscription and persists the server's removal-grace timestamp without claiming immediate revocation",
+            "Re-subscribing an SSF subject restores its persisted notification and clears the previous removal-grace timestamp"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "oidc-request-objects",
+      "requiredServerFeatures": [],
+      "criteria": [
+        {
+          "criterion": "Signed and encrypted request objects preserve the bound state nonce PKCE redirect and client identity and reject tampering",
+          "checks": [
+            "Signed request objects retain their original PKCE state nonce and verified user across Query responses",
+            "Signed request objects retain their original PKCE state nonce and verified user across Fragment responses",
+            "Signed request objects retain their original PKCE state nonce and verified user across FormPost responses",
+            "Signed request objects retain their original PKCE state nonce and verified user across QueryJwt responses",
+            "Signed request objects retain their original PKCE state nonce and verified user across FragmentJwt responses",
+            "Signed request objects retain their original PKCE state nonce and verified user across FormPostJwt responses",
+            "Signed request objects retain their original PKCE state nonce and verified user across Jwt responses",
+            "Keycloak refuses a request object signed by a key outside the registered client trust",
+            "A client requiring signed requests refuses an unsigned authorization downgrade",
+            "Keycloak decrypts a signed request object with its pinned realm key before returning an encrypted and verified browser identity",
+            "A registered request_uri serves the original signed request and retains its bound browser identity through real Keycloak retrieval"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "oidc-signed-responses",
+      "requiredServerFeatures": [],
+      "criteria": [
+        {
+          "criterion": "JARM validates signature encryption issuer audience expiry state and every supported response transport before code redemption",
+          "checks": [
+            "Signed request objects retain their original PKCE state nonce and verified user across Query responses",
+            "Signed request objects retain their original PKCE state nonce and verified user across Fragment responses",
+            "Signed request objects retain their original PKCE state nonce and verified user across FormPost responses",
+            "Signed request objects retain their original PKCE state nonce and verified user across QueryJwt responses",
+            "Signed request objects retain their original PKCE state nonce and verified user across FragmentJwt responses",
+            "Signed request objects retain their original PKCE state nonce and verified user across FormPostJwt responses",
+            "Signed request objects retain their original PKCE state nonce and verified user across Jwt responses",
+            "Real RSA-OAEP encrypted JARM and ID tokens require the host decryption key before yielding the original verified subject",
+            "Real RSA-OAEP-256 encrypted JARM and ID tokens require the host decryption key before yielding the original verified subject",
+            "A tampered real JARM signature is rejected before the intact original authorization response can redeem its code"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "oidc-browser-compatibility",
+      "requiredServerFeatures": [],
+      "criteria": [
+        {
+          "criterion": "Implicit hybrid and none responses preserve explicit browser correlation validate nonce and token or code hashes and cannot substitute an unsolicited identity",
+          "checks": [
+            "Browser IdToken via Fragment enforces its requested credentials correlation nonce and token or code hashes without inventing an identity",
+            "Browser IdToken via Fragment callback cannot be consumed twice",
+            "Browser IdToken via FormPost enforces its requested credentials correlation nonce and token or code hashes without inventing an identity",
+            "Browser IdToken via FormPost callback cannot be consumed twice",
+            "Browser IdToken via Jwt enforces its requested credentials correlation nonce and token or code hashes without inventing an identity",
+            "Browser IdToken via Jwt callback cannot be consumed twice",
+            "Browser Token via Fragment enforces its requested credentials correlation nonce and token or code hashes without inventing an identity",
+            "Browser Token via Fragment callback cannot be consumed twice",
+            "Browser Token via FormPost enforces its requested credentials correlation nonce and token or code hashes without inventing an identity",
+            "Browser Token via FormPost callback cannot be consumed twice",
+            "Browser Token via Jwt enforces its requested credentials correlation nonce and token or code hashes without inventing an identity",
+            "Browser Token via Jwt callback cannot be consumed twice",
+            "Browser IdTokenToken via Fragment enforces its requested credentials correlation nonce and token or code hashes without inventing an identity",
+            "Browser IdTokenToken via Fragment callback cannot be consumed twice",
+            "Browser IdTokenToken via FormPost enforces its requested credentials correlation nonce and token or code hashes without inventing an identity",
+            "Browser IdTokenToken via FormPost callback cannot be consumed twice",
+            "Browser IdTokenToken via Jwt enforces its requested credentials correlation nonce and token or code hashes without inventing an identity",
+            "Browser IdTokenToken via Jwt callback cannot be consumed twice",
+            "Browser CodeIdToken via Fragment enforces its requested credentials correlation nonce and token or code hashes without inventing an identity",
+            "Browser CodeIdToken via Fragment callback cannot be consumed twice",
+            "Browser CodeIdToken via FormPost enforces its requested credentials correlation nonce and token or code hashes without inventing an identity",
+            "Browser CodeIdToken via FormPost callback cannot be consumed twice",
+            "Browser CodeIdToken via Jwt enforces its requested credentials correlation nonce and token or code hashes without inventing an identity",
+            "Browser CodeIdToken via Jwt callback cannot be consumed twice",
+            "Browser CodeToken via Fragment enforces its requested credentials correlation nonce and token or code hashes without inventing an identity",
+            "Browser CodeToken via Fragment callback cannot be consumed twice",
+            "Browser CodeToken via FormPost enforces its requested credentials correlation nonce and token or code hashes without inventing an identity",
+            "Browser CodeToken via FormPost callback cannot be consumed twice",
+            "Browser CodeToken via Jwt enforces its requested credentials correlation nonce and token or code hashes without inventing an identity",
+            "Browser CodeToken via Jwt callback cannot be consumed twice",
+            "Browser CodeIdTokenToken via Fragment enforces its requested credentials correlation nonce and token or code hashes without inventing an identity",
+            "Browser CodeIdTokenToken via Fragment callback cannot be consumed twice",
+            "Browser CodeIdTokenToken via FormPost enforces its requested credentials correlation nonce and token or code hashes without inventing an identity",
+            "Browser CodeIdTokenToken via FormPost callback cannot be consumed twice",
+            "Browser CodeIdTokenToken via Jwt enforces its requested credentials correlation nonce and token or code hashes without inventing an identity",
+            "Browser CodeIdTokenToken via Jwt callback cannot be consumed twice",
+            "Browser None via Fragment enforces its requested credentials correlation nonce and token or code hashes without inventing an identity",
+            "Browser None via Fragment callback cannot be consumed twice",
+            "Browser None via FormPost enforces its requested credentials correlation nonce and token or code hashes without inventing an identity",
+            "Browser None via FormPost callback cannot be consumed twice",
+            "Browser None via Jwt enforces its requested credentials correlation nonce and token or code hashes without inventing an identity",
+            "Browser None via Jwt callback cannot be consumed twice",
+            "A real hybrid ID token rejects substitution of its bound code before code redemption",
+            "A real hybrid ID token rejects substitution of its bound access_token before code redemption"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "saml",
+      "runtime": "managed",
+      "requiredServerFeatures": [
+        "STEP_UP_AUTHENTICATION_SAML",
+        "STEP_UP_AUTHENTICATION"
+      ],
+      "criteria": [
+        {
+          "criterion": "SP metadata, signed browser bindings, Artifact SOAP, ECP and protected IdP initiation",
+          "checks": [
+            "SAML metadata binds the exact realm signing trust SP identity and assertion-consumer endpoint",
+            "SAML browser login verifies the real signed response assertion audience recipient lifetime and request correlation",
+            "SAML rejects replay mismatched browser transactions and a tampered real signed assertion",
+            "SAML signed single logout validates the real redirect response and independently removes the bound Keycloak session",
+            "SAML decrypts an actually encrypted Keycloak assertion before validating its signed identity audience and recipient",
+            "SAML Redirect request and Redirect response preserve signed identity and the original browser correlation",
+            "SAML Redirect request and Post response preserve signed identity and the original browser correlation",
+            "SAML Post request and Redirect response preserve signed identity and the original browser correlation",
+            "SAML Post request and Post response preserve signed identity and the original browser correlation",
+            "An explicitly initiated IdP SSO URL retains a protected browser transaction without accepting an unsolicited assertion",
+            "SAML Redirect artifact delivery resolves a signed one-use SOAP response before verifying the original assertion and browser transaction",
+            "SAML Post artifact delivery resolves a signed one-use SOAP response before verifying the original assertion and browser transaction",
+            "SAML ECP verifies its signed SOAP identity and exact assertion consumer endpoint using only per-call user credentials",
+            "SAML ECP rejects incorrect user credentials without yielding a local identity",
+            "A real IdP SOAP logout cannot acknowledge or reserve its replay receipt when local session storage fails",
+            "Retrying a verified IdP SOAP logout atomically persists exactly one local session revocation before returning its signed correlated response",
+            "SAML persistent NameID retains its verified format and server-defined identity lifecycle without assuming every subject is a username",
+            "SAML transient NameID retains its verified format and server-defined identity lifecycle without assuming every subject is a username",
+            "SAML email NameID retains its verified format and server-defined identity lifecycle without assuming every subject is a username",
+            "SAML signed POST single logout verifies its correlated POST response and removes the independently observed Keycloak session",
+            "SAML assurance level one is verified from an actual signed authentication context after password-only login",
+            "SAML step-up reuses the original browser session but requires a real OTP challenge before its signed context can attain level two",
+            "SAML refuses a requested authentication context absent from the server assurance mapping instead of substituting a lower signed context",
+            "Forced SAML level-two authentication cannot turn an incorrect OTP into a local verified identity",
+            "Closing the SAML step-up host flag blocks assurance initiation independently of ordinary SAML login"
+          ]
+        },
+        {
+          "criterion": "Assertion decryption, signature, issuer, audience, recipient, time, NameID and request replay protection",
+          "checks": [
+            "SAML metadata binds the exact realm signing trust SP identity and assertion-consumer endpoint",
+            "SAML browser login verifies the real signed response assertion audience recipient lifetime and request correlation",
+            "SAML rejects replay mismatched browser transactions and a tampered real signed assertion",
+            "SAML signed single logout validates the real redirect response and independently removes the bound Keycloak session",
+            "SAML decrypts an actually encrypted Keycloak assertion before validating its signed identity audience and recipient",
+            "SAML Redirect request and Redirect response preserve signed identity and the original browser correlation",
+            "SAML Redirect request and Post response preserve signed identity and the original browser correlation",
+            "SAML Post request and Redirect response preserve signed identity and the original browser correlation",
+            "SAML Post request and Post response preserve signed identity and the original browser correlation",
+            "An explicitly initiated IdP SSO URL retains a protected browser transaction without accepting an unsolicited assertion",
+            "SAML Redirect artifact delivery resolves a signed one-use SOAP response before verifying the original assertion and browser transaction",
+            "SAML Post artifact delivery resolves a signed one-use SOAP response before verifying the original assertion and browser transaction",
+            "SAML ECP verifies its signed SOAP identity and exact assertion consumer endpoint using only per-call user credentials",
+            "SAML ECP rejects incorrect user credentials without yielding a local identity",
+            "A real IdP SOAP logout cannot acknowledge or reserve its replay receipt when local session storage fails",
+            "Retrying a verified IdP SOAP logout atomically persists exactly one local session revocation before returning its signed correlated response",
+            "SAML persistent NameID retains its verified format and server-defined identity lifecycle without assuming every subject is a username",
+            "SAML transient NameID retains its verified format and server-defined identity lifecycle without assuming every subject is a username",
+            "SAML email NameID retains its verified format and server-defined identity lifecycle without assuming every subject is a username",
+            "SAML signed POST single logout verifies its correlated POST response and removes the independently observed Keycloak session",
+            "SAML assurance level one is verified from an actual signed authentication context after password-only login",
+            "SAML step-up reuses the original browser session but requires a real OTP challenge before its signed context can attain level two",
+            "SAML refuses a requested authentication context absent from the server assurance mapping instead of substituting a lower signed context",
+            "Forced SAML level-two authentication cannot turn an incorrect OTP into a local verified identity",
+            "Closing the SAML step-up host flag blocks assurance initiation independently of ordinary SAML login"
+          ]
+        },
+        {
+          "criterion": "SP and IdP initiated single logout, atomic host revocation and signed step-up assurance",
+          "checks": [
+            "SAML metadata binds the exact realm signing trust SP identity and assertion-consumer endpoint",
+            "SAML browser login verifies the real signed response assertion audience recipient lifetime and request correlation",
+            "SAML rejects replay mismatched browser transactions and a tampered real signed assertion",
+            "SAML signed single logout validates the real redirect response and independently removes the bound Keycloak session",
+            "SAML decrypts an actually encrypted Keycloak assertion before validating its signed identity audience and recipient",
+            "SAML Redirect request and Redirect response preserve signed identity and the original browser correlation",
+            "SAML Redirect request and Post response preserve signed identity and the original browser correlation",
+            "SAML Post request and Redirect response preserve signed identity and the original browser correlation",
+            "SAML Post request and Post response preserve signed identity and the original browser correlation",
+            "An explicitly initiated IdP SSO URL retains a protected browser transaction without accepting an unsolicited assertion",
+            "SAML Redirect artifact delivery resolves a signed one-use SOAP response before verifying the original assertion and browser transaction",
+            "SAML Post artifact delivery resolves a signed one-use SOAP response before verifying the original assertion and browser transaction",
+            "SAML ECP verifies its signed SOAP identity and exact assertion consumer endpoint using only per-call user credentials",
+            "SAML ECP rejects incorrect user credentials without yielding a local identity",
+            "A real IdP SOAP logout cannot acknowledge or reserve its replay receipt when local session storage fails",
+            "Retrying a verified IdP SOAP logout atomically persists exactly one local session revocation before returning its signed correlated response",
+            "SAML persistent NameID retains its verified format and server-defined identity lifecycle without assuming every subject is a username",
+            "SAML transient NameID retains its verified format and server-defined identity lifecycle without assuming every subject is a username",
+            "SAML email NameID retains its verified format and server-defined identity lifecycle without assuming every subject is a username",
+            "SAML signed POST single logout verifies its correlated POST response and removes the independently observed Keycloak session",
+            "SAML assurance level one is verified from an actual signed authentication context after password-only login",
+            "SAML step-up reuses the original browser session but requires a real OTP challenge before its signed context can attain level two",
+            "SAML refuses a requested authentication context absent from the server assurance mapping instead of substituting a lower signed context",
+            "Forced SAML level-two authentication cannot turn an incorrect OTP into a local verified identity",
+            "Closing the SAML step-up host flag blocks assurance initiation independently of ordinary SAML login"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "oidc-assurance",
+      "requiredServerFeatures": [
+        "STEP_UP_AUTHENTICATION"
+      ],
+      "criteria": [
+        {
+          "criterion": "Verified ID-token acr auth_time and amr enforce application assurance and reject stale or weaker protocol login identities",
+          "checks": [
+            "OIDC required assurance verifies the signed password context auth_time and actual pwd method for the independently observed user",
+            "A correctly signed password-only OIDC identity cannot satisfy an application requirement for level two and OTP",
+            "OIDC step-up retains its original user and browser session but requires a real OTP before signed acr and amr can satisfy level two",
+            "An already verified OIDC identity expires against signed auth_time independently of a newly issued token or an existing application session",
+            "A real password-and-OTP ID token cannot invent the hardware authentication method required by a stronger application policy",
+            "Closing the OIDC assurance host flag prevents a new assurance transaction before reading client credentials or sending any protocol request"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "wallet",
+      "requiredServerFeatures": [
+        "OID4VC_VCI",
+        "ACCOUNT_API"
+      ],
+      "criteria": [
+        {
+          "criterion": "Pinned credential metadata and offers with authorization-code PKCE credential authorization",
+          "checks": [
+            "Explicit realm scope configuration removes protocol-less SSF scopes before Keycloak 26.8.1 wallet offer lookup",
+            "Admin credential entitlement creation persists the expected sdk-jwt configuration for the independent account user",
+            "Credential authorization code and PKCE bind the expected user and exact sdk-jwt configuration",
+            "Real jwt_vc_json issuance verifies the pinned issuer signature disclosed user claims and exact wallet holder key",
+            "A modified real jwt_vc_json issuer signature cannot produce a verified credential",
+            "A valid jwt_vc_json credential bound to one wallet is refused for another holder",
+            "Keycloak refuses jwt_vc_json issuance without the configured holder proof",
+            "A real jwt_vc_json proof batch returns two independently verified holder-bound credentials",
+            "A consumed jwt_vc_json issuance nonce cannot be replayed even with a previously valid wallet proof",
+            "OID4VCI refresh preserves jwt_vc_json credential authorization and remains usable for holder-bound issuance",
+            "The current account independently observes its own sdk-jwt credential entitlement",
+            "Admin credential entitlement creation persists the expected sdk-sd configuration for the independent account user",
+            "Credential authorization code and PKCE bind the expected user and exact sdk-sd configuration",
+            "Real dc+sd-jwt issuance verifies the pinned issuer signature disclosed user claims and exact wallet holder key",
+            "A modified real dc+sd-jwt issuer signature cannot produce a verified credential",
+            "A valid dc+sd-jwt credential bound to one wallet is refused for another holder",
+            "Keycloak refuses dc+sd-jwt issuance without the configured holder proof",
+            "A real dc+sd-jwt proof batch returns two independently verified holder-bound credentials",
+            "A consumed dc+sd-jwt issuance nonce cannot be replayed even with a previously valid wallet proof",
+            "An SD-JWT wallet discloses no optional claims unless selected and binds its presentation to the verifier and fresh nonce",
+            "OID4VCI refresh preserves dc+sd-jwt credential authorization and remains usable for holder-bound issuance",
+            "The current account independently observes its own sdk-sd credential entitlement",
+            "Both canonical credential and JWT issuer metadata endpoints describe the pinned realm",
+            "Signed credential metadata verifies its type issuer subject lifetime and independently fetched realm signature",
+            "Real sdk-jwt request encryption authenticates its content and still independently verifies issuer and holder binding",
+            "Real sdk-jwt both encryption authenticates its content and still independently verifies issuer and holder binding",
+            "A signed sdk-jwt proof with an invalid issuer nonce cannot obtain a credential",
+            "Real sdk-sd request encryption authenticates its content and still independently verifies issuer and holder binding",
+            "Real sdk-sd both encryption authenticates its content and still independently verifies issuer and holder binding",
+            "A signed sdk-sd proof with an invalid issuer nonce cannot obtain a credential",
+            "Account-issued credential revocation independently removes the exact persisted Admin record",
+            "An account-revoked issued credential cannot be obtained again with its original issuance token",
+            "Account entitlement revocation independently removes the user's persisted credential grant",
+            "Closing the independent Wallet host flag stops its workflow before credentials or HTTP",
+            "Canceled wallet operations terminate before contacting the issuer"
+          ]
+        },
+        {
+          "criterion": "JWT and SD-JWT credential issuance verifies issuer holder binding and selective disclosures; nonce proof batch encryption refresh and account revocation",
+          "checks": [
+            "Explicit realm scope configuration removes protocol-less SSF scopes before Keycloak 26.8.1 wallet offer lookup",
+            "Admin credential entitlement creation persists the expected sdk-jwt configuration for the independent account user",
+            "Credential authorization code and PKCE bind the expected user and exact sdk-jwt configuration",
+            "Real jwt_vc_json issuance verifies the pinned issuer signature disclosed user claims and exact wallet holder key",
+            "A modified real jwt_vc_json issuer signature cannot produce a verified credential",
+            "A valid jwt_vc_json credential bound to one wallet is refused for another holder",
+            "Keycloak refuses jwt_vc_json issuance without the configured holder proof",
+            "A real jwt_vc_json proof batch returns two independently verified holder-bound credentials",
+            "A consumed jwt_vc_json issuance nonce cannot be replayed even with a previously valid wallet proof",
+            "OID4VCI refresh preserves jwt_vc_json credential authorization and remains usable for holder-bound issuance",
+            "The current account independently observes its own sdk-jwt credential entitlement",
+            "Admin credential entitlement creation persists the expected sdk-sd configuration for the independent account user",
+            "Credential authorization code and PKCE bind the expected user and exact sdk-sd configuration",
+            "Real dc+sd-jwt issuance verifies the pinned issuer signature disclosed user claims and exact wallet holder key",
+            "A modified real dc+sd-jwt issuer signature cannot produce a verified credential",
+            "A valid dc+sd-jwt credential bound to one wallet is refused for another holder",
+            "Keycloak refuses dc+sd-jwt issuance without the configured holder proof",
+            "A real dc+sd-jwt proof batch returns two independently verified holder-bound credentials",
+            "A consumed dc+sd-jwt issuance nonce cannot be replayed even with a previously valid wallet proof",
+            "An SD-JWT wallet discloses no optional claims unless selected and binds its presentation to the verifier and fresh nonce",
+            "OID4VCI refresh preserves dc+sd-jwt credential authorization and remains usable for holder-bound issuance",
+            "The current account independently observes its own sdk-sd credential entitlement",
+            "Both canonical credential and JWT issuer metadata endpoints describe the pinned realm",
+            "Signed credential metadata verifies its type issuer subject lifetime and independently fetched realm signature",
+            "Real sdk-jwt request encryption authenticates its content and still independently verifies issuer and holder binding",
+            "Real sdk-jwt both encryption authenticates its content and still independently verifies issuer and holder binding",
+            "A signed sdk-jwt proof with an invalid issuer nonce cannot obtain a credential",
+            "Real sdk-sd request encryption authenticates its content and still independently verifies issuer and holder binding",
+            "Real sdk-sd both encryption authenticates its content and still independently verifies issuer and holder binding",
+            "A signed sdk-sd proof with an invalid issuer nonce cannot obtain a credential",
+            "Account-issued credential revocation independently removes the exact persisted Admin record",
+            "An account-revoked issued credential cannot be obtained again with its original issuance token",
+            "Account entitlement revocation independently removes the user's persisted credential grant",
+            "Closing the independent Wallet host flag stops its workflow before credentials or HTTP",
+            "Canceled wallet operations terminate before contacting the issuer"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "wallet-pre-authorized",
+      "requiredServerFeatures": [
+        "OID4VC_VCI",
+        "OID4VC_VCI_PREAUTH_CODE"
+      ],
+      "criteria": [
+        {
+          "criterion": "Pre-authorized credential issuance binds the offer and user and rejects replay expiry and revoked entitlements without retrying terminal upstream errors",
+          "checks": [
+            "A real pre-authorized offer issues a holder-bound credential for the original independently observed user",
+            "A pre-authorized credential code is consumed atomically and cannot be redeemed twice",
+            "An expired pre-authorized offer cannot issue a credential and is never retried",
+            "A revoked pre-authorized offer preserves the pinned server's terminal 500 without issuing any credential or retrying the consumed grant",
+            "Closing the independent WalletPreAuthorized host flag stops its workflow before credentials or HTTP"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "wallet-offers",
+      "requiredServerFeatures": [
+        "OID4VC_VCI",
+        "OID4VC_VCI_REST_CREDENTIAL_OFFER"
+      ],
+      "criteria": [
+        {
+          "criterion": "REST credential offers preserve configured authorization and reject unauthorized targets; URI and bounded PNG QR responses interoperate",
+          "checks": [
+            "Credential authorization code and PKCE bind the expected user and exact sdk-sd configuration for credential offer",
+            "An authorization-code credential offer preserves issuer_state through PKCE and delivers only its authorized configuration",
+            "Real credential offers return a bounded PNG QR representation through Qr",
+            "Real credential offers return a bounded PNG QR representation through UriWithQr",
+            "An ordinary wallet user cannot create a targeted credential offer for another account",
+            "Closing the independent WalletOffers host flag stops its workflow before credentials or HTTP"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "wallet-mdoc",
+      "requiredServerFeatures": [
+        "OID4VC_VCI",
+        "OID4VC_MDOC"
+      ],
+      "criteria": [
+        {
+          "criterion": "Issued mdoc credentials verify COSE issuer signature certificate trust mobile security object digest validity and holder device key",
+          "checks": [
+            "Credential authorization code and PKCE bind the expected user and exact sdk-mdoc configuration",
+            "Real mdoc issuance verifies the trusted CA chain COSE issuer signature signed data digests validity and exact P-256 device key",
+            "A real mdoc credential cannot be accepted for another device key",
+            "An embedded mdoc issuer certificate never establishes trust without the application's configured CA",
+            "Closing the independent WalletMdoc host flag stops its workflow before credentials or HTTP"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "wallet-presentation",
+      "requiredServerFeatures": [
+        "OID4VC_VP"
+      ],
+      "criteria": [
+        {
+          "criterion": "OID4VP signed requests bind issuer client nonce state and response destination; selective disclosure and holder key binding complete real broker login without replay",
+          "checks": [
+            "Credential authorization code and PKCE bind the expected user and exact sdk-sd configuration for presentation",
+            "The plain same-device wallet link identifies the independently pinned verifier certificate",
+            "The plain same-device signed wallet request verifies its certificate signature audience nonce state and response destination",
+            "The plain same-device wallet refuses omitted required claims before signing or sending a presentation",
+            "The plain same-device verifier atomically consumes the wallet request and rejects a second real presentation",
+            "A real plain same-device wallet presentation completes only its original browser login and independently mapped user",
+            "The plain cross-device wallet link identifies the independently pinned verifier certificate",
+            "The plain cross-device signed wallet request verifies its certificate signature audience nonce state and response destination",
+            "The plain cross-device wallet refuses omitted required claims before signing or sending a presentation",
+            "The plain cross-device verifier atomically consumes the wallet request and rejects a second real presentation",
+            "A real plain cross-device wallet presentation completes only its original browser login and independently mapped user",
+            "The encrypted same-device wallet link identifies the independently pinned verifier certificate",
+            "The encrypted same-device signed wallet request verifies its certificate signature audience nonce state and response destination",
+            "The encrypted same-device wallet refuses omitted required claims before signing or sending a presentation",
+            "The encrypted same-device verifier atomically consumes the wallet request and rejects a second real presentation",
+            "A real encrypted same-device wallet presentation completes only its original browser login and independently mapped user",
+            "The encrypted cross-device wallet link identifies the independently pinned verifier certificate",
+            "The encrypted cross-device signed wallet request verifies its certificate signature audience nonce state and response destination",
+            "The encrypted cross-device wallet refuses omitted required claims before signing or sending a presentation",
+            "The encrypted cross-device verifier atomically consumes the wallet request and rejects a second real presentation",
+            "A real encrypted cross-device wallet presentation completes only its original browser login and independently mapped user",
+            "Closing the independent WalletPresentation host flag stops its workflow before credentials or HTTP"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "wallet-attestation",
+      "requiredServerFeatures": [
+        "CLIENT_AUTH_ABCA"
+      ],
+      "criteria": [
+        {
+          "criterion": "A trusted attester and fresh holder proof authenticate the expected client and reject untrusted attesters foreign holder keys invalid audience and expired attestations",
+          "checks": [
+            "Trusted wallet attestation and a fresh client proof authenticate the independently observed service account",
+            "Wallet attestation refuses an untrusted attester before issuing a client token",
+            "Wallet attestation refuses a foreign holder before issuing a client token",
+            "Wallet attestation refuses the wrong audience before issuing a client token",
+            "Wallet attestation refuses an expired attestation before issuing a client token",
+            "Closing wallet attestation blocks its credential provider and HTTP request independently of ordinary OIDC"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "authentication",
+      "requiredServerFeatures": [],
+      "criteria": [
+        {
+          "criterion": "Server-hosted authentication and application-initiated actions retain PKCE state nonce and verified identity without treating an action callback as proof of a persisted business change",
+          "checks": [
+            "A real WebAuthn registration persists its public credential only after the bound PKCE login and server-verified ceremony",
+            "Recovery codes are generated and explicitly confirmed in the server-hosted action before their credential is persisted",
+            "Only the valid email confirmation persists the verified target address and the next signature-verified login preserves the original account identity"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "authentication-webauthn",
+      "requiredServerFeatures": [
+        "WEB_AUTHN"
+      ],
+      "criteria": [
+        {
+          "criterion": "WebAuthn registration and login bind challenge origin RP user verification and signature; invalid origins and signatures cannot produce application identities",
+          "checks": [
+            "A real WebAuthn registration persists its public credential only after the bound PKCE login and server-verified ceremony",
+            "WebAuthn login verifies a fresh challenge RP origin user presence verification and authenticator signature before the application accepts its signed subject",
+            "An assertion from a foreign WebAuthn origin cannot produce a verified application login",
+            "A modified real WebAuthn assertion signature cannot produce a verified application login",
+            "Closing the independent WebAuthn authentication flag prevents authorization initiation before protocol HTTP"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "authentication-passkeys",
+      "requiredServerFeatures": [
+        "WEB_AUTHN",
+        "PASSKEYS"
+      ],
+      "criteria": [
+        {
+          "criterion": "Resident user-verified passkeys complete passwordless login for the bound account through server-hosted browser mediation",
+          "checks": [
+            "Passkey registration persists a resident user-verified public credential through the protected application-initiated action",
+            "A discoverable passkey authenticates its bound account without sending an account password to the application or authenticator",
+            "Closing the independent Passkeys authentication flag prevents authorization initiation before protocol HTTP"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "authentication-recovery-codes",
+      "requiredServerFeatures": [
+        "RECOVERY_CODES"
+      ],
+      "criteria": [
+        {
+          "criterion": "Recovery-code registration requires confirmation and one-time consumption prevents replay during second-factor login",
+          "checks": [
+            "Recovery codes are generated and explicitly confirmed in the server-hosted action before their credential is persisted",
+            "A real one-time recovery code completes the configured second-factor login for the original verified user",
+            "A consumed recovery code cannot authenticate a subsequent application login",
+            "Closing the independent RecoveryCodes authentication flag prevents authorization initiation before protocol HTTP"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "authentication-update-email",
+      "requiredServerFeatures": [
+        "UPDATE_EMAIL"
+      ],
+      "criteria": [
+        {
+          "criterion": "Application-initiated email changes require server-hosted confirmation and independently persist only the verified target address",
+          "checks": [
+            "An application-initiated email update sends a bound confirmation to the new address while the independently observed account retains its old email",
+            "A modified email action token cannot confirm or replace the account address",
+            "Only the valid email confirmation persists the verified target address and the next signature-verified login preserves the original account identity",
+            "A consumed email confirmation action token is rejected on replay without another account change",
+            "Closing the independent UpdateEmail authentication flag prevents authorization initiation before protocol HTTP"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "authentication-transient-users",
+      "requiredServerFeatures": [
+        "TRANSIENT_USERS"
+      ],
+      "criteria": [
+        {
+          "criterion": "Broker login verifies a transient identity without persisting a local user and cannot silently turn it into an ordinary stored account",
+          "checks": [
+            "A signature-verified transient broker identity retains a marked server session without persisting an ordinary local user",
+            "Refreshing a transient identity preserves its verified session subject without silently storing a local account",
+            "Transient logout invalidates its refresh credential and a subsequent broker login creates a distinct session identity without a persistent user",
+            "Closing the independent TransientUsers authentication flag prevents authorization initiation before protocol HTTP"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "authentication-kerberos",
+      "requiredServerFeatures": [
+        "KERBEROS"
+      ],
+      "criteria": [
+        {
+          "criterion": "SPNEGO negotiation validates the trusted Kerberos service ticket and maps its principal to the independently observed application identity",
+          "checks": [
+            "A Kerberos-only login issues a real Negotiate challenge and cannot create an application identity without a service ticket",
+            "A real MIT Kerberos SPNEGO service ticket maps only its configured principal to the independently observed signature-verified application identity",
+            "Replaying a consumed Kerberos service authenticator cannot create another application login",
+            "A modified Kerberos service authenticator cannot create a verified application identity",
+            "Closing the independent Kerberos authentication flag prevents authorization initiation before protocol HTTP"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "authentication-legacy-logout",
+      "requiredServerFeatures": [
+        "LOGOUT_ALL_SESSIONS_V1"
+      ],
+      "criteria": [
+        {
+          "criterion": "Explicit legacy logout-other-sessions compatibility revokes regular sessions while retaining offline sessions and requires independent deprecated capability opt-in",
+          "checks": [
+            "Explicit deprecated logout-other-sessions compatibility revokes the independently observed regular session after the user confirms a password change",
+            "The pinned logout-all-sessions v1 behavior deliberately retains the real offline session and cannot be described as revoking every credential",
+            "Closing the independent LegacyLogoutAllSessions authentication flag prevents authorization initiation before protocol HTTP"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "authentication-legacy-passkey-ui",
+      "requiredServerFeatures": [
+        "WEB_AUTHN",
+        "PASSKEYS",
+        "PASSKEYS_CONDITIONAL_UI_AUTHENTICATOR"
+      ],
+      "criteria": [
+        {
+          "criterion": "Explicit deprecated conditional passkey UI retains challenge origin and credential binding without enabling ordinary stable login implicitly",
+          "checks": [
+            "The explicitly enabled deprecated conditional Passkey authenticator preserves its resident credential challenge signature and original verified account",
+            "The deprecated conditional Passkey authenticator cannot turn a foreign-origin assertion into a verified application identity",
+            "Closing the independent LegacyConditionalPasskeyUi authentication flag prevents authorization initiation before protocol HTTP"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "authentication-twitter",
+      "requiredServerFeatures": [
+        "TWITTER_BROKER"
+      ],
+      "criteria": [
+        {
+          "criterion": "Deprecated Twitter federation preserves server-side state and maps only the independently verified upstream identity",
+          "checks": [
+            "Controlled twitter federation rejects a corrupted broker state without replacing the persisted external identity association",
+            "Controlled twitter federation completes the pinned upstream wire contract and independently verifies only its exact linked local application subject",
+            "Closing the independent Twitter authentication flag prevents authorization initiation before protocol HTTP"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "authentication-instagram",
+      "requiredServerFeatures": [
+        "INSTAGRAM_BROKER"
+      ],
+      "criteria": [
+        {
+          "criterion": "Deprecated Instagram federation preserves server-side state and maps only the independently verified upstream identity",
+          "checks": [
+            "Controlled instagram federation rejects a corrupted broker state without replacing the persisted external identity association",
+            "Controlled instagram federation completes the pinned upstream wire contract and independently verifies only its exact linked local application subject",
+            "Closing the independent Instagram authentication flag prevents authorization initiation before protocol HTTP"
+          ]
+        }
+      ]
+    }
+  ],
+  "runtimeChecks": {
+    "managed": [
+      "SAML metadata binds the exact realm signing trust SP identity and assertion-consumer endpoint",
+      "SAML browser login verifies the real signed response assertion audience recipient lifetime and request correlation",
+      "SAML rejects replay mismatched browser transactions and a tampered real signed assertion",
+      "SAML signed single logout validates the real redirect response and independently removes the bound Keycloak session",
+      "SAML decrypts an actually encrypted Keycloak assertion before validating its signed identity audience and recipient",
+      "Host OIDC challenge uses PKCE nonce and protected browser correlation without disclosing a client secret",
+      "Host OIDC rejects a real callback without its initiating browser correlation cookie",
+      "Host OIDC completes a real signed Keycloak login and stores the authenticated ticket on the server",
+      "Host browser cookie contains an opaque protected ticket reference rather than ID access or refresh tokens",
+      "Host OIDC callback replay cannot create a second authenticated ticket",
+      "Host resource authentication accepts the exact verified audience and refuses ID-token substitution",
+      "Host resource authentication refreshes pinned realm JWKS and accepts an actually rotated Keycloak signing key",
+      "Host resource authentication stops trusting a retired Keycloak signing key even for a previously valid unexpired token",
+      "MCP protected-resource metadata and Bearer challenge advertise the exact resource and pinned Keycloak authorization server",
+      "Host back-channel logout rejects an unsigned forged notification without invalidating the victim session",
+      "Host front-channel logout refuses an issuer query targeting an unrelated browser session",
+      "Host front-channel logout clears only the initiating browser ticket whose signed session identifier matches the notification",
+      "A real Keycloak back-channel logout revokes the matching local host ticket before the next authenticated request",
+      "SAML Redirect request and Redirect response preserve signed identity and the original browser correlation",
+      "SAML Redirect request and Post response preserve signed identity and the original browser correlation",
+      "SAML Post request and Redirect response preserve signed identity and the original browser correlation",
+      "SAML Post request and Post response preserve signed identity and the original browser correlation",
+      "An explicitly initiated IdP SSO URL retains a protected browser transaction without accepting an unsolicited assertion",
+      "SAML Redirect artifact delivery resolves a signed one-use SOAP response before verifying the original assertion and browser transaction",
+      "SAML Post artifact delivery resolves a signed one-use SOAP response before verifying the original assertion and browser transaction",
+      "SAML ECP verifies its signed SOAP identity and exact assertion consumer endpoint using only per-call user credentials",
+      "SAML ECP rejects incorrect user credentials without yielding a local identity",
+      "A real IdP SOAP logout cannot acknowledge or reserve its replay receipt when local session storage fails",
+      "Retrying a verified IdP SOAP logout atomically persists exactly one local session revocation before returning its signed correlated response",
+      "SAML persistent NameID retains its verified format and server-defined identity lifecycle without assuming every subject is a username",
+      "SAML transient NameID retains its verified format and server-defined identity lifecycle without assuming every subject is a username",
+      "SAML email NameID retains its verified format and server-defined identity lifecycle without assuming every subject is a username",
+      "SAML signed POST single logout verifies its correlated POST response and removes the independently observed Keycloak session",
+      "SAML assurance level one is verified from an actual signed authentication context after password-only login",
+      "SAML step-up reuses the original browser session but requires a real OTP challenge before its signed context can attain level two",
+      "SAML refuses a requested authentication context absent from the server assurance mapping instead of substituting a lower signed context",
+      "Forced SAML level-two authentication cannot turn an incorrect OTP into a local verified identity",
+      "Closing the SAML step-up host flag blocks assurance initiation independently of ordinary SAML login",
+      "Host OIDC rejects a real lower-assurance signed ID token even when the browser changes acr_values while preserving valid protected correlation",
+      "Host OIDC creates its opaque server ticket only after a real OTP and signed acr auth_time and amr satisfy the application policy",
+      "A local host cookie cannot outlive the mandatory signed authentication freshness even while its application ticket has remaining lifetime",
+      "Closing host OIDC assurance blocks its next challenge before metadata HTTP or client credential access independently of ordinary browser login",
+      "Host custom code redemption refuses a real signed callback that retains protected correlation but loses its initiating nonce cookie"
+    ]
+  },
+  "requiredCounterpartImages": [
+    "kerberos"
+  ]
+}

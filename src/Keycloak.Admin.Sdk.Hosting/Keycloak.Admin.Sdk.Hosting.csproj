@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <IsAotCompatible>false</IsAotCompatible>
+    <!-- Preserve the patched XML dependency in the NuGet manifest: consumers do not prune framework references inherited through packages. -->
+    <RestoreEnablePackagePruning>false</RestoreEnablePackagePruning>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <Description>Managed host integrations for the pinned Keycloak target. Support is independently verified per protocol and runtime.</Description>
+  </PropertyGroup>
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <ProjectReference Include="../Keycloak.Admin.Sdk.Protocols/Keycloak.Admin.Sdk.Protocols.csproj" />
+    <PackageReference Include="ITfoxtec.Identity.Saml2" Version="4.21.0" />
+    <PackageReference Include="System.Security.Cryptography.Pkcs" Version="10.0.14" />
+    <PackageReference Include="System.Security.Cryptography.Xml" Version="10.0.14" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="10.0.14" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.14" />
+    <None Update="README.md" Pack="true" PackagePath="/" />
+    <InternalsVisibleTo Include="Keycloak.Admin.Sdk.Hosting.Tests" />
+  </ItemGroup>
+</Project>

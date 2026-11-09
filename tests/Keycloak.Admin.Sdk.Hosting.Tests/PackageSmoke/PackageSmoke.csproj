@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType><IsPackable>false</IsPackable><PublishAot>false</PublishAot>
+    <RestoreAdditionalProjectSources Condition="'$(SdkPackageFeed)' != ''">$(SdkPackageFeed);$(RestoreAdditionalProjectSources)</RestoreAdditionalProjectSources>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Condition="'$(SdkPackageFeed)' != ''" Include="Keycloak.Admin.Sdk.Hosting" Version="[$(Version)]" />
+    <ProjectReference Condition="'$(SdkPackageFeed)' == ''" Include="../../../src/Keycloak.Admin.Sdk.Hosting/Keycloak.Admin.Sdk.Hosting.csproj" />
+    <PackageReference Condition="'$(SdkPackageFeed)' != ''" Include="Keycloak.Admin.Sdk.Platform" Version="[$(Version)]" />
+    <ProjectReference Condition="'$(SdkPackageFeed)' == ''" Include="../../../src/Keycloak.Admin.Sdk.Platform/Keycloak.Admin.Sdk.Platform.csproj" />
+  </ItemGroup>
+</Project>

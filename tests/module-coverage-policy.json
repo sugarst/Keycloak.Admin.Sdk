@@ -1,0 +1,16 @@
+{
+  "platform": {
+    "assembly": "Keycloak.Admin.Sdk.Platform",
+    "minimumTests": 5,
+    "methodPercent": 100,
+    "linePercent": 100,
+    "branchPercent": 100
+  },
+  "hosting": {
+    "assembly": "Keycloak.Admin.Sdk.Hosting",
+    "minimumTests": 35,
+    "methodPercent": 100,
+    "linePercent": 100,
+    "branchPercent": 100
+  }
+}

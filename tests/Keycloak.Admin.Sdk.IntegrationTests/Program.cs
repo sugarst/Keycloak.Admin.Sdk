@@ -22,6 +22,12 @@ static async Task RunAsync(CancellationToken cancellationToken)
     tokenResponse.EnsureSuccessStatusCode();
     var token = JsonSerializer.Deserialize(await tokenResponse.Content.ReadAsStringAsync(cancellationToken: cancellationToken), KeycloakJsonContext.Default.TokenResponse)!;
     var sdk = new KeycloakAdminClient(http, server, new StaticAccessTokenProvider(token.AccessToken!));
+    if (Environment.GetEnvironmentVariable("KC_TEST_PROTOCOLS") == "1")
+    {
+        using var protocolAdminTokens = new LivePasswordTokens(http, server);
+        await ProtocolValidationRunner.RunAsync(http, server, new KeycloakAdminClient(http, server, protocolAdminTokens), protocolAdminTokens, cancellationToken);
+        return;
+    }
     if (Environment.GetEnvironmentVariable("KC_TEST_FEATURE") is { } feature)
     {
         await FeatureValidationRunner.RunAsync(http, server, new StaticAccessTokenProvider(token.AccessToken!), feature,
@@ -159,6 +165,16 @@ sealed class RecordingHandler(HttpMessageHandler inner) : DelegatingHandler(inne
     {
         Interlocked.Increment(ref sent);
         var response = await base.SendAsync(request, cancellationToken);
+        if (!response.IsSuccessStatusCode && Environment.GetEnvironmentVariable("KC_TEST_PROTOCOL_COMPONENT") == "wallet" && request.RequestUri!.AbsolutePath.EndsWith("/protocol/oid4vc/credential", StringComparison.Ordinal))
+        {
+            using var failure = JsonDocument.Parse(await response.Content.ReadAsStringAsync(cancellationToken));
+            if (failure.RootElement.TryGetProperty("error_description", out var description))
+            {
+                string text = description.GetString() ?? "";
+                string[] known = ["JWK algorithm", "Unsupported content encryption algorithm", "Invalid JWK", "Encryption operation failed", "credential_response_encryption requires encrypted", "Encryption is required", "Could not decrypt", "Missing required parameters"];
+                Console.WriteLine("Wallet diagnostic classification: " + (known.FirstOrDefault(text.StartsWith) ?? "unclassified"));
+            }
+        }
         if (!response.IsSuccessStatusCode && Environment.GetEnvironmentVariable("KC_TEST_FULL_ADMIN") == "1")
         {
             string error = await response.Content.ReadAsStringAsync(cancellationToken);
