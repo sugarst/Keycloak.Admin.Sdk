@@ -1,12 +1,12 @@
 # 应用协议选定工作流验收
 
-固定 Keycloak 26.8.1；验证输入指纹 `91845857488c428a404ed28e988cc320871f4aad49b0a512414827b30882ea87`。
+固定 Keycloak 26.8.1；验证输入指纹 `a54351ad222e3149bc5728db6d506a3fb8dd87aeca8d006c9923ab18a3b4a65e`。
 
 | 运行模式 | 业务断言 | 不可变证据 |
 | --- | --- | --- |
-| managed | 20/20 | [ca49200b15d1](application-protocol-evidence/ca49200b15d116cef22f651e54d8866fcd206947105cff26f6f0d38175f417ad.json) |
-| native-aot | 20/20 | [ff18454a7313](application-protocol-evidence/ff18454a7313836ed25f17d4f16d2935d5a6f0fc2fb1d6aaaf9f2061e1a30aac.json) |
+| managed | 20/20 | [9e788f6c3301](application-protocol-evidence/9e788f6c33011736702e2a09c1e6a200c0b86bcfa7b4b632d365587dd04a9acd.json) |
+| native-aot | 20/20 | [bc369739fe89](application-protocol-evidence/bc369739fe890074cf53c6cb233470565e37000ebd53aba83367a2b7838a722f.json) |
 
-本报告覆盖旧版 Token Exchange v1 和 Identity Brokering v1：权限拒绝与撤销、内部访问／刷新令牌、模拟用户、内外部双向交换、外部断言验签、代理令牌存储与同意，以及宿主关闭。两个运行模式均在隔离容器网络实际调用固定服务端。标准计划的独立报告见 [标准应用工作流](application-protocol-workflows.md)；其他能力不能继承本兼容报告。
+覆盖安全登录、PAR、客户端委托、AuthZen、SCIM、账户、注册、UMA 共享与授权、Client Admin v2、管理端 OpenAPI、Docker 令牌、DPoP、身份代理和 SSF 的选定流程。两个运行模式均在隔离容器网络实际调用固定服务端；未验证能力不会继承这些结果。
 
 报告不自行晋升（`promoted=false`）。独立工具依据审阅计划、全部验收标准和当前输入，为明确运行模式/RID 生成支持配置。稳定与非稳定能力分别晋升。当前应用覆盖与责任边界由 [全能力矩阵](platform-capability-matrix.md) 和完整发布门禁共同确定。

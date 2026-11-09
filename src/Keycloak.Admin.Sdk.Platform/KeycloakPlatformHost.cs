@@ -4,7 +4,7 @@ using Keycloak.Admin.Sdk.Protocols;
 namespace Keycloak.Admin.Sdk.Platform;
 
 /// <summary>Reads authenticated serverinfo once, then shares one gate and one capability snapshot across both chains.
-/// Caller owns HttpClient, token provider and all user/session isolation. Native AOT compatible.</summary>
+/// Caller owns HttpClient, token provider and all user/session isolation. Managed host integration.</summary>
 public sealed class KeycloakPlatformHost
 {
     private readonly Uri server;
@@ -30,9 +30,24 @@ public sealed class KeycloakPlatformHost
         ArgumentNullException.ThrowIfNull(tokens);
         ArgumentNullException.ThrowIfNull(options);
         if (options.Support is null) throw new ArgumentException("Support configuration is required.", nameof(options));
-        if (options.Flags is null) throw new ArgumentException("Feature flags are required.", nameof(options));
         var catalog = options.Catalog ?? new KeycloakFeatureFlagCatalog();
-        var gate = KeycloakPlatformGate.Create(options.Flags, catalog);
+        if (options.FeatureManager is not null && options.Flags is not null)
+            throw new ArgumentException("Choose FeatureManager or Flags, not both.", nameof(options));
+        IKeycloakFeatureGate gate;
+        if (options.FeatureManager is { } manager)
+        {
+            var names = new List<KeyValuePair<string, bool>>();
+            await foreach (string id in manager.GetFeatureNamesAsync(cancellationToken).ConfigureAwait(false))
+                if (catalog.IsKnown(id)) names.Add(new(id, false));
+            // Other application flags are allowed; every SDK flag must be explicitly configured.
+            catalog.EnsureComplete(names);
+            gate = new KeycloakMicrosoftFeatureGate(manager, catalog);
+        }
+        else
+        {
+            if (options.Flags is null) throw new ArgumentException("Feature flags are required.", nameof(options));
+            gate = KeycloakPlatformGate.Create(options.Flags, catalog);
+        }
         var bootstrap = new KeycloakAdminClient(http, server, tokens);
         var info = await bootstrap.ServerInfoAdmin.GetInfoAsync(cancellationToken).ConfigureAwait(false);
         var capabilities = KeycloakServerCapabilities.FromServerInfo(info.Content);

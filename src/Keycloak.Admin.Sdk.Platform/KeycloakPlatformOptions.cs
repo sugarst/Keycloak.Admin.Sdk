@@ -1,5 +1,6 @@
 using Keycloak.Admin.Sdk.Capabilities;
 using Keycloak.Admin.Sdk.Protocols;
+using Microsoft.FeatureManagement;
 
 namespace Keycloak.Admin.Sdk.Platform;
 
@@ -11,4 +12,7 @@ public sealed class KeycloakPlatformOptions
     public IEnumerable<KeyValuePair<string, bool>> Flags { get; init; } = null!;
     public KeycloakFeatureFlagCatalog? Catalog { get; init; }
     public bool EnableUnauthorizedRecovery { get; init; }
+    /// <summary>Optional Microsoft feature manager. Choose this or Flags, not both.
+    /// Use a host-scoped IVariantFeatureManagerSnapshot when request consistency is required.</summary>
+    public IVariantFeatureManager? FeatureManager { get; init; }
 }

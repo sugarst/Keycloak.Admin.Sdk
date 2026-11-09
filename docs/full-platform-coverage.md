@@ -17,7 +17,7 @@
 
 - `Keycloak.Admin.Sdk`：管理接口和服务账号管理认证。
 - `Keycloak.Admin.Sdk.Protocols`：realm 绑定协议传输、显式客户端认证、用户令牌、钱包签发及出示，以及服务器托管认证的应用入口。开发包尚未发布。
-- `Keycloak.Admin.Sdk.Platform`：统一宿主开关面；Admin 链与协议链共享一次 serverinfo 引导、同一份开关目录和同一个 `KeycloakFeatureSnapshotGate`，零 NuGet 依赖，托管与 Native AOT 走同一代码路径。
+- `Keycloak.Admin.Sdk.Platform`：Managed 宿主统一开关面；支持快照模式和微软 FeatureManagement 模式，以及默认关闭的官方 Application Insights 遥测。两条链共享 serverinfo 和 gate；不声明 Native AOT 支持，原生调用使用主包的快照门禁。
 - `Keycloak.Admin.Sdk.Hosting`：Managed ASP.NET Core OIDC/JWT、服务端票据、注销接收、MCP 资源元数据和 SAML SP；依赖 ASP.NET Core 与 ITfoxtec。该包不声明 Native AOT 支持，各宿主能力仍须逐项晋升。
 
 管理 token 不会自动传入用户协议调用。每个用户的令牌、刷新和交换状态由各自调用上下文持有；协议模块不跨用户缓存，也不把解析 JWT 当作验证身份。

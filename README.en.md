@@ -62,7 +62,7 @@ Only bodyless GET/HEAD requests use transient retry, timeout and circuit-breakin
 
 ## Client and feature flags
 
-The feature package depends on Microsoft telemetry components; telemetry is opt-in.
+Platform integrates Microsoft.FeatureManagement and its official Application Insights publisher in the same package, with telemetry disabled by default. Platform targets Managed hosts; core and Protocols retain their independent Native AOT support. See [telemetry configuration and delivery](docs/platform-application-insights.md).
 
 `new KeycloakAdminClient(...)` provides the underlying API transport. Use `KeycloakSupportedClient.CreateAsync` to enforce the supported scope before sending requests, or `Keycloak.Admin.Sdk.Platform` / `KeycloakPlatformHost.CreateAsync` for one host switch surface. See [capability policy](docs/capability-policy.md), [platform feature gate](docs/platform-feature-gate.md), and [authentication, errors and DI](docs/authentication-and-errors.md).
 
@@ -78,14 +78,14 @@ The feature package depends on Microsoft telemetry components; telemetry is opt-
 
 This development branch maintains two separate matrices: [Admin API operations](docs/contracts/admin-api-support-matrix.tsv) and [platform capabilities](docs/contracts/platform-capability-matrix.md), covering 80 pinned upstream feature flags and 52 application capability families. Application capabilities are independently verified for an exact version and runtime. Deployment, databases, clustering, server UI and Java SPI responsibilities are documented in the [implementation scope](docs/full-platform-coverage.md). The 520-operation count below applies only to the Admin API.
 
-All 52 reviewed application families are promoted and the complete-coverage gate passes. Standard live workflows verify 434 Managed / 391 Linux Native AOT checks, plus 20 legacy checks per runtime. Support remains specific to the matrix's runtime, RID and current-input evidence.
+Current inputs have fresh independent promotion for all 52 application families: standard protocols pass 434/434 Managed and 391/391 Linux Native AOT checks, plus 20/20 legacy checks per runtime. Admin v2 passes 478/478 and v1 492/492 in both modes. The full release gate and 14 negative controls per route pass. Managed live acceptance also verifies the Microsoft engine and official local telemetry channel. Support remains specific to version, runtime, RID and current-input evidence.
 
 | Package | Use |
 | --- | --- |
 | `Keycloak.Admin.Sdk` | Admin API, service-account authentication and support policy |
 | `Keycloak.Admin.Sdk.Protocols` | Application OIDC/OAuth, Account, SCIM, authorization, wallets and identity brokering; Managed and verified Linux Native AOT |
 | `Keycloak.Admin.Sdk.Hosting` | ASP.NET Core login, resource tokens, logout, MCP metadata and SAML; Managed only |
-| `Keycloak.Admin.Sdk.Platform` | One host switch surface for Admin and protocol capabilities; Managed and Native AOT |
+| `Keycloak.Admin.Sdk.Platform` | Managed host switches for Admin and protocols, with Microsoft's engine and optional official Application Insights telemetry |
 
 preview.3 is an unpublished development version. Use project references or locally built packages for the new modules. Published preview.2 capabilities remain documented in the [changelog](CHANGELOG.md). See [wallet integration](docs/wallet-integration.md) and [authentication integration](docs/authentication-integration.md) for the new application flows.
 
@@ -105,7 +105,7 @@ The following APIs remain outside the default formal acceptance scope. Non-stabl
 | `ssf` | Experimental | 19 | Independent v2 Managed / Linux Native AOT validation; requires an explicit per-capability Experimental opt-in and host flag |
 | `client-types` | Experimental | 2 | Independent v2 Managed / Linux Native AOT validation; off by default, requiring a schema-2 opt-in and host flag |
 
-Schema 2 supports Managed, NativeAot and Portable verification profiles. Managed and Native AOT applications share `KeycloakFeatureSnapshotGate` through `Keycloak.Admin.Sdk.Platform`. Host flags cannot override version, stage or evidence denials. Existing configurations retain their requirement for both managed and AOT evidence. See the [capability policy](docs/capability-policy.md) for configuration and per-operation promotion.
+Schema 2 supports Managed, NativeAot and Portable verification profiles. Managed applications may use Platform snapshots or Microsoft's engine. Native AOT uses the core `KeycloakFeatureSnapshotGate` without referencing Platform. Host flags cannot override version, stage or evidence denials. Existing configurations retain their requirement for both managed and AOT evidence. See the [capability policy](docs/capability-policy.md) for configuration and per-operation promotion.
 
 The default v2 route also excludes 14 FGAP v1-only operations; those have passed acceptance on the v1 compatibility route. **A generated method does not itself imply SDK support.** Use `KeycloakSupportedClient.CreateAsync` to check version, maturity, route, server features and verification before sending a request. Constructing `KeycloakAdminClient` directly provides the underlying transport without applying the support policy automatically.
 

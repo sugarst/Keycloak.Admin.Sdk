@@ -26,7 +26,8 @@ return await ScriptHost.ExecuteAsync(args, "dotnet run --file tools/Test-Accepta
         ("no-fgap-proof", (m, _) => m["evidence"]!["fgapDelegation"]!["revocationDenied"] = false, "FGAP delegation must be verified"),
         ("no-support-policy-proof", (m, _) => m["evidence"]!["supportPolicyLocalGuards"] = false, "Real acceptance must use the support policy"),
         ("bootstrap-as-release", (m, _) => { m["evidence"]!["supportPolicy"] = "bootstrap-wire"; m["evidence"]!["supportPolicyLocalGuards"] = false; }, "Real acceptance must use the support policy"),
-        ("no-platform-gate-proof", (m, _) => m["evidence"]!["platformGateBusinessGuards"] = false, "Platform gate evidence must match")
+        ("no-platform-gate-proof", (m, _) => m["evidence"]!["platformGateBusinessGuards"] = false, "Platform gate evidence must match"),
+        ("wrong-microsoft-gate-proof", (m, _) => m["evidence"]!["microsoftFeatureManagementBusinessGuards"] = m["mode"]!.GetValue<string>() == "native-aot", "Microsoft Platform gate evidence must match")
     };
     string parent = "acceptance-gate-selftest-" + Guid.NewGuid().ToString("N");
     foreach (var test in cases)

@@ -20,7 +20,10 @@ public static partial class ContractSuite
         await ResilienceContracts.RunAsync();
         await CapabilityContracts.RunAsync();
         await RuntimeCapabilityContracts.RunAsync();
+#if KEYCLOAK_PLATFORM
         await PlatformContracts.RunAsync();
+        await PlatformTelemetryContracts.RunAsync();
+#endif
         ModelMatrix.Run();
         foreach (var operation in EndpointMatrix.Cases) await operation.RunAsync();
         Console.WriteLine($"PASS: {EndpointMatrix.Cases.Count} API operation matrices and all published DTO contracts.");

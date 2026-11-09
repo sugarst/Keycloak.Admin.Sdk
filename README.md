@@ -50,7 +50,7 @@ DI 入口 `AddKeycloakAdminSdk` 提供 `options.Resilience`，默认关闭。开
 
 ## 客户端与功能开关
 
-功能开关包依赖微软遥测组件，遥测默认关闭。
+Platform 同包接入 Microsoft.FeatureManagement 及官方 Application Insights 评估遥测发布器，遥测默认关闭。Platform 面向 Managed，不声明 Native AOT 支持；主包和 Protocols 的 AOT 支持独立保留。接入见[遥测说明](docs/platform-application-insights.md)。
 
 `new KeycloakAdminClient(...)` 提供底层 API 传输。需要在发送前限制支持范围时，使用 `KeycloakSupportedClient.CreateAsync`；统一宿主开关面使用 `Keycloak.Admin.Sdk.Platform` 的 `KeycloakPlatformHost.CreateAsync`。配置见 [能力策略](docs/capability-policy.md)、[平台开关面](docs/platform-feature-gate.md)，DI 见 [认证与错误处理](docs/authentication-and-errors.md)。
 
@@ -66,14 +66,14 @@ DI 入口 `AddKeycloakAdminSdk` 提供 `options.Resilience`，默认关闭。开
 
 本开发分支以两种独立矩阵维护支持范围：[Admin API 操作矩阵](docs/contracts/admin-api-support-matrix.tsv)，以及包含 80 个上游功能开关、52 个应用能力族的[全能力矩阵](docs/contracts/platform-capability-matrix.md)。应用可调用能力按固定版本和运行模式独立验收；部署、数据库、多集群、服务端界面和 Java SPI 的责任边界见[实施说明](docs/full-platform-coverage.md)。下述 520 项覆盖只属于 Admin API。
 
-当前 52/52 个审阅应用能力族已晋升，完整覆盖门禁通过；标准业务验收为 Managed 434 项、Linux Native AOT 391 项，旧版兼容计划各 20 项。支持范围以矩阵中的具体运行模式、RID 和当前输入证据为准。
+当前源码已重新完成 52/52 个应用能力族的独立晋升：标准协议 Managed 434/434、Linux Native AOT 391/391，旧版兼容各 20/20；Admin v2 两种模式各 478/478，v1 各 492/492。完整发布门禁及两路线各 14 项负向控制通过。微软引擎及官方本地遥测通道已纳入 Managed 真实业务验收；支持范围仍按版本、运行模式、RID 与当前输入证据限定。
 
 | 包 | 使用场景 |
 | --- | --- |
 | `Keycloak.Admin.Sdk` | 管理接口、服务账号认证与支持策略 |
 | `Keycloak.Admin.Sdk.Protocols` | 应用 OIDC/OAuth、账户、SCIM、授权、钱包及身份代理；支持 Managed 和已验证的 Linux Native AOT |
 | `Keycloak.Admin.Sdk.Hosting` | ASP.NET Core 登录、资源令牌、注销、MCP 元数据及 SAML；仅 Managed |
-| `Keycloak.Admin.Sdk.Platform` | 一个宿主开关面控制 Admin 与协议链的全部能力；托管与 Native AOT 均可用 |
+| `Keycloak.Admin.Sdk.Platform` | Managed 宿主统一开关面；支持微软引擎与可选官方 Application Insights 遥测 |
 
 preview.3 仍是未发布的开发版本；新增模块使用项目引用或本地构建包。已发布 preview.2 的范围见 [CHANGELOG](CHANGELOG.md)。钱包和认证接入分别见[钱包集成](docs/wallet-integration.md)和[认证集成](docs/authentication-integration.md)。
 
@@ -93,7 +93,7 @@ preview.3 仍是未发布的开发版本；新增模块使用项目引用或本�
 | `ssf` | Experimental | 19 | v2 路线 Managed／Linux Native AOT 独立验证；需逐功能 Experimental 许可与宿主开关 |
 | `client-types` | Experimental | 2 | v2 路线 Managed／Linux Native AOT 独立验证；默认关闭，需 schema 2 显式许可和宿主开关 |
 
-schema 2 支持 Managed、NativeAot 和 Portable 验证配置。托管与 Native AOT 统一使用 `Keycloak.Admin.Sdk.Platform` 的 `KeycloakFeatureSnapshotGate`；开关不能覆盖版本、阶段或证据拒绝。旧配置保持同时要求托管和 AOT 证据。接入见[能力策略](docs/capability-policy.md#按运行环境开放schema-2)；独立验证、晋升与最后的灰度开关见[非 Stable 功能流程](docs/non-stable-feature-lifecycle.md)。
+schema 2 支持 Managed、NativeAot 和 Portable 验证配置。托管可使用 Platform 的快照或微软引擎；Native AOT 使用主包 `KeycloakFeatureSnapshotGate`，不引用 Platform。开关不能覆盖版本、阶段或证据拒绝。旧配置保持同时要求托管和 AOT 证据。接入见[能力策略](docs/capability-policy.md#按运行环境开放schema-2)；独立验证、晋升与最后的灰度开关见[非 Stable 功能流程](docs/non-stable-feature-lifecycle.md)。
 
 默认 v2 路线另外排除 14 个 FGAP v1 专用接口；这些接口已在 v1 兼容路线上通过验收。**生成方法存在不等于 SDK 承诺支持该接口**：使用 `KeycloakSupportedClient.CreateAsync` 可在发送请求前执行版本、成熟度、路线、服务器功能及验证状态检查。直接构造 `KeycloakAdminClient` 提供底层传输，不自动应用支持策略。
 

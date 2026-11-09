@@ -1,6 +1,6 @@
 # 验证状态与发布边界
 
-记录日期：2026-11-05。目标、源码和镜像以 [baseline.json](../../contracts/baseline.json) 为准；以下是仓库证据，远端 CI 状态以实际运行结果为准。
+记录日期：2026-11-09。目标、源码和镜像以 [baseline.json](../../contracts/baseline.json) 为准；以下是仓库证据，远端 CI 状态以实际运行结果为准。
 
 | 检查 | 证据 |
 | --- | --- |
@@ -9,7 +9,7 @@
 | 两条路线的托管 / Linux Native AOT 业务验收 | [逐项结果与执行时间](full-live-acceptance.md)、[支持及排除原因](admin-api-support-matrix.tsv) |
 | 六条特殊路径的回归契约 | [媒体类型、动态查询与列表响应](six-path-fixes.md) |
 
-核心与能力策略已实际在 `linux-musl-x64` 发布并运行；Windows 本机缺少 C++ 链接器和 Windows SDK，尚无本机 `win-x64` 原生通过记录。平台开关面 `Keycloak.Admin.Sdk.Platform` 面向托管与 Native AOT 宿主，不依赖外部特性管理引擎，也不提供遥测；旧托管扩展的 Application Insights 本地事件验证仅属历史记录。
+核心与能力策略已实际在 `linux-musl-x64` 发布并运行；Windows 本机缺少 C++ 链接器和 Windows SDK，尚无本机 `win-x64` 原生通过记录。Platform 现为 Managed 包，使用 Microsoft.FeatureManagement 及默认关闭的官方 Application Insights 发布器；原生 smoke 不再引用它。主包/Protocols 继续独立原生验证；本次源码及证据语义变化后已重跑四套真实容器验收，v2 各 478/478、v1 各 492/492，标准协议 434/391、兼容协议各 20，完整发布候选门禁通过。候选记录见 [当前验收记录](../releases/26.8.1-preview.3/a1993485c6eeb5901f3c10ff76b1e165f329994bf4b7e0a2feb31c93808c3545.json)。
 
 ## 发布限制
 

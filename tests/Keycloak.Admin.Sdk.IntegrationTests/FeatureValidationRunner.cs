@@ -5,7 +5,11 @@ using System.Security.Cryptography;
 using System.Text.Json.Nodes;
 using Keycloak.Admin.Sdk;
 using Keycloak.Admin.Sdk.Capabilities;
+#if KEYCLOAK_PLATFORM
 using Keycloak.Admin.Sdk.Platform;
+#else
+using NativeCoreFixture;
+#endif
 
 internal static class FeatureValidationRunner
 {
@@ -43,7 +47,7 @@ internal static class FeatureValidationRunner
             flags[plan.FeatureId] = value;
             KeycloakPlatformGate.Replace(snapshot, flags, catalog);
         }
-        string gateName = "platform-snapshot";
+        string gateName = native ? "core-snapshot" : "platform-snapshot";
         var sdk = guarded ? await KeycloakSupportedClient.CreateAsync(http, server, tokens, support, gate, cancellationToken: cancellationToken) : wire;
         string realm = "sdk-feature-" + Guid.NewGuid().ToString("N");
         var proofs = new JsonArray();

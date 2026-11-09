@@ -29,7 +29,7 @@ internal static class FeatureAcceptance
             if (!server.RootElement.GetProperty("features").EnumerateArray().Any(f => f.GetProperty("name").GetString() == feature && f.GetProperty("enabled").GetBoolean()))
                 throw new InvalidDataException("Required server feature is disabled or unknown.");
         if (requireGuarded && (Text("catalogSha256") != CapabilityEvidence.Digest(Path.Combine(root, "contracts/capabilities.json"))
-            || report["flagDenialVerified"]?.GetValue<bool>() != true || Text("gate") != "platform-snapshot"))
+            || report["flagDenialVerified"]?.GetValue<bool>() != true || Text("gate") != (native ? "core-snapshot" : "platform-snapshot")))
             throw new InvalidDataException("Final feature acceptance requires the current catalog and runtime host gate.");
         var seen = new HashSet<string>(StringComparer.Ordinal);
         foreach (var node in report["operations"]?.AsArray() ?? throw new InvalidDataException("Missing operation proofs."))

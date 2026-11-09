@@ -23,6 +23,7 @@ public sealed class ContractTests
     [TestMethod] public Task PlatformGateReplacesSnapshotsAtomically() => PlatformContracts.GateAsync();
     [TestMethod] public Task PlatformHostSharesOneBootstrapAndGate() => PlatformContracts.HostAsync();
     [TestMethod] public Task PlatformHostSwitchesCannotPromoteCatalog() => PlatformContracts.DecisionsAsync();
+    [TestMethod, DoNotParallelize] public Task MicrosoftFeatureManagementAndOptionalTelemetry() => PlatformTelemetryContracts.RunAsync();
     [TestMethod] public void VersionCapabilityCatalog() => CapabilityContracts.Catalog();
     [TestMethod] public void SupportConfigurationAndOverrides() => CapabilityContracts.Configuration();
     [TestMethod] public void ConjunctiveSupportDecisions() => CapabilityContracts.Decisions();

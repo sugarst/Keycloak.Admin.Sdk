@@ -2,7 +2,11 @@ using System.Net;
 using System.Text.Json;
 using Keycloak.Admin.Sdk;
 using Keycloak.Admin.Sdk.Capabilities;
+#if KEYCLOAK_PLATFORM
 using Keycloak.Admin.Sdk.Platform;
+#else
+using NativeCoreFixture;
+#endif
 using static LiveContext;
 
 internal static class FullAdminSuite
@@ -19,12 +23,19 @@ internal static class FullAdminSuite
         if (!bootstrap) platform = await KeycloakPlatformHost.CreateAsync(http, server, tokens, options, cancellationToken);
         sdk = bootstrap ? new(http, server, tokens) : platform!.Admin;
         if (!bootstrap) await FullPlatformGate.VerifyAsync(platform!, flags, cancellationToken);
+#if KEYCLOAK_PLATFORM
+        if (!bootstrap) await FullMicrosoftFeatureGate.VerifyAsync(http, server, tokens,
+            declared.FgapVersion == 1 ? KeycloakAdminRoute.FgapV1Compatibility : KeycloakAdminRoute.FgapV2Stable, cancellationToken);
+#endif
         var ledger = new LiveLedger();
         string realm = "sdk-full-" + Guid.NewGuid().ToString("N");
         var c = new LiveContext(sdk, realm, ledger, cancellationToken);
         c.Evidence("supportPolicy", System.Text.Json.Nodes.JsonValue.Create(bootstrap ? "bootstrap-wire" : "catalog-conjunctive-v1"));
-        c.Evidence("platformGate", System.Text.Json.Nodes.JsonValue.Create(bootstrap ? "not-loaded-bootstrap" : "snapshot-v1"));
+        c.Evidence("platformGate", System.Text.Json.Nodes.JsonValue.Create(bootstrap ? "not-loaded-bootstrap"
+            : System.Runtime.CompilerServices.RuntimeFeature.IsDynamicCodeSupported ? "snapshot-v1" : "core-snapshot-v1"));
         c.Evidence("platformGateBusinessGuards", System.Text.Json.Nodes.JsonValue.Create(!bootstrap));
+        c.Evidence("microsoftFeatureManagementBusinessGuards", System.Text.Json.Nodes.JsonValue.Create(
+            !bootstrap && System.Runtime.CompilerServices.RuntimeFeature.IsDynamicCodeSupported));
         var serverInfo = await sdk.ServerInfoAdmin.GetInfoAsync(cancellationToken);
         if (!bootstrap) await FullCapabilities.VerifyAsync(http, server, tokens, declared.FgapVersion == 1 ? KeycloakAdminRoute.FgapV1Compatibility : KeycloakAdminRoute.FgapV2Stable, serverInfo.Content, cancellationToken);
         c.Evidence("supportPolicyLocalGuards", System.Text.Json.Nodes.JsonValue.Create(!bootstrap));

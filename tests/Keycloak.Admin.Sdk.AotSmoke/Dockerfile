@@ -2,7 +2,7 @@ ARG SDK_IMAGE
 FROM ${SDK_IMAGE} AS source
 RUN apk add --no-cache clang build-base zlib-dev
 WORKDIR /src
-COPY global.json Directory.Build.props Target.props ./
+COPY global.json Directory.Build.props Target.props Keycloak.Admin.Sdk.slnx ./
 COPY src ./src
 COPY tests ./tests
 COPY contracts ./contracts

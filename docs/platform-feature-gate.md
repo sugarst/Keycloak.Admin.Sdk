@@ -1,12 +1,12 @@
 # 平台开关面
 
-`Keycloak.Admin.Sdk.Platform` 提供一个宿主统一开关面，用同一个 `IKeycloakFeatureGate` 实例同时控制 Admin API 与应用协议链。它只通过两条 `ProjectReference` 引用主包与 Protocols，零 NuGet 依赖，并声明 `IsAotCompatible=true`；Admin 链与协议链共享一次受认证的 `serverinfo` 引导、同一份开关目录和同一个 gate 实例，托管与 Native AOT 走同一代码路径。包结构与依赖边界见 [架构与契约来源](architecture.md)。
+`Keycloak.Admin.Sdk.Platform` 提供 Managed 宿主统一开关面，用同一个 `IKeycloakFeatureGate` 实例同时控制 Admin API 与应用协议链。它直接引用 Protocols、Microsoft.FeatureManagement 4.8.0 和 Microsoft.FeatureManagement.Telemetry.ApplicationInsights 4.8.0，主包通过 Protocols 传递引用；`IsAotCompatible=false`。Admin 链与协议链共享一次受认证的 `serverinfo` 引导、同一份开关目录和 gate。包结构与依赖边界见 [架构与契约来源](architecture.md)。
 
 ## 定位
 
 | 公开类型 | 职责 |
 | --- | --- |
-| `KeycloakPlatformOptions` | 统一配置：支持配置、协议支持配置、开关快照、可选自定义目录及 401 恢复开关 |
+| `KeycloakPlatformOptions` | 支持配置、协议支持配置、互斥的 Flags / FeatureManager、可选目录及 401 恢复开关 |
 | `KeycloakPlatformHost` | 一次 `serverinfo` 引导得到 `KeycloakServerCapabilities`；产出 Admin client 与协议 transport，二者共享同一 gate 实例 |
 | `KeycloakFeatureFlagCatalog` | 完整开关目录，启动时校验配置完整性（fail-closed） |
 | `KeycloakPlatformGate` | `KeycloakFeatureSnapshotGate` 的创建与原子替换包装，沿用快照语义 |
@@ -67,16 +67,16 @@ var transport = host.CreateProtocolTransport(http, "master");
 
 ## 快照替换
 
-开关保存在不可变的 `KeycloakFeatureSnapshotGate` 快照中。`KeycloakPlatformGate.Replace` 先校验再原子替换整份快照；失败替换不影响旧快照，一次逻辑请求中总开关与功能开关读取同一代快照。配置变化只影响后续请求，不改变上游阶段、支持目录或服务端 feature。配置文件、远端更新、取消令牌和提供方生命周期由宿主管理；若宿主仍要接入自定义特性管理引擎，自行实现主包的 `IKeycloakFeatureGate` 即可，SDK 不再打包适配器。
+`Flags` 模式把开关保存在不可变的 `KeycloakFeatureSnapshotGate` 快照中。`KeycloakPlatformGate.Replace` 先校验再原子替换整份快照；失败替换不影响旧快照，一次逻辑请求读取同代快照。也可使用互斥的 `FeatureManager` 模式，经 `KeycloakMicrosoftFeatureGate` 调用微软引擎，支持过滤器及宿主配置刷新；需要作用域内一致性时由宿主使用 `IVariantFeatureManagerSnapshot` 并匹配作用域生命周期。微软模式启动时要求全部 SDK 开关已定义，允许额外应用开关。配置变化不改变支持目录或服务端 feature。
 
-## AOT 兼容
+## 运行环境
 
-包内不引入任何外部特性管理引擎、过滤器或反射配置绑定，`IsAotCompatible=true`，因此托管与 Native AOT 走同一份代码，不再有 managed / native-aot 分叉。真实验收的 `evidence.platformGate` 在两种模式统一为 `snapshot-v1`、`platformGateBusinessGuards` 为 true，首次 bootstrap 证据为 `not-loaded-bootstrap` 且业务守卫为 false。结果见 [真实验收](contracts/full-live-acceptance.md) 和 [覆盖率](contracts/test-coverage.md)，命令见 [测试与验证](testing.md)。
+Platform 面向 Managed 宿主，不声明 Native AOT 支持，即使关闭遥测也不承诺 AOT 兼容。主包与 Protocols 继续独立支持 AOT，原生 smoke 和集成验收不引用 Platform。集成夹具的 Managed 快照入口记录 `snapshot-v1`，Native AOT 使用主包快照并记录 `core-snapshot-v1`；bootstrap 仍为 `not-loaded-bootstrap`。真实证据须重新生成，历史通过不证明当前源码。
 
 ## 边界
 
 - 不控制上游 `KC_FEATURES`：`serverinfo.features[]` 只读入并用于能力校验，启用或关闭服务端功能由部署层负责，见 [全能力扩展](full-platform-coverage.md)。
-- 不提供遥测：不打包遥测适配器，不采集开关评估事件，也不注册请求或依赖自动采集；宿主如需观测自行订阅。
+- 提供同包内默认关闭的官方 Application Insights 评估遥测。宿主显式注册 publisher，逐开关设置 `telemetry.enabled`，启动 hosted services 并管理 TelemetryClient 生命周期；不注册请求或依赖自动采集，详见[遥测说明](platform-application-insights.md)。
 - 不合并两套总闸命名：统一的是同一 gate 实例与同一份开关目录，Admin 与协议各自的总闸保持独立。
 - 不提供灰度人群、比例筛选或目标过滤器，SDK 只消费宿主给出的最终布尔结果。
 

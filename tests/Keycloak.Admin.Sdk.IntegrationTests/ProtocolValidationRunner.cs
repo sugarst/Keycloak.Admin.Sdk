@@ -4,7 +4,11 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using Keycloak.Admin.Sdk;
 using Keycloak.Admin.Sdk.Capabilities;
+#if KEYCLOAK_PLATFORM
 using Keycloak.Admin.Sdk.Platform;
+#else
+using NativeCoreFixture;
+#endif
 using Keycloak.Admin.Sdk.Protocols;
 
 internal static class ProtocolValidationRunner

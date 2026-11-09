@@ -48,7 +48,7 @@ return await ScriptHost.ExecuteAsync(args,
     var dependencies = new Dictionary<string, string[]>
     {
         ["Keycloak.Admin.Sdk"] = ["Microsoft.Extensions.Http", "Microsoft.Extensions.Http.Resilience"],
-        ["Keycloak.Admin.Sdk.Platform"] = ["Keycloak.Admin.Sdk", "Keycloak.Admin.Sdk.Protocols"],
+        ["Keycloak.Admin.Sdk.Platform"] = ["Keycloak.Admin.Sdk.Protocols", "Microsoft.FeatureManagement", "Microsoft.FeatureManagement.Telemetry.ApplicationInsights"],
         ["Keycloak.Admin.Sdk.Protocols"] = ["Keycloak.Admin.Sdk", "Microsoft.IdentityModel.JsonWebTokens", "System.Security.Cryptography.Cose", "System.Formats.Cbor"],
         ["Keycloak.Admin.Sdk.Hosting"] = ["Keycloak.Admin.Sdk.Protocols", "ITfoxtec.Identity.Saml2", "System.Security.Cryptography.Pkcs", "System.Security.Cryptography.Xml", "Microsoft.AspNetCore.Authentication.OpenIdConnect", "Microsoft.AspNetCore.Authentication.JwtBearer"]
     };

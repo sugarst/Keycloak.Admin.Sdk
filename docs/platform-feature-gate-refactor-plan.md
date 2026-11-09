@@ -1,6 +1,10 @@
 # 全平台特性开关包改造方案
 
+> 当前验收：采用下述微软包方案后已完成全量重跑，`Release.cs --bootstrap` 全部门禁通过。Admin v2 两种模式各 478/478、v1 各 492/492，标准协议 434/391、兼容协议各 20；Managed 真实验收包含微软引擎和官方本地遥测通道。记录见[当前候选](releases/26.8.1-preview.3/a1993485c6eeb5901f3c10ff76b1e165f329994bf4b7e0a2feb31c93808c3545.json)。以下原始执行结果保留为方案历史，不代表尚未重跑。
+
 > 状态：**方案 / 代码闭环已完成，真实容器全量验收待重跑（2026-11-09）**。第 ①～⑤ 批已落地；第 ⑦ 批把 `FeatureValidationRunner` / `ProtocolValidationRunner` 收敛到 66 项平台开关目录与原子快照替换，并补齐上游 pinned-source 缓存。Release 构建 0 警 0 错；主测试 586/586、协议 105/105、宿主 14/14；覆盖率 15 项全 PASS；4 个 nupkg 依赖校验通过。第 ⑥ 批仍待执行：源码指纹变更使旧证据按设计自动失效，本机拉取固定 Keycloak 26.8.1 镜像受网络限制。适用 `26.8.1-preview.3` 开发线。
+
+> 当前方案调整：按用户要求放弃 Platform 的 Native AOT 承诺，同包接入 Microsoft.FeatureManagement 4.8.0 及其官方 Application Insights 适配器，遥测默认关闭，删除自写 HTTP 发送器。主包/Protocols 继续独立原生测试，原生验收使用核心快照。下文「零外部引擎」「两项依赖」「Platform AOT」等描述原始重构及历史结果，不代表当前依赖与支持范围；当前用法见[遥测说明](platform-application-insights.md)。
 > 前提：四个包**没有历史包袱**，不需要考虑 `26.8.1-preview.2` 消费者的升级路径。
 > 文中行号均以 2026-11-09 当前工作树为基准，实施时以实际代码为准。
 
