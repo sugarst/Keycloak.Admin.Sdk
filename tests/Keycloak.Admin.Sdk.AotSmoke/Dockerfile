@@ -1,3 +1,4 @@
+# syntax=docker/dockerfile:1
 ARG SDK_IMAGE
 FROM ${SDK_IMAGE} AS source
 RUN apk add --no-cache clang build-base zlib-dev
@@ -16,6 +17,9 @@ RUN /out/Keycloak.Admin.Sdk.AotSmoke
 FROM scratch AS export
 COPY --from=build /out/ /
 FROM source AS integration-build
-RUN dotnet publish tests/Keycloak.Admin.Sdk.IntegrationTests -c Release -r linux-musl-x64 -p:PublishAot=true -p:IlcTreatWarningsAsErrors=true -o /integration
+# Only source-based integration builds share downloaded dependencies. The package-consumption
+# stage above keeps its fresh package directory so same-version SDK packages cannot be stale.
+RUN --mount=type=cache,id=keycloak-integration-nuget,target=/root/.nuget/packages,sharing=locked \
+    dotnet publish tests/Keycloak.Admin.Sdk.IntegrationTests -c Release -r linux-musl-x64 -p:PublishAot=true -p:IlcTreatWarningsAsErrors=true -o /integration
 FROM scratch AS integration-export
 COPY --from=integration-build /integration/ /

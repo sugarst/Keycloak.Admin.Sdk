@@ -58,6 +58,14 @@ dotnet run --file tools/Release.cs
 
 首次验收只在测试程序显式使用 `bootstrap-wire`，业务断言不减少，但没有最终策略拦截证明，不能导出为发布证据。`--promote` 核验四份首次证据，晋升后必须重跑最终客户端。`Release.cs -- --bootstrap` 可强制演练。
 
+### 构建复用与耗时诊断
+
+Admin、应用协议、功能复验和指纹自检共用 `artifacts/integration-builds/` 中的集成测试构建缓存。Managed 与 Linux Native AOT 分开保存；键包含完整源码/契约指纹，Native AOT 还包含 `.dockerignore`。命中时核对全部产物的 SHA-256 和文件清单，再复制到各命令原有输出目录。代码、契约、能力目录或工具链输入变化，以及产物缺失或被修改，都会重新构建。构建期间输入改变、失败或取消均不生成新缓存记录，同一运行时的并发构建通过文件锁串行化。
+
+缓存只复用二进制；真实业务测试、覆盖率、门禁负向控制、证据时效和包消费验证仍按原流程执行。FGAP 两路线继续串行运行，避免共享本地服务互相切换配置。包消费测试保留独立还原目录；Docker 的 NuGet 下载缓存仅用于引用源码的集成测试构建。CI 缓存普通 NuGet 下载和已固定哈希的上游源码归档，后续仍校验归档哈希。
+
+`Verify.cs` 使用稳定的逐工具编译目录和 `UseAppHost=false`，使 MSBuild 能复用增量结果，并避免 Windows 上覆盖运行中的 apphost。`Release.cs` 输出每个阶段的开始、结果和耗时，成功或失败均保存 `artifacts/release-timings/<run>.json`，包含总耗时和已执行阶段；CI 会上传该目录。构建缓存可在没有验收任务运行时清理，随后自动重建。
+
 失败即停止，不输出成功 manifest；旧 artifacts 可能保留，以本次成功清单为准。输出位于 `artifacts/releases/<packageVersion>/<sourceFingerprint>/`。命令只生成本地候选，不提交、推送或发布 NuGet。[release.yaml](../.github/workflows/release.yaml) 手动工作流执行同一入口。NuGet 发布由项目所有者明确执行；版本配置、候选产物和源码推送均不代表已发布，发布记录以实际公开结果为准。
 
 版本记录需要提交，构建产物继续忽略；字段含义、制品保存和实际发布记录要求见 [发布记录与保存规则](releases/README.md)。

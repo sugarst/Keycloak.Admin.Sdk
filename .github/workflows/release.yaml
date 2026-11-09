@@ -9,6 +9,12 @@ jobs:
       - uses: actions/setup-dotnet@v4
         with:
           global-json-file: global.json
+          cache: true
+          cache-dependency-path: '**/*.csproj'
+      - uses: actions/cache@v4
+        with:
+          path: .cache/keycloak/**/source.tar.gz
+          key: keycloak-source-${{ runner.os }}-${{ hashFiles('contracts/baseline.json') }}
       - run: dotnet run --file tools/Release.cs
       - uses: actions/upload-artifact@v4
         if: always()
@@ -20,5 +26,6 @@ jobs:
             artifacts/test-results/
             !artifacts/test-results/**/packages/**
             artifacts/full-live/
+            artifacts/release-timings/
       - if: always()
         run: dotnet run --file local/keycloak/Service.cs -- down

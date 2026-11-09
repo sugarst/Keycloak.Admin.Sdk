@@ -3,6 +3,8 @@
 #:property PublishAot=false
 #:include ../../tools/Shared/ScriptSupport.cs
 #:include ../../tools/Shared/TargetBaseline.cs
+#:include ../../tools/Shared/IntegrationBuild.cs
+#:include ../../tests/Keycloak.Admin.Sdk.IntegrationTests/LiveEvidence.cs
 #:include ../../tests/Keycloak.Admin.Sdk.IntegrationTests/KeycloakRouteSupport.cs
 
 using System.Diagnostics;
@@ -170,11 +172,12 @@ return await ScriptHost.ExecuteAsync(args,
         environment["KEYCLOAK_ADMIN_API_ROUTE"] = route.Id;
         if (!native)
         {
-            await ScriptHost.RunCheckedAsync(root, "dotnet", ["run", "--project", "tests/Keycloak.Admin.Sdk.IntegrationTests", "-c", "Release"], ct, environment: environment);
+            string output = "tests/Keycloak.Admin.Sdk.IntegrationTests/bin/Release/net10.0";
+            await IntegrationBuild.PrepareAsync(root, false, output, ct);
+            await ScriptHost.RunCheckedAsync(root, "dotnet", [output + "/Keycloak.Admin.Sdk.IntegrationTests.dll"], ct, environment: environment);
             return;
         }
-        await ScriptHost.RunCheckedAsync(root, "docker", ["build", .. target.DockerBuildArgs, "-f", "tests/Keycloak.Admin.Sdk.AotSmoke/Dockerfile", "--target", "integration-export",
-            "--output", "type=local,dest=artifacts/aot/integration", "."], ct);
+        await IntegrationBuild.PrepareAsync(root, true, "artifacts/aot/integration", ct);
         var server = await ComposeAsync(["ps", "--quiet", "keycloak"], capture: true);
         string container = "keycloak-sdk-local-test-" + Guid.NewGuid().ToString("N");
         environment["KC_TEST_URL"] = "http://127.0.0.1:8080/";

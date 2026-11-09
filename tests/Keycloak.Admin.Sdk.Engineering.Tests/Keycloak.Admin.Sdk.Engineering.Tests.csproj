@@ -6,5 +6,7 @@
     <Compile Include="../../tools/FeatureAcceptance.cs" Link="FeatureAcceptance.cs" />
     <Compile Include="../../tools/PlatformCoverage.cs" Link="PlatformCoverage.cs" />
     <Compile Include="../../tools/ApplicationAcceptance.cs" Link="ApplicationAcceptance.cs" />
+    <Compile Include="../../tools/Shared/IntegrationBuild.cs" Link="IntegrationBuild.cs" />
+    <Compile Include="../../tools/Shared/StageTimings.cs" Link="StageTimings.cs" />
   </ItemGroup>
 </Project>
