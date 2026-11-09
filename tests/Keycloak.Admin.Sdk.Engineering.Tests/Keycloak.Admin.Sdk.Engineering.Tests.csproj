@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="../Keycloak.Admin.Sdk.IntegrationTests/Keycloak.Admin.Sdk.IntegrationTests.csproj" />
+    <Compile Include="../Shared/Fixtures/CapabilityTestData.cs" Link="Fixtures/CapabilityTestData.cs" />
+    <Compile Include="../../tools/CapabilityEvidence.cs" Link="CapabilityEvidence.cs" />
+    <Compile Include="../../tools/FeatureAcceptance.cs" Link="FeatureAcceptance.cs" />
+    <Compile Include="../../tools/PlatformCoverage.cs" Link="PlatformCoverage.cs" />
+    <Compile Include="../../tools/ApplicationAcceptance.cs" Link="ApplicationAcceptance.cs" />
+  </ItemGroup>
+</Project>

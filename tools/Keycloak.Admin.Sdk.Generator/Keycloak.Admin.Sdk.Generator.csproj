@@ -1,4 +1,4 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup><IsPackable>false</IsPackable><OutputType>Exe</OutputType></PropertyGroup>
-  <ItemGroup><Compile Include="../TargetBaseline.cs" Link="TargetBaseline.cs" /></ItemGroup>
+  <ItemGroup><Compile Include="../Shared/TargetBaseline.cs" Link="TargetBaseline.cs" /></ItemGroup>
 </Project>

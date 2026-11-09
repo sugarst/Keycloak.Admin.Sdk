@@ -71,10 +71,12 @@ dotnet run --file tools/Verify.cs -- --help
 
 ## 辅助代码
 
-- [ScriptSupport.cs](../tools/ScriptSupport.cs)：供文件式工具共用的参数、取消、路径和子进程支持；不是独立命令。
-- [TargetBaseline.cs](../tools/TargetBaseline.cs)：解析和校验单目标基线，供多个工具及生成器引用；不是独立命令。
+- [ScriptSupport.cs](../tools/Shared/ScriptSupport.cs)：供文件式工具共用的参数、取消、路径和子进程支持；不是独立命令。
+- [TargetBaseline.cs](../tools/Shared/TargetBaseline.cs)：解析和校验单目标基线，供多个工具及生成器引用；不是独立命令。
 - [ApplicationAcceptance.cs](../tools/ApplicationAcceptance.cs) 与 [PlatformCoverage.cs](../tools/PlatformCoverage.cs)：应用计划、证据晋升与矩阵计算的共用实现。
 - [Stamp-ApplicationInputs.cs](../tools/Stamp-ApplicationInputs.cs)：构建时绑定当前验证输入，避免旧程序为新源码出具验收证据。
 - [ProtocolTlsFixture.cs](../tools/ProtocolTlsFixture.cs) 与 [ProtocolKerberosFixture.cs](../tools/ProtocolKerberosFixture.cs)：隔离验收的临时 TLS 材料及 MIT Kerberos 对端编排；私钥和 keytab 不进入归档报告。
 - [JavaAuditIndex.cs](../tools/JavaAuditIndex.cs)：独立 Java token 扫描器，供契约审计和测试矩阵使用；不是独立命令。
 - [Keycloak.Admin.Sdk.Generator/Program.cs](../tools/Keycloak.Admin.Sdk.Generator/Program.cs) 与 [JavaRoutes.cs](../tools/Keycloak.Admin.Sdk.Generator/JavaRoutes.cs)：生成器入口及 Java 路由发现实现，属于独立 .NET 项目，不使用上述文件式工具的 `--help` 约定。
+
+共享的路径、进程、取消和基线基础设施集中于 `tools/Shared/`；生成器与独立审计仍保持各自算法。`Check-ModuleCoverage.cs -- --module=platform|hosting --results=<directory>` 检查独立模块门禁。

@@ -1,4 +1,8 @@
 using System.Reflection;
+using Keycloak.Admin.Sdk.Platform;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Configuration;
+using Microsoft.FeatureManagement;
 using Keycloak.Admin.Sdk.Hosting;
 using Keycloak.Admin.Sdk.Protocols;
 
@@ -13,4 +17,9 @@ foreach (var assembly in new[] { typeof(System.Security.Cryptography.Xml.SignedX
     if (!Version.TryParse(version, out var actual) || actual < new Version(10, 0, 14)) throw new InvalidOperationException("Hosting resolved an unpatched cryptography dependency.");
 }
 _ = typeof(ITfoxtec.Identity.Saml2.Saml2AuthnResponse).Assembly;
-Console.WriteLine("PASS standalone Hosting package consumer and patched cryptography dependencies.");
+var services = new ServiceCollection();
+services.AddSingleton<IConfiguration>(new ConfigurationBuilder().Build());
+services.AddFeatureManagement().AddKeycloakApplicationInsightsTelemetry();
+using var provider = services.BuildServiceProvider();
+_ = provider.GetRequiredService<IVariantFeatureManager>();
+Console.WriteLine("PASS Managed Hosting/Platform package consumer, optional telemetry disabled, and patched cryptography dependencies.");

@@ -10,8 +10,5 @@
   "rawBranchPercent": 59,
   "capabilityMethodPercent": 100,
   "capabilityLinePercent": 100,
-  "capabilityBranchPercent": 100,
-  "platformGateMethodPercent": 100,
-  "platformGateLinePercent": 100,
-  "platformGateBranchPercent": 100
+  "capabilityBranchPercent": 100
 }

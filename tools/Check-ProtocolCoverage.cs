@@ -1,7 +1,7 @@
 #!/usr/bin/env -S dotnet --
 #:property TargetFramework=net10.0
 #:property PublishAot=false
-#:include ScriptSupport.cs
+#:include Shared/ScriptSupport.cs
 using System.Xml.Linq;
 
 return await ScriptHost.ExecuteAsync(args, "dotnet run --file tools/Check-ProtocolCoverage.cs -- --results=<directory>",
@@ -11,8 +11,8 @@ return await ScriptHost.ExecuteAsync(args, "dotnet run --file tools/Check-Protoc
     string results = ScriptHost.Within(root, args.Single(a => a.StartsWith("--results=", StringComparison.Ordinal))[10..]);
     var trx = XDocument.Load(Path.Combine(results, "protocols.trx")); XNamespace ns = trx.Root!.Name.Namespace;
     var outcomes = trx.Descendants(ns + "UnitTestResult").ToArray();
-    if (outcomes.Length < 105 || outcomes.Any(r => (string?)r.Attribute("outcome") != "Passed"))
-        throw new InvalidDataException("Complete protocol and platform tests must pass without skips.");
+    if (outcomes.Length < 96 || outcomes.Any(r => (string?)r.Attribute("outcome") != "Passed"))
+        throw new InvalidDataException("Complete protocol tests must pass without skips.");
     var attachments = trx.Descendants(ns + "UriAttachment").Select(e => e.Element(ns + "A")?.Attribute("href")?.Value)
         .OfType<string>().Where(p => p.EndsWith("coverage.cobertura.xml", StringComparison.OrdinalIgnoreCase)).ToArray();
     if (attachments.Length != 1) throw new InvalidDataException("Expected one current TRX coverage attachment.");

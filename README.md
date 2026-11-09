@@ -121,3 +121,5 @@ dotnet run --file local/keycloak/Service.cs                # 启动本地 Keyclo
 - [端点与源码](docs/contracts/endpoint-inventory.md) · [源码对齐审计](docs/contracts/keycloak-26.8.1-alignment-audit.md)
 
 [Apache License 2.0](LICENSE)；契约来源及归属见 [第三方说明](THIRD_PARTY_NOTICES.md)。
+
+工程整理与测试分层见 [preview.3 工程结构](docs/project-architecture.md)。

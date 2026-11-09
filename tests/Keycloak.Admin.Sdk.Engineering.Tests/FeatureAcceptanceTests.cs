@@ -8,6 +8,21 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 public sealed class FeatureAcceptanceTests
 {
     [TestMethod]
+    public void SharedContractsBuildImportsAndCoveragePoliciesInvalidateEvidence()
+    {
+        using var fixture = new Repository();
+        foreach (string path in new[] { "tests/Shared/Contracts/Example.cs", "tests/Shared/CoreContracts.props",
+            "tests/Keycloak.Admin.Sdk.Platform.Tests/Example.cs", "tests/module-coverage-policy.json", "Keycloak.Admin.Sdk.slnx" })
+        {
+            string before = LiveEvidence.ValidationFingerprint(fixture.Root);
+            string fullPath = Path.Combine(fixture.Root, path);
+            Directory.CreateDirectory(Path.GetDirectoryName(fullPath)!);
+            File.AppendAllText(fullPath, "changed-test-input");
+            Assert.AreNotEqual(before, LiveEvidence.ValidationFingerprint(fixture.Root), path);
+        }
+    }
+
+    [TestMethod]
     public void ResetCatalogRetainsUnverifiedOperationsWithoutSupportProfiles()
     {
         using var fixture = new Repository();
@@ -19,7 +34,7 @@ public sealed class FeatureAcceptanceTests
             && e.Verification == KeycloakVerification.Contract && e.SupportProfiles.Count == 0));
         var policy = new KeycloakCapabilityPolicy(new Uri("https://keycloak.invalid/auth/"),
             new(KeycloakTarget.Version, allowPreview: true, allowExperimental: true),
-            KeycloakServerCapabilities.FromServerInfo(CapabilityContracts.ServerInfo()));
+            KeycloakServerCapabilities.FromServerInfo(CapabilityTestData.ServerInfo()));
         foreach (var endpoint in unverified)
             Assert.AreEqual(KeycloakCapabilityReason.NotSupported, policy.EvaluateEndpoint(endpoint).Reason);
     }
@@ -137,7 +152,7 @@ public sealed class FeatureAcceptanceTests
         Assert.Throws<InvalidDataException>(() => FeatureAcceptance.Validate(fixture.Root, guarded, true));
         Assert.Throws<InvalidDataException>(() => FeatureValidationPlan.Load(fixture.Root, "../outside"));
         Assert.Throws<InvalidDataException>(() => FeatureValidationPlan.Load(fixture.Root, "unknown"));
-        File.AppendAllText(Path.Combine(fixture.Root, "tools/ScriptSupport.cs"), "// code changed");
+        File.AppendAllText(Path.Combine(fixture.Root, "tools/Shared/ScriptSupport.cs"), "// code changed");
         Assert.Throws<InvalidDataException>(() => FeatureAcceptance.Validate(fixture.Root, report, false));
     }
 
@@ -146,12 +161,12 @@ public sealed class FeatureAcceptanceTests
         public string Root { get; } = Path.Combine(Path.GetTempPath(), "keycloak-feature-tests-" + Guid.NewGuid().ToString("N"));
         public Repository()
         {
-            foreach (string directory in new[] { "src", "tests/Keycloak.Admin.Sdk.IntegrationTests", "tests/Keycloak.Admin.Sdk.Protocols.Tests", "tests/Keycloak.Admin.Sdk.Hosting.Tests", "tests/Keycloak.Admin.Sdk.AotSmoke", "local/keycloak", "tools", "contracts" })
+            foreach (string directory in new[] { "src", "tests/Keycloak.Admin.Sdk.IntegrationTests", "tests/Keycloak.Admin.Sdk.Protocols.Tests", "tests/Keycloak.Admin.Sdk.Hosting.Tests", "tests/Keycloak.Admin.Sdk.AotSmoke", "local/keycloak", "tools/Shared", "contracts" })
                 Directory.CreateDirectory(Path.Combine(Root, directory));
             string source = ScriptHost.RepositoryRoot();
             foreach (string path in new[] { "contracts/baseline.json", "contracts/admin-api-routes.json", "contracts/capabilities.json", "contracts/capability-rules.json", "contracts/feature-validation-plans.json", "contracts/platform-feature-flags.example.json" })
                 File.Copy(Path.Combine(source, path), Path.Combine(Root, path));
-            foreach (string path in new[] { "global.json", "Directory.Build.props", "Target.props", "tools/TargetBaseline.cs", "tools/ScriptSupport.cs", "contracts/source-files.sha256", "tests/Keycloak.Admin.Sdk.AotSmoke/Dockerfile" })
+            foreach (string path in new[] { "global.json", "Directory.Build.props", "Keycloak.Admin.Sdk.slnx", "Target.props", "tools/Shared/TargetBaseline.cs", "tools/Shared/ScriptSupport.cs", "contracts/source-files.sha256", "tests/Keycloak.Admin.Sdk.AotSmoke/Dockerfile" })
                 File.WriteAllText(Path.Combine(Root, path), "test-input");
             // Begin with no Client Types or SSF verification, independently of the real catalog's current rollout.
             var catalog = JsonNode.Parse(File.ReadAllText(Path.Combine(Root, "contracts/capabilities.json")))!.AsObject();

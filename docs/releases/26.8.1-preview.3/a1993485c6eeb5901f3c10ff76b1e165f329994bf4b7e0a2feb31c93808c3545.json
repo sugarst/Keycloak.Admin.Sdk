@@ -4,31 +4,31 @@
   "keycloakVersion": "26.8.1",
   "keycloakSourceCommit": "24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b",
   "packageVersion": "26.8.1-preview.3",
-  "sdkCommit": "3b6968c7858da3634e104a08bba41635223f60a5",
+  "sdkCommit": "948f54ae4ab8c8f9a48f64bf771d56aadede42f2",
   "sdkWorkingTreeDirty": true,
   "dotnetSdk": "10.0.403",
   "sourceFingerprint": "a1993485c6eeb5901f3c10ff76b1e165f329994bf4b7e0a2feb31c93808c3545",
-  "finishedUtc": "2026-11-09T03:29:48.5167404\u002B00:00",
+  "finishedUtc": "2026-11-09T04:18:26.9372761\u002B00:00",
   "packages": [
     {
       "id": "Keycloak.Admin.Sdk",
       "file": "Keycloak.Admin.Sdk.26.8.1-preview.3.nupkg",
-      "sha256": "349dff8500a590073dded5f70d981980286c1ebcd1f514ef6ee7a07586969594"
+      "sha256": "003f2a922108f4513997ffd7cc4cf7c308da108382ffe70410917aafac4db547"
     },
     {
       "id": "Keycloak.Admin.Sdk.Platform",
       "file": "Keycloak.Admin.Sdk.Platform.26.8.1-preview.3.nupkg",
-      "sha256": "40f0d3c3d535c3b0ab3e250225692500a9683cba800dcf7b1313b96a098dc033"
+      "sha256": "8c41d6745da4b1cbeb275ed3d3a7d7b86c1e3b56f612001655497050b2ff9d8a"
     },
     {
       "id": "Keycloak.Admin.Sdk.Protocols",
       "file": "Keycloak.Admin.Sdk.Protocols.26.8.1-preview.3.nupkg",
-      "sha256": "e01f6b74f903f3163ccd94bf12e2d7ba5f1a9e1d029630cfe16e78f494845928"
+      "sha256": "4c7362bba9c1ad3a5daa6776db4f4faa3a910da4a8b4ad9b535e46a1a289da92"
     },
     {
       "id": "Keycloak.Admin.Sdk.Hosting",
       "file": "Keycloak.Admin.Sdk.Hosting.26.8.1-preview.3.nupkg",
-      "sha256": "7fa7b25ca31e08e108b1ece064034f5d68d9226fb561b3d96d1c1c75ebf7e451"
+      "sha256": "54d2e5baf1263fff3006f28aaa1ba0c42c1fd485fec6c8deaf655638103fab2b"
     }
   ],
   "allGatesPassed": true,

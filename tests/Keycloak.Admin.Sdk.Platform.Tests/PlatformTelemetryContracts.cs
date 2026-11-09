@@ -135,7 +135,7 @@ public static class PlatformTelemetryContracts
             Calls++;
             return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)
             { Content = new ByteArrayContent(request.RequestUri!.AbsolutePath.EndsWith("admin/serverinfo", StringComparison.Ordinal)
-                ? CapabilityContracts.ServerInfo() : "[]"u8.ToArray()) });
+                ? CapabilityTestData.ServerInfo() : "[]"u8.ToArray()) });
         }
     }
     private sealed class Channel : ITelemetryChannel

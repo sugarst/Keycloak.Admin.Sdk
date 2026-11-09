@@ -107,6 +107,10 @@ public static class RuntimeCapabilityContracts
         KeycloakReleaseCapabilities Read(string json) { using var d = JsonDocument.Parse(json); return KeycloakCapabilityCatalog.Read(d.RootElement); }
         Check(Read(Json(profile, endpoint)).Endpoints.Single().SupportProfiles.Single().Runtime == KeycloakRuntimeProfile.Managed);
         Check(Read(Json(profile, endpoint, 1)).Endpoints.Single().SupportProfiles.Count == 0);
+        var unverified = Read(Json(profile, endpoint.Replace("\"support\":\"Supported\"", "\"support\":\"NotSupported\"", StringComparison.Ordinal)
+            .Replace("[\"managed\"]", "[]", StringComparison.Ordinal))).Endpoints.Single();
+        Check(unverified.Support == KeycloakSupportStatus.NotSupported && unverified.SupportProfiles.Count == 0);
+        Check(Policy(new(KeycloakTarget.Version)).EvaluateEndpoint(unverified).Reason == KeycloakCapabilityReason.NotSupported);
         Reject<InvalidDataException>(() => Read(Json(profile, endpoint, 9)));
         Reject<InvalidDataException>(() => Read(Json(profile + "," + profile, endpoint)));
         foreach (var bad in new[] {

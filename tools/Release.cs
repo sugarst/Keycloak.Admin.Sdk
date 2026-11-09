@@ -1,8 +1,8 @@
 #!/usr/bin/env -S dotnet --
 #:property TargetFramework=net10.0
 #:property PublishAot=false
-#:include ScriptSupport.cs
-#:include TargetBaseline.cs
+#:include Shared/ScriptSupport.cs
+#:include Shared/TargetBaseline.cs
 #:include CapabilityEvidence.cs
 #:include FeatureAcceptance.cs
 #:include ApplicationAcceptance.cs
@@ -76,7 +76,7 @@ return await ScriptHost.ExecuteAsync(args, "dotnet run --file tools/Release.cs -
     }
     foreach (string relative in new[] { "contracts/platform-capabilities.json", "contracts/platform-coverage-rules.json", "contracts/application-validation-plans.json",
         "contracts/application-legacy-validation-plans.json", "contracts/application-verification-profiles.json", "docs/contracts/platform-capability-matrix.md",
-        "docs/contracts/protocol-coverage.md", "docs/contracts/application-protocol-workflows.md", "docs/contracts/application-protocol-legacy-workflows.md",
+        "docs/contracts/protocol-coverage.md", "docs/contracts/platform-coverage.md", "docs/contracts/hosting-coverage.md", "tests/module-coverage-policy.json", "docs/contracts/application-protocol-workflows.md", "docs/contracts/application-protocol-legacy-workflows.md",
         "docs/authentication-integration.md", "docs/wallet-integration.md" })
     {
         string destination = ScriptHost.Within(output, relative); Directory.CreateDirectory(Path.GetDirectoryName(destination)!); File.Copy(ScriptHost.Within(root, relative), destination, true);

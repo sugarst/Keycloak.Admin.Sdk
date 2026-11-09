@@ -135,3 +135,5 @@ The detailed guides and generated reports below are maintained in Chinese; the e
 - [Endpoints and source mapping](docs/contracts/endpoint-inventory.md) · [Source alignment audit](docs/contracts/keycloak-26.8.1-alignment-audit.md)
 
 [Apache License 2.0](LICENSE). See [third-party notices](THIRD_PARTY_NOTICES.md) for contract provenance and attribution.
+
+See [preview.3 project structure](docs/project-architecture.md) for package boundaries and test organization.

@@ -21,13 +21,21 @@ Windows 原生发布需要 Visual Studio C++ 桌面工具链和 Windows SDK；Li
 
 非 Stable 功能按“候选验证 → 审阅晋升 → 受策略保护复验 → 宿主灰度”推进，职责、命令与失败处理见 [完整流程](non-stable-feature-lifecycle.md)。
 
+## 测试工程分组
+
+解决方案按 `tests/Unit`、`tests/Integration`、`tests/PackageConsumption` 分组。四个单元测试工程各自对应一个发布包；Platform 的微软开关与可选遥测断言独立执行。`Engineering.Tests` 验证验收证据、取消和子进程，不再让核心单测依赖 IntegrationTests。
+
+核心托管测试和 AotSmoke 通过 `tests/Shared/CoreContracts.props` 显式共享 AOT 安全断言；不使用通配符引入 Managed 测试。两个包消费工程均纳入解决方案：AotSmoke 验证主包/Protocols 的原生包，Managed PackageSmoke 验证 Hosting/Platform 的实际 NuGet 图和默认关闭遥测。没有增加发布包。
+
 ## 契约测试与覆盖率
 
-每个生成操作有一个独立 MSTest 入口，映射见 [测试矩阵](contracts/admin-api-test-matrix.md)。期望值冻结在 [admin-api-test-matrix.json](../contracts/admin-api-test-matrix.json)，来自独立 Java token 扫描和发布定义。查询参数逐一隔离测试，以检出同类型参数互换；模型同时检查嵌套往返与单字段 wire 映射，避免对称读写错误相互抵消。媒体类型、动态分派等另有 [手写专项断言](../tests/Keycloak.Admin.Sdk.Tests/AlignmentContracts.cs)。
+每个生成操作有一个独立 MSTest 入口，映射见 [测试矩阵](contracts/admin-api-test-matrix.md)。期望值冻结在 [admin-api-test-matrix.json](../contracts/admin-api-test-matrix.json)，来自独立 Java token 扫描和发布定义。查询参数逐一隔离测试，以检出同类型参数互换；模型同时检查嵌套往返与单字段 wire 映射，避免对称读写错误相互抵消。媒体类型、动态分派等另有 [手写专项断言](../tests/Shared/Contracts/AlignmentContracts.cs)。
 
 操作矩阵通过 `IKeycloakAdminClient` 及生成资源接口调用。托管测试核对接口与实现的签名、参数名及默认值，并用 Moq 验证资源替换；DI 别名和六个原始入口的接口调用同时进入 Native AOT 验证。支持策略及平台开关面工厂另验证返回值可通过接口使用。
 
 `Verify.cs` 检查生成一致性和门禁负向控制，再运行 MSTest，将本次目录写入 `artifacts/test-results/latest.txt`。覆盖率门禁只读取该次 TRX 引用的 Cobertura；操作缺失、重复、跳过、失败或低于 [coverage-policy.json](../tests/coverage-policy.json) 均返回非零。当前测试总数、实测指标及统计口径仅在 [覆盖率报告](contracts/test-coverage.md) 维护。
+
+Platform 与 Hosting 分别由 `Check-ModuleCoverage.cs` 读取独立 TRX/Cobertura，报告见 [Platform](contracts/platform-coverage.md)、[Hosting](contracts/hosting-coverage.md)。Platform 保持方法/行/分支 100%；Hosting 根据现有实测设防退化门槛（方法 90%、行 79%、分支 75%），不宣称 100%。策略见 [module-coverage-policy.json](../tests/module-coverage-policy.json)。
 
 需要单独收集覆盖率时：
 
@@ -40,13 +48,12 @@ dotnet run --file tools/Check-Coverage.cs -- --results=artifacts/test-results/ma
 
 ## 依赖边界
 
-常规测试的直接包引用均设为 `PrivateAssets="all"`，项目不可打包；准确版本见 [测试项目](../tests/Keycloak.Admin.Sdk.Tests/Keycloak.Admin.Sdk.Tests.csproj)。
+常规测试的直接包引用均设为 `PrivateAssets="all"`，项目不可打包；MSTest 和 Coverlet 版本统一定义在 [测试构建配置](../tests/Directory.Build.props)。
 
 | 包 | 用途 |
 | --- | --- |
 | Microsoft.NET.Test.Sdk、MSTest.TestAdapter、MSTest.TestFramework | 测试发现、运行及断言 |
 | coverlet.collector | Cobertura 覆盖率 |
-| Microsoft.Extensions.Configuration.Json | 旧托管扩展的配置绑定；平台开关面改由宿主直接提供快照，测试项目已不再引用 |
 | AutoFixture、Bogus | 请求样本、局部固定种子的用户数据 |
 | Moq、PasswordGenerator | token/策略交互次数、密码透传与错误脱敏 |
 

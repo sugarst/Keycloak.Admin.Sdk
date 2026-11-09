@@ -1,8 +1,8 @@
 #!/usr/bin/env -S dotnet --
 #:property TargetFramework=net10.0
 #:property PublishAot=false
-#:include ScriptSupport.cs
-#:include TargetBaseline.cs
+#:include Shared/ScriptSupport.cs
+#:include Shared/TargetBaseline.cs
 
 using System.IO.Compression;
 using System.Runtime.InteropServices;
@@ -20,7 +20,7 @@ return await ScriptHost.ExecuteAsync(args,
         throw new InvalidDataException("Use .yaml for repository YAML files:\n" + string.Join('\n', legacyYaml.Select(file => Path.GetRelativePath(root, file))));
     // Release.cs can be the parent process. Do not overwrite its running apphost on Windows.
     string toolsOutput = "artifacts/tool-check/" + Guid.NewGuid().ToString("N");
-    foreach (string script in new[] { "Release.cs", "Upgrade.cs", "Test-Workflow.cs", "Generate-ValidationList.cs", "Test-Integration.cs", "Update-Contracts.cs", "Update-Verification.cs", "Audit-Contracts.cs", "Generate-TestMatrix.cs", "Check-Coverage.cs", "Generate-LiveRoutes.cs", "Check-AdminRoutes.cs", "Check-FullAcceptance.cs", "Test-AcceptanceGate.cs", "Test-AllAdminRoutes.cs", "Generate-CapabilityCatalog.cs", "Test-Feature.cs", "Check-FeatureAcceptance.cs", "Test-SupportedFeatures.cs", "Generate-PlatformMatrix.cs", "Generate-FeatureCatalog.cs", "Check-ProtocolCoverage.cs", "Test-ApplicationProtocols.cs", "Check-ApplicationProtocols.cs" })
+    foreach (string script in new[] { "Release.cs", "Upgrade.cs", "Test-Workflow.cs", "Generate-ValidationList.cs", "Test-Integration.cs", "Update-Contracts.cs", "Update-Verification.cs", "Audit-Contracts.cs", "Generate-TestMatrix.cs", "Check-Coverage.cs", "Generate-LiveRoutes.cs", "Check-AdminRoutes.cs", "Check-FullAcceptance.cs", "Test-AcceptanceGate.cs", "Test-AllAdminRoutes.cs", "Generate-CapabilityCatalog.cs", "Test-Feature.cs", "Check-FeatureAcceptance.cs", "Test-SupportedFeatures.cs", "Generate-PlatformMatrix.cs", "Generate-FeatureCatalog.cs", "Check-ProtocolCoverage.cs", "Check-ModuleCoverage.cs", "Test-ApplicationProtocols.cs", "Check-ApplicationProtocols.cs" })
         await ScriptHost.RunCheckedAsync(root, "dotnet", ["build", "tools/" + script, "-o", toolsOutput + "/" + Path.GetFileNameWithoutExtension(script)], ct);
     await ScriptHost.RunCheckedAsync(root, "dotnet", ["build", "local/keycloak/Service.cs", "-o", toolsOutput + "/Service"], ct);
     await ScriptHost.RunCheckedAsync(root, "dotnet", ["build", "Keycloak.Admin.Sdk.slnx", "-c", "Release"], ct);
@@ -42,7 +42,13 @@ return await ScriptHost.ExecuteAsync(args,
         "--logger", "trx;LogFileName=protocols.trx", "--results-directory", protocolResults, "--collect", "XPlat Code Coverage"], ct);
     await ScriptHost.RunCheckedAsync(root, "dotnet", ["run", "--file", "tools/Check-ProtocolCoverage.cs", "--", "--results=" + protocolResults], ct);
     await ScriptHost.RunCheckedAsync(root, "dotnet", ["test", "tests/Keycloak.Admin.Sdk.Hosting.Tests", "-c", "Release", "--no-build",
-        "--logger", "trx;LogFileName=hosting.trx", "--results-directory", testResults + "/hosting"], ct);
+        "--logger", "trx;LogFileName=hosting.trx", "--results-directory", testResults + "/hosting", "--collect", "XPlat Code Coverage"], ct);
+    await ScriptHost.RunCheckedAsync(root, "dotnet", ["run", "--file", "tools/Check-ModuleCoverage.cs", "--", "--module=hosting", "--results=" + testResults + "/hosting"], ct);
+    await ScriptHost.RunCheckedAsync(root, "dotnet", ["test", "tests/Keycloak.Admin.Sdk.Platform.Tests", "-c", "Release", "--no-build",
+        "--logger", "trx;LogFileName=platform.trx", "--results-directory", testResults + "/platform", "--collect", "XPlat Code Coverage"], ct);
+    await ScriptHost.RunCheckedAsync(root, "dotnet", ["run", "--file", "tools/Check-ModuleCoverage.cs", "--", "--module=platform", "--results=" + testResults + "/platform"], ct);
+    await ScriptHost.RunCheckedAsync(root, "dotnet", ["test", "tests/Keycloak.Admin.Sdk.Engineering.Tests", "-c", "Release", "--no-build",
+        "--logger", "trx;LogFileName=engineering.trx", "--results-directory", testResults + "/engineering"], ct);
     var target = TargetBaseline.Load(root);
     string feed = Path.Combine(root, "artifacts", "packages", target.PackageVersion);
     var dependencies = new Dictionary<string, string[]>

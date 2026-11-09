@@ -62,7 +62,7 @@ public static class PlatformContracts
         var gate = KeycloakPlatformGate.Create(flags, catalog);
         var policy = new KeycloakFeatureGatePolicy(new KeycloakCapabilityPolicy(Server,
             new KeycloakSupportConfiguration(KeycloakTarget.Version),
-            KeycloakServerCapabilities.FromServerInfo(CapabilityContracts.ServerInfo())), gate);
+            KeycloakServerCapabilities.FromServerInfo(CapabilityTestData.ServerInfo())), gate);
         var target = new Uri(Server, "admin/serverinfo");
         var denied = await policy.EvaluateAsync(HttpMethod.Get, target, "ServerInfoAdmin.GetInfoAsync");
         Check(denied.Reason == KeycloakCapabilityReason.DisabledByHost, "A closed host switch cannot be promoted by the catalog");
@@ -130,7 +130,7 @@ public static class PlatformContracts
         {
             Sends++;
             byte[] body = request.RequestUri!.AbsolutePath.EndsWith("admin/serverinfo", StringComparison.Ordinal)
-                ? CapabilityContracts.ServerInfo() : "[]"u8.ToArray();
+                ? CapabilityTestData.ServerInfo() : "[]"u8.ToArray();
             return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK) { Content = new ByteArrayContent(body) });
         }
     }

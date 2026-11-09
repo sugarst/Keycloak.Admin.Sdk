@@ -1,16 +1,25 @@
 <Solution>
   <Folder Name="/src/">
-    <Project Path="src/Keycloak.Admin.Sdk.Hosting/Keycloak.Admin.Sdk.Hosting.csproj" />
-    <Project Path="src/Keycloak.Admin.Sdk.Protocols/Keycloak.Admin.Sdk.Protocols.csproj" />
-    <Project Path="src/Keycloak.Admin.Sdk.Platform/Keycloak.Admin.Sdk.Platform.csproj" />
     <Project Path="src/Keycloak.Admin.Sdk/Keycloak.Admin.Sdk.csproj" />
+    <Project Path="src/Keycloak.Admin.Sdk.Protocols/Keycloak.Admin.Sdk.Protocols.csproj" />
+    <Project Path="src/Keycloak.Admin.Sdk.Hosting/Keycloak.Admin.Sdk.Hosting.csproj" />
+    <Project Path="src/Keycloak.Admin.Sdk.Platform/Keycloak.Admin.Sdk.Platform.csproj" />
   </Folder>
-  <Folder Name="/tests/">
-    <Project Path="tests/Keycloak.Admin.Sdk.Hosting.Tests/Keycloak.Admin.Sdk.Hosting.Tests.csproj" />
-    <Project Path="tests/Keycloak.Admin.Sdk.Protocols.Tests/Keycloak.Admin.Sdk.Protocols.Tests.csproj" />
+  <Folder Name="/tests/Unit/">
     <Project Path="tests/Keycloak.Admin.Sdk.Tests/Keycloak.Admin.Sdk.Tests.csproj" />
-    <Project Path="tests/Keycloak.Admin.Sdk.IntegrationTests/Keycloak.Admin.Sdk.IntegrationTests.csproj" />
-    <Project Path="tests/Keycloak.Admin.Sdk.AotSmoke/Keycloak.Admin.Sdk.AotSmoke.csproj" />
+    <Project Path="tests/Keycloak.Admin.Sdk.Protocols.Tests/Keycloak.Admin.Sdk.Protocols.Tests.csproj" />
+    <Project Path="tests/Keycloak.Admin.Sdk.Hosting.Tests/Keycloak.Admin.Sdk.Hosting.Tests.csproj" />
+    <Project Path="tests/Keycloak.Admin.Sdk.Platform.Tests/Keycloak.Admin.Sdk.Platform.Tests.csproj" />
   </Folder>
-  <Folder Name="/tools/"><Project Path="tools/Keycloak.Admin.Sdk.Generator/Keycloak.Admin.Sdk.Generator.csproj" /></Folder>
+  <Folder Name="/tests/Integration/">
+    <Project Path="tests/Keycloak.Admin.Sdk.IntegrationTests/Keycloak.Admin.Sdk.IntegrationTests.csproj" />
+    <Project Path="tests/Keycloak.Admin.Sdk.Engineering.Tests/Keycloak.Admin.Sdk.Engineering.Tests.csproj" />
+  </Folder>
+  <Folder Name="/tests/PackageConsumption/">
+    <Project Path="tests/Keycloak.Admin.Sdk.AotSmoke/Keycloak.Admin.Sdk.AotSmoke.csproj" />
+    <Project Path="tests/Keycloak.Admin.Sdk.Hosting.Tests/PackageSmoke/PackageSmoke.csproj" />
+  </Folder>
+  <Folder Name="/tools/">
+    <Project Path="tools/Keycloak.Admin.Sdk.Generator/Keycloak.Admin.Sdk.Generator.csproj" />
+  </Folder>
 </Solution>

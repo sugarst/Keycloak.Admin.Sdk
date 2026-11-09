@@ -151,8 +151,8 @@ public sealed class ApplicationAcceptanceTests
         {
             var repo = new DirectoryInfo(AppContext.BaseDirectory); while (repo is not null && !File.Exists(Path.Combine(repo.FullName, "Target.props"))) repo = repo.Parent;
             Assert.IsNotNull(repo);
-            foreach (string directory in new[] { "src", "tests/Keycloak.Admin.Sdk.IntegrationTests", "tests/Keycloak.Admin.Sdk.Protocols.Tests", "tests/Keycloak.Admin.Sdk.Hosting.Tests", "tests/Keycloak.Admin.Sdk.AotSmoke", "local/keycloak", "tools", "contracts" }) Directory.CreateDirectory(Path.Combine(Root, directory));
-            foreach (string file in new[] { "global.json", "Directory.Build.props", "Target.props", "tools/TargetBaseline.cs", "tools/ScriptSupport.cs", "contracts/source-files.sha256", "tests/Keycloak.Admin.Sdk.AotSmoke/Dockerfile" }) File.Copy(Path.Combine(repo.FullName, file), Path.Combine(Root, file));
+            foreach (string directory in new[] { "src", "tests/Keycloak.Admin.Sdk.IntegrationTests", "tests/Keycloak.Admin.Sdk.Protocols.Tests", "tests/Keycloak.Admin.Sdk.Hosting.Tests", "tests/Keycloak.Admin.Sdk.AotSmoke", "local/keycloak", "tools/Shared", "contracts" }) Directory.CreateDirectory(Path.Combine(Root, directory));
+            foreach (string file in new[] { "global.json", "Directory.Build.props", "Keycloak.Admin.Sdk.slnx", "Target.props", "tools/Shared/TargetBaseline.cs", "tools/Shared/ScriptSupport.cs", "contracts/source-files.sha256", "tests/Keycloak.Admin.Sdk.AotSmoke/Dockerfile" }) File.Copy(Path.Combine(repo.FullName, file), Path.Combine(Root, file));
             foreach (string file in Directory.EnumerateFiles(Path.Combine(repo.FullName, "contracts"), "*.json")) File.Copy(file, Path.Combine(Root, "contracts", Path.GetFileName(file)));
             var baseline = TargetBaseline.Load(Root); string destination = Path.Combine(baseline.Source(Root), PlatformCoverage.ProfilePath);
             Directory.CreateDirectory(Path.GetDirectoryName(destination)!); File.Copy(Path.Combine(baseline.Source(repo.FullName), PlatformCoverage.ProfilePath), destination);

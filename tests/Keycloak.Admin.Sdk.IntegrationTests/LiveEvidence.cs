@@ -8,12 +8,12 @@ internal static class LiveEvidence
     public static string ValidationFingerprint(string root) => Fingerprint(root, true);
     private static string Fingerprint(string root, bool validation)
     {
-        string[] roots = ["src", "tests/Keycloak.Admin.Sdk.IntegrationTests", "tests/Keycloak.Admin.Sdk.Protocols.Tests", "tests/Keycloak.Admin.Sdk.Hosting.Tests", "tests/Keycloak.Admin.Sdk.AotSmoke", "local/keycloak", "tools"];
+        string[] roots = ["src", "tests", "local/keycloak", "tools"];
         var paths = roots.SelectMany(p => Directory.EnumerateFiles(Path.Combine(root, p), "*", SearchOption.AllDirectories))
-            .Where(p => !p.Split(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar).Any(s => s is "bin" or "obj") && Path.GetExtension(p) is ".cs" or ".csproj" or ".yaml")
-            .Concat(new[] { "global.json", "Directory.Build.props", "contracts/admin-api-routes.json", "contracts/baseline.json", "tests/Keycloak.Admin.Sdk.AotSmoke/Dockerfile", "tools/ScriptSupport.cs" }.Select(p => Path.Combine(root, p)))
+            .Where(p => !p.Split(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar).Any(s => s is "bin" or "obj") && Path.GetExtension(p) is ".cs" or ".csproj" or ".yaml" or ".props" or ".json")
+            .Concat(new[] { "global.json", "Directory.Build.props", "Keycloak.Admin.Sdk.slnx", "contracts/admin-api-routes.json", "contracts/baseline.json", "tests/Keycloak.Admin.Sdk.AotSmoke/Dockerfile", "tools/Shared/ScriptSupport.cs" }.Select(p => Path.Combine(root, p)))
             .Concat(new[] { "local/keycloak/kerberos/Dockerfile", "local/keycloak/kerberos/start.sh", "local/keycloak/kerberos/ticket.py" }.Select(p => Path.Combine(root, p)).Where(File.Exists))
-            .Concat(new[] { "contracts/capabilities.json", "contracts/capability-rules.json", "Target.props", "tools/TargetBaseline.cs" }.Select(p => Path.Combine(root, p)))
+            .Concat(new[] { "contracts/capabilities.json", "contracts/capability-rules.json", "Target.props", "tools/Shared/TargetBaseline.cs" }.Select(p => Path.Combine(root, p)))
             .Concat(Directory.EnumerateFiles(Path.Combine(root, "contracts"), "*.json"))
             .Append(Path.Combine(root, "contracts/source-files.sha256"))
             .Select(Path.GetFullPath)

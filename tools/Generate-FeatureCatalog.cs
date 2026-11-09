@@ -1,7 +1,7 @@
 #!/usr/bin/env -S dotnet --
 #:property TargetFramework=net10.0
 #:property PublishAot=false
-#:include ScriptSupport.cs
+#:include Shared/ScriptSupport.cs
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;

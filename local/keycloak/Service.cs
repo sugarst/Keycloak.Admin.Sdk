@@ -1,8 +1,8 @@
 #!/usr/bin/env -S dotnet --
 #:property TargetFramework=net10.0
 #:property PublishAot=false
-#:include ../../tools/ScriptSupport.cs
-#:include ../../tools/TargetBaseline.cs
+#:include ../../tools/Shared/ScriptSupport.cs
+#:include ../../tools/Shared/TargetBaseline.cs
 #:include ../../tests/Keycloak.Admin.Sdk.IntegrationTests/KeycloakRouteSupport.cs
 
 using System.Diagnostics;
