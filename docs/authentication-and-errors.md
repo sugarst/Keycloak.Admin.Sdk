@@ -129,7 +129,7 @@ IKeycloakAdminClient sdk = await KeycloakSupportedClient.CreateAsync(
 
 ## HTTP 弹性策略
 
-主包直接引用 Microsoft.Extensions.Http 10.0.14 与 Microsoft.Extensions.Http.Resilience 10.11.0，使用微软 ResilienceHandler 和 Polly 管道，无反射式配置绑定。通过既有 DI 入口统一配置，不再叠加 AddStandardResilienceHandler、Http.Polly 或其他重试 handler：
+主包直接引用 Microsoft.Extensions.Http 10.0.15 与 Microsoft.Extensions.Http.Resilience 10.11.0，使用微软 ResilienceHandler 和 Polly 管道，无反射式配置绑定。通过既有 DI 入口统一配置，不再叠加 AddStandardResilienceHandler、Http.Polly 或其他重试 handler：
 
 ```csharp
 services.AddKeycloakAdminSdk(options =>

@@ -10,11 +10,11 @@
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
     <ProjectReference Include="../Keycloak.Admin.Sdk.Protocols/Keycloak.Admin.Sdk.Protocols.csproj" />
-    <PackageReference Include="ITfoxtec.Identity.Saml2" Version="4.21.0" />
-    <PackageReference Include="System.Security.Cryptography.Pkcs" Version="10.0.14" />
-    <PackageReference Include="System.Security.Cryptography.Xml" Version="10.0.14" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="10.0.14" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.14" />
+    <PackageReference Include="ITfoxtec.Identity.Saml2" Version="4.21.1" />
+    <PackageReference Include="System.Security.Cryptography.Pkcs" Version="10.0.15" />
+    <PackageReference Include="System.Security.Cryptography.Xml" Version="10.0.15" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="10.0.15" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.15" />
     <None Update="README.md" Pack="true" PackagePath="/" />
     <InternalsVisibleTo Include="Keycloak.Admin.Sdk.Hosting.Tests" />
   </ItemGroup>

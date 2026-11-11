@@ -2,7 +2,7 @@
 
 [简体中文](README.md) | English
 
-A **.NET 10 / Native AOT** client for the Keycloak Admin REST API, currently targeting **Keycloak 26.8.1** only. The main package references Microsoft.Extensions.Http **10.0.14** and Microsoft.Extensions.Http.Resilience **10.11.0**, and uses source-generated JSON metadata with reflection serialization disabled. This repository pins .NET SDK **10.0.403**.
+A **.NET 10 / Native AOT** client for the Keycloak Admin REST API, currently targeting **Keycloak 26.8.1** only. The main package references Microsoft.Extensions.Http **10.0.15** and Microsoft.Extensions.Http.Resilience **10.11.0**, and uses source-generated JSON metadata with reflection serialization disabled. This repository pins .NET SDK **10.0.403**.
 
 Public APIs may change. For development, reference the [core project](src/Keycloak.Admin.Sdk/Keycloak.Admin.Sdk.csproj).
 

@@ -56,7 +56,7 @@ return await ScriptHost.ExecuteAsync(args,
     {
         ["Keycloak.Admin.Sdk"] = ["Microsoft.Extensions.Http", "Microsoft.Extensions.Http.Resilience"],
         ["Keycloak.Admin.Sdk.Platform"] = ["Keycloak.Admin.Sdk.Protocols", "Microsoft.FeatureManagement", "Microsoft.FeatureManagement.Telemetry.ApplicationInsights"],
-        ["Keycloak.Admin.Sdk.Protocols"] = ["Keycloak.Admin.Sdk", "Microsoft.IdentityModel.JsonWebTokens", "System.Security.Cryptography.Cose", "System.Formats.Cbor"],
+        ["Keycloak.Admin.Sdk.Protocols"] = ["Keycloak.Admin.Sdk", "Microsoft.IdentityModel.JsonWebTokens", "System.Security.Cryptography.Cose"],
         ["Keycloak.Admin.Sdk.Hosting"] = ["Keycloak.Admin.Sdk.Protocols", "ITfoxtec.Identity.Saml2", "System.Security.Cryptography.Pkcs", "System.Security.Cryptography.Xml", "Microsoft.AspNetCore.Authentication.OpenIdConnect", "Microsoft.AspNetCore.Authentication.JwtBearer"]
     };
     foreach (var (id, expected) in dependencies)
@@ -69,7 +69,7 @@ return await ScriptHost.ExecuteAsync(args,
         if (!expected.ToHashSet(StringComparer.OrdinalIgnoreCase).SetEquals(actual))
             throw new InvalidDataException($"Unexpected dependencies in {id}: {string.Join(", ", actual)}");
         if (id == "Keycloak.Admin.Sdk")
-            foreach (var (dependency, version) in new[] { ("Microsoft.Extensions.Http", "10.0.14"), ("Microsoft.Extensions.Http.Resilience", "10.11.0") })
+            foreach (var (dependency, version) in new[] { ("Microsoft.Extensions.Http", "10.0.15"), ("Microsoft.Extensions.Http.Resilience", "10.11.0") })
                 if (manifest.Descendants().Single(e => e.Name.LocalName == "dependency" && (string?)e.Attribute("id") == dependency).Attribute("version")!.Value != version)
                     throw new InvalidDataException($"Unexpected dependency version for {dependency}.");
     }
