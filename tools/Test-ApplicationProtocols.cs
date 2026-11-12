@@ -82,6 +82,7 @@ return await ScriptHost.ExecuteAsync(args, "dotnet run --file tools/Test-Applica
             using var diagnostic = new CancellationTokenSource(TimeSpan.FromSeconds(10));
             try
             {
+                if (kerberos is not null) await kerberos.ReportTicketFailuresAsync(diagnostic.Token);
                 var log = await ScriptHost.RunAsync(root, "docker", ["logs", "--tail", "100", container], diagnostic.Token, capture: true);
                 foreach (var match in System.Text.RegularExpressions.Regex.Matches(log.StandardOutput + log.StandardError, "(?:type|error)=\\\"[A-Z_a-z]+\\\"")) Console.Error.WriteLine(match);
                 if (args.Contains("--wallet-only") || args.Contains("--authentication-only"))

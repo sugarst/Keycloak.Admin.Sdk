@@ -5,7 +5,7 @@ using Keycloak.Admin.Sdk.Protocols;
 
 internal static class ProtocolKerberosWorkflows
 {
-    internal static async Task RunAsync(KeycloakAdminClient admin, HttpClient http, ProtocolTransport transport, string realm, Action<bool, string> check, CancellationToken ct)
+    internal static async Task RunAsync(KeycloakAdminClient admin, ProtocolTransport transport, string realm, Action<bool, string> check, CancellationToken ct)
     {
         string image = Environment.GetEnvironmentVariable("KC_TEST_KERBEROS_IMAGE_ID") ?? throw new InvalidDataException("An owned Kerberos counterpart is required.");
         if (!image.StartsWith("sha256:", StringComparison.Ordinal) || image.Length != 71) throw new InvalidDataException("Kerberos counterpart must have an immutable image identity.");
@@ -51,7 +51,8 @@ internal static class ProtocolKerberosWorkflows
         async Task<OidcLoginTransaction> Start() => await OidcLoginTransaction.StartAsync(oidc, client, redirect, options: new() { RequiredAuthenticationCapabilities = [KeycloakAuthenticationCapability.Kerberos] }, cancellationToken: ct);
         var missing = await Negotiate(await Start(), null);
         check(missing.Challenged && missing.Callback is null, "A Kerberos-only login issues a real Negotiate challenge and cannot create an application identity without a service ticket");
-        string ticket = (await http.GetStringAsync("http://127.0.0.1:18091/ticket", ct)).Trim();
+        using var ticketClient = new HttpClient(new SocketsHttpHandler { UseProxy = false, AllowAutoRedirect = false }) { Timeout = TimeSpan.FromSeconds(5) };
+        string ticket = await GetServiceTicketAsync(ticketClient, ct);
         var login = await Start(); var result = await Negotiate(login, ticket);
         if (result.Callback is null) throw new InvalidDataException("The trusted Kerberos service ticket did not complete SPNEGO login.");
         var identity = await login.CompleteAsync(result.Callback, client, new(oidc, client.ClientId), ct);
@@ -60,9 +61,34 @@ internal static class ProtocolKerberosWorkflows
             "A real MIT Kerberos SPNEGO service ticket maps only its configured principal to the independently observed signature-verified application identity");
         var duplicate = await Negotiate(await Start(), ticket);
         check(duplicate.Callback is null, "Replaying a consumed Kerberos service authenticator cannot create another application login");
-        byte[] invalid = Convert.FromBase64String((await http.GetStringAsync("http://127.0.0.1:18091/ticket", ct)).Trim()); invalid[^1] ^= 1;
+        byte[] invalid = Convert.FromBase64String(await GetServiceTicketAsync(ticketClient, ct)); invalid[^1] ^= 1;
         check((await Negotiate(await Start(), Convert.ToBase64String(invalid))).Callback is null,
             "A modified Kerberos service authenticator cannot create a verified application identity");
         await admin.Component.RemoveComponentAsync(realm, federation.Id!, ct);
+    }
+
+    private static async Task<string> GetServiceTicketAsync(HttpClient client, CancellationToken ct)
+    {
+        // Retry only acquisition from the isolated counterpart. Each request generates a fresh token.
+        // Requests to Keycloak, including the explicit replay check, are never retried here.
+        const int attempts = 3;
+        for (int attempt = 1; ; attempt++)
+        {
+            try
+            {
+                return (await client.GetStringAsync("http://127.0.0.1:18091/ticket", ct)).Trim();
+            }
+            catch (HttpRequestException error) when (error.StatusCode is null or HttpStatusCode.ServiceUnavailable)
+            {
+                if (attempt == attempts)
+                    throw new InvalidDataException($"Kerberos fixture ticket acquisition failed: {error.StatusCode?.ToString() ?? error.HttpRequestError.ToString()}.", error);
+            }
+            catch (OperationCanceledException error) when (!ct.IsCancellationRequested)
+            {
+                if (attempt == attempts)
+                    throw new TimeoutException("Kerberos fixture ticket acquisition timed out.", error);
+            }
+            await Task.Delay(TimeSpan.FromSeconds(1), ct);
+        }
     }
 }

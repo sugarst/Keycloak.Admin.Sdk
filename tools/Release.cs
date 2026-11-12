@@ -26,8 +26,8 @@ return await ScriptHost.ExecuteAsync(args, "dotnet run --file tools/Release.cs -
     async Task Run(string script, params string[] options) => await timings.RunAsync(string.Join(' ', new[] { script }.Concat(options)), async () =>
         await ScriptHost.RunCheckedAsync(root, "dotnet", ["run", "--file", "tools/" + script, .. options.Length > 0 ? (string[])["--", .. options] : []], ct, environment: finalEnvironment));
     await Run("Check-Baseline.cs");
-    await Run("Generate-PlatformMatrix.cs", "--require-complete");
     await Run("Update-Contracts.cs");
+    await Run("Generate-PlatformMatrix.cs", "--require-complete");
     await Run("Test-Workflow.cs");
     await Run("Audit-Contracts.cs", "--online");
     await Run("Test-Fingerprint.cs");

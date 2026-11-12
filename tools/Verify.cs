@@ -14,6 +14,8 @@ return await ScriptHost.ExecuteAsync(args,
     string root = ScriptHost.RepositoryRoot();
     await ScriptHost.RunCheckedAsync(root, "dotnet", ["run", "--file", "tools/Check-Baseline.cs"], ct);
     await ScriptHost.RunCheckedAsync(root, "dotnet", ["run", "--file", "tools/Check-Baseline.cs", "--", "--self-test"], ct);
+    if (!File.Exists(Path.Combine(TargetBaseline.Load(root).Source(root), "common/src/main/java/org/keycloak/common/Profile.java")))
+        await ScriptHost.RunCheckedAsync(root, "dotnet", ["run", "--file", "tools/Update-Contracts.cs", "--", "--source-only"], ct);
     if (args.Length > 1) throw new ArgumentException("Choose only one native verification option.");
     var legacyYaml = ScriptHost.RepositoryFiles(root).Where(file => Path.GetExtension(file).Equals(".yml", StringComparison.OrdinalIgnoreCase)).ToArray();
     if (legacyYaml.Length != 0)
