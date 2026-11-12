@@ -14,15 +14,18 @@ return await ScriptHost.ExecuteAsync(args,
     string root = ScriptHost.RepositoryRoot();
     await ScriptHost.RunCheckedAsync(root, "dotnet", ["run", "--file", "tools/Check-Baseline.cs"], ct);
     await ScriptHost.RunCheckedAsync(root, "dotnet", ["run", "--file", "tools/Check-Baseline.cs", "--", "--self-test"], ct);
+    if (!File.Exists(Path.Combine(TargetBaseline.Load(root).Source(root), "common/src/main/java/org/keycloak/common/Profile.java")))
+        await ScriptHost.RunCheckedAsync(root, "dotnet", ["run", "--file", "tools/Update-Contracts.cs", "--", "--source-only"], ct);
     if (args.Length > 1) throw new ArgumentException("Choose only one native verification option.");
     var legacyYaml = ScriptHost.RepositoryFiles(root).Where(file => Path.GetExtension(file).Equals(".yml", StringComparison.OrdinalIgnoreCase)).ToArray();
     if (legacyYaml.Length != 0)
         throw new InvalidDataException("Use .yaml for repository YAML files:\n" + string.Join('\n', legacyYaml.Select(file => Path.GetRelativePath(root, file))));
-    // Release.cs can be the parent process. Do not overwrite its running apphost on Windows.
-    string toolsOutput = "artifacts/tool-check/" + Guid.NewGuid().ToString("N");
+    // Stable output paths retain MSBuild's incremental results. No apphost is needed for these
+    // compile checks, which also avoids overwriting a running script's apphost on Windows.
+    string toolsOutput = "artifacts/tool-check";
     foreach (string script in new[] { "Release.cs", "Upgrade.cs", "Test-Workflow.cs", "Generate-ValidationList.cs", "Test-Integration.cs", "Update-Contracts.cs", "Update-Verification.cs", "Audit-Contracts.cs", "Generate-TestMatrix.cs", "Check-Coverage.cs", "Generate-LiveRoutes.cs", "Check-AdminRoutes.cs", "Check-FullAcceptance.cs", "Test-AcceptanceGate.cs", "Test-AllAdminRoutes.cs", "Generate-CapabilityCatalog.cs", "Test-Feature.cs", "Check-FeatureAcceptance.cs", "Test-SupportedFeatures.cs", "Generate-PlatformMatrix.cs", "Generate-FeatureCatalog.cs", "Check-ProtocolCoverage.cs", "Check-ModuleCoverage.cs", "Test-ApplicationProtocols.cs", "Check-ApplicationProtocols.cs" })
-        await ScriptHost.RunCheckedAsync(root, "dotnet", ["build", "tools/" + script, "-o", toolsOutput + "/" + Path.GetFileNameWithoutExtension(script)], ct);
-    await ScriptHost.RunCheckedAsync(root, "dotnet", ["build", "local/keycloak/Service.cs", "-o", toolsOutput + "/Service"], ct);
+        await ScriptHost.RunCheckedAsync(root, "dotnet", ["build", "tools/" + script, "-p:UseAppHost=false", "-o", toolsOutput + "/" + Path.GetFileNameWithoutExtension(script)], ct);
+    await ScriptHost.RunCheckedAsync(root, "dotnet", ["build", "local/keycloak/Service.cs", "-p:UseAppHost=false", "-o", toolsOutput + "/Service"], ct);
     await ScriptHost.RunCheckedAsync(root, "dotnet", ["build", "Keycloak.Admin.Sdk.slnx", "-c", "Release"], ct);
     await ScriptHost.RunCheckedAsync(root, "dotnet", ["run", "--file", "tools/Generate-TestMatrix.cs", "--", "--check"], ct);
     await ScriptHost.RunCheckedAsync(root, "dotnet", ["run", "--file", "tools/Generate-LiveRoutes.cs", "--", "--check"], ct);
@@ -55,7 +58,7 @@ return await ScriptHost.ExecuteAsync(args,
     {
         ["Keycloak.Admin.Sdk"] = ["Microsoft.Extensions.Http", "Microsoft.Extensions.Http.Resilience"],
         ["Keycloak.Admin.Sdk.Platform"] = ["Keycloak.Admin.Sdk.Protocols", "Microsoft.FeatureManagement", "Microsoft.FeatureManagement.Telemetry.ApplicationInsights"],
-        ["Keycloak.Admin.Sdk.Protocols"] = ["Keycloak.Admin.Sdk", "Microsoft.IdentityModel.JsonWebTokens", "System.Security.Cryptography.Cose", "System.Formats.Cbor"],
+        ["Keycloak.Admin.Sdk.Protocols"] = ["Keycloak.Admin.Sdk", "Microsoft.IdentityModel.JsonWebTokens", "System.Security.Cryptography.Cose"],
         ["Keycloak.Admin.Sdk.Hosting"] = ["Keycloak.Admin.Sdk.Protocols", "ITfoxtec.Identity.Saml2", "System.Security.Cryptography.Pkcs", "System.Security.Cryptography.Xml", "Microsoft.AspNetCore.Authentication.OpenIdConnect", "Microsoft.AspNetCore.Authentication.JwtBearer"]
     };
     foreach (var (id, expected) in dependencies)
@@ -68,7 +71,7 @@ return await ScriptHost.ExecuteAsync(args,
         if (!expected.ToHashSet(StringComparer.OrdinalIgnoreCase).SetEquals(actual))
             throw new InvalidDataException($"Unexpected dependencies in {id}: {string.Join(", ", actual)}");
         if (id == "Keycloak.Admin.Sdk")
-            foreach (var (dependency, version) in new[] { ("Microsoft.Extensions.Http", "10.0.14"), ("Microsoft.Extensions.Http.Resilience", "10.11.0") })
+            foreach (var (dependency, version) in new[] { ("Microsoft.Extensions.Http", "10.0.15"), ("Microsoft.Extensions.Http.Resilience", "10.11.0") })
                 if (manifest.Descendants().Single(e => e.Name.LocalName == "dependency" && (string?)e.Attribute("id") == dependency).Attribute("version")!.Value != version)
                     throw new InvalidDataException($"Unexpected dependency version for {dependency}.");
     }

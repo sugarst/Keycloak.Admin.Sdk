@@ -2,7 +2,7 @@
 
 简体中文 | [English](README.en.md)
 
-面向 **.NET 10 / Native AOT** 的 Keycloak Admin REST API 客户端，当前仅支持 **Keycloak 26.8.1**。主包引用 Microsoft.Extensions.Http **10.0.14** 和 Microsoft.Extensions.Http.Resilience **10.11.0**，使用源生成 JSON 元数据，默认关闭反射序列化。仓库固定 .NET SDK **10.0.403**。
+面向 **.NET 10 / Native AOT** 的 Keycloak Admin REST API 客户端，当前仅支持 **Keycloak 26.8.1**。主包引用 Microsoft.Extensions.Http **10.0.15** 和 Microsoft.Extensions.Http.Resilience **10.11.0**，使用源生成 JSON 元数据，默认关闭反射序列化。仓库固定 .NET SDK **10.0.403**。
 
 公开 API 仍可能调整。开发时可引用[核心项目](src/Keycloak.Admin.Sdk/Keycloak.Admin.Sdk.csproj)。
 

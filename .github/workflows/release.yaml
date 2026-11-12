@@ -5,12 +5,18 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-dotnet@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-dotnet@v5
         with:
           global-json-file: global.json
+          cache: true
+          cache-dependency-path: '**/*.csproj'
+      - uses: actions/cache@v5
+        with:
+          path: .cache/keycloak/**/source.tar.gz
+          key: keycloak-source-${{ runner.os }}-${{ hashFiles('contracts/baseline.json') }}
       - run: dotnet run --file tools/Release.cs
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v6
         if: always()
         with:
           name: single-target-release-candidate
@@ -20,5 +26,6 @@ jobs:
             artifacts/test-results/
             !artifacts/test-results/**/packages/**
             artifacts/full-live/
+            artifacts/release-timings/
       - if: always()
         run: dotnet run --file local/keycloak/Service.cs -- down

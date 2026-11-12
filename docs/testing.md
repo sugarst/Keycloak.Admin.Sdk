@@ -59,7 +59,7 @@ dotnet run --file tools/Check-Coverage.cs -- --results=artifacts/test-results/ma
 
 `ManagedTestDataTests.cs` 中的测试数据工具只进入 MSTest 项目，不进入 AOT。关键字段、密码策略边界仍用明确样本；随机测试不依赖特定输出。核心包不引用测试依赖，`Verify.cs` 检查四个 nuspec 的直接依赖清单及包数量。
 
-`Verify.cs` 在本开发分支将主包、Platform、Protocols 和 Hosting 四个包写入 `artifacts/packages/<packageVersion>/`。主包直接依赖 Microsoft.Extensions.Http 10.0.14 和 Microsoft.Extensions.Http.Resilience 10.11.0；Platform 直接依赖 Protocols、Microsoft.FeatureManagement 4.8.0 和官方 Application Insights 遥测适配器，主包为传递依赖，Platform 仅声明 Managed 支持；Protocols 依赖主包、IdentityModel、COSE 和 CBOR；Hosting 依赖 Protocols、ASP.NET Core OIDC/JWT、ITfoxtec SAML、Pkcs 和 Xml，要求 ASP.NET Core 10.0.14 或更高的 10.0 补丁版本，仅声明 Managed 支持。Hosting 保留 Pkcs/Xml 10.0.14 的显式 NuGet 依赖，并用未声明直接 ASP.NET Core FrameworkReference 的独立消费项目验证实际恢复版本。独立的版本目录避免混入其他版本产物。
+`Verify.cs` 在本开发分支将主包、Platform、Protocols 和 Hosting 四个包写入 `artifacts/packages/<packageVersion>/`。主包直接依赖 Microsoft.Extensions.Http 10.0.15 和 Microsoft.Extensions.Http.Resilience 10.11.0；Platform 直接依赖 Protocols、Microsoft.FeatureManagement 4.8.0 和官方 Application Insights 遥测适配器，主包为传递依赖，Platform 仅声明 Managed 支持；Protocols 依赖主包、IdentityModel 和 COSE，CBOR 由 COSE 传递引入；Hosting 依赖 Protocols、ASP.NET Core OIDC/JWT、ITfoxtec SAML、Pkcs 和 Xml，要求 ASP.NET Core 10.0.14 或更高的 10.0 补丁版本，仅声明 Managed 支持。Hosting 保留 Pkcs/Xml 10.0.15 的显式 NuGet 依赖，并用未声明直接 ASP.NET Core FrameworkReference 的独立消费项目验证实际恢复版本。独立的版本目录避免混入其他版本产物。
 
 `ResilienceContracts.cs` 的七组测试验证默认关闭、408/429/5xx/连接故障重试及响应释放、写入/内容/Token POST 排除、401 组合次数与策略单次判断、单次/总超时、Retry-After、取消、命名读熔断及流交付边界；校验所有配置限制。该文件同时链接到 AotSmoke，原生程序从本次 NuGet 包还原并实际启用管道，覆盖序列化关闭反射及裁剪边界。
 

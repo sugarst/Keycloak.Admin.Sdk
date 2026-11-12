@@ -3,6 +3,7 @@
 #:property PublishAot=false
 #:include Shared/ScriptSupport.cs
 #:include Shared/TargetBaseline.cs
+#:include Shared/StageTimings.cs
 #:include CapabilityEvidence.cs
 #:include FeatureAcceptance.cs
 #:include ApplicationAcceptance.cs
@@ -17,14 +18,16 @@ using System.Security.Cryptography;
 return await ScriptHost.ExecuteAsync(args, "dotnet run --file tools/Release.cs -- [--bootstrap] (full acceptance; no publishing)", ["--bootstrap"], async ct =>
 {
     string root = ScriptHost.RepositoryRoot(); var target = TargetBaseline.Load(root);
+    await using var timings = new StageTimings(Path.Combine(root, "artifacts/release-timings", DateTimeOffset.UtcNow.ToString("yyyyMMdd-HHmmss") + "-" + Guid.NewGuid().ToString("N") + ".json"));
     string sdkCommit = (await ScriptHost.RunCheckedAsync(root, "git", ["rev-parse", "HEAD"], ct, capture: true)).StandardOutput.Trim();
     bool sdkWorkingTreeDirty = !string.IsNullOrWhiteSpace((await ScriptHost.RunCheckedAsync(root, "git", ["status", "--porcelain", "--untracked-files=normal"], ct, capture: true)).StandardOutput);
     string initialFingerprint = LiveEvidence.Fingerprint(root);
     var finalEnvironment = new Dictionary<string, string?> { ["KC_TEST_RELEASE_BOOTSTRAP"] = null };
-    async Task Run(string script, params string[] options) => await ScriptHost.RunCheckedAsync(root, "dotnet", ["run", "--file", "tools/" + script, .. options.Length > 0 ? (string[])["--", .. options] : []], ct, environment: finalEnvironment);
+    async Task Run(string script, params string[] options) => await timings.RunAsync(string.Join(' ', new[] { script }.Concat(options)), async () =>
+        await ScriptHost.RunCheckedAsync(root, "dotnet", ["run", "--file", "tools/" + script, .. options.Length > 0 ? (string[])["--", .. options] : []], ct, environment: finalEnvironment));
     await Run("Check-Baseline.cs");
-    await Run("Generate-PlatformMatrix.cs", "--require-complete");
     await Run("Update-Contracts.cs");
+    await Run("Generate-PlatformMatrix.cs", "--require-complete");
     await Run("Test-Workflow.cs");
     await Run("Audit-Contracts.cs", "--online");
     await Run("Test-Fingerprint.cs");
@@ -115,5 +118,6 @@ return await ScriptHost.ExecuteAsync(args, "dotnet run --file tools/Release.cs -
     string record = ScriptHost.Within(root, "docs/releases/" + target.PackageVersion + "/" + fingerprint + ".json");
     Directory.CreateDirectory(Path.GetDirectoryName(record)!);
     await File.WriteAllTextAsync(record, json, ct);
+    timings.Completed = true;
     Console.WriteLine("PASS release candidate: " + output + "; all gates passed; tracked record: " + record + "; no Git or NuGet publication performed.");
 });

@@ -8,7 +8,7 @@ using System.Formats.Tar;
 using System.IO.Compression;
 using System.Security.Cryptography;
 
-return await ScriptHost.ExecuteAsync(args, "dotnet run --file tools/Update-Contracts.cs", [], async ct =>
+return await ScriptHost.ExecuteAsync(args, "dotnet run --file tools/Update-Contracts.cs -- [--source-only]", ["--source-only"], async ct =>
 {
     string root = ScriptHost.RepositoryRoot();
     var targetBaseline = TargetBaseline.Load(root);
@@ -67,7 +67,8 @@ return await ScriptHost.ExecuteAsync(args, "dotnet run --file tools/Update-Contr
         Directory.Delete(owned, recursive: true);
     }
     Directory.Move(extracted, ScriptHost.Within(cache, "pinned-source"));
-    await ScriptHost.RunCheckedAsync(root, "dotnet", ["run", "--project", "tools/Keycloak.Admin.Sdk.Generator", "--", root, source], ct);
+    if (!args.Contains("--source-only"))
+        await ScriptHost.RunCheckedAsync(root, "dotnet", ["run", "--project", "tools/Keycloak.Admin.Sdk.Generator", "--", root, source], ct);
 });
 
 static async Task VerifyHashAsync(string path, string expected, CancellationToken ct)

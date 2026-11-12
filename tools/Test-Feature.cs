@@ -3,6 +3,8 @@
 #:property PublishAot=false
 #:include Shared/ScriptSupport.cs
 #:include Shared/TargetBaseline.cs
+#:include Shared/IntegrationBuild.cs
+#:include ../tests/Keycloak.Admin.Sdk.IntegrationTests/LiveEvidence.cs
 #:include ../tests/Keycloak.Admin.Sdk.IntegrationTests/FeatureValidationPlan.cs
 #:project ../src/Keycloak.Admin.Sdk/Keycloak.Admin.Sdk.csproj
 using System.Diagnostics;
@@ -19,9 +21,7 @@ return await ScriptHost.ExecuteAsync(args, "dotnet run --file tools/Test-Feature
     string resultPath = plan.ResultPath(root, route, native ? "native-aot" : "managed", native ? "linux-musl-x64" : null, args.Contains("--guarded"));
     Directory.CreateDirectory(Path.GetDirectoryName(resultPath)!); File.Delete(resultPath);
     string nativeOutput = "artifacts/aot/feature-integration";
-    if (native)
-        await ScriptHost.RunCheckedAsync(root, "docker", ["build", .. target.DockerBuildArgs, "-f", "tests/Keycloak.Admin.Sdk.AotSmoke/Dockerfile", "--target", "integration-export", "--output", "type=local,dest=" + nativeOutput, "."], ct);
-    else await ScriptHost.RunCheckedAsync(root, "dotnet", ["build", "tests/Keycloak.Admin.Sdk.IntegrationTests", "-c", "Release", "--disable-build-servers"], ct);
+    await IntegrationBuild.PrepareAsync(root, native, native ? nativeOutput : "tests/Keycloak.Admin.Sdk.IntegrationTests/bin/Release/net10.0", ct);
     var image = await ScriptHost.RunAsync(root, "docker", ["image", "inspect", target.ServerImage], ct, capture: true);
     if (image.ExitCode != 0) await ScriptHost.RunCheckedAsync(root, "docker", ["pull", target.ServerImage], ct);
     string container = "keycloak-sdk-feature-" + Guid.NewGuid().ToString("N"), child = container + "-native";

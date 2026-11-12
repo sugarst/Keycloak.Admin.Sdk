@@ -60,10 +60,23 @@ internal sealed class ProtocolKerberosFixture : IAsyncDisposable
         {
             var state = await ScriptHost.RunCheckedAsync(root, "docker", ["inspect", "--format", "{{.State.Status}} {{.State.Health.Status}}", container], ct, capture: true);
             if (state.StandardOutput.Trim() == "running healthy") return;
-            if (state.StandardOutput.StartsWith("exited", StringComparison.Ordinal)) throw new InvalidDataException("Owned Kerberos counterpart exited before readiness.");
+            if (state.StandardOutput.StartsWith("exited", StringComparison.Ordinal))
+            {
+                await ReportTicketFailuresAsync(ct);
+                throw new InvalidDataException("Owned Kerberos counterpart exited before readiness.");
+            }
             await Task.Delay(TimeSpan.FromSeconds(1), ct);
         }
+        await ReportTicketFailuresAsync(ct);
         throw new TimeoutException("Owned Kerberos counterpart did not become ready.");
+    }
+
+    internal async Task ReportTicketFailuresAsync(CancellationToken ct)
+    {
+        if (container is null) return;
+        var logs = await ScriptHost.RunAsync(root, "docker", ["logs", "--tail", "30", container], ct, capture: true);
+        foreach (string line in logs.StandardError.Split('\n', StringSplitOptions.TrimEntries))
+            if (line.StartsWith("Kerberos ticket generation failed:", StringComparison.Ordinal)) Console.Error.WriteLine(line);
     }
     public async ValueTask DisposeAsync()
     {

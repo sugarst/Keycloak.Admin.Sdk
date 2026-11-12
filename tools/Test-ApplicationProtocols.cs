@@ -3,6 +3,8 @@
 #:property PublishAot=false
 #:include Shared/ScriptSupport.cs
 #:include Shared/TargetBaseline.cs
+#:include Shared/IntegrationBuild.cs
+#:include ../tests/Keycloak.Admin.Sdk.IntegrationTests/LiveEvidence.cs
 #:include ProtocolTlsFixture.cs
 #:include ProtocolKerberosFixture.cs
 using System.Diagnostics;
@@ -21,9 +23,7 @@ return await ScriptHost.ExecuteAsync(args, "dotnet run --file tools/Test-Applica
     if (!supportOnly) File.Delete(Path.Combine(root, "artifacts/application-protocols", (native ? "native-aot" : "managed") + (legacy ? "-legacy" : "") + ".json"));
     string output = supportOnly ? "artifacts/aot/application-support" : "artifacts/aot/application-protocols";
     string managedOutput = supportOnly ? "artifacts/application-support/managed" : "tests/Keycloak.Admin.Sdk.IntegrationTests/bin/Release/net10.0";
-    if (native) await ScriptHost.RunCheckedAsync(root, "docker", ["build", .. target.DockerBuildArgs, "-f", "tests/Keycloak.Admin.Sdk.AotSmoke/Dockerfile",
-        "--target", "integration-export", "--output", "type=local,dest=" + output, "."], ct);
-    else await ScriptHost.RunCheckedAsync(root, "dotnet", ["build", "tests/Keycloak.Admin.Sdk.IntegrationTests", "-c", "Release", "--disable-build-servers", .. (supportOnly ? new[] { "-o", managedOutput } : [])], ct);
+    await IntegrationBuild.PrepareAsync(root, native, native ? output : managedOutput, ct);
     string container = "keycloak-sdk-protocols-" + Guid.NewGuid().ToString("N"), child = container + "-native";
     string password = Convert.ToHexString(RandomNumberGenerator.GetBytes(24)) + "aA1!";
     await using var tls = await ProtocolTlsFixture.CreateAsync(root, ct);
@@ -82,6 +82,7 @@ return await ScriptHost.ExecuteAsync(args, "dotnet run --file tools/Test-Applica
             using var diagnostic = new CancellationTokenSource(TimeSpan.FromSeconds(10));
             try
             {
+                if (kerberos is not null) await kerberos.ReportTicketFailuresAsync(diagnostic.Token);
                 var log = await ScriptHost.RunAsync(root, "docker", ["logs", "--tail", "100", container], diagnostic.Token, capture: true);
                 foreach (var match in System.Text.RegularExpressions.Regex.Matches(log.StandardOutput + log.StandardError, "(?:type|error)=\\\"[A-Z_a-z]+\\\"")) Console.Error.WriteLine(match);
                 if (args.Contains("--wallet-only") || args.Contains("--authentication-only"))

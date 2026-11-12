@@ -124,7 +124,7 @@ internal static class ProtocolAuthenticationWorkflows
             }
             await SetFlow("browser");
             await ProtocolTransientUserWorkflows.RunAsync(admin, http, transport, realm, server, password, check, ct);
-            await ProtocolKerberosWorkflows.RunAsync(admin, http, transport, realm, check, ct);
+            await ProtocolKerberosWorkflows.RunAsync(admin, transport, realm, check, ct);
             await SetFlow("sdk-password");
             await ProtocolLegacySessionWorkflows.RunAsync(admin, transport, realm, user, password, check, ct);
             await SetFlow("browser");

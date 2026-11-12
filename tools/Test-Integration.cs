@@ -3,6 +3,8 @@
 #:property PublishAot=false
 #:include Shared/ScriptSupport.cs
 #:include Shared/TargetBaseline.cs
+#:include Shared/IntegrationBuild.cs
+#:include ../tests/Keycloak.Admin.Sdk.IntegrationTests/LiveEvidence.cs
 
 using System.Diagnostics;
 using System.Globalization;
@@ -17,8 +19,7 @@ return await ScriptHost.ExecuteAsync(args,
     bool skipBuild = args.Contains("--no-build-native");
     if (skipBuild && !native) throw new ArgumentException("--no-build-native requires --native-aot.");
     if (native && !skipBuild)
-        await ScriptHost.RunCheckedAsync(root, "docker", ["build", .. TargetBaseline.Load(root).DockerBuildArgs, "-f", "tests/Keycloak.Admin.Sdk.AotSmoke/Dockerfile", "--target", "integration-export",
-            "--output", "type=local,dest=artifacts/aot/integration", "."], ct);
+        await IntegrationBuild.PrepareAsync(root, true, "artifacts/aot/integration", ct);
     if (native && !File.Exists(Path.Combine(root, "artifacts/aot/integration/Keycloak.Admin.Sdk.IntegrationTests")))
         throw new FileNotFoundException("Build the Native AOT integration executable before using --no-build-native.");
 

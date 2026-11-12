@@ -7,14 +7,14 @@ jobs:
         os: [ubuntu-latest, windows-latest]
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-dotnet@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-dotnet@v5
         with:
           global-json-file: global.json
       - if: runner.os == 'Linux'
         run: sudo apt-get update && sudo apt-get install -y clang zlib1g-dev
       - run: dotnet run --file tools/Verify.cs
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v6
         if: always()
         with:
           name: test-matrix-and-coverage-${{ matrix.os }}
@@ -35,8 +35,8 @@ jobs:
     env:
       KEYCLOAK_ADMIN_API_ROUTE: ${{ matrix.route }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-dotnet@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-dotnet@v5
         with:
           global-json-file: global.json
       - run: dotnet run --file local/keycloak/Service.cs -- test-full
@@ -49,7 +49,7 @@ jobs:
         run: dotnet run --file tools/Test-AcceptanceGate.cs -- --v2
       - if: matrix.route == 'fgap-v1-compat'
         run: dotnet run --file tools/Test-AcceptanceGate.cs -- --v1
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v6
         if: always()
         with:
           name: full-business-acceptance-${{ matrix.route }}
@@ -60,8 +60,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 40
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-dotnet@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-dotnet@v5
         with:
           global-json-file: global.json
       - run: dotnet run --file tools/Test-ApplicationProtocols.cs
@@ -70,7 +70,7 @@ jobs:
       - run: dotnet run --file tools/Test-ApplicationProtocols.cs -- --legacy
       - run: dotnet run --file tools/Test-ApplicationProtocols.cs -- --legacy --native-aot
       - run: dotnet run --file tools/Check-ApplicationProtocols.cs -- --legacy
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v6
         if: always()
         with:
           name: application-protocol-workflows
