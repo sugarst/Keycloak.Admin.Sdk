@@ -5,11 +5,11 @@
 ## 26.8.1（本地候选通过验收 / Validated local candidate）
 
 - 更新 COSE、HTTP、ASP.NET Core 认证与加密依赖。通过 COSE 传递解析 `System.Formats.Cbor` 10.0.15，修复 `CVE-2026-118747`。同步更新 SAML 和测试依赖。
-- 验证流程在检查应用能力矩阵前准备固定的 Keycloak 源码。Kerberos 测试容器在能够签发真实服务票据后报告就绪，客户端通过隔离的回环连接请求票据。
+- 验证流程在检查应用能力矩阵前准备固定的 Keycloak 源码。Kerberos 测试容器使用完整服务主体 `HTTP/localhost@SDK.TEST` 获取票据，避免 CI 的 DNS 搜索域改变主体名称。就绪检查要求成功获取真实服务票据。
 - Update COSE, HTTP, ASP.NET Core authentication, and cryptography dependencies. Resolve `System.Formats.Cbor` 10.0.15 through COSE to address `CVE-2026-118747`. Update the SAML and test dependencies.
-- Prepare pinned Keycloak sources before validating the application capability matrix. Require the Kerberos fixture to obtain a real service ticket before it reports readiness, and request tickets over an isolated loopback connection.
-- 正式版本号的四包候选已通过全部本地发布门禁。740 项测试全部通过，标准协议托管 434/434、Linux Native AOT 391/391，兼容协议两种模式各 20/20。Admin FGAP v2 两种模式各 478/478，FGAP v1 各 492/492。见[候选清单与包哈希](docs/releases/26.8.1/7391e0a45e18c1ba4952cdf59bb72aec9bd31c317323b2aba8371c08e6da96d4.json)。
-- The four packages with the stable version passed all local release gates. All 740 tests passed. Standard protocols passed 434/434 Managed and 391/391 Linux Native AOT checks, and legacy protocols passed 20/20 in each mode. Admin FGAP v2 passed 478/478 and FGAP v1 passed 492/492 in each mode. See the [candidate manifest and package hashes](docs/releases/26.8.1/7391e0a45e18c1ba4952cdf59bb72aec9bd31c317323b2aba8371c08e6da96d4.json).
+- Prepare pinned Keycloak sources before validating the application capability matrix. Request tickets for the exact principal `HTTP/localhost@SDK.TEST` so CI DNS search domains cannot alter it. The readiness probe requires a real service ticket.
+- 正式版本号的四包候选已通过全部本地发布门禁。740 项测试全部通过，标准协议托管 434/434、Linux Native AOT 391/391，兼容协议两种模式各 20/20。Admin FGAP v2 两种模式各 478/478，FGAP v1 各 492/492。见[候选清单与包哈希](docs/releases/26.8.1/00a525ca47d4cb14cd4bab44c39618cc88c437b921e1a5459050c393a6743d9c.json)。
+- The four packages with the stable version passed all local release gates. All 740 tests passed. Standard protocols passed 434/434 Managed and 391/391 Linux Native AOT checks, and legacy protocols passed 20/20 in each mode. Admin FGAP v2 passed 478/478 and FGAP v1 passed 492/492 in each mode. See the [candidate manifest and package hashes](docs/releases/26.8.1/00a525ca47d4cb14cd4bab44c39618cc88c437b921e1a5459050c393a6743d9c.json).
 
 ## 26.8.1-preview.3（开发中，未发布 / In development, unpublished）
 

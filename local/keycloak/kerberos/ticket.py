@@ -5,7 +5,8 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 
 
 def service_ticket():
-    target = gssapi.Name("HTTP@localhost", name_type=gssapi.NameType.hostbased_service)
+    # Use the exact principal provisioned by the fixture, independent of DNS search domains.
+    target = gssapi.Name("HTTP/localhost@SDK.TEST", name_type=gssapi.NameType.kerberos_principal)
     context = gssapi.SecurityContext(name=target, mech=gssapi.OID.from_int_seq("1.3.6.1.5.5.2"), usage="initiate")
     ticket = context.step()
     if not ticket:
