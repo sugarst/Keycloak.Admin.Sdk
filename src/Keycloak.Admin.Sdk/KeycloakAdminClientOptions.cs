@@ -16,6 +16,8 @@ public sealed class KeycloakRequestOptions
 
 public sealed class ClientCredentialsTokenProviderOptions
 {
+    /// <summary>Optional space-delimited OAuth scope to request. Null omits the scope parameter.</summary>
+    public string? Scope { get; init; }
     /// <summary>Bounds the shared token acquisition, including secret resolution and response body reading. Default 30 seconds.</summary>
     public TimeSpan RequestTimeout { get; init; } = TimeSpan.FromSeconds(30);
     /// <summary>Share a failed acquisition during this interval to limit authentication failure bursts. Default one second; zero disables cooldown. Must fit a .NET timer.</summary>

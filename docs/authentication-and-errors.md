@@ -17,6 +17,18 @@ var sdk = new KeycloakAdminClient(http, server, tokens);
 
 也可使用 `StaticAccessTokenProvider` 或实现 `IAccessTokenProvider`。调用方须在所有调用及共享 token 获取结束后释放自己创建的 HTTP 客户端和 provider。
 
+## Keycloak 26.8.2 管理 scope
+
+26.8.2 要求 Admin REST API 的 access token 同时包含 `kc-admin-api` scope 和对应的 `aud`。在签发 token 的 realm 中，将内置 `kc-admin-api` 分配给自建管理客户端。设为默认 client scope 时，现有取 token 方式即可使用。设为可选 client scope 时，在 `AddKeycloakAdminSdk` 的配置中显式请求它：
+
+```csharp
+options.Token = new() { Scope = "kc-admin-api" };
+```
+
+手动构造 `ClientCredentialsTokenProvider` 时，给 `ClientCredentialsTokenProviderOptions.Scope` 传相同的值。`Scope` 接受以空格分隔的 scope，默认 `null`，此时省略 form 参数。自行提供 access token 时，也要从已分配该 scope 的客户端获取 token。跨 realm 管理时，`aud` 由签发 realm 的前端 URL 派生，业务角色仍须授予目标 realm 的访问权限。
+
+收到 `Stage = AdminApi` 的 `401` 时，先检查 access token 的 scope 和 `aud`。收到 `403` 时，再检查服务账号对目标资源的角色或细粒度权限。见 [Keycloak 26.8.2 升级指南](https://www.keycloak.org/docs/26.8.2/upgrading/)。
+
 ## 结构化错误
 
 `KeycloakAdminException` 继承 `HttpRequestException`，保留 `StatusCode`、`Method`，并提供：

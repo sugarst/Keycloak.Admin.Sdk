@@ -49,6 +49,7 @@ public sealed class ClientCredentialsTokenProvider(HttpClient client, Uri server
     private readonly object gate = new();
     private readonly TimeSpan requestTimeout = ValidateOptions(options).RequestTimeout;
     private readonly TimeSpan failureCooldown = options.FailureCooldown;
+    private readonly string? scope = options.Scope;
     private Task<string>? pending;
     private DateTimeOffset retryAt;
     private bool disposed;
@@ -72,6 +73,7 @@ public sealed class ClientCredentialsTokenProvider(HttpClient client, Uri server
             throw new ArgumentOutOfRangeException(nameof(options), "RequestTimeout must be positive and supported by a timer.");
         if (options.FailureCooldown < TimeSpan.Zero || options.FailureCooldown.TotalMilliseconds > uint.MaxValue - 1)
             throw new ArgumentOutOfRangeException(nameof(options), "FailureCooldown must be nonnegative and supported by a timer.");
+        if (options.Scope is not null) ArgumentException.ThrowIfNullOrWhiteSpace(options.Scope, nameof(options.Scope));
         return options;
     }
 
@@ -113,14 +115,13 @@ public sealed class ClientCredentialsTokenProvider(HttpClient client, Uri server
         {
             using var timeout = new CancellationTokenSource(requestTimeout, clock);
             var cancellationToken = timeout.Token;
-            using var request = new HttpRequestMessage(HttpMethod.Post, endpoint)
+            var form = new Dictionary<string, string>
             {
-                Content = new FormUrlEncodedContent(new Dictionary<string, string>
-                {
-                    ["grant_type"] = "client_credentials", ["client_id"] = clientId,
-                    ["client_secret"] = await secret(cancellationToken).ConfigureAwait(false)
-                })
+                ["grant_type"] = "client_credentials", ["client_id"] = clientId,
+                ["client_secret"] = await secret(cancellationToken).ConfigureAwait(false)
             };
+            if (scope is not null) form.Add("scope", scope);
+            using var request = new HttpRequestMessage(HttpMethod.Post, endpoint) { Content = new FormUrlEncodedContent(form) };
             var started = clock.GetUtcNow();
             using var response = await client.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
             if (!response.IsSuccessStatusCode) throw new KeycloakAdminException(response.StatusCode, "TOKEN POST", KeycloakFailureStage.TokenEndpoint, null);

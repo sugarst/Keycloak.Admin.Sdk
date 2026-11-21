@@ -65,7 +65,7 @@ public static class DependencyInjectionContracts
         options.ClientId = identity;
         options.ClientSecret = (_, _) => ValueTask.FromResult("client-secret-value");
         options.Client = new() { EnableUnauthorizedRecovery = recovery };
-        options.Token = new() { FailureCooldown = TimeSpan.Zero };
+        options.Token = new() { FailureCooldown = TimeSpan.Zero, Scope = identity == "other" ? "kc-admin-api profile" : null };
     }
     private static void Check(bool condition, string message) { if (!condition) throw new InvalidOperationException(message); }
     private sealed class Handler(string identity) : HttpMessageHandler
@@ -77,6 +77,8 @@ public static class DependencyInjectionContracts
             {
                 var form = await request.Content!.ReadAsStringAsync(cancellationToken);
                 Check(request.RequestUri.AbsolutePath == "/auth/realms/auth-" + identity + "/protocol/openid-connect/token" && form.Contains("client_id=" + identity), "named credentials");
+                var scopes = form.Split('&').Where(part => part.StartsWith("scope=", StringComparison.Ordinal));
+                Check(scopes.SequenceEqual(identity == "other" ? ["scope=kc-admin-api+profile"] : []), "named token scopes remain isolated");
                 return new(HttpStatusCode.OK) { Content = new StringContent("{\"access_token\":\"" + identity + "-token\",\"expires_in\":60,\"token_type\":\"Bearer\"}") };
             }
             Check(request.Headers.Authorization?.Parameter == identity + "-token", "token isolation");

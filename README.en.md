@@ -42,6 +42,8 @@ public sealed class UserService(IKeycloakAdminClient sdk)
 
 Provide `Keycloak:ClientSecret` through a secure host configuration source. DI manages the HTTP client and token provider lifetimes and disables automatic redirects by default. The authentication realm is independent of the target realm. Use realm names and internal client UUIDs in paths; a client UUID is different from the OIDC `clientId`. All network methods support cancellation. Pagination exposes server parameters without snapshot or total-count guarantees.
 
+For authentication validation against 26.8.2, assign `kc-admin-api` to the admin client. If it is assigned as an optional client scope, set `options.Token = new() { Scope = "kc-admin-api" };`. See the [26.8.2 admin scope setup](docs/authentication-and-errors.md#keycloak-2682-管理-scope).
+
 `IKeycloakAdminClient` exposes generated resource interfaces such as `IUsersApi` for business test doubles. DI supports both the interface and concrete type, resolving the same client instance for each name. See [interfaces and test doubles](docs/authentication-and-errors.md#接口与测试替身).
 
 This DI registration creates the underlying client without installing a support policy. To enforce the supported stable scope before requests, obtain a trusted server capability snapshot and configure `options.Client.RequestPolicy`, or use the asynchronous `KeycloakSupportedClient.CreateAsync`. See [authentication and DI](docs/authentication-and-errors.md) and [capability policy](docs/capability-policy.md) for manual construction, existing token integration and policy initialization.

@@ -208,6 +208,8 @@ public static class RecoveryContracts
         foreach (var options in new[] { new ClientCredentialsTokenProviderOptions { RequestTimeout = TimeSpan.Zero },
             new() { RequestTimeout = TimeSpan.FromDays(100) }, new() { FailureCooldown = TimeSpan.FromSeconds(-1) }, new() { FailureCooldown = TimeSpan.MaxValue } })
             await Expect<ArgumentOutOfRangeException>(() => { using var p = Provider(http, options: options); return Task.CompletedTask; });
+        foreach (string scope in new[] { "", " \t" })
+            await Expect<ArgumentException>(() => { using var p = Provider(http, options: new() { Scope = scope }); return Task.CompletedTask; });
         await Expect<ArgumentNullException>(() => { using var p = new ClientCredentialsTokenProvider(http, Server, "master", "id", _ => ValueTask.FromResult("secret"), null, null!); return Task.CompletedTask; });
         await Expect<ArgumentNullException>(() => { _ = new KeycloakAdminClient(http, Server, null, null!); return Task.CompletedTask; });
         var sdk = Client(http, new Tokens());

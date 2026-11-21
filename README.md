@@ -42,6 +42,8 @@ public sealed class UserService(IKeycloakAdminClient sdk)
 
 宿主应从安全配置源提供 `Keycloak:ClientSecret`。DI 容器管理 HTTP 客户端和 token provider 的生命周期，默认禁用自动重定向。认证 realm 与目标 realm 独立；`realm` 使用名称，客户端路径参数使用内部 UUID，而非 OIDC `clientId`。所有网络方法支持取消；分页直接采用服务端参数，不保证快照或总数。
 
+在 26.8.2 的认证回归场景中，为管理客户端分配 `kc-admin-api`。如果配置为可选 client scope，设置 `options.Token = new() { Scope = "kc-admin-api" };`。详见 [26.8.2 管理 scope](docs/authentication-and-errors.md#keycloak-2682-管理-scope)。
+
 `IKeycloakAdminClient` 的资源入口返回 `IUsersApi` 等生成接口，便于业务测试替换。DI 同时支持接口和具体类型，同一名称解析到同一客户端实例，详见 [接口与测试替身](docs/authentication-and-errors.md#接口与测试替身)。
 
 该 DI 入口默认注册底层客户端，不自动安装支持策略。需要在请求前限制稳定支持范围时，可先获取可信的服务端能力快照并通过 `options.Client.RequestPolicy` 配置策略，或使用异步的 `KeycloakSupportedClient.CreateAsync`。手动构造、已有 token 接入和策略初始化见 [认证与 DI](docs/authentication-and-errors.md) 和 [能力策略](docs/capability-policy.md)。

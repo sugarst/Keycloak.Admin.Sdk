@@ -40,13 +40,15 @@ static async Task RunAsync(CancellationToken cancellationToken)
         return;
     }
     string realm = "sdk-test-" + Guid.NewGuid().ToString("N");
+    var serverInfo = (await sdk.ServerInfoAdmin.GetInfoAsync(cancellationToken)).Body;
+    string serverVersion = serverInfo.GetProperty("systemInfo").GetProperty("version").GetString()
+        ?? throw new InvalidDataException("Keycloak serverinfo did not report a version.");
     try
     {
         await sdk.RealmsAdmin.ImportRealmAsync(new StringContent(JsonSerializer.Serialize(new RealmRepresentation { Realm = realm, Enabled = true, OrganizationsEnabled = true }, KeycloakJsonContext.Default.RealmRepresentation), Encoding.UTF8, "application/json"), cancellationToken: cancellationToken);
         Check((await sdk.RealmAdmin.GetRealmAsync(realm, cancellationToken: cancellationToken)).Body!.Realm == realm, "Realm creation");
         await sdk.RealmAdmin.UpdateRealmAsync(realm, new RealmRepresentation { DisplayName = "SDK Native AOT" }, cancellationToken: cancellationToken);
         await sdk.RealmsAdmin.GetRealmsAsync(cancellationToken: cancellationToken);
-        await sdk.ServerInfoAdmin.GetInfoAsync(cancellationToken: cancellationToken);
         await sdk.Users.CreateUserAsync(realm, new UserRepresentation { Username = "sdk-user", Enabled = false, Email = "user@example.invalid" }, cancellationToken: cancellationToken);
         var users = (await sdk.Users.GetUsersAsync(realm, username: "sdk-user", exact: true, first: 0, max: 1, cancellationToken: cancellationToken)).Body!;
         Check(users.Count == 1 && users[0].Enabled == false, "User exact query");
@@ -72,13 +74,14 @@ static async Task RunAsync(CancellationToken cancellationToken)
         await sdk.User.GetGroupMembershipCountAsync(realm, userId, cancellationToken: cancellationToken);
         await sdk.User.RemoveMembershipAsync(realm, userId, groupId, cancellationToken: cancellationToken);
 
-        await sdk.Clients.CreateClientAsync(realm, new ClientRepresentation { ClientId = "sdk-service", Enabled = true, ServiceAccountsEnabled = true, PublicClient = false, Secret = "integration-only-secret", AuthorizationServicesEnabled = true }, cancellationToken: cancellationToken);
-        string clientId = (await sdk.Clients.GetClientsAsync(realm, clientId: "sdk-service", cancellationToken: cancellationToken)).Body!.Single().Id!;
+        const string serviceClient = "sdk-service", serviceSecret = "integration-only-secret";
+        await sdk.Clients.CreateClientAsync(realm, new ClientRepresentation { ClientId = serviceClient, Enabled = true, ServiceAccountsEnabled = true, PublicClient = false, Secret = serviceSecret, AuthorizationServicesEnabled = true }, cancellationToken: cancellationToken);
+        string clientId = (await sdk.Clients.GetClientsAsync(realm, clientId: serviceClient, cancellationToken: cancellationToken)).Body!.Single().Id!;
         // ClientResource.update disables authorization services when this flag is absent.
         await sdk.Client.UpdateAsync(realm, clientId, new ClientRepresentation { Name = "SDK service", AuthorizationServicesEnabled = true }, cancellationToken: cancellationToken);
         Check((await sdk.Client.GetClientAsync(realm, clientId, cancellationToken: cancellationToken)).Body!.Name == "SDK service", "Client update");
         await sdk.Client.GetClientSecretAsync(realm, clientId, cancellationToken: cancellationToken);
-        await sdk.Client.GetServiceAccountUserAsync(realm, clientId, cancellationToken: cancellationToken);
+        var serviceAccount = (await sdk.Client.GetServiceAccountUserAsync(realm, clientId, cancellationToken: cancellationToken)).Body!;
         await sdk.Client.GetDefaultClientScopesAsync(realm, clientId, cancellationToken: cancellationToken);
         await sdk.Client.GetOptionalClientScopesAsync(realm, clientId, cancellationToken: cancellationToken);
 
@@ -129,10 +132,33 @@ static async Task RunAsync(CancellationToken cancellationToken)
         await sdk.OrganizationMember.DeleteAsync(realm, org.Id!, userId, cancellationToken: cancellationToken);
         await sdk.Organization.DeleteAsync(realm, org.Id!, cancellationToken: cancellationToken);
 
-        using var provider = new ClientCredentialsTokenProvider(http, server, realm, "sdk-service", _ => ValueTask.FromResult("integration-only-secret"));
-        var restricted = new KeycloakAdminClient(http, server, provider);
-        try { await restricted.Users.GetUsersAsync(realm, cancellationToken: cancellationToken); throw new Exception("Expected forbidden"); }
-        catch (KeycloakAdminException e) { Check(e.StatusCode == HttpStatusCode.Forbidden, "Service-account permission boundary"); }
+        if (serverVersion == "26.8.1")
+        {
+            await ExpectAdminDenialAsync(() => ReadUsersAsServiceAsync(null), HttpStatusCode.Forbidden);
+        }
+        else
+        {
+            const string adminScope = "kc-admin-api";
+            string adminScopeId = (await sdk.ClientScopes.GetClientScopesAsync(realm, cancellationToken)).Body!.Single(s => s.Name == adminScope).Id!;
+            await sdk.Client.AddOptionalClientScopeAsync(realm, clientId, adminScopeId, cancellationToken);
+            await ExpectAdminDenialAsync(() => ReadUsersAsServiceAsync(adminScope), HttpStatusCode.Forbidden);
+            Console.WriteLine("PASS: 403 for a scoped service account without permission to view users.");
+
+            string realmManagementId = (await sdk.Clients.GetClientsAsync(realm, clientId: "realm-management", cancellationToken: cancellationToken)).Body!.Single().Id!;
+            var viewUsers = (await sdk.RoleContainer.GetRoleAsync(realm, realmManagementId, "view-users", cancellationToken)).Body!;
+            await sdk.ClientRoleMappings.AddClientRoleMappingPOSTAdminRealmsRealmUsersUserIdRoleMappingsClientsClientIdAsync(
+                realm, serviceAccount.Id!, realmManagementId, [viewUsers], cancellationToken);
+            await ExpectAdminDenialAsync(() => ReadUsersAsServiceAsync(null), HttpStatusCode.Unauthorized);
+            Console.WriteLine("PASS: 401 when a service account with view-users omits kc-admin-api.");
+
+            CheckVisibleUser(await ReadUsersAsServiceAsync(adminScope));
+            Console.WriteLine("PASS: 200 with an explicitly requested kc-admin-api scope and view-users.");
+
+            await sdk.Client.RemoveOptionalClientScopeAsync(realm, clientId, adminScopeId, cancellationToken);
+            await sdk.Client.AddDefaultClientScopeAsync(realm, clientId, adminScopeId, cancellationToken);
+            CheckVisibleUser(await ReadUsersAsServiceAsync(null));
+            Console.WriteLine("PASS: 200 with kc-admin-api assigned as a default scope and view-users.");
+        }
         try { await sdk.User.GetUserAsync(realm, Guid.NewGuid().ToString(), cancellationToken: cancellationToken); throw new Exception("Expected missing user"); }
         catch (KeycloakAdminException e) { Check(e.StatusCode == HttpStatusCode.NotFound, "Missing user status"); }
 
@@ -141,6 +167,18 @@ static async Task RunAsync(CancellationToken cancellationToken)
         await sdk.Client.DeleteClientAsync(realm, clientId, cancellationToken: cancellationToken);
         await sdk.Group.DeleteGroupAsync(realm, groupId, cancellationToken: cancellationToken);
         await sdk.User.DeleteUserAsync(realm, userId, cancellationToken: cancellationToken);
+
+        async Task<AdminResponse<List<UserRepresentation>>> ReadUsersAsServiceAsync(string? scope)
+        {
+            using var provider = new ClientCredentialsTokenProvider(http, server, realm, serviceClient,
+                _ => ValueTask.FromResult(serviceSecret), null, new() { Scope = scope });
+            var service = new KeycloakAdminClient(http, server, provider);
+            return await service.Users.GetUsersAsync(realm, username: "sdk-user", exact: true, cancellationToken: cancellationToken);
+        }
+
+        void CheckVisibleUser(AdminResponse<List<UserRepresentation>> response) =>
+            Check(response.StatusCode == HttpStatusCode.OK && response.Body is [{ Id: var id }] && id == userId,
+                "A scoped service account can read the expected user.");
     }
     finally
     {
@@ -150,7 +188,14 @@ static async Task RunAsync(CancellationToken cancellationToken)
     }
     Directory.CreateDirectory("artifacts");
     await File.WriteAllLinesAsync("artifacts/live-endpoints.tsv", handler.Results.Order(), cancellationToken: cancellationToken);
-    Console.WriteLine($"PASS: isolated Keycloak {KeycloakTarget.Version} CRUD, credentials, membership, authorization scopes, organizations and permission boundaries; {handler.Results.Count} HTTP method/path/status observations. Realm cleaned up.");
+    Console.WriteLine($"PASS: isolated Keycloak {serverVersion} CRUD, credentials, membership, authorization scopes, organizations and permission boundaries; {handler.Results.Count} HTTP method/path/status observations. Realm cleaned up.");
+}
+
+static async Task ExpectAdminDenialAsync(Func<Task> action, HttpStatusCode expected)
+{
+    try { await action(); }
+    catch (KeycloakAdminException e) when (e.StatusCode == expected && e.Stage == KeycloakFailureStage.AdminApi && e.Operation == "Users.GetUsersAsync") { return; }
+    throw new InvalidOperationException($"Expected the Admin API user listing to return {(int)expected}.");
 }
 
 static void Check(bool condition, string message) { if (!condition) throw new Exception(message); }
