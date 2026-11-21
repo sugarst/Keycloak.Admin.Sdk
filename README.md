@@ -75,7 +75,7 @@ Platform 同包接入 Microsoft.FeatureManagement 及官方 Application Insights
 | `Keycloak.Admin.Sdk.Hosting` | ASP.NET Core 登录、资源令牌、注销、MCP 元数据及 SAML；仅 Managed |
 | `Keycloak.Admin.Sdk.Platform` | Managed 宿主统一开关面；支持微软引擎与可选官方 Application Insights 遥测 |
 
-preview.3 仍是未发布的开发版本；新增模块使用项目引用或本地构建包。已发布 preview.2 的范围见 [CHANGELOG](CHANGELOG.md)。钱包和认证接入分别见[钱包集成](docs/wallet-integration.md)和[认证集成](docs/authentication-integration.md)。
+**26.8.1-preview.3 四个包已发布至 NuGet**，详见[中英文发布说明](docs/releases/26.8.1-preview.3/release-notes.md)。已发布 preview.2 的范围见 [CHANGELOG](CHANGELOG.md)。钱包和认证接入分别见[钱包集成](docs/wallet-integration.md)和[认证集成](docs/authentication-integration.md)。
 
 主包按 HTTP 方法 + 路径生成了 520 项 Admin API 操作。已纳入支持范围的功能包括 realm、用户、组、角色、客户端、客户端作用域、身份提供方、认证流程、授权策略、组织、工作流及管理控制台扩展等。实际可用范围还取决于声明的 FGAP 路线、服务器功能配置和账号权限。
 

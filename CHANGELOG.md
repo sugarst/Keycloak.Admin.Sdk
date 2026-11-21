@@ -11,7 +11,9 @@
 - 正式版本号的四包候选已通过全部本地发布门禁。740 项测试全部通过，标准协议托管 434/434、Linux Native AOT 391/391，兼容协议两种模式各 20/20。Admin FGAP v2 两种模式各 478/478，FGAP v1 各 492/492。见[候选清单与包哈希](docs/releases/26.8.1/00a525ca47d4cb14cd4bab44c39618cc88c437b921e1a5459050c393a6743d9c.json)。
 - The four packages with the stable version passed all local release gates. All 740 tests passed. Standard protocols passed 434/434 Managed and 391/391 Linux Native AOT checks, and legacy protocols passed 20/20 in each mode. Admin FGAP v2 passed 478/478 and FGAP v1 passed 492/492 in each mode. See the [candidate manifest and package hashes](docs/releases/26.8.1/00a525ca47d4cb14cd4bab44c39618cc88c437b921e1a5459050c393a6743d9c.json).
 
-## 26.8.1-preview.3（开发中，未发布 / In development, unpublished）
+## 26.8.1-preview.3（已发布至 NuGet / Published on NuGet）
+
+维护者已手动发布四个包，公开版本已由 NuGet 官方元数据确认；详见[中英文发布说明 / Bilingual release notes](docs/releases/26.8.1-preview.3/release-notes.md)。
 
 - **Hosting 测试补齐 / Coverage**：35 项 Hosting 测试使自有源码方法、行、分支覆盖率达到 100%，三项门槛均固定为 100%。将 SAML 签名后的安全校验抽成内部方法，复用已绑定 ID Token 的 claims 完成认证强度检查；补齐注销、MCP、Options 重建、异步策略及签名绑定/拒绝测试。
 - Reach 100% Hosting source method, line and branch coverage with 35 tests and mandatory 100% gates. Independently verify post-signature SAML checks, reuse the bound ID-token claims for assurance, and exercise logout, MCP, options reload, asynchronous host policy and signed binding failure cases.
@@ -19,8 +21,8 @@
 - **工程整理 / Engineering**：保留四个发布包，解决方案按 Unit、Integration、PackageConsumption 分组；Platform 与工程工具测试独立，核心测试解除对集成验收程序的引用。共享 AOT 断言和工具基础设施分别集中到 `tests/Shared`、`tools/Shared`，统一测试依赖版本，增加 Platform/Hosting 独立覆盖率门禁及双扩展包消费检查。
 - Keep four shipping packages; separate unit, integration and package-consumption projects. Isolate Platform and engineering tests, share AOT-safe assertions and tool infrastructure explicitly, centralize test dependencies, and add independent Platform/Hosting coverage gates with Managed package-consumption checks.
 
-- 当前源码全量复验通过：标准协议 Managed 434/434、Native AOT 391/391，兼容协议各 20/20；Admin v2 各 478/478、v1 各 492/492；728 项测试、两路线各 14 项门禁负向控制、六套非 Stable 受保护复验及严格原生包消费全部通过。完整 `Release.cs --bootstrap` 生成新本地候选，未发布 NuGet。
-- Revalidate current inputs: standard protocols 434/434 Managed and 391/391 Native AOT, legacy 20/20 per runtime; Admin v2 478/478 and v1 492/492 per runtime. Pass 728 tests, 14 negative controls per route, six guarded non-Stable runs and strict native package consumption. Full `Release.cs --bootstrap` produces a fresh local candidate without NuGet publication.
+- 当前源码全量复验通过：标准协议 Managed 434/434、Native AOT 391/391，兼容协议各 20/20；Admin v2 各 478/478、v1 各 492/492；728 项测试、两路线各 14 项门禁负向控制、六套非 Stable 受保护复验及严格原生包消费全部通过。完整 `Release.cs --bootstrap` 生成通过验收的本地候选，四包随后由维护者手动发布至 NuGet。
+- Revalidate current inputs: standard protocols 434/434 Managed and 391/391 Native AOT, legacy 20/20 per runtime; Admin v2 478/478 and v1 492/492 per runtime. Pass 728 tests, 14 negative controls per route, six guarded non-Stable runs and strict native package consumption. Full `Release.cs --bootstrap` produces the validated local candidate; the maintainer manually published all four packages to NuGet.
 
 - 真实验收补强：托管全量流程新增微软引擎创建/删除、配置刷新、协议关闭及官方本地遥测通道检查；发布门禁强制核对对应证据，并增加错误运行模式证据的负向控制。修复 AOT Docker 构建上下文遗漏解决方案根标记，导致协议开关生成器无法定位仓库的问题。
 - Strengthen live acceptance with Microsoft-engine create/delete, configuration reload, protocol shutdown and official local-channel telemetry checks. Require matching business evidence and reject wrong-runtime claims. Fix the missing solution root marker in the AOT Docker context, which prevented the protocol flag generator from locating the repository.
@@ -36,11 +38,11 @@
 - 协议源码行和分支覆盖率要求 100%，真实流程验证用户同意、独立验签、持久化结果、拒绝、撤销、过期和重放。能力按固定版本、输入指纹、运行模式/RID 独立晋升，由 `Keycloak.Admin.Sdk.Platform` 的统一开关面最后开放或关闭。
 - 标准应用验收 Managed 434/434、Native AOT 391/391；旧版兼容计划各 20/20。Client Types、SSF、OID4VC 的 28 个 Admin 操作完成 v2 托管及原生独立晋升与受保护复验；14 个 FGAP v1 专用操作继续保留兼容阶段，默认稳定路线不扩大。
 - 测试共 728 项：核心 567、协议 96、宿主 35、平台 5、工程与证据 25；协议源码行／分支覆盖均为 100%。补充未晋升目录的关闭状态测试，并按服务端异步提交语义等待工作流持久化，避免重复发送写操作。
-- 所有 Preview、Experimental 和 Deprecated 能力仍须明确选择，并通过对应服务器功能及最终宿主开关；晋升不修改上游阶段。preview.3 尚未发布，已发布 preview.2 的功能范围不变。
+- 所有 Preview、Experimental 和 Deprecated 能力仍须明确选择，并通过对应服务器功能及最终宿主开关；晋升不修改上游阶段。preview.3 已发布至 NuGet，已发布 preview.2 的功能范围不变。
 - **Architecture (preview.3, breaking)**: Replace the separate `Keycloak.Admin.Sdk.FeatureManagement` package with Managed `Keycloak.Admin.Sdk.Platform`, offering snapshot and Microsoft-engine entry points across the same 66-flag Admin/protocol switch surface. Acceptance evidence uses `platformGate*`; Platform coverage has an independent test project. Published preview.2 scope is unchanged.
 - Add separate matrices for 80 pinned upstream features and 52 application capability families. All 52 reviewed families are implemented and independently promoted; the complete-coverage gate passes within the documented server/host responsibilities and verified runtimes.
 - Add Protocols and Managed Hosting, including secure OIDC/OAuth, delegation, SAML, authorization, account, provisioning, wallets, WebAuthn/Passkeys, Kerberos, transient users and explicitly controlled legacy compatibility. Standard workflows pass 434 Managed / 391 Native AOT checks, with 20 legacy checks per runtime. Independently promote and guard all 28 optional Admin operations for v2 Managed / Native AOT; retain 14 FGAP v1 compatibility operations.
-- Preserve explicit per-capability non-Stable opt-ins and current-input/runtime evidence. The `Keycloak.Admin.Sdk.Platform` switch surface controls final exposure. preview.3 remains unpublished; published preview.2 capabilities are unchanged.
+- Preserve explicit per-capability non-Stable opt-ins and current-input/runtime evidence. The `Keycloak.Admin.Sdk.Platform` switch surface controls final exposure. preview.3 is published on NuGet; published preview.2 capabilities are unchanged.
 - Pass 728 tests: 567 core, 96 protocol, 35 hosting, 5 platform and 25 engineering tests, with 100% protocol source line/branch coverage. Verify unpromoted catalog entries remain closed, and await asynchronous workflow persistence without replaying writes.
 
 ## 26.8.1-preview.2（已发布至 NuGet）

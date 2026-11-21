@@ -17,6 +17,8 @@
 
 `26.8.1-preview.2` 两个包已由维护者手动发布至 NuGet，见[实际发布记录](26.8.1-preview.2/publication.json)。候选记录仍保留运行验收时的原始状态；公开包与本地候选的文件哈希分别记录，未知信息不作推断。
 
+`26.8.1-preview.3` 四个包已由维护者手动发布，NuGet 官方元数据确认四个版本均已公开列出，见[中英文发布说明](26.8.1-preview.3/release-notes.md)。历史候选仍保留验收时的状态，候选包哈希不直接当作 NuGet 服务端签名后包的哈希。
+
 ## 单独保存的制品
 
 `.nupkg`、`.snupkg`、完整日志、TRX、Cobertura、缓存和 AOT 二进制继续由 `.gitignore` 排除。本地候选位于 `artifacts/releases/<packageVersion>/<sourceFingerprint>/`，清理前如需保存，应复制到长期制品存储。CI 会上传候选及测试附件，但 CI 附件会按保留策略过期，不能作为唯一的长期存档。

@@ -87,7 +87,7 @@ Current inputs have fresh independent promotion for all 52 application families:
 | `Keycloak.Admin.Sdk.Hosting` | ASP.NET Core login, resource tokens, logout, MCP metadata and SAML; Managed only |
 | `Keycloak.Admin.Sdk.Platform` | Managed host switches for Admin and protocols, with Microsoft's engine and optional official Application Insights telemetry |
 
-preview.3 is an unpublished development version. Use project references or locally built packages for the new modules. Published preview.2 capabilities remain documented in the [changelog](CHANGELOG.md). See [wallet integration](docs/wallet-integration.md) and [authentication integration](docs/authentication-integration.md) for the new application flows.
+**All four 26.8.1-preview.3 packages are now available on NuGet.** See the [bilingual release notes](docs/releases/26.8.1-preview.3/release-notes.md). Published preview.2 capabilities remain documented in the [changelog](CHANGELOG.md). See [wallet integration](docs/wallet-integration.md) and [authentication integration](docs/authentication-integration.md) for the new application flows.
 
 The main package generates 520 Admin API operations, counted by HTTP method and path. Supported areas include realms, users, groups, roles, clients, client scopes, identity providers, authentication flows, authorization policies, organizations, workflows and admin console extensions. Availability also depends on the declared FGAP route, server features and account permissions.
 

@@ -4,15 +4,15 @@
 
 - 可公开的博客正文：`docs/blog/26.8.1-preview.3-release.md`。
 - 博客按维护者要求，直接采用“26.8.1-preview.3 已发布到 NuGet”的口径，适合四包实际发布并可安装后公开。
-- 本清单只说明手动操作。完整候选已通过验收并生成四包，NuGet 尚未上传，状态保持 `local-candidate` / `published=false`。
-- 对应本次工程整理后的成功候选，源码指纹：`e5965dacad7c2bdb66f4791e1e9aab8307f243df41097ff60cd27133db8d9aeb`。工程结构与中英文说明见 [工程结构](../../project-architecture.md)。
+- 维护者已确认手动上传，四个 preview.3 版本已通过 NuGet 官方注册元数据核对；公开说明见 [中英文发布说明](release-notes.md)。本清单保留候选路径及上传前文件哈希，候选的 `local-candidate` / `published=false` 为历史状态，不代表当前未发布。
+- 对应当前分支重新生成的成功候选，源码指纹：`08658c88f857619ff947e05dcc5d5ff4d278aaf4bce3cf4bc16d02a4be56728f`。工程结构与中英文说明见 [工程结构](../../project-architecture.md)。
 
 ## 1. 优先使用已经完成验收的四包
 
 本次完整 `Release.cs --bootstrap` 已生成的候选目录：
 
 ```text
-artifacts/releases/26.8.1-preview.3/e5965dacad7c2bdb66f4791e1e9aab8307f243df41097ff60cd27133db8d9aeb/
+artifacts/releases/26.8.1-preview.3/08658c88f857619ff947e05dcc5d5ff4d278aaf4bce3cf4bc16d02a4be56728f/
 ```
 
 Hosting 的 35 项测试使源码方法、行和分支覆盖率均达到 100%，三项发布门槛均固定为 100%。
@@ -22,22 +22,22 @@ Hosting 的 35 项测试使源码方法、行和分支覆盖率均达到 100%，
 该目录中的四个 `.nupkg` 与 `release-manifest.json` 属于同一次成功候选。建议从这个目录选择上传文件，避免混入其他尝试产生的同版本包。完整记录：
 
 ```text
-docs/releases/26.8.1-preview.3/e5965dacad7c2bdb66f4791e1e9aab8307f243df41097ff60cd27133db8d9aeb.json
+docs/releases/26.8.1-preview.3/08658c88f857619ff947e05dcc5d5ff4d278aaf4bce3cf4bc16d02a4be56728f.json
 ```
 
 | 建议上传顺序 | 包文件 | SHA-256 |
 | --- | --- | --- |
-| 1 | `Keycloak.Admin.Sdk.26.8.1-preview.3.nupkg` | `1211a8a1e6eebbd099c8baaec468bc5cef5ddc3c05fda81ed48120301bcbe251` |
-| 2 | `Keycloak.Admin.Sdk.Protocols.26.8.1-preview.3.nupkg` | `98ea91ce561e2531fba07c2d10c709d48906518d4b16f6461d885689bc9c186d` |
-| 3 | `Keycloak.Admin.Sdk.Hosting.26.8.1-preview.3.nupkg` | `16d4ec5bc9c77ebc3ce4a95de498a83d0bdd02c2daa1486bd8475f15c27ba3d3` |
-| 4 | `Keycloak.Admin.Sdk.Platform.26.8.1-preview.3.nupkg` | `86f8403b10128bd122bcf68de0d08952ec4a84c2e4ed2af9b43980ec68eee7b9` |
+| 1 | `Keycloak.Admin.Sdk.26.8.1-preview.3.nupkg` | `b586aa7b57d60b6a7df9da113b29d99abe388b84d9b4b9c7b19a8581ff918a18` |
+| 2 | `Keycloak.Admin.Sdk.Protocols.26.8.1-preview.3.nupkg` | `1d01b8fced7a1d62fdc6ec6a62dff6bef0e06fea0a017f860cf3f97abfd2d900` |
+| 3 | `Keycloak.Admin.Sdk.Hosting.26.8.1-preview.3.nupkg` | `02ce31f774f50b4256db72d639910ef984189409536f70bf2428f61ca3719999` |
+| 4 | `Keycloak.Admin.Sdk.Platform.26.8.1-preview.3.nupkg` | `75c13e01c720f13a82fc31420151bcae2c43f378ba8a3c6ad82c4a1cfeab9c6f` |
 
 Hosting 与 Platform 互不依赖，二者的先后可以交换。优先发布主包和 Protocols，等依赖包可见后再发布两个扩展包。
 
 上传前在仓库根目录核对文件：
 
 ```powershell
-$candidate = Join-Path $PWD 'artifacts/releases/26.8.1-preview.3/e5965dacad7c2bdb66f4791e1e9aab8307f243df41097ff60cd27133db8d9aeb'
+$candidate = Join-Path $PWD 'artifacts/releases/26.8.1-preview.3/08658c88f857619ff947e05dcc5d5ff4d278aaf4bce3cf4bc16d02a4be56728f'
 $manifest = Get-Content -Raw (Join-Path $candidate 'release-manifest.json') | ConvertFrom-Json
 
 if (!$manifest.allGatesPassed -or $manifest.packageVersion -ne '26.8.1-preview.3') {
@@ -54,7 +54,7 @@ foreach ($package in $manifest.packages) {
 }
 ```
 
-候选中的 `sdkCommit` 是启动验收时的 HEAD，`sdkWorkingTreeDirty=true` 如实记录了工程整理尚未提交的状态。实现、当前证据和新候选记录会一起提交；应结合源码指纹、对应 Git 提交和包哈希确认来源，不要手工修改候选中的来源字段。
+候选中的 `sdkCommit` 为 `7a079506da369dff1829fd8fedad53659926a7e4`，是启动完整 Release 时的 HEAD。`sdkWorkingTreeDirty=true` 如实记录了重建中更新的目录与验收证据；应结合源码指纹、后续保存证据的 Git 提交和包哈希确认来源，不要手工修改候选中的来源字段。
 
 ## 2. 在 NuGet.org 手动上传
 
