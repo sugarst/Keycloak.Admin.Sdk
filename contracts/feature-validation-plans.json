@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "serverVersion": "26.8.1",
+  "serverVersion": "26.8.2",
   "plans": {
     "oid4vc-vci": {
       "featureId": "KeycloakSdk.Oid4vcVci",

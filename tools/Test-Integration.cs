@@ -12,33 +12,35 @@ using System.Security.Cryptography;
 using System.Text.Json;
 
 return await ScriptHost.ExecuteAsync(args,
-    "dotnet run --file tools/Test-Integration.cs -- [--native-aot] [--no-build-native]", ["--native-aot", "--no-build-native"], async ct =>
+    "dotnet run --file tools/Test-Integration.cs -- [--native-aot] [--no-build-native] [--upgrade-regressions]",
+    ["--native-aot", "--no-build-native", "--upgrade-regressions"], async ct =>
 {
     string root = ScriptHost.RepositoryRoot();
     bool native = args.Contains("--native-aot");
     bool skipBuild = args.Contains("--no-build-native");
+    bool upgradeRegressions = args.Contains("--upgrade-regressions");
     if (skipBuild && !native) throw new ArgumentException("--no-build-native requires --native-aot.");
     if (native && !skipBuild)
         await IntegrationBuild.PrepareAsync(root, true, "artifacts/aot/integration", ct);
     if (native && !File.Exists(Path.Combine(root, "artifacts/aot/integration/Keycloak.Admin.Sdk.IntegrationTests")))
         throw new FileNotFoundException("Build the Native AOT integration executable before using --no-build-native.");
 
-    using var baseline = ScriptHost.Baseline(root);
-    string image = baseline.RootElement.GetProperty("serverImage").GetString()!;
-    string tag = "quay.io/keycloak/keycloak:" + baseline.RootElement.GetProperty("keycloakVersion").GetString();
-    var inspected = await ScriptHost.RunAsync(root, "docker", ["image", "inspect", tag, "--format", "{{json .}}"], ct, capture: true);
+    string image = TargetBaseline.Load(root).ServerImage;
+    var inspected = await ScriptHost.RunAsync(root, "docker", ["image", "inspect", image, "--format", "{{json .}}"], ct, capture: true);
     if (inspected.ExitCode != 0)
     {
+        if (upgradeRegressions) throw new InvalidOperationException("The upgrade regressions require the pinned Keycloak image locally: " + image);
         await ScriptHost.RunCheckedAsync(root, "docker", ["pull", image], ct);
         inspected = await ScriptHost.RunCheckedAsync(root, "docker", ["image", "inspect", image, "--format", "{{json .}}"], ct, capture: true);
     }
+    string imageId;
     using (var localImage = JsonDocument.Parse(inspected.StandardOutput))
     {
         if (!localImage.RootElement.GetProperty("RepoDigests").EnumerateArray().Any(d => d.GetString() == image))
-            throw new InvalidDataException("The local Keycloak tag does not match the target image digest.");
-        image = localImage.RootElement.GetProperty("Id").GetString()!;
+            throw new InvalidDataException("The local Keycloak image does not match the target digest.");
+        imageId = localImage.RootElement.GetProperty("Id").GetString()!;
     }
-    Console.WriteLine($"Using verified local image {tag} ({image}).");
+    Console.WriteLine($"Using verified local image {image} ({imageId}).");
     string container = "keycloak-sdk-test-" + Guid.NewGuid().ToString("N");
     string nativeContainer = container + "-native";
     string password = Convert.ToHexString(RandomNumberGenerator.GetBytes(24)) + "aA1!";
@@ -54,7 +56,7 @@ return await ScriptHost.ExecuteAsync(args,
             "-p", "127.0.0.1::8080", "-e", "KC_BOOTSTRAP_ADMIN_USERNAME", "-e", "KC_BOOTSTRAP_ADMIN_PASSWORD",
         };
         if (OperatingSystem.IsLinux()) runArguments.AddRange(["--add-host", "host.docker.internal:host-gateway"]);
-        runArguments.AddRange([image, "start-dev", "--features=admin-fine-grained-authz:v2,workflows"]);
+        runArguments.AddRange([imageId, "start-dev", "--features=admin-fine-grained-authz:v2,workflows"]);
         await ScriptHost.RunCheckedAsync(root, "docker", runArguments, ct, capture: true, environment: bootstrap);
         var binding = await ScriptHost.RunCheckedAsync(root, "docker", ["port", container, "8080/tcp"], ct, capture: true);
         string address = binding.StandardOutput.Trim();
@@ -81,14 +83,15 @@ return await ScriptHost.ExecuteAsync(args,
             await ScriptHost.RunAsync(root, "docker", ["logs", container], ct);
             throw new TimeoutException("Keycloak startup timed out.");
         }
-        var testEnvironment = new Dictionary<string, string?> { ["KC_TEST_PASSWORD"] = password, ["KC_TEST_URL"] = server.AbsoluteUri, ["KC_TEST_CALLBACK_HOST"] = "host.docker.internal" };
+        var testEnvironment = new Dictionary<string, string?> { ["KC_TEST_PASSWORD"] = password, ["KC_TEST_URL"] = server.AbsoluteUri,
+            ["KC_TEST_CALLBACK_HOST"] = "host.docker.internal", ["KC_TEST_UPGRADE_REGRESSIONS"] = upgradeRegressions ? "1" : null };
         if (native)
         {
             testEnvironment["KC_TEST_URL"] = "http://127.0.0.1:8080/";
             testEnvironment["KC_TEST_CALLBACK_HOST"] = "127.0.0.1";
             attemptedNative = true;
             await ScriptHost.RunCheckedAsync(root, "docker", ["run", "--rm", "--name", nativeContainer, "--network", "container:" + container,
-                "-v", root + ":/workspace", "-w", "/workspace", "-e", "KC_TEST_PASSWORD", "-e", "KC_TEST_URL", "-e", "KC_TEST_CALLBACK_HOST",
+                "-v", root + ":/workspace", "-w", "/workspace", "-e", "KC_TEST_PASSWORD", "-e", "KC_TEST_URL", "-e", "KC_TEST_CALLBACK_HOST", "-e", "KC_TEST_UPGRADE_REGRESSIONS",
                 TargetBaseline.Load(root).NativeRuntimeImage, "/workspace/artifacts/aot/integration/Keycloak.Admin.Sdk.IntegrationTests"], ct, environment: testEnvironment);
         }
         else

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "keycloakVersion": "26.8.1",
+  "keycloakVersion": "26.8.2",
   "rules": [
     { "pattern": "/ssf/", "featureId": "KeycloakSdk.Ssf", "stage": "Experimental", "serverFeature": "SSF", "sourceType": "EXPERIMENTAL", "routes": ["FgapV2Stable", "FgapV1Compatibility"] },
     { "pattern": "/vc/", "featureId": "KeycloakSdk.Oid4vcVci", "stage": "Preview", "serverFeature": "OID4VC_VCI", "sourceType": "PREVIEW", "routes": ["FgapV2Stable", "FgapV1Compatibility"] },

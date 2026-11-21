@@ -2,7 +2,7 @@
 namespace Keycloak.Admin.Sdk;
 public static class KeycloakTarget
 {
-    public const string Version = "26.8.1";
-    public const string SourceCommit = "24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b";
+    public const string Version = "26.8.2";
+    public const string SourceCommit = "e514445f9dcdabc5bdcf67cab56c1e49655de067";
     public const int EndpointCount = 520;
 }

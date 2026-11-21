@@ -43,6 +43,9 @@ static async Task RunAsync(CancellationToken cancellationToken)
     var serverInfo = (await sdk.ServerInfoAdmin.GetInfoAsync(cancellationToken)).Body;
     string serverVersion = serverInfo.GetProperty("systemInfo").GetProperty("version").GetString()
         ?? throw new InvalidDataException("Keycloak serverinfo did not report a version.");
+    bool upgradeRegressions = Environment.GetEnvironmentVariable("KC_TEST_UPGRADE_REGRESSIONS") == "1";
+    if (upgradeRegressions && serverVersion != KeycloakTarget.Version)
+        throw new InvalidDataException("The upgrade regression server does not match the pinned target version.");
     try
     {
         await sdk.RealmsAdmin.ImportRealmAsync(new StringContent(JsonSerializer.Serialize(new RealmRepresentation { Realm = realm, Enabled = true, OrganizationsEnabled = true }, KeycloakJsonContext.Default.RealmRepresentation), Encoding.UTF8, "application/json"), cancellationToken: cancellationToken);
@@ -186,6 +189,7 @@ static async Task RunAsync(CancellationToken cancellationToken)
         try { await sdk.RealmAdmin.DeleteRealmAsync(realm, cancellationToken: cleanup.Token); }
         catch (KeycloakAdminException error) when (error.StatusCode == HttpStatusCode.NotFound) { }
     }
+    if (upgradeRegressions) await UpgradeRegressions.RunAsync(sdk, http, server, cancellationToken);
     Directory.CreateDirectory("artifacts");
     await File.WriteAllLinesAsync("artifacts/live-endpoints.tsv", handler.Results.Order(), cancellationToken: cancellationToken);
     Console.WriteLine($"PASS: isolated Keycloak {serverVersion} CRUD, credentials, membership, authorization scopes, organizations and permission boundaries; {handler.Results.Count} HTTP method/path/status observations. Realm cleaned up.");

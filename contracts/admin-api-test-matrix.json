@@ -146,7 +146,7 @@
     "responseJson": "{\u0022raw\u0022:\u0022\\u4E2D \\u002B\\u0026\u0022}",
     "mediaTypes": [],
     "sources": [
-      "services/src/main/java/org/keycloak/services/resources/admin/ClientScopeResource.java:185"
+      "services/src/main/java/org/keycloak/services/resources/admin/ClientScopeResource.java:195"
     ]
   },
   {
@@ -161,7 +161,7 @@
     "responseJson": "{\u0022raw\u0022:\u0022\\u4E2D \\u002B\\u0026\u0022}",
     "mediaTypes": [],
     "sources": [
-      "services/src/main/java/org/keycloak/services/resources/admin/ProtocolMappersResource.java:294"
+      "services/src/main/java/org/keycloak/services/resources/admin/ProtocolMappersResource.java:309"
     ]
   },
   {
@@ -210,7 +210,7 @@
     "responseJson": "{\u0022raw\u0022:\u0022\\u4E2D \\u002B\\u0026\u0022}",
     "mediaTypes": [],
     "sources": [
-      "services/src/main/java/org/keycloak/services/resources/admin/ClientScopeResource.java:185"
+      "services/src/main/java/org/keycloak/services/resources/admin/ClientScopeResource.java:195"
     ]
   },
   {
@@ -225,7 +225,7 @@
     "responseJson": "{\u0022raw\u0022:\u0022\\u4E2D \\u002B\\u0026\u0022}",
     "mediaTypes": [],
     "sources": [
-      "services/src/main/java/org/keycloak/services/resources/admin/ProtocolMappersResource.java:294"
+      "services/src/main/java/org/keycloak/services/resources/admin/ProtocolMappersResource.java:309"
     ]
   },
   {
@@ -289,7 +289,7 @@
     "responseJson": "{\u0022raw\u0022:\u0022\\u4E2D \\u002B\\u0026\u0022}",
     "mediaTypes": [],
     "sources": [
-      "services/src/main/java/org/keycloak/services/resources/admin/ClientResource.java:273"
+      "services/src/main/java/org/keycloak/services/resources/admin/ClientResource.java:281"
     ]
   },
   {
@@ -396,7 +396,7 @@
       "application/json"
     ],
     "sources": [
-      "services/src/main/java/org/keycloak/services/resources/admin/ClientResource.java:815"
+      "services/src/main/java/org/keycloak/services/resources/admin/ClientResource.java:823"
     ]
   },
   {
@@ -411,7 +411,7 @@
     "responseJson": "{\u0022raw\u0022:\u0022\\u4E2D \\u002B\\u0026\u0022}",
     "mediaTypes": [],
     "sources": [
-      "services/src/main/java/org/keycloak/services/resources/admin/ClientResource.java:468"
+      "services/src/main/java/org/keycloak/services/resources/admin/ClientResource.java:476"
     ]
   },
   {
@@ -426,7 +426,7 @@
     "responseJson": "{\u0022raw\u0022:\u0022\\u4E2D \\u002B\\u0026\u0022}",
     "mediaTypes": [],
     "sources": [
-      "services/src/main/java/org/keycloak/services/resources/admin/ClientResource.java:706"
+      "services/src/main/java/org/keycloak/services/resources/admin/ClientResource.java:714"
     ]
   },
   {
@@ -441,7 +441,7 @@
     "responseJson": "{\u0022raw\u0022:\u0022\\u4E2D \\u002B\\u0026\u0022}",
     "mediaTypes": [],
     "sources": [
-      "services/src/main/java/org/keycloak/services/resources/admin/ClientResource.java:513"
+      "services/src/main/java/org/keycloak/services/resources/admin/ClientResource.java:521"
     ]
   },
   {
@@ -456,7 +456,7 @@
     "responseJson": "{\u0022raw\u0022:\u0022\\u4E2D \\u002B\\u0026\u0022}",
     "mediaTypes": [],
     "sources": [
-      "services/src/main/java/org/keycloak/services/resources/admin/ProtocolMappersResource.java:294"
+      "services/src/main/java/org/keycloak/services/resources/admin/ProtocolMappersResource.java:309"
     ]
   },
   {
@@ -1600,7 +1600,7 @@
     "responseJson": "[{\u0022id\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022name\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022description\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022protocol\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022attributes\u0022:{\u0022entry\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022},\u0022protocolMappers\u0022:[{\u0022id\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022name\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022protocol\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022protocolMapper\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022consentRequired\u0022:false,\u0022consentText\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022config\u0022:{\u0022entry\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022},\u0022futureField\u0022:{\u0022nested\u0022:\u0022preserved\u0022}}],\u0022futureField\u0022:{\u0022nested\u0022:\u0022preserved\u0022}}]",
     "mediaTypes": [],
     "sources": [
-      "services/src/main/java/org/keycloak/services/resources/admin/ClientScopesResource.java:95"
+      "services/src/main/java/org/keycloak/services/resources/admin/ClientScopesResource.java:98"
     ]
   },
   {
@@ -1615,7 +1615,7 @@
     "responseJson": "{\u0022id\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022name\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022description\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022protocol\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022attributes\u0022:{\u0022entry\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022},\u0022protocolMappers\u0022:[{\u0022id\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022name\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022protocol\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022protocolMapper\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022consentRequired\u0022:false,\u0022consentText\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022config\u0022:{\u0022entry\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022},\u0022futureField\u0022:{\u0022nested\u0022:\u0022preserved\u0022}}],\u0022futureField\u0022:{\u0022nested\u0022:\u0022preserved\u0022}}",
     "mediaTypes": [],
     "sources": [
-      "services/src/main/java/org/keycloak/services/resources/admin/ClientScopeResource.java:166"
+      "services/src/main/java/org/keycloak/services/resources/admin/ClientScopeResource.java:176"
     ]
   },
   {
@@ -1630,7 +1630,7 @@
     "responseJson": "[{\u0022id\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022name\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022protocol\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022protocolMapper\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022consentRequired\u0022:false,\u0022consentText\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022config\u0022:{\u0022entry\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022},\u0022futureField\u0022:{\u0022nested\u0022:\u0022preserved\u0022}}]",
     "mediaTypes": [],
     "sources": [
-      "services/src/main/java/org/keycloak/services/resources/admin/ProtocolMappersResource.java:207"
+      "services/src/main/java/org/keycloak/services/resources/admin/ProtocolMappersResource.java:214"
     ]
   },
   {
@@ -1645,7 +1645,7 @@
     "responseJson": "{\u0022id\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022name\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022protocol\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022protocolMapper\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022consentRequired\u0022:false,\u0022consentText\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022config\u0022:{\u0022entry\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022},\u0022futureField\u0022:{\u0022nested\u0022:\u0022preserved\u0022}}",
     "mediaTypes": [],
     "sources": [
-      "services/src/main/java/org/keycloak/services/resources/admin/ProtocolMappersResource.java:227"
+      "services/src/main/java/org/keycloak/services/resources/admin/ProtocolMappersResource.java:234"
     ]
   },
   {
@@ -1660,7 +1660,7 @@
     "responseJson": "[{\u0022id\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022name\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022protocol\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022protocolMapper\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022consentRequired\u0022:false,\u0022consentText\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022config\u0022:{\u0022entry\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022},\u0022futureField\u0022:{\u0022nested\u0022:\u0022preserved\u0022}}]",
     "mediaTypes": [],
     "sources": [
-      "services/src/main/java/org/keycloak/services/resources/admin/ProtocolMappersResource.java:120"
+      "services/src/main/java/org/keycloak/services/resources/admin/ProtocolMappersResource.java:125"
     ]
   },
   {
@@ -1805,7 +1805,7 @@
     "responseJson": "[{\u0022id\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022name\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022description\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022protocol\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022attributes\u0022:{\u0022entry\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022},\u0022protocolMappers\u0022:[{\u0022id\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022name\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022protocol\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022protocolMapper\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022consentRequired\u0022:false,\u0022consentText\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022config\u0022:{\u0022entry\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022},\u0022futureField\u0022:{\u0022nested\u0022:\u0022preserved\u0022}}],\u0022futureField\u0022:{\u0022nested\u0022:\u0022preserved\u0022}}]",
     "mediaTypes": [],
     "sources": [
-      "services/src/main/java/org/keycloak/services/resources/admin/ClientScopesResource.java:95"
+      "services/src/main/java/org/keycloak/services/resources/admin/ClientScopesResource.java:98"
     ]
   },
   {
@@ -1820,7 +1820,7 @@
     "responseJson": "{\u0022id\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022name\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022description\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022protocol\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022attributes\u0022:{\u0022entry\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022},\u0022protocolMappers\u0022:[{\u0022id\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022name\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022protocol\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022protocolMapper\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022consentRequired\u0022:false,\u0022consentText\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022config\u0022:{\u0022entry\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022},\u0022futureField\u0022:{\u0022nested\u0022:\u0022preserved\u0022}}],\u0022futureField\u0022:{\u0022nested\u0022:\u0022preserved\u0022}}",
     "mediaTypes": [],
     "sources": [
-      "services/src/main/java/org/keycloak/services/resources/admin/ClientScopeResource.java:166"
+      "services/src/main/java/org/keycloak/services/resources/admin/ClientScopeResource.java:176"
     ]
   },
   {
@@ -1835,7 +1835,7 @@
     "responseJson": "[{\u0022id\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022name\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022protocol\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022protocolMapper\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022consentRequired\u0022:false,\u0022consentText\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022config\u0022:{\u0022entry\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022},\u0022futureField\u0022:{\u0022nested\u0022:\u0022preserved\u0022}}]",
     "mediaTypes": [],
     "sources": [
-      "services/src/main/java/org/keycloak/services/resources/admin/ProtocolMappersResource.java:207"
+      "services/src/main/java/org/keycloak/services/resources/admin/ProtocolMappersResource.java:214"
     ]
   },
   {
@@ -1850,7 +1850,7 @@
     "responseJson": "{\u0022id\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022name\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022protocol\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022protocolMapper\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022consentRequired\u0022:false,\u0022consentText\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022config\u0022:{\u0022entry\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022},\u0022futureField\u0022:{\u0022nested\u0022:\u0022preserved\u0022}}",
     "mediaTypes": [],
     "sources": [
-      "services/src/main/java/org/keycloak/services/resources/admin/ProtocolMappersResource.java:227"
+      "services/src/main/java/org/keycloak/services/resources/admin/ProtocolMappersResource.java:234"
     ]
   },
   {
@@ -1865,7 +1865,7 @@
     "responseJson": "[{\u0022id\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022name\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022protocol\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022protocolMapper\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022consentRequired\u0022:false,\u0022consentText\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022config\u0022:{\u0022entry\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022},\u0022futureField\u0022:{\u0022nested\u0022:\u0022preserved\u0022}}]",
     "mediaTypes": [],
     "sources": [
-      "services/src/main/java/org/keycloak/services/resources/admin/ProtocolMappersResource.java:120"
+      "services/src/main/java/org/keycloak/services/resources/admin/ProtocolMappersResource.java:125"
     ]
   },
   {
@@ -2035,7 +2035,7 @@
     "responseJson": "[{\u0022id\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022clientId\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022name\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022description\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022type\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022rootUrl\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022adminUrl\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022baseUrl\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022surrogateAuthRequired\u0022:false,\u0022enabled\u0022:false,\u0022alwaysDisplayInConsole\u0022:false,\u0022clientAuthenticatorType\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022secret\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022registrationAccessToken\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022defaultRoles\u0022:[\u0022value \\u4E2D \\u002B\\u0026\u0022],\u0022redirectUris\u0022:[\u0022value \\u4E2D \\u002B\\u0026\u0022],\u0022webOrigins\u0022:[\u0022value \\u4E2D \\u002B\\u0026\u0022],\u0022notBefore\u0022:7,\u0022bearerOnly\u0022:false,\u0022consentRequired\u0022:false,\u0022standardFlowEnabled\u0022:false,\u0022implicitFlowEnabled\u0022:false,\u0022directAccessGrantsEnabled\u0022:false,\u0022serviceAccountsEnabled\u0022:false,\u0022authorizationServicesEnabled\u0022:false,\u0022directGrantsOnly\u0022:false,\u0022publicClient\u0022:false,\u0022frontchannelLogout\u0022:false,\u0022protocol\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022attributes\u0022:{\u0022entry\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022},\u0022authenticationFlowBindingOverrides\u0022:{\u0022entry\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022},\u0022fullScopeAllowed\u0022:false,\u0022nodeReRegistrationTimeout\u0022:7,\u0022registeredNodes\u0022:{\u0022entry\u0022:7},\u0022protocolMappers\u0022:[{\u0022id\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022name\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022protocol\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022protocolMapper\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022consentRequired\u0022:false,\u0022consentText\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022config\u0022:{\u0022entry\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022},\u0022futureField\u0022:{\u0022nested\u0022:\u0022preserved\u0022}}],\u0022clientTemplate\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022useTemplateConfig\u0022:false,\u0022useTemplateScope\u0022:false,\u0022useTemplateMappers\u0022:false,\u0022defaultClientScopes\u0022:[\u0022value \\u4E2D \\u002B\\u0026\u0022],\u0022optionalClientScopes\u0022:[\u0022value \\u4E2D \\u002B\\u0026\u0022],\u0022authorizationSettings\u0022:{\u0022id\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022clientId\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022name\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022allowRemoteResourceManagement\u0022:false,\u0022policyEnforcementMode\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022resources\u0022:[{\u0022_id\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022name\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022uris\u0022:[\u0022value \\u4E2D \\u002B\\u0026\u0022],\u0022type\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022scopes\u0022:[{\u0022id\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022name\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022iconUri\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022policies\u0022:[{\u0022id\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022name\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022description\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022type\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022policies\u0022:[\u0022value \\u4E2D \\u002B\\u0026\u0022],\u0022resources\u0022:[\u0022value \\u4E2D \\u002B\\u0026\u0022],\u0022scopes\u0022:[\u0022value \\u4E2D \\u002B\\u0026\u0022],\u0022logic\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022decisionStrategy\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022owner\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022resourceType\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022resourcesData\u0022:[{}],\u0022scopesData\u0022:[{}],\u0022config\u0022:{\u0022entry\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022},\u0022futureField\u0022:{\u0022nested\u0022:\u0022preserved\u0022}}],\u0022resources\u0022:[{}],\u0022displayName\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022futureField\u0022:{\u0022nested\u0022:\u0022preserved\u0022}}],\u0022icon_uri\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022owner\u0022:{\u0022entry\u0022:{\u0022raw\u0022:\u0022\\u4E2D \\u002B\\u0026\u0022}},\u0022ownerManagedAccess\u0022:false,\u0022displayName\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022attributes\u0022:{\u0022entry\u0022:[\u0022value \\u4E2D \\u002B\\u0026\u0022]},\u0022uri\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022scopesUma\u0022:[{\u0022id\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022name\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022iconUri\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022policies\u0022:[{\u0022id\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022name\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022description\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022type\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022policies\u0022:[\u0022value \\u4E2D \\u002B\\u0026\u0022],\u0022resources\u0022:[\u0022value \\u4E2D \\u002B\\u0026\u0022],\u0022scopes\u0022:[\u0022value \\u4E2D \\u002B\\u0026\u0022],\u0022logic\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022decisionStrategy\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022owner\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022resourceType\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022resourcesData\u0022:[{}],\u0022scopesData\u0022:[{}],\u0022config\u0022:{\u0022entry\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022},\u0022futureField\u0022:{\u0022nested\u0022:\u0022preserved\u0022}}],\u0022resources\u0022:[{}],\u0022displayName\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022futureField\u0022:{\u0022nested\u0022:\u0022preserved\u0022}}],\u0022futureField\u0022:{\u0022nested\u0022:\u0022preserved\u0022}}],\u0022policies\u0022:[{\u0022id\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022name\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022description\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022type\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022policies\u0022:[\u0022value \\u4E2D \\u002B\\u0026\u0022],\u0022resources\u0022:[\u0022value \\u4E2D \\u002B\\u0026\u0022],\u0022scopes\u0022:[\u0022value \\u4E2D \\u002B\\u0026\u0022],\u0022logic\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022decisionStrategy\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022owner\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022resourceType\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022resourcesData\u0022:[{\u0022_id\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022name\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022uris\u0022:[\u0022value \\u4E2D \\u002B\\u0026\u0022],\u0022type\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022scopes\u0022:[{\u0022id\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022name\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022iconUri\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022policies\u0022:[{}],\u0022resources\u0022:[{}],\u0022displayName\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022futureField\u0022:{\u0022nested\u0022:\u0022preserved\u0022}}],\u0022icon_uri\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022owner\u0022:{\u0022entry\u0022:{\u0022raw\u0022:\u0022\\u4E2D \\u002B\\u0026\u0022}},\u0022ownerManagedAccess\u0022:false,\u0022displayName\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022attributes\u0022:{\u0022entry\u0022:[\u0022value \\u4E2D \\u002B\\u0026\u0022]},\u0022uri\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022scopesUma\u0022:[{\u0022id\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022name\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022iconUri\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022policies\u0022:[{}],\u0022resources\u0022:[{}],\u0022displayName\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022futureField\u0022:{\u0022nested\u0022:\u0022preserved\u0022}}],\u0022futureField\u0022:{\u0022nested\u0022:\u0022preserved\u0022}}],\u0022scopesData\u0022:[{\u0022id\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022name\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022iconUri\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022policies\u0022:[{}],\u0022resources\u0022:[{\u0022_id\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022name\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022uris\u0022:[\u0022value \\u4E2D \\u002B\\u0026\u0022],\u0022type\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022scopes\u0022:[{}],\u0022icon_uri\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022owner\u0022:{\u0022entry\u0022:{\u0022raw\u0022:\u0022\\u4E2D \\u002B\\u0026\u0022}},\u0022ownerManagedAccess\u0022:false,\u0022displayName\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022attributes\u0022:{\u0022entry\u0022:[\u0022value \\u4E2D \\u002B\\u0026\u0022]},\u0022uri\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022scopesUma\u0022:[{}],\u0022futureField\u0022:{\u0022nested\u0022:\u0022preserved\u0022}}],\u0022displayName\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022futureField\u0022:{\u0022nested\u0022:\u0022preserved\u0022}}],\u0022config\u0022:{\u0022entry\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022},\u0022futureField\u0022:{\u0022nested\u0022:\u0022preserved\u0022}}],\u0022scopes\u0022:[{\u0022id\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022name\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022iconUri\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022policies\u0022:[{\u0022id\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022name\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022description\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022type\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022policies\u0022:[\u0022value \\u4E2D \\u002B\\u0026\u0022],\u0022resources\u0022:[\u0022value \\u4E2D \\u002B\\u0026\u0022],\u0022scopes\u0022:[\u0022value \\u4E2D \\u002B\\u0026\u0022],\u0022logic\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022decisionStrategy\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022owner\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022resourceType\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022resourcesData\u0022:[{\u0022_id\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022name\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022uris\u0022:[\u0022value \\u4E2D \\u002B\\u0026\u0022],\u0022type\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022scopes\u0022:[{}],\u0022icon_uri\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022owner\u0022:{\u0022entry\u0022:{\u0022raw\u0022:\u0022\\u4E2D \\u002B\\u0026\u0022}},\u0022ownerManagedAccess\u0022:false,\u0022displayName\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022attributes\u0022:{\u0022entry\u0022:[\u0022value \\u4E2D \\u002B\\u0026\u0022]},\u0022uri\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022scopesUma\u0022:[{}],\u0022futureField\u0022:{\u0022nested\u0022:\u0022preserved\u0022}}],\u0022scopesData\u0022:[{}],\u0022config\u0022:{\u0022entry\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022},\u0022futureField\u0022:{\u0022nested\u0022:\u0022preserved\u0022}}],\u0022resources\u0022:[{\u0022_id\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022name\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022uris\u0022:[\u0022value \\u4E2D \\u002B\\u0026\u0022],\u0022type\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022scopes\u0022:[{}],\u0022icon_uri\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022owner\u0022:{\u0022entry\u0022:{\u0022raw\u0022:\u0022\\u4E2D \\u002B\\u0026\u0022}},\u0022ownerManagedAccess\u0022:false,\u0022displayName\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022attributes\u0022:{\u0022entry\u0022:[\u0022value \\u4E2D \\u002B\\u0026\u0022]},\u0022uri\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022scopesUma\u0022:[{}],\u0022futureField\u0022:{\u0022nested\u0022:\u0022preserved\u0022}}],\u0022displayName\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022futureField\u0022:{\u0022nested\u0022:\u0022preserved\u0022}}],\u0022decisionStrategy\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022authorizationSchema\u0022:{\u0022resourceTypes\u0022:{\u0022entry\u0022:{\u0022type\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022scopes\u0022:[\u0022value \\u4E2D \\u002B\\u0026\u0022],\u0022scopeAliases\u0022:{\u0022entry\u0022:[\u0022value \\u4E2D \\u002B\\u0026\u0022]},\u0022groupType\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022futureField\u0022:{\u0022nested\u0022:\u0022preserved\u0022}}},\u0022futureField\u0022:{\u0022nested\u0022:\u0022preserved\u0022}},\u0022futureField\u0022:{\u0022nested\u0022:\u0022preserved\u0022}},\u0022access\u0022:{\u0022entry\u0022:false},\u0022origin\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022futureField\u0022:{\u0022nested\u0022:\u0022preserved\u0022}}]",
     "mediaTypes": [],
     "sources": [
-      "services/src/main/java/org/keycloak/services/resources/admin/ClientsResource.java:125"
+      "services/src/main/java/org/keycloak/services/resources/admin/ClientsResource.java:128"
     ]
   },
   {
@@ -2065,7 +2065,7 @@
     "responseJson": "{\u0022id\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022clientId\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022name\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022description\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022type\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022rootUrl\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022adminUrl\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022baseUrl\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022surrogateAuthRequired\u0022:false,\u0022enabled\u0022:false,\u0022alwaysDisplayInConsole\u0022:false,\u0022clientAuthenticatorType\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022secret\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022registrationAccessToken\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022defaultRoles\u0022:[\u0022value \\u4E2D \\u002B\\u0026\u0022],\u0022redirectUris\u0022:[\u0022value \\u4E2D \\u002B\\u0026\u0022],\u0022webOrigins\u0022:[\u0022value \\u4E2D \\u002B\\u0026\u0022],\u0022notBefore\u0022:7,\u0022bearerOnly\u0022:false,\u0022consentRequired\u0022:false,\u0022standardFlowEnabled\u0022:false,\u0022implicitFlowEnabled\u0022:false,\u0022directAccessGrantsEnabled\u0022:false,\u0022serviceAccountsEnabled\u0022:false,\u0022authorizationServicesEnabled\u0022:false,\u0022directGrantsOnly\u0022:false,\u0022publicClient\u0022:false,\u0022frontchannelLogout\u0022:false,\u0022protocol\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022attributes\u0022:{\u0022entry\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022},\u0022authenticationFlowBindingOverrides\u0022:{\u0022entry\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022},\u0022fullScopeAllowed\u0022:false,\u0022nodeReRegistrationTimeout\u0022:7,\u0022registeredNodes\u0022:{\u0022entry\u0022:7},\u0022protocolMappers\u0022:[{\u0022id\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022name\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022protocol\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022protocolMapper\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022consentRequired\u0022:false,\u0022consentText\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022config\u0022:{\u0022entry\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022},\u0022futureField\u0022:{\u0022nested\u0022:\u0022preserved\u0022}}],\u0022clientTemplate\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022useTemplateConfig\u0022:false,\u0022useTemplateScope\u0022:false,\u0022useTemplateMappers\u0022:false,\u0022defaultClientScopes\u0022:[\u0022value \\u4E2D \\u002B\\u0026\u0022],\u0022optionalClientScopes\u0022:[\u0022value \\u4E2D \\u002B\\u0026\u0022],\u0022authorizationSettings\u0022:{\u0022id\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022clientId\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022name\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022allowRemoteResourceManagement\u0022:false,\u0022policyEnforcementMode\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022resources\u0022:[{\u0022_id\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022name\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022uris\u0022:[\u0022value \\u4E2D \\u002B\\u0026\u0022],\u0022type\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022scopes\u0022:[{\u0022id\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022name\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022iconUri\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022policies\u0022:[{\u0022id\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022name\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022description\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022type\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022policies\u0022:[\u0022value \\u4E2D \\u002B\\u0026\u0022],\u0022resources\u0022:[\u0022value \\u4E2D \\u002B\\u0026\u0022],\u0022scopes\u0022:[\u0022value \\u4E2D \\u002B\\u0026\u0022],\u0022logic\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022decisionStrategy\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022owner\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022resourceType\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022resourcesData\u0022:[{}],\u0022scopesData\u0022:[{}],\u0022config\u0022:{\u0022entry\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022},\u0022futureField\u0022:{\u0022nested\u0022:\u0022preserved\u0022}}],\u0022resources\u0022:[{}],\u0022displayName\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022futureField\u0022:{\u0022nested\u0022:\u0022preserved\u0022}}],\u0022icon_uri\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022owner\u0022:{\u0022entry\u0022:{\u0022raw\u0022:\u0022\\u4E2D \\u002B\\u0026\u0022}},\u0022ownerManagedAccess\u0022:false,\u0022displayName\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022attributes\u0022:{\u0022entry\u0022:[\u0022value \\u4E2D \\u002B\\u0026\u0022]},\u0022uri\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022scopesUma\u0022:[{\u0022id\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022name\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022iconUri\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022policies\u0022:[{\u0022id\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022name\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022description\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022type\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022policies\u0022:[\u0022value \\u4E2D \\u002B\\u0026\u0022],\u0022resources\u0022:[\u0022value \\u4E2D \\u002B\\u0026\u0022],\u0022scopes\u0022:[\u0022value \\u4E2D \\u002B\\u0026\u0022],\u0022logic\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022decisionStrategy\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022owner\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022resourceType\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022resourcesData\u0022:[{}],\u0022scopesData\u0022:[{}],\u0022config\u0022:{\u0022entry\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022},\u0022futureField\u0022:{\u0022nested\u0022:\u0022preserved\u0022}}],\u0022resources\u0022:[{}],\u0022displayName\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022futureField\u0022:{\u0022nested\u0022:\u0022preserved\u0022}}],\u0022futureField\u0022:{\u0022nested\u0022:\u0022preserved\u0022}}],\u0022policies\u0022:[{\u0022id\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022name\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022description\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022type\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022policies\u0022:[\u0022value \\u4E2D \\u002B\\u0026\u0022],\u0022resources\u0022:[\u0022value \\u4E2D \\u002B\\u0026\u0022],\u0022scopes\u0022:[\u0022value \\u4E2D \\u002B\\u0026\u0022],\u0022logic\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022decisionStrategy\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022owner\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022resourceType\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022resourcesData\u0022:[{\u0022_id\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022name\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022uris\u0022:[\u0022value \\u4E2D \\u002B\\u0026\u0022],\u0022type\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022scopes\u0022:[{\u0022id\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022name\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022iconUri\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022policies\u0022:[{}],\u0022resources\u0022:[{}],\u0022displayName\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022futureField\u0022:{\u0022nested\u0022:\u0022preserved\u0022}}],\u0022icon_uri\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022owner\u0022:{\u0022entry\u0022:{\u0022raw\u0022:\u0022\\u4E2D \\u002B\\u0026\u0022}},\u0022ownerManagedAccess\u0022:false,\u0022displayName\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022attributes\u0022:{\u0022entry\u0022:[\u0022value \\u4E2D \\u002B\\u0026\u0022]},\u0022uri\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022scopesUma\u0022:[{\u0022id\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022name\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022iconUri\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022policies\u0022:[{}],\u0022resources\u0022:[{}],\u0022displayName\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022futureField\u0022:{\u0022nested\u0022:\u0022preserved\u0022}}],\u0022futureField\u0022:{\u0022nested\u0022:\u0022preserved\u0022}}],\u0022scopesData\u0022:[{\u0022id\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022name\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022iconUri\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022policies\u0022:[{}],\u0022resources\u0022:[{\u0022_id\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022name\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022uris\u0022:[\u0022value \\u4E2D \\u002B\\u0026\u0022],\u0022type\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022scopes\u0022:[{}],\u0022icon_uri\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022owner\u0022:{\u0022entry\u0022:{\u0022raw\u0022:\u0022\\u4E2D \\u002B\\u0026\u0022}},\u0022ownerManagedAccess\u0022:false,\u0022displayName\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022attributes\u0022:{\u0022entry\u0022:[\u0022value \\u4E2D \\u002B\\u0026\u0022]},\u0022uri\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022scopesUma\u0022:[{}],\u0022futureField\u0022:{\u0022nested\u0022:\u0022preserved\u0022}}],\u0022displayName\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022futureField\u0022:{\u0022nested\u0022:\u0022preserved\u0022}}],\u0022config\u0022:{\u0022entry\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022},\u0022futureField\u0022:{\u0022nested\u0022:\u0022preserved\u0022}}],\u0022scopes\u0022:[{\u0022id\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022name\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022iconUri\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022policies\u0022:[{\u0022id\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022name\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022description\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022type\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022policies\u0022:[\u0022value \\u4E2D \\u002B\\u0026\u0022],\u0022resources\u0022:[\u0022value \\u4E2D \\u002B\\u0026\u0022],\u0022scopes\u0022:[\u0022value \\u4E2D \\u002B\\u0026\u0022],\u0022logic\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022decisionStrategy\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022owner\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022resourceType\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022resourcesData\u0022:[{\u0022_id\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022name\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022uris\u0022:[\u0022value \\u4E2D \\u002B\\u0026\u0022],\u0022type\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022scopes\u0022:[{}],\u0022icon_uri\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022owner\u0022:{\u0022entry\u0022:{\u0022raw\u0022:\u0022\\u4E2D \\u002B\\u0026\u0022}},\u0022ownerManagedAccess\u0022:false,\u0022displayName\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022attributes\u0022:{\u0022entry\u0022:[\u0022value \\u4E2D \\u002B\\u0026\u0022]},\u0022uri\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022scopesUma\u0022:[{}],\u0022futureField\u0022:{\u0022nested\u0022:\u0022preserved\u0022}}],\u0022scopesData\u0022:[{}],\u0022config\u0022:{\u0022entry\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022},\u0022futureField\u0022:{\u0022nested\u0022:\u0022preserved\u0022}}],\u0022resources\u0022:[{\u0022_id\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022name\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022uris\u0022:[\u0022value \\u4E2D \\u002B\\u0026\u0022],\u0022type\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022scopes\u0022:[{}],\u0022icon_uri\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022owner\u0022:{\u0022entry\u0022:{\u0022raw\u0022:\u0022\\u4E2D \\u002B\\u0026\u0022}},\u0022ownerManagedAccess\u0022:false,\u0022displayName\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022attributes\u0022:{\u0022entry\u0022:[\u0022value \\u4E2D \\u002B\\u0026\u0022]},\u0022uri\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022scopesUma\u0022:[{}],\u0022futureField\u0022:{\u0022nested\u0022:\u0022preserved\u0022}}],\u0022displayName\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022futureField\u0022:{\u0022nested\u0022:\u0022preserved\u0022}}],\u0022decisionStrategy\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022authorizationSchema\u0022:{\u0022resourceTypes\u0022:{\u0022entry\u0022:{\u0022type\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022scopes\u0022:[\u0022value \\u4E2D \\u002B\\u0026\u0022],\u0022scopeAliases\u0022:{\u0022entry\u0022:[\u0022value \\u4E2D \\u002B\\u0026\u0022]},\u0022groupType\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022futureField\u0022:{\u0022nested\u0022:\u0022preserved\u0022}}},\u0022futureField\u0022:{\u0022nested\u0022:\u0022preserved\u0022}},\u0022futureField\u0022:{\u0022nested\u0022:\u0022preserved\u0022}},\u0022access\u0022:{\u0022entry\u0022:false},\u0022origin\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022futureField\u0022:{\u0022nested\u0022:\u0022preserved\u0022}}",
     "mediaTypes": [],
     "sources": [
-      "services/src/main/java/org/keycloak/services/resources/admin/ClientResource.java:210"
+      "services/src/main/java/org/keycloak/services/resources/admin/ClientResource.java:218"
     ]
   },
   {
@@ -3046,7 +3046,7 @@
     "responseJson": "{\u0022id\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022type\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022userLabel\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022createdDate\u0022:7,\u0022secretData\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022credentialData\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022priority\u0022:7,\u0022value\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022temporary\u0022:false,\u0022device\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022hashedSaltedValue\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022salt\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022hashIterations\u0022:7,\u0022counter\u0022:7,\u0022algorithm\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022digits\u0022:7,\u0022period\u0022:7,\u0022config\u0022:{\u0022entry\u0022:{\u0022raw\u0022:\u0022\\u4E2D \\u002B\\u0026\u0022}},\u0022federationLink\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022futureField\u0022:{\u0022nested\u0022:\u0022preserved\u0022}}",
     "mediaTypes": [],
     "sources": [
-      "services/src/main/java/org/keycloak/services/resources/admin/ClientResource.java:378"
+      "services/src/main/java/org/keycloak/services/resources/admin/ClientResource.java:386"
     ]
   },
   {
@@ -3061,7 +3061,7 @@
     "responseJson": "{\u0022id\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022type\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022userLabel\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022createdDate\u0022:7,\u0022secretData\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022credentialData\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022priority\u0022:7,\u0022value\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022temporary\u0022:false,\u0022device\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022hashedSaltedValue\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022salt\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022hashIterations\u0022:7,\u0022counter\u0022:7,\u0022algorithm\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022digits\u0022:7,\u0022period\u0022:7,\u0022config\u0022:{\u0022entry\u0022:{\u0022raw\u0022:\u0022\\u4E2D \\u002B\\u0026\u0022}},\u0022federationLink\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022futureField\u0022:{\u0022nested\u0022:\u0022preserved\u0022}}",
     "mediaTypes": [],
     "sources": [
-      "services/src/main/java/org/keycloak/services/resources/admin/ClientResource.java:851"
+      "services/src/main/java/org/keycloak/services/resources/admin/ClientResource.java:859"
     ]
   },
   {
@@ -3076,7 +3076,7 @@
     "responseJson": "[{\u0022id\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022name\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022description\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022protocol\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022attributes\u0022:{\u0022entry\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022},\u0022protocolMappers\u0022:[{\u0022id\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022name\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022protocol\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022protocolMapper\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022consentRequired\u0022:false,\u0022consentText\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022config\u0022:{\u0022entry\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022},\u0022futureField\u0022:{\u0022nested\u0022:\u0022preserved\u0022}}],\u0022futureField\u0022:{\u0022nested\u0022:\u0022preserved\u0022}}]",
     "mediaTypes": [],
     "sources": [
-      "services/src/main/java/org/keycloak/services/resources/admin/ClientResource.java:415"
+      "services/src/main/java/org/keycloak/services/resources/admin/ClientResource.java:423"
     ]
   },
   {
@@ -3249,7 +3249,7 @@
     "responseJson": "{\u0022raw\u0022:\u0022\\u4E2D \\u002B\\u0026\u0022}",
     "mediaTypes": [],
     "sources": [
-      "services/src/main/java/org/keycloak/services/resources/admin/ClientResource.java:257"
+      "services/src/main/java/org/keycloak/services/resources/admin/ClientResource.java:265"
     ]
   },
   {
@@ -3264,7 +3264,7 @@
     "responseJson": "{\u0022enabled\u0022:false,\u0022resource\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022scopePermissions\u0022:{\u0022entry\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022},\u0022futureField\u0022:{\u0022nested\u0022:\u0022preserved\u0022}}",
     "mediaTypes": [],
     "sources": [
-      "services/src/main/java/org/keycloak/services/resources/admin/ClientResource.java:759"
+      "services/src/main/java/org/keycloak/services/resources/admin/ClientResource.java:767"
     ]
   },
   {
@@ -3279,7 +3279,7 @@
     "responseJson": "{\u0022entry\u0022:7}",
     "mediaTypes": [],
     "sources": [
-      "services/src/main/java/org/keycloak/services/resources/admin/ClientResource.java:626"
+      "services/src/main/java/org/keycloak/services/resources/admin/ClientResource.java:634"
     ]
   },
   {
@@ -3303,7 +3303,7 @@
     "responseJson": "[{\u0022id\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022username\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022userId\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022ipAddress\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022start\u0022:7,\u0022lastAccess\u0022:7,\u0022rememberMe\u0022:false,\u0022clients\u0022:{\u0022entry\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022},\u0022transientUser\u0022:false,\u0022futureField\u0022:{\u0022nested\u0022:\u0022preserved\u0022}}]",
     "mediaTypes": [],
     "sources": [
-      "services/src/main/java/org/keycloak/services/resources/admin/ClientResource.java:649"
+      "services/src/main/java/org/keycloak/services/resources/admin/ClientResource.java:657"
     ]
   },
   {
@@ -3318,7 +3318,7 @@
     "responseJson": "[{\u0022id\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022name\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022description\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022protocol\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022attributes\u0022:{\u0022entry\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022},\u0022protocolMappers\u0022:[{\u0022id\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022name\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022protocol\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022protocolMapper\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022consentRequired\u0022:false,\u0022consentText\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022config\u0022:{\u0022entry\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022},\u0022futureField\u0022:{\u0022nested\u0022:\u0022preserved\u0022}}],\u0022futureField\u0022:{\u0022nested\u0022:\u0022preserved\u0022}}]",
     "mediaTypes": [],
     "sources": [
-      "services/src/main/java/org/keycloak/services/resources/admin/ClientResource.java:495"
+      "services/src/main/java/org/keycloak/services/resources/admin/ClientResource.java:503"
     ]
   },
   {
@@ -3333,7 +3333,7 @@
     "responseJson": "[{\u0022id\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022name\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022protocol\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022protocolMapper\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022consentRequired\u0022:false,\u0022consentText\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022config\u0022:{\u0022entry\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022},\u0022futureField\u0022:{\u0022nested\u0022:\u0022preserved\u0022}}]",
     "mediaTypes": [],
     "sources": [
-      "services/src/main/java/org/keycloak/services/resources/admin/ProtocolMappersResource.java:207"
+      "services/src/main/java/org/keycloak/services/resources/admin/ProtocolMappersResource.java:214"
     ]
   },
   {
@@ -3348,7 +3348,7 @@
     "responseJson": "{\u0022id\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022name\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022protocol\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022protocolMapper\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022consentRequired\u0022:false,\u0022consentText\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022config\u0022:{\u0022entry\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022},\u0022futureField\u0022:{\u0022nested\u0022:\u0022preserved\u0022}}",
     "mediaTypes": [],
     "sources": [
-      "services/src/main/java/org/keycloak/services/resources/admin/ProtocolMappersResource.java:227"
+      "services/src/main/java/org/keycloak/services/resources/admin/ProtocolMappersResource.java:234"
     ]
   },
   {
@@ -3363,7 +3363,7 @@
     "responseJson": "[{\u0022id\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022name\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022protocol\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022protocolMapper\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022consentRequired\u0022:false,\u0022consentText\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022config\u0022:{\u0022entry\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022},\u0022futureField\u0022:{\u0022nested\u0022:\u0022preserved\u0022}}]",
     "mediaTypes": [],
     "sources": [
-      "services/src/main/java/org/keycloak/services/resources/admin/ProtocolMappersResource.java:120"
+      "services/src/main/java/org/keycloak/services/resources/admin/ProtocolMappersResource.java:125"
     ]
   },
   {
@@ -3656,7 +3656,7 @@
     "responseJson": "{\u0022id\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022username\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022firstName\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022lastName\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022email\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022emailVerified\u0022:false,\u0022attributes\u0022:{\u0022entry\u0022:[\u0022value \\u4E2D \\u002B\\u0026\u0022]},\u0022userProfileMetadata\u0022:{\u0022attributes\u0022:[{\u0022name\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022displayName\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022required\u0022:false,\u0022readOnly\u0022:false,\u0022annotations\u0022:{\u0022entry\u0022:{\u0022raw\u0022:\u0022\\u4E2D \\u002B\\u0026\u0022}},\u0022validators\u0022:{\u0022entry\u0022:{\u0022entry\u0022:{\u0022raw\u0022:\u0022\\u4E2D \\u002B\\u0026\u0022}}},\u0022group\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022multivalued\u0022:false,\u0022defaultValue\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022futureField\u0022:{\u0022nested\u0022:\u0022preserved\u0022}}],\u0022groups\u0022:[{\u0022name\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022displayHeader\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022displayDescription\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022annotations\u0022:{\u0022entry\u0022:{\u0022raw\u0022:\u0022\\u4E2D \\u002B\\u0026\u0022}},\u0022futureField\u0022:{\u0022nested\u0022:\u0022preserved\u0022}}],\u0022futureField\u0022:{\u0022nested\u0022:\u0022preserved\u0022}},\u0022enabled\u0022:false,\u0022self\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022origin\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022createdTimestamp\u0022:7,\u0022totp\u0022:false,\u0022federationLink\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022serviceAccountClientId\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022credentials\u0022:[{\u0022id\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022type\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022userLabel\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022createdDate\u0022:7,\u0022secretData\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022credentialData\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022priority\u0022:7,\u0022value\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022temporary\u0022:false,\u0022device\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022hashedSaltedValue\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022salt\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022hashIterations\u0022:7,\u0022counter\u0022:7,\u0022algorithm\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022digits\u0022:7,\u0022period\u0022:7,\u0022config\u0022:{\u0022entry\u0022:{\u0022raw\u0022:\u0022\\u4E2D \\u002B\\u0026\u0022}},\u0022federationLink\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022futureField\u0022:{\u0022nested\u0022:\u0022preserved\u0022}}],\u0022disableableCredentialTypes\u0022:[\u0022value \\u4E2D \\u002B\\u0026\u0022],\u0022requiredActions\u0022:[\u0022value \\u4E2D \\u002B\\u0026\u0022],\u0022federatedIdentities\u0022:[{\u0022identityProvider\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022userId\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022userName\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022futureField\u0022:{\u0022nested\u0022:\u0022preserved\u0022}}],\u0022realmRoles\u0022:[\u0022value \\u4E2D \\u002B\\u0026\u0022],\u0022clientRoles\u0022:{\u0022entry\u0022:[\u0022value \\u4E2D \\u002B\\u0026\u0022]},\u0022clientConsents\u0022:[{\u0022clientId\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022grantedClientScopes\u0022:[\u0022value \\u4E2D \\u002B\\u0026\u0022],\u0022createdDate\u0022:7,\u0022lastUpdatedDate\u0022:7,\u0022grantedRealmRoles\u0022:[\u0022value \\u4E2D \\u002B\\u0026\u0022],\u0022futureField\u0022:{\u0022nested\u0022:\u0022preserved\u0022}}],\u0022notBefore\u0022:7,\u0022verifiableCredentials\u0022:[{\u0022credentialScopeName\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022credentialConfigurationId\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022revision\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022createdDate\u0022:7,\u0022updatedDate\u0022:7,\u0022userAttributes\u0022:{\u0022entry\u0022:[\u0022value \\u4E2D \\u002B\\u0026\u0022]},\u0022futureField\u0022:{\u0022nested\u0022:\u0022preserved\u0022}}],\u0022issuedVerifiableCredentials\u0022:[{\u0022id\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022userId\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022credentialType\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022issuedAt\u0022:7,\u0022expiresAt\u0022:7,\u0022clientId\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022clientName\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022clientBaseUrl\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022revision\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022futureField\u0022:{\u0022nested\u0022:\u0022preserved\u0022}}],\u0022applicationRoles\u0022:{\u0022entry\u0022:[\u0022value \\u4E2D \\u002B\\u0026\u0022]},\u0022socialLinks\u0022:[{\u0022socialProvider\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022socialUserId\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022socialUsername\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022futureField\u0022:{\u0022nested\u0022:\u0022preserved\u0022}}],\u0022groups\u0022:[\u0022value \\u4E2D \\u002B\\u0026\u0022],\u0022access\u0022:{\u0022entry\u0022:false},\u0022futureField\u0022:{\u0022nested\u0022:\u0022preserved\u0022}}",
     "mediaTypes": [],
     "sources": [
-      "services/src/main/java/org/keycloak/services/resources/admin/ClientResource.java:533"
+      "services/src/main/java/org/keycloak/services/resources/admin/ClientResource.java:541"
     ]
   },
   {
@@ -3671,7 +3671,7 @@
     "responseJson": "{\u0022entry\u0022:7}",
     "mediaTypes": [],
     "sources": [
-      "services/src/main/java/org/keycloak/services/resources/admin/ClientResource.java:577"
+      "services/src/main/java/org/keycloak/services/resources/admin/ClientResource.java:585"
     ]
   },
   {
@@ -3686,7 +3686,7 @@
     "responseJson": "{\u0022successRequests\u0022:[\u0022value \\u4E2D \\u002B\\u0026\u0022],\u0022failedRequests\u0022:[\u0022value \\u4E2D \\u002B\\u0026\u0022],\u0022futureField\u0022:{\u0022nested\u0022:\u0022preserved\u0022}}",
     "mediaTypes": [],
     "sources": [
-      "services/src/main/java/org/keycloak/services/resources/admin/ClientResource.java:732"
+      "services/src/main/java/org/keycloak/services/resources/admin/ClientResource.java:740"
     ]
   },
   {
@@ -3710,7 +3710,7 @@
     "responseJson": "[{\u0022id\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022username\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022userId\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022ipAddress\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022,\u0022start\u0022:7,\u0022lastAccess\u0022:7,\u0022rememberMe\u0022:false,\u0022clients\u0022:{\u0022entry\u0022:\u0022value \\u4E2D \\u002B\\u0026\u0022},\u0022transientUser\u0022:false,\u0022futureField\u0022:{\u0022nested\u0022:\u0022preserved\u0022}}]",
     "mediaTypes": [],
     "sources": [
-      "services/src/main/java/org/keycloak/services/resources/admin/ClientResource.java:600"
+      "services/src/main/java/org/keycloak/services/resources/admin/ClientResource.java:608"
     ]
   },
   {
@@ -6942,7 +6942,7 @@
       "application/json"
     ],
     "sources": [
-      "services/src/main/java/org/keycloak/services/resources/admin/ClientScopesResource.java:121"
+      "services/src/main/java/org/keycloak/services/resources/admin/ClientScopesResource.java:124"
     ]
   },
   {
@@ -6959,7 +6959,7 @@
       "application/json"
     ],
     "sources": [
-      "services/src/main/java/org/keycloak/services/resources/admin/ProtocolMappersResource.java:173"
+      "services/src/main/java/org/keycloak/services/resources/admin/ProtocolMappersResource.java:179"
     ]
   },
   {
@@ -6976,7 +6976,7 @@
       "application/json"
     ],
     "sources": [
-      "services/src/main/java/org/keycloak/services/resources/admin/ProtocolMappersResource.java:143"
+      "services/src/main/java/org/keycloak/services/resources/admin/ProtocolMappersResource.java:148"
     ]
   },
   {
@@ -7027,7 +7027,7 @@
       "application/json"
     ],
     "sources": [
-      "services/src/main/java/org/keycloak/services/resources/admin/ClientScopesResource.java:121"
+      "services/src/main/java/org/keycloak/services/resources/admin/ClientScopesResource.java:124"
     ]
   },
   {
@@ -7044,7 +7044,7 @@
       "application/json"
     ],
     "sources": [
-      "services/src/main/java/org/keycloak/services/resources/admin/ProtocolMappersResource.java:173"
+      "services/src/main/java/org/keycloak/services/resources/admin/ProtocolMappersResource.java:179"
     ]
   },
   {
@@ -7061,7 +7061,7 @@
       "application/json"
     ],
     "sources": [
-      "services/src/main/java/org/keycloak/services/resources/admin/ProtocolMappersResource.java:143"
+      "services/src/main/java/org/keycloak/services/resources/admin/ProtocolMappersResource.java:148"
     ]
   },
   {
@@ -7112,7 +7112,7 @@
       "application/json"
     ],
     "sources": [
-      "services/src/main/java/org/keycloak/services/resources/admin/ClientsResource.java:210"
+      "services/src/main/java/org/keycloak/services/resources/admin/ClientsResource.java:213"
     ]
   },
   {
@@ -7416,7 +7416,7 @@
       "application/json"
     ],
     "sources": [
-      "services/src/main/java/org/keycloak/services/resources/admin/ClientResource.java:311"
+      "services/src/main/java/org/keycloak/services/resources/admin/ClientResource.java:319"
     ]
   },
   {
@@ -7433,7 +7433,7 @@
       "application/json"
     ],
     "sources": [
-      "services/src/main/java/org/keycloak/services/resources/admin/ClientResource.java:673"
+      "services/src/main/java/org/keycloak/services/resources/admin/ClientResource.java:681"
     ]
   },
   {
@@ -7450,7 +7450,7 @@
       "application/json"
     ],
     "sources": [
-      "services/src/main/java/org/keycloak/services/resources/admin/ProtocolMappersResource.java:173"
+      "services/src/main/java/org/keycloak/services/resources/admin/ProtocolMappersResource.java:179"
     ]
   },
   {
@@ -7467,7 +7467,7 @@
       "application/json"
     ],
     "sources": [
-      "services/src/main/java/org/keycloak/services/resources/admin/ProtocolMappersResource.java:143"
+      "services/src/main/java/org/keycloak/services/resources/admin/ProtocolMappersResource.java:148"
     ]
   },
   {
@@ -7482,7 +7482,7 @@
     "responseJson": "{\u0022successRequests\u0022:[\u0022value \\u4E2D \\u002B\\u0026\u0022],\u0022failedRequests\u0022:[\u0022value \\u4E2D \\u002B\\u0026\u0022],\u0022futureField\u0022:{\u0022nested\u0022:\u0022preserved\u0022}}",
     "mediaTypes": [],
     "sources": [
-      "services/src/main/java/org/keycloak/services/resources/admin/ClientResource.java:552"
+      "services/src/main/java/org/keycloak/services/resources/admin/ClientResource.java:560"
     ]
   },
   {
@@ -7499,7 +7499,7 @@
       "application/json"
     ],
     "sources": [
-      "services/src/main/java/org/keycloak/services/resources/admin/ClientResource.java:354"
+      "services/src/main/java/org/keycloak/services/resources/admin/ClientResource.java:362"
     ]
   },
   {
@@ -8761,7 +8761,7 @@
       "application/json"
     ],
     "sources": [
-      "services/src/main/java/org/keycloak/services/resources/admin/ClientScopeResource.java:127"
+      "services/src/main/java/org/keycloak/services/resources/admin/ClientScopeResource.java:128"
     ]
   },
   {
@@ -8778,7 +8778,7 @@
       "application/json"
     ],
     "sources": [
-      "services/src/main/java/org/keycloak/services/resources/admin/ProtocolMappersResource.java:261"
+      "services/src/main/java/org/keycloak/services/resources/admin/ProtocolMappersResource.java:268"
     ]
   },
   {
@@ -8795,7 +8795,7 @@
       "application/json"
     ],
     "sources": [
-      "services/src/main/java/org/keycloak/services/resources/admin/ClientScopeResource.java:127"
+      "services/src/main/java/org/keycloak/services/resources/admin/ClientScopeResource.java:128"
     ]
   },
   {
@@ -8812,7 +8812,7 @@
       "application/json"
     ],
     "sources": [
-      "services/src/main/java/org/keycloak/services/resources/admin/ProtocolMappersResource.java:261"
+      "services/src/main/java/org/keycloak/services/resources/admin/ProtocolMappersResource.java:268"
     ]
   },
   {
@@ -8846,7 +8846,7 @@
       "application/json"
     ],
     "sources": [
-      "services/src/main/java/org/keycloak/services/resources/admin/ClientResource.java:164"
+      "services/src/main/java/org/keycloak/services/resources/admin/ClientResource.java:165"
     ]
   },
   {
@@ -8980,7 +8980,7 @@
     "responseJson": "{\u0022raw\u0022:\u0022\\u4E2D \\u002B\\u0026\u0022}",
     "mediaTypes": [],
     "sources": [
-      "services/src/main/java/org/keycloak/services/resources/admin/ClientResource.java:435"
+      "services/src/main/java/org/keycloak/services/resources/admin/ClientResource.java:443"
     ]
   },
   {
@@ -8997,7 +8997,7 @@
       "application/json"
     ],
     "sources": [
-      "services/src/main/java/org/keycloak/services/resources/admin/ClientResource.java:792"
+      "services/src/main/java/org/keycloak/services/resources/admin/ClientResource.java:800"
     ]
   },
   {
@@ -9012,7 +9012,7 @@
     "responseJson": "{\u0022raw\u0022:\u0022\\u4E2D \\u002B\\u0026\u0022}",
     "mediaTypes": [],
     "sources": [
-      "services/src/main/java/org/keycloak/services/resources/admin/ClientResource.java:504"
+      "services/src/main/java/org/keycloak/services/resources/admin/ClientResource.java:512"
     ]
   },
   {
@@ -9029,7 +9029,7 @@
       "application/json"
     ],
     "sources": [
-      "services/src/main/java/org/keycloak/services/resources/admin/ProtocolMappersResource.java:261"
+      "services/src/main/java/org/keycloak/services/resources/admin/ProtocolMappersResource.java:268"
     ]
   },
   {

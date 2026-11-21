@@ -1,5 +1,5 @@
 {
-  "keycloakVersion": "26.8.1",
+  "keycloakVersion": "26.8.2",
   "defaultRoute": "fgap-v2-stable",
   "environmentVariable": "KEYCLOAK_ADMIN_API_ROUTE",
   "routes": {

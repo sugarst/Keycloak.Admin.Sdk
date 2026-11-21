@@ -1,6 +1,6 @@
 # Keycloak 全能力覆盖矩阵 / Platform capability coverage
 
-固定目标 / Exact target: Keycloak 26.8.1, upstream `24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b`.
+固定目标 / Exact target: Keycloak 26.8.2, upstream `e514445f9dcdabc5bdcf67cab56c1e49655de067`.
 
 本表登记上游功能及责任边界，不把登记、生成或 HTTP 可调用视为完成支持。HostIntegration 仍属于应用全覆盖待完成项；ServerRuntime 和 ServerExtension 明确由服务端或外部工具承担。用户自定义 SPI 不属于有限上游清单。
 
@@ -95,60 +95,60 @@ Admin API 的 520 项操作独立维护于 [操作支持矩阵](admin-api-suppor
 
 | Capability | Responsibility | Implementation | Verified runtime profiles |
 | --- | --- | --- | --- |
-| `oidc` | SdkProtocol | Implemented | 2; verified for referenced profiles only |
-| `oidc-standard-exchange` | SdkProtocol | Implemented | 2; verified for referenced profiles only |
-| `oidc-legacy-exchange` | SdkProtocol | Implemented | 2; verified for referenced profiles only |
-| `oidc-delegation` | SdkProtocol | Implemented | 2; verified for referenced profiles only |
-| `oidc-jwt-grant` | SdkProtocol | Implemented | 2; verified for referenced profiles only |
-| `oidc-device` | SdkProtocol | Implemented | 2; verified for referenced profiles only |
-| `oidc-ciba` | SdkProtocol | Implemented | 2; verified for referenced profiles only |
-| `oidc-par` | SdkProtocol | Implemented | 2; verified for referenced profiles only |
-| `oidc-parameterized-scopes` | SdkProtocol | Implemented | 2; verified for referenced profiles only |
-| `oidc-resources` | SdkProtocol | Implemented | 2; verified for referenced profiles only |
-| `oidc-identity-assertion` | SdkProtocol | Implemented | 2; verified for referenced profiles only |
-| `oidc-client-metadata` | SdkProtocol | Implemented | 2; verified for referenced profiles only |
-| `account` | SdkProtocol | Implemented | 2; verified for referenced profiles only |
-| `scim` | SdkProtocol | Implemented | 2; verified for referenced profiles only |
-| `registration` | SdkProtocol | Implemented | 2; verified for referenced profiles only |
-| `uma` | SdkProtocol | Implemented | 2; verified for referenced profiles only |
-| `authzen` | SdkProtocol | Implemented | 2; verified for referenced profiles only |
-| `client-admin-v2` | SdkProtocol | Implemented | 2; verified for referenced profiles only |
-| `identity-brokering-legacy` | SdkProtocol | Implemented | 2; verified for referenced profiles only |
-| `identity-brokering` | SdkProtocol | Implemented | 2; verified for referenced profiles only |
-| `wallet` | SdkProtocol | Implemented | 2; verified for referenced profiles only |
-| `wallet-pre-authorized` | SdkProtocol | Implemented | 2; verified for referenced profiles only |
-| `wallet-offers` | SdkProtocol | Implemented | 2; verified for referenced profiles only |
-| `wallet-mdoc` | SdkProtocol | Implemented | 2; verified for referenced profiles only |
-| `wallet-presentation` | SdkProtocol | Implemented | 2; verified for referenced profiles only |
-| `wallet-attestation` | HostIntegration | Implemented | 2; verified for referenced profiles only |
-| `signals` | SdkProtocol | Implemented | 2; verified for referenced profiles only |
-| `docker-registry` | SdkProtocol | Implemented | 2; verified for referenced profiles only |
-| `browser-oidc` | HostIntegration | Implemented | 1; verified for referenced profiles only |
-| `saml` | HostIntegration | Implemented | 1; verified for referenced profiles only |
-| `dpop` | HostIntegration | Implemented | 2; verified for referenced profiles only |
-| `authentication` | HostIntegration | Implemented | 2; verified for referenced profiles only |
-| `federated-client-auth` | HostIntegration | Implemented | 2; verified for referenced profiles only |
-| `runtime-openapi` | SdkProtocol | Implemented | 2; verified for referenced profiles only |
-| `mutual-tls` | HostIntegration | Implemented | 2; verified for referenced profiles only |
-| `spiffe-client-auth` | HostIntegration | Implemented | 2; verified for referenced profiles only |
-| `identity-broker-login` | HostIntegration | Implemented | 2; verified for referenced profiles only |
-| `identity-linking` | HostIntegration | Implemented | 2; verified for referenced profiles only |
-| `oidc-request-objects` | SdkProtocol | Implemented | 2; verified for referenced profiles only |
-| `oidc-signed-responses` | SdkProtocol | Implemented | 2; verified for referenced profiles only |
-| `oidc-browser-compatibility` | SdkProtocol | Implemented | 2; verified for referenced profiles only |
-| `oidc-assurance` | SdkProtocol | Implemented | 2; verified for referenced profiles only |
-| `authentication-webauthn` | HostIntegration | Implemented | 2; verified for referenced profiles only |
-| `authentication-passkeys` | HostIntegration | Implemented | 2; verified for referenced profiles only |
-| `authentication-kerberos` | HostIntegration | Implemented | 2; verified for referenced profiles only |
-| `authentication-recovery-codes` | HostIntegration | Implemented | 2; verified for referenced profiles only |
-| `authentication-update-email` | HostIntegration | Implemented | 2; verified for referenced profiles only |
-| `authentication-transient-users` | HostIntegration | Implemented | 2; verified for referenced profiles only |
-| `authentication-legacy-logout` | HostIntegration | Implemented | 2; verified for referenced profiles only |
-| `authentication-legacy-passkey-ui` | HostIntegration | Implemented | 2; verified for referenced profiles only |
-| `authentication-instagram` | HostIntegration | Implemented | 2; verified for referenced profiles only |
-| `authentication-twitter` | HostIntegration | Implemented | 2; verified for referenced profiles only |
+| `oidc` | SdkProtocol | Implemented | 0; not promoted |
+| `oidc-standard-exchange` | SdkProtocol | Implemented | 0; not promoted |
+| `oidc-legacy-exchange` | SdkProtocol | Implemented | 0; not promoted |
+| `oidc-delegation` | SdkProtocol | Implemented | 0; not promoted |
+| `oidc-jwt-grant` | SdkProtocol | Implemented | 0; not promoted |
+| `oidc-device` | SdkProtocol | Implemented | 0; not promoted |
+| `oidc-ciba` | SdkProtocol | Implemented | 0; not promoted |
+| `oidc-par` | SdkProtocol | Implemented | 0; not promoted |
+| `oidc-parameterized-scopes` | SdkProtocol | Implemented | 0; not promoted |
+| `oidc-resources` | SdkProtocol | Implemented | 0; not promoted |
+| `oidc-identity-assertion` | SdkProtocol | Implemented | 0; not promoted |
+| `oidc-client-metadata` | SdkProtocol | Implemented | 0; not promoted |
+| `account` | SdkProtocol | Implemented | 0; not promoted |
+| `scim` | SdkProtocol | Implemented | 0; not promoted |
+| `registration` | SdkProtocol | Implemented | 0; not promoted |
+| `uma` | SdkProtocol | Implemented | 0; not promoted |
+| `authzen` | SdkProtocol | Implemented | 0; not promoted |
+| `client-admin-v2` | SdkProtocol | Implemented | 0; not promoted |
+| `identity-brokering-legacy` | SdkProtocol | Implemented | 0; not promoted |
+| `identity-brokering` | SdkProtocol | Implemented | 0; not promoted |
+| `wallet` | SdkProtocol | Implemented | 0; not promoted |
+| `wallet-pre-authorized` | SdkProtocol | Implemented | 0; not promoted |
+| `wallet-offers` | SdkProtocol | Implemented | 0; not promoted |
+| `wallet-mdoc` | SdkProtocol | Implemented | 0; not promoted |
+| `wallet-presentation` | SdkProtocol | Implemented | 0; not promoted |
+| `wallet-attestation` | HostIntegration | Implemented | 0; not promoted |
+| `signals` | SdkProtocol | Implemented | 0; not promoted |
+| `docker-registry` | SdkProtocol | Implemented | 0; not promoted |
+| `browser-oidc` | HostIntegration | Implemented | 0; not promoted |
+| `saml` | HostIntegration | Implemented | 0; not promoted |
+| `dpop` | HostIntegration | Implemented | 0; not promoted |
+| `authentication` | HostIntegration | Implemented | 0; not promoted |
+| `federated-client-auth` | HostIntegration | Implemented | 0; not promoted |
+| `runtime-openapi` | SdkProtocol | Implemented | 0; not promoted |
+| `mutual-tls` | HostIntegration | Implemented | 0; not promoted |
+| `spiffe-client-auth` | HostIntegration | Implemented | 0; not promoted |
+| `identity-broker-login` | HostIntegration | Implemented | 0; not promoted |
+| `identity-linking` | HostIntegration | Implemented | 0; not promoted |
+| `oidc-request-objects` | SdkProtocol | Implemented | 0; not promoted |
+| `oidc-signed-responses` | SdkProtocol | Implemented | 0; not promoted |
+| `oidc-browser-compatibility` | SdkProtocol | Implemented | 0; not promoted |
+| `oidc-assurance` | SdkProtocol | Implemented | 0; not promoted |
+| `authentication-webauthn` | HostIntegration | Implemented | 0; not promoted |
+| `authentication-passkeys` | HostIntegration | Implemented | 0; not promoted |
+| `authentication-kerberos` | HostIntegration | Implemented | 0; not promoted |
+| `authentication-recovery-codes` | HostIntegration | Implemented | 0; not promoted |
+| `authentication-update-email` | HostIntegration | Implemented | 0; not promoted |
+| `authentication-transient-users` | HostIntegration | Implemented | 0; not promoted |
+| `authentication-legacy-logout` | HostIntegration | Implemented | 0; not promoted |
+| `authentication-legacy-passkey-ui` | HostIntegration | Implemented | 0; not promoted |
+| `authentication-instagram` | HostIntegration | Implemented | 0; not promoted |
+| `authentication-twitter` | HostIntegration | Implemented | 0; not promoted |
 
 `Partial` 表示仅有部分调用实现；不表示完整协议支持，也不继承 Admin API 的验收。晋升引用绑定输入指纹、运行模式、RID 和不可变业务证据；修改代码后旧证据自动退出当前支持。
 
-全部审阅应用能力和 Admin API 已有支持配置。发布仍须通过完整契约、原生构建和真实验收门禁。
+全部应用能力尚未通过协议业务晋升，不能宣称全功能覆盖。运行 `Generate-PlatformMatrix.cs -- --require-complete` 会明确拒绝当前未完成项。
 

@@ -11,6 +11,7 @@
 | 同时验证 Linux 容器 Native AOT | `dotnet run --file tools/Verify.cs -- --native-container` |
 | 仅运行 MSTest | `dotnet test tests/Keycloak.Admin.Sdk.Tests -c Release` |
 | 隔离 Keycloak 场景 | `dotnet run --file tools/Test-Integration.cs`；原生加 `-- --native-aot` |
+| 26.8.2 升级专项回归 | `dotnet run --file tools/Test-Integration.cs -- --upgrade-regressions` |
 | 两条路线、托管/AOT 全量验收及证据更新 | `dotnet run --file tools/Test-AllAdminRoutes.cs -- --update-docs` |
 | 独立源码审计 | `dotnet run --file tools/Audit-Contracts.cs`；在线来源核验加 `-- --online` |
 | 隔离非 Stable 功能验证 | `dotnet run --file tools/Test-Feature.cs -- --feature=client-types`；原生加 `--native-aot`，晋升后加 `--guarded` |
@@ -70,6 +71,8 @@ dotnet run --file tools/Check-Coverage.cs -- --results=artifacts/test-results/ma
 应用协议使用独立的 `Keycloak.Admin.Sdk.Protocols.Tests` 测试集和 `Check-ProtocolCoverage.cs` 门禁，要求其源码行和分支覆盖率 100%。`Test-ApplicationProtocols.cs` 对固定版本的临时 Keycloak 实例运行选定真实工作流，原生加 `--native-aot`；这些结果不等于完整协议晋升。全能力覆盖情况见 [矩阵](contracts/platform-capability-matrix.md) 和 [实施说明](full-platform-coverage.md)。
 
 `Test-Integration.cs` 使用固定 digest、临时本机端口和隔离 realm，退出时清理容器。原生模式自动构建 Linux 程序；已有二进制可加 `--no-build-native`。需要持久化 PostgreSQL 时使用 [本地服务](../local/keycloak/README.md) 的 `test` / `test-native`，全量业务验收使用 `test-full` / `test-full-native`。
+
+`--upgrade-regressions` 使用本地已缓存的基线镜像，运行管理 scope 的状态码验证，再核对委派管理员的 Protocol Mapper 权限、DCR 注册策略及 FGAP v2 客户端和会话统计可见性。测试报告中的权限判断基于实际 HTTP 响应和持久化结果。
 
 全量场景位于手写的 `Full*.cs`；生成的 `LiveRoutes.g.cs` 仅分派调用。`LiveLedger` 要求成功 SDK 响应及已通过的业务断言，未完成项非空即失败。验收数量、协议效果、排除项及执行时间见 [真实验收](contracts/full-live-acceptance.md)，不重复维护在本页。
 

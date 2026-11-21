@@ -81,8 +81,19 @@ internal static class AlignmentLive
         try
         {
             await sdk.Workflow.ActivateAsync(realm, workflowId, "USERS", user, notBefore: "86400", cancellationToken: cancellationToken);
-            var scheduled = await sdk.Workflows.GetScheduledWorkflowsAsync(realm, user, cancellationToken: cancellationToken);
-            Check(scheduled.Body is { Count: > 0 } && scheduled.Body.Any(w => w.Id == workflowId && w.Name == "sdk-delayed-workflow" && w.Steps is { Count: > 0 }), "Scheduled workflow nonempty list is deserialized with steps");
+            // Activation is enqueued after the request commits. Wait for the read model without replaying the write.
+            bool persisted = false;
+            for (int attempt = 0; attempt < 100; attempt++)
+            {
+                var scheduled = await sdk.Workflows.GetScheduledWorkflowsAsync(realm, user, cancellationToken: cancellationToken);
+                if (scheduled.Body?.Any(w => w.Id == workflowId && w.Name == "sdk-delayed-workflow" && w.Steps is { Count: > 0 }) == true)
+                {
+                    persisted = true;
+                    break;
+                }
+                await Task.Delay(100, cancellationToken);
+            }
+            Check(persisted, "Scheduled workflow is deserialized with steps after activation persists");
             await sdk.Workflow.DeactivateAsync(realm, workflowId, "USERS", user, cancellationToken: cancellationToken);
         }
         finally { await sdk.Workflow.DeleteAsync(realm, workflowId, cancellationToken: cancellationToken); }

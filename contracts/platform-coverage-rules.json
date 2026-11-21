@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "serverVersion": "26.8.1",
-  "sourceCommit": "24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b",
+  "serverVersion": "26.8.2",
+  "sourceCommit": "e514445f9dcdabc5bdcf67cab56c1e49655de067",
   "profileSha256": "93df273bd9b57b16d68baf26493f995e732d523bb34f18bd6b85162f7884ac68",
   "features": [
     {
@@ -409,7 +409,7 @@
       "acceptanceCriteria": [
         "CIBA poll and ping authenticate notifications and enforce request lifecycle"
       ],
-      "upstreamNotes": "Pinned CibaConfig.CIBA_SUPPORTED_MODES contains poll and ping only. Push delivery and user_code are rejected by Keycloak 26.8.1."
+      "upstreamNotes": "Pinned CibaConfig.CIBA_SUPPORTED_MODES contains poll and ping only. Push delivery and user_code are rejected by Keycloak 26.8.2."
     },
     {
       "id": "oidc-par",
@@ -458,7 +458,7 @@
       "acceptanceCriteria": [
         "Identity assertions bind the verified upstream subject and relying party"
       ],
-      "upstreamNotes": "The pinned 26.8.1 source consumes oauth-id-jag+jwt using the JWT authorization grant; it does not expose an ID-JAG issuance or exchange endpoint."
+      "upstreamNotes": "The pinned 26.8.2 source consumes oauth-id-jag+jwt using the JWT authorization grant; it does not expose an ID-JAG issuance or exchange endpoint."
     },
     {
       "id": "oidc-client-metadata",
