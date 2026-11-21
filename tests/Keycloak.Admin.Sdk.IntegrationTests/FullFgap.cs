@@ -19,7 +19,10 @@ internal static class FullFgap
         string managementId = S(management.J![0], "id");
         var queryRole = await c.Get("clients/{client-uuid}/roles/{role-name}", null, ("client-uuid", managementId), ("role-name", "query-users"));
         await c.Post("users/{user-id}/role-mappings/clients/{client-id}", new JsonArray(queryRole.J!.DeepClone()), paths: [("user-id", admin), ("client-id", managementId)]);
-        await c.Post("clients", O("""{"clientId":"full-delegated-login","publicClient":false,"protocol":"openid-connect","secret":"full-delegated-secret","directAccessGrantsEnabled":true,"fullScopeAllowed":true}"""));
+        var loginClient = await c.Post("clients", O("""{"clientId":"full-delegated-login","publicClient":false,"protocol":"openid-connect","secret":"full-delegated-secret","directAccessGrantsEnabled":true,"fullScopeAllowed":true}"""));
+        var scopes = await c.Get("client-scopes");
+        string adminScope = S(scopes.J!.AsArray().Single(s => S(s, "name") == "kc-admin-api"), "id");
+        await c.Put("clients/{client-uuid}/default-client-scopes/{clientScopeId}", paths: [("client-uuid", loginClient.Id), ("clientScopeId", adminScope)]);
         using var form = new FormUrlEncodedContent(new Dictionary<string, string> { ["grant_type"] = "password", ["client_id"] = "full-delegated-login", ["client_secret"] = "full-delegated-secret", ["username"] = "full-delegated-admin", ["password"] = "Delegated-admin-Password-123!" });
         using var login = await http.PostAsync(new Uri(server, "realms/" + c.Realm + "/protocol/openid-connect/token"), form, cancellationToken: c.Cancellation);
         login.EnsureSuccessStatusCode();

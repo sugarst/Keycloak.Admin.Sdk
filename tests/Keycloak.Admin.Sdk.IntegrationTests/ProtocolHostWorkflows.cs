@@ -29,7 +29,9 @@ internal static class ProtocolHostWorkflows
             Secret = secret, StandardFlowEnabled = true, DirectAccessGrantsEnabled = true, RedirectUris = [callback.AbsoluteUri],
             Attributes = new() { ["backchannel.logout.url"] = new Uri(host, "backchannel").AbsoluteUri, ["backchannel.logout.session.required"] = "true", ["post.logout.redirect.uris"] = new Uri(host, "signout-callback-host").AbsoluteUri },
             ProtocolMappers = [new() { Name = "resource", Protocol = "openid-connect", ProtocolMapper = "oidc-audience-mapper", Config = new() { ["included.custom.audience"] = new Uri(host, "mcp").AbsoluteUri, ["access.token.claim"] = "true" } }] }, cancellationToken: ct);
-        var builder = WebApplication.CreateSlimBuilder(); builder.Logging.ClearProviders(); builder.WebHost.UseUrls(host.AbsoluteUri);
+        // Keep configuration file watching inside the test output instead of the bind-mounted repository.
+        var builder = WebApplication.CreateSlimBuilder(new WebApplicationOptions { ContentRootPath = AppContext.BaseDirectory });
+        builder.Logging.ClearProviders(); builder.WebHost.UseUrls(host.AbsoluteUri);
         builder.Services.AddDataProtection().UseEphemeralDataProtectionProvider(); builder.Services.AddAuthorization();
         var logout = new InMemoryKeycloakLogoutStore(); var tickets = new Tickets(); var authentication = OAuthClientAuthentication.SecretBasic("host-app", _ => ValueTask.FromResult(secret));
         builder.Services.AddAuthentication(options => { options.DefaultAuthenticateScheme = scheme + ".cookie"; options.DefaultChallengeScheme = scheme; })

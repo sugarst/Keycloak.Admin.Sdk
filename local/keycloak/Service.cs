@@ -28,7 +28,9 @@ return await ScriptHost.ExecuteAsync(args,
     Environment.SetEnvironmentVariable("KEYCLOAK_TARGET_VERSION", target.Version);
     Environment.SetEnvironmentVariable("POSTGRES_IMAGE", target.PostgresImage);
     string directory = Path.Combine(root, "local/keycloak");
-    string envPath = Path.Combine(directory, ".env");
+    string project = ScriptHost.LocalKeycloakProject();
+    string envPath = project == "keycloak-admin-sdk-local" ? Path.Combine(directory, ".env")
+        : ScriptHost.Within(root, "artifacts/local-keycloak/" + project + "/.env");
     if (action is "up" or "test" or "test-native" or "test-full" or "test-full-native" or "reset") await InitializeAsync();
     if (!File.Exists(envPath)) throw new FileNotFoundException("Run Service.cs up first to initialize local credentials.");
     var settings = ReadSettings(envPath);
@@ -49,7 +51,7 @@ return await ScriptHost.ExecuteAsync(args,
         await File.WriteAllTextAsync(envPath, string.Join('\n', environmentLines) + "\n", ct);
     }
     Console.WriteLine($"Declared route: {route.Id}; FGAP v{route.FgapVersion}; compatibilityOnly={route.CompatibilityOnly}; preview=false; experimental=false.");
-    string[] compose = ["compose", "--project-name", "keycloak-admin-sdk-local", "--project-directory", directory, "--env-file", envPath, "-f", Path.Combine(directory, "compose.yaml"),
+    string[] compose = ["compose", "--project-name", project, "--project-directory", directory, "--env-file", envPath, "-f", Path.Combine(directory, "compose.yaml"),
         .. action.StartsWith("test-full", StringComparison.Ordinal) ? new[] { "-f", Path.Combine(directory, "compose.acceptance.yaml") } : [],
         .. OperatingSystem.IsLinux() ? new[] { "-f", Path.Combine(directory, "compose.linux.yaml") } : []];
     await ComposeAsync(["config", "--quiet"]);
@@ -74,7 +76,7 @@ return await ScriptHost.ExecuteAsync(args,
     {
         if (File.Exists(envPath)) return;
         // A lost credential file must not silently generate incompatible credentials for an existing DB.
-        var volume = await ScriptHost.RunAsync(root, "docker", ["volume", "inspect", "keycloak-admin-sdk-local_postgres_data"], ct, capture: true);
+        var volume = await ScriptHost.RunAsync(root, "docker", ["volume", "inspect", project + "_postgres_data"], ct, capture: true);
         if (volume.ExitCode == 0 && action != "reset")
             throw new InvalidOperationException("The local PostgreSQL volume exists but .env is missing. Restore .env, or explicitly use reset --delete-data to recreate this environment.");
         string Pick(string name, string fallback) => Environment.GetEnvironmentVariable(name) ?? fallback;
@@ -85,16 +87,18 @@ return await ScriptHost.ExecuteAsync(args,
             ["POSTGRES_PASSWORD"] = Pick("POSTGRES_PASSWORD", secret()), ["POSTGRES_PORT"] = Pick("POSTGRES_PORT", "15432"),
             ["KEYCLOAK_ADMIN_USERNAME"] = Pick("KEYCLOAK_ADMIN_USERNAME", "admin"), ["KEYCLOAK_ADMIN_PASSWORD"] = Pick("KEYCLOAK_ADMIN_PASSWORD", secret()),
             ["KEYCLOAK_HTTP_PORT"] = Pick("KEYCLOAK_HTTP_PORT", "18080"), ["KEYCLOAK_MANAGEMENT_PORT"] = Pick("KEYCLOAK_MANAGEMENT_PORT", "19000"),
+            ["LDAP_PORT"] = Pick("LDAP_PORT", "1389"),
             ["KEYCLOAK_ADMIN_API_ROUTE"] = KeycloakRoute.Load(root).Id,
             ["KEYCLOAK_FEATURES"] = string.Join(',', KeycloakRoute.Load(root).Features)
         };
         // Single-quoted dotenv values preserve literal $ and #. Generated passwords are ASCII hex.
         if (values.Values.Any(v => v.IndexOfAny(['\r', '\n', '\'']) >= 0)) throw new ArgumentException("Local environment values cannot contain newlines or single quotes.");
         string content = "# Local credentials, generated once. Do not commit.\n" + string.Join('\n', values.Select(v => v.Key + "='" + v.Value + "'")) + "\n";
+        Directory.CreateDirectory(Path.GetDirectoryName(envPath)!);
         await using (var file = new FileStream(envPath, FileMode.CreateNew, FileAccess.Write, FileShare.None))
             await file.WriteAsync(Encoding.UTF8.GetBytes(content), ct);
         if (!OperatingSystem.IsWindows()) File.SetUnixFileMode(envPath, UnixFileMode.UserRead | UnixFileMode.UserWrite);
-        Console.WriteLine("Created local/keycloak/.env with persistent local credentials (passwords not printed).");
+        Console.WriteLine($"Created credentials for Compose project {project} (passwords not printed).");
     }
     Task<CommandResult> ComposeAsync(string[] arguments, bool capture = false) =>
         ScriptHost.RunCheckedAsync(root, "docker", [.. compose, .. arguments], ct, capture);
@@ -149,7 +153,7 @@ return await ScriptHost.ExecuteAsync(args,
         if (fields.Length != 3 || fields[0] != target.PostgresVersionNumber || !fields[1].StartsWith("/var/lib/postgresql/18/", StringComparison.Ordinal) || fields[2] != "true")
             throw new InvalidDataException("Expected PostgreSQL 18.0, versioned PGDATA and an initialized Keycloak realm table.");
         Console.WriteLine($"PASS: Keycloak {target.Version} ready; PostgreSQL {target.PostgresVersionNumber} and persisted Keycloak schema verified; admin login and Admin API succeeded.");
-        Console.WriteLine($"Admin console: {settings.Server}admin/  (user: {settings.Admin}; password: local/keycloak/.env)");
+        Console.WriteLine($"Admin console: {settings.Server}admin/  (user: {settings.Admin}; password file: {Path.GetRelativePath(root, envPath)})");
         Console.WriteLine($"Readiness: {settings.Health}");
     }
 
@@ -162,7 +166,7 @@ return await ScriptHost.ExecuteAsync(args,
         };
         environment["KC_TEST_FULL_ADMIN"] = action.StartsWith("test-full", StringComparison.Ordinal) ? "1" : null;
         environment["KC_TEST_LDAP_HOST"] = "127.0.0.1";
-        environment["KC_TEST_LDAP_PORT"] = "1389";
+        environment["KC_TEST_LDAP_PORT"] = Environment.GetEnvironmentVariable("LDAP_PORT") ?? ReadEnvironmentValue(envPath, "LDAP_PORT") ?? "1389";
         environment["KC_TEST_LDAP_PASSWORD"] = Environment.GetEnvironmentVariable("POSTGRES_PASSWORD") ?? ReadEnvironmentValue(envPath, "POSTGRES_PASSWORD")!;
         environment["KC_TEST_PG_HOST"] = "127.0.0.1";
         environment["KC_TEST_PG_PORT"] = Environment.GetEnvironmentVariable("POSTGRES_PORT") ?? ReadEnvironmentValue(envPath, "POSTGRES_PORT") ?? "15432";

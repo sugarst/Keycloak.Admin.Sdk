@@ -123,7 +123,9 @@ internal static class FeatureSsfWorkflows
         next = (await Emit()).Body.GetProperty("jti").GetString()!;
         var deleted = await sdk.SsfAdmin.DeleteEventsAsync(realm, status: "PENDING", cancellationToken: ct); Require(deleted.Body.GetProperty("deleted").GetInt32() > 0, "realm status-filtered cleanup"); await Missing(next);
         Proof("DeleteEvents", deleted, "Realm status-filtered deletion removes the newly emitted pending record with independent absence verification.");
-        string ordinaryToken = (await oidc.PasswordGrantAsync(authentication, user.Username!, secret, cancellationToken: ct)).Json!.Value.GetProperty("access_token").GetString()!;
+        string adminScope = (await wire.ClientScopes.GetClientScopesAsync(realm, ct)).Body!.Single(s => s.Name == "kc-admin-api").Id!;
+        await wire.Client.AddOptionalClientScopeAsync(realm, client.Id!, adminScope, ct);
+        string ordinaryToken = (await oidc.PasswordGrantAsync(authentication, user.Username!, secret, scope: "kc-admin-api", cancellationToken: ct)).Json!.Value.GetProperty("access_token").GetString()!;
         var ordinary = new KeycloakAdminClient(http, server, new StaticAccessTokenProvider(ordinaryToken));
         foreach (Func<Task> forbidden in new Func<Task>[] { () => ordinary.SsfAdmin.GetConfigAsync(realm, ct), () => ordinary.SsfAdmin.GetClientStreamAsync(realm, receiver, ct), () => ordinary.SsfAdmin.EmitEventAsync(realm, receiver, Body(new()), ct) })
         {

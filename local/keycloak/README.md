@@ -6,7 +6,7 @@
 dotnet run --file local/keycloak/Service.cs
 ```
 
-工具读取 [固定基线](../../contracts/baseline.json)，启动 Keycloak 26.8.1 + PostgreSQL 18.0，生成忽略提交的 `.env` 随机凭据，并检查 HTTP 就绪、管理员登录、服务器版本、路线及数据库 schema。
+工具按[固定基线](../../contracts/baseline.json)启动 Keycloak 和 PostgreSQL，生成忽略提交的 `.env` 随机凭据，并检查 HTTP 就绪、管理员登录、服务器版本、路线及数据库 schema。
 
 | 服务 | 默认地址 | 凭据 |
 | --- | --- | --- |
@@ -42,6 +42,8 @@ dotnet run --file tools/Test-AllAdminRoutes.cs -- --update-docs
 配置项见 [.env.example](.env.example)。进程环境变量优先于 `.env`，修改端口等配置后重跑 `up`。路线通过 `KEYCLOAK_ADMIN_API_ROUTE` 声明，不直接改 `KEYCLOAK_FEATURES`，选择顺序和实际服务器校验见 [路线规则](../../docs/contracts/admin-api-routing.md)。
 
 Compose 项目为 `keycloak-admin-sdk-local`，命名卷 `keycloak-admin-sdk-local_postgres_data` 挂载到 `/var/lib/postgresql`；PGDATA 为 `/var/lib/postgresql/18/docker`。`down` / `up` 保留数据。初始化密码只对空数据库生效，编辑 `.env` 不会修改已有角色密码；数据卷存在但凭据文件丢失时须恢复原凭据。
+
+要在保留现有数据卷的情况下运行独立验收，设置 `KEYCLOAK_LOCAL_PROJECT` 为不同的 Compose 项目名。该项目使用 `artifacts/local-keycloak/<项目名>/.env` 和自己的 PostgreSQL 卷。可用 `KEYCLOAK_HTTP_PORT`、`KEYCLOAK_MANAGEMENT_PORT`、`POSTGRES_PORT`、`LDAP_PORT` 指定独立的本机端口。
 
 基线版本改变时工具停止启动，要求先选择备份/迁移或显式重置，不自动删除数据。清空数据使用：
 

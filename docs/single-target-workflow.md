@@ -19,6 +19,8 @@ baseline.json
 admin-api-routes.json
 capability-rules.json
 feature-validation-plans.json
+application-validation-plans.json
+application-legacy-validation-plans.json
 platform-coverage-rules.json
 overrides.json
 support-policy.example.json
@@ -41,7 +43,7 @@ dotnet run --file tools/Upgrade.cs -- --candidate=artifacts/candidate --apply
 
 ## 发布候选验收
 
-发布流程要求应用全覆盖。`Release.cs` 准备固定的 Keycloak 源码后执行 `Generate-PlatformMatrix.cs -- --require-complete`。应用协议与宿主集成尚未晋升时停止生成发布候选。新增 Protocols 包及全平台矩阵见 [实施说明](full-platform-coverage.md)。
+全平台矩阵要求应用能力和 Admin API 都有验收证据。首次切换基线时，先用 `Update-Contracts.cs -- --source-only` 准备校验过的源码，按[应用协议流程](full-platform-coverage.md)归档标准与兼容证据。再用 `Test-AllAdminRoutes.cs -- --bootstrap` 验收两条路线和两种运行模式，执行 `Generate-CapabilityCatalog.cs -- --promote`，并按[非 Stable 功能流程](non-stable-feature-lifecycle.md)验收和晋升已声明的运行模式。之后 `Release.cs` 会检查完整矩阵，并用最终能力策略复验。
 
 ```shell
 dotnet run --file tools/Release.cs
@@ -50,7 +52,7 @@ dotnet run --file tools/Release.cs
 入口顺序：
 
 1. 核验基线，准备固定源码并重建契约，检查应用覆盖矩阵，自检升级流程，在线核验官方 tag/OpenAPI 并审计源码。
-2. 新目录尚未验收时，执行两路线、托管/AOT 的首次业务验收，再晋升能力支持。
+2. 稳定或弃用操作缺少双运行模式证据时，补跑两条路线的候选验收，再晋升相应 Admin 能力。传入 `--bootstrap` 可强制执行该阶段。
 3. 执行构建、单测、覆盖率、打包、包依赖检查及严格 Native AOT。
 4. 用最终能力策略客户端重跑四套真实验收，包含本地拦截及平台开关面的数据断言。
 5. 验证两路线各十四项门禁负向控制，更新逐项清单并核对源码指纹。

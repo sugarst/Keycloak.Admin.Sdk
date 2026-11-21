@@ -89,6 +89,15 @@ internal static class ScriptHost
 
     public static JsonDocument Baseline(string root) => JsonDocument.Parse(File.ReadAllText(Path.Combine(root, "contracts/baseline.json")));
 
+    public static string LocalKeycloakProject()
+    {
+        string name = Environment.GetEnvironmentVariable("KEYCLOAK_LOCAL_PROJECT") ?? "keycloak-admin-sdk-local";
+        static bool IsAlphaNumeric(char c) => char.IsAsciiLetterLower(c) || char.IsAsciiDigit(c);
+        if (name.Length == 0 || !IsAlphaNumeric(name[0]) || name.Any(c => !IsAlphaNumeric(c) && c is not ('-' or '_')))
+            throw new ArgumentException("Invalid KEYCLOAK_LOCAL_PROJECT name.");
+        return name;
+    }
+
     private static async Task<string> ForwardAsync(StreamReader source, TextWriter destination, CancellationToken cancellationToken)
     {
         var buffer = new char[4096];

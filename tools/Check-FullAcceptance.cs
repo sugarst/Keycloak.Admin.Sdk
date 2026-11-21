@@ -72,9 +72,10 @@ return await ScriptHost.ExecuteAsync(args, "dotnet run --file tools/Check-FullAc
     string docs = Path.Combine(root, "docs/contracts"); Directory.CreateDirectory(Path.Combine(docs, "full-live-evidence"));
     var images = new JsonObject { ["checkedUtc"] = DateTimeOffset.UtcNow.ToString("O") };
     using var baseline = ScriptHost.Baseline(root);
+    string project = ScriptHost.LocalKeycloakProject();
     foreach (string service in new[] { "keycloak", "postgres" })
     {
-        var running = await ScriptHost.RunCheckedAsync(root, "docker", ["inspect", "--format", "{{.Image}}", "keycloak-admin-sdk-local-" + service + "-1"], ct, capture: true);
+        var running = await ScriptHost.RunCheckedAsync(root, "docker", ["inspect", "--format", "{{.Image}}", project + "-" + service + "-1"], ct, capture: true);
         string imageId = running.StandardOutput.Trim();
         var digests = await ScriptHost.RunCheckedAsync(root, "docker", ["image", "inspect", "--format", "{{json .RepoDigests}}", imageId], ct, capture: true);
         using var parsed = JsonDocument.Parse(digests.StandardOutput);

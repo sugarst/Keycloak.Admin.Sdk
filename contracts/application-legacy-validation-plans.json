@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "serverVersion": "26.8.1",
-  "sourceCommit": "24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b",
+  "serverVersion": "26.8.2",
+  "sourceCommit": "e514445f9dcdabc5bdcf67cab56c1e49655de067",
   "requiredServerFeatures": [
     "ADMIN_API",
     "ADMIN_FINE_GRAINED_AUTHZ",

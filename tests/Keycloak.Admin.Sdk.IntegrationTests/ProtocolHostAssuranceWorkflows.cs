@@ -29,7 +29,8 @@ internal static class ProtocolHostAssuranceWorkflows
         var clock = new ProtocolOidcAssuranceWorkflows.AssuranceClock(); var requirement = new OidcAssuranceRequirement(["urn:sdk:loa:2"], TimeSpan.FromMinutes(5), ["pwd", "otp"], clock);
         var tickets = new Tickets(); int credentials = 0;
         var client = OAuthClientAuthentication.SecretBasic(clientId, _ => { credentials++; return ValueTask.FromResult(password); });
-        var builder = WebApplication.CreateSlimBuilder(); builder.Logging.ClearProviders(); builder.WebHost.UseUrls(host.AbsoluteUri);
+        var builder = WebApplication.CreateSlimBuilder(new WebApplicationOptions { ContentRootPath = AppContext.BaseDirectory });
+        builder.Logging.ClearProviders(); builder.WebHost.UseUrls(host.AbsoluteUri);
         builder.Services.AddDataProtection().UseEphemeralDataProtectionProvider(); builder.Services.AddAuthorization();
         builder.Services.AddAuthentication(options => { options.DefaultAuthenticateScheme = "assurance.cookie"; options.DefaultChallengeScheme = "assurance"; })
             .AddKeycloakWebApp("assurance", transport, client, tickets, new InMemoryKeycloakLogoutStore(), allowLoopbackHttp: true, requiredAssurance: requirement);

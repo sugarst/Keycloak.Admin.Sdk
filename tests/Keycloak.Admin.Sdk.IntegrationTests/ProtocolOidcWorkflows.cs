@@ -93,7 +93,7 @@ internal static class ProtocolOidcWorkflows
         var delegatedAdmin = new KeycloakAdminClient(http, server, new StaticAccessTokenProvider(delegatedToken));
         bool adminDenied = false;
         try { await delegatedAdmin.Users.GetUsersAsync(realm, cancellationToken: ct); }
-        catch (KeycloakAdminException e) when (e.StatusCode == HttpStatusCode.Forbidden) { adminDenied = true; }
+        catch (KeycloakAdminException e) when (e.Stage == KeycloakFailureStage.AdminApi && e.StatusCode == HttpStatusCode.Unauthorized) { adminDenied = true; }
         check(adminDenied, "Client delegated tokens cannot call Admin APIs");
         await admin.SendAsync(HttpMethod.Delete, policyPath + "/permission/" + permission!["id"]!.GetValue<string>(), cancellationToken: ct);
         var revokedRefresh = await oidc.RefreshAsync(subjectClient, subject.Tokens.Json.Value.GetProperty("refresh_token").GetString()!, cancellationToken: ct);
