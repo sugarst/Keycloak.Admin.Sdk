@@ -960,7 +960,7 @@
   "boundaries": {
     "ServerRuntime": "Keycloak server and deployment/observability tools own implementation and operations; SDK records the boundary, not client support.",
     "ServerExtension": "Keycloak UI, theme and Java SPI implementation; SDK may manage configuration but does not execute server extensions.",
-    "HostIntegration": "Host/framework integration remains required work, not an exclusion from application coverage.",
+    "HostIntegration": "Host and framework integrations require acceptance evidence for each supported runtime and server profile.",
     "ThirdPartySpi": "Only extensions distributed in the pinned upstream source are enumerated; user-provided dynamic SPI endpoints require separate contracts."
   }
 }

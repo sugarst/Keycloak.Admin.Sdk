@@ -13,7 +13,7 @@ return await ScriptHost.ExecuteAsync(args, "dotnet run --file tools/Generate-Pla
     if (args.Length > 1) throw new ArgumentException("Choose one mode.");
     string root = ScriptHost.RepositoryRoot(); var result = PlatformCoverage.Generate(root);
     if (args.Contains("--require-complete") && !result.Complete)
-        throw new InvalidDataException("Full application coverage is not achieved: protocol and host integration acceptance remains unpromoted. See docs/contracts/platform-capability-matrix.md.");
+        throw new InvalidDataException("Platform coverage is incomplete: a reviewed application capability or Admin API operation lacks a support profile. See docs/contracts/platform-capability-matrix.md.");
     foreach (var (path, text) in new[] { ("contracts/platform-capabilities.json", result.Json), ("docs/contracts/platform-capability-matrix.md", result.Markdown) })
     {
         if (args.Contains("--check"))

@@ -1,6 +1,6 @@
-# Keycloak 26.8.1 全能力扩展
+# Keycloak 26.8.2 全能力覆盖
 
-本分支的目标是覆盖固定 Keycloak 26.8.1 中供应用调用的 API、认证与授权协议。部署、数据库、多集群、服务端 UI 和 Java SPI 的实施由 Keycloak 或外部工具承担，并保留明确责任记录。目标不包含用户任意安装的第三方扩展。
+本分支以 Keycloak 26.8.2 为固定目标，覆盖供应用调用的 API、认证与授权协议。部署、数据库、多集群、服务端 UI 和 Java SPI 的实施由 Keycloak 或外部工具承担。用户自定义扩展需要独立契约。
 
 ## 两种支持矩阵
 
@@ -16,9 +16,9 @@
 ## 模块与身份边界
 
 - `Keycloak.Admin.Sdk`：管理接口和服务账号管理认证。
-- `Keycloak.Admin.Sdk.Protocols`：realm 绑定协议传输、显式客户端认证、用户令牌、钱包签发及出示，以及服务器托管认证的应用入口。开发包尚未发布。
+- `Keycloak.Admin.Sdk.Protocols` 提供 realm 绑定的协议传输、显式客户端认证、用户令牌、钱包签发及出示，以及服务器托管认证的应用入口。
 - `Keycloak.Admin.Sdk.Platform`：Managed 宿主统一开关面；支持快照模式和微软 FeatureManagement 模式，以及默认关闭的官方 Application Insights 遥测。两条链共享 serverinfo 和 gate；不声明 Native AOT 支持，原生调用使用主包的快照门禁。
-- `Keycloak.Admin.Sdk.Hosting`：Managed ASP.NET Core OIDC/JWT、服务端票据、注销接收、MCP 资源元数据和 SAML SP；依赖 ASP.NET Core 与 ITfoxtec。该包不声明 Native AOT 支持，各宿主能力仍须逐项晋升。
+- `Keycloak.Admin.Sdk.Hosting` 在 Managed 上验证了 ASP.NET Core OIDC/JWT、服务端票据、注销接收、MCP 资源元数据和 SAML SP。该包依赖 ASP.NET Core 与 ITfoxtec。
 
 管理 token 不会自动传入用户协议调用。每个用户的令牌、刷新和交换状态由各自调用上下文持有；协议模块不跨用户缓存，也不把解析 JWT 当作验证身份。
 
@@ -58,13 +58,15 @@ dotnet run --file tools/Verify.cs -- --native-container
 4. 针对明确运行模式和原生 RID，完成真实业务效果、权限拒绝、取消和宿主开关关闭场景。
 5. 归档与当前输入及构建程序绑定的证据，并完成独立应用能力晋升。
 
-独立晋升计划维护于 `contracts/application-validation-plans.json`。`Check-ApplicationProtocols.cs -- --archive` 验证两种运行模式后，将证据内容寻址归档，并更新 `contracts/application-verification-profiles.json`；只有实现完成且全部验收标准都有证明的能力族才获得对应支持配置。宿主断言放入 Managed 专属检查组，不能晋升 Native AOT。旧报告、缺失断言、错误 RID、篡改哈希、未启用的服务器特性均不能晋升。平台开关面仍只负责最终开放与关闭。
+独立晋升计划维护于 `contracts/application-validation-plans.json`。`Check-ApplicationProtocols.cs -- --archive` 验证两种运行模式后，按内容哈希归档证据，并更新 `contracts/application-verification-profiles.json`。能力族必须完成实现，并满足全部验收标准，才能获得相应支持配置。ASP.NET Core Hosting 与 SAML 的专属断言属于 Managed 检查组。Native AOT 的支持依据对应 RID 的独立证据。旧报告、缺失断言、错误 RID、篡改哈希或未启用的服务器特性都会阻止晋升。
 
 验证输入包含协议与宿主安全测试及 AOT smoke。生成的 Admin/平台支持目录和应用证据注册表不作为验证输入，避免晋升改变自身指纹；规则、计划、目标与实现仍全部绑定。修改这些输入后旧证据自动退出当前支持，历史归档保留。
 
-全覆盖门禁根据全部应用能力与 Admin API 的支持配置计算完成状态，`Release.cs` 首先执行此门禁。当前 52/52 个审阅应用能力族均已完成实现与独立晋升，矩阵 `complete=true`；520 项 Admin API 中 506 项为 Supported，14 项保留 FGAP v1 Compatibility。标准计划 Managed 434/434、Native AOT 391/391；旧版兼容计划分别 20/20。此完成状态只适用于矩阵记录的版本、运行环境和责任边界。
+全覆盖门禁根据全部应用能力与 Admin API 的支持配置计算完成状态。`Release.cs` 在构建和真实业务验收前检查此门禁。当前 52/52 个审阅应用能力族均已完成实现与独立晋升，矩阵为 `complete=true`。520 项 Admin API 中 506 项为 Supported，14 项保留 FGAP v1 Compatibility。标准计划 Managed 434/434、Native AOT 391/391，旧版兼容计划分别通过 20/20。此完成状态只适用于矩阵记录的版本、运行环境和责任边界。
 
-preview.3 仍是未发布的开发版本。覆盖门禁通过不代表已经发布 NuGet，也不替代完整构建、包消费、严格原生程序、Admin API 真实验收和非 Stable 受保护复验。
+Managed 的验收覆盖全部 52 个应用能力族。Linux Native AOT 在 `linux-musl-x64` 上覆盖其中 50 个。ASP.NET Core 浏览器 OIDC 和 SAML 的宿主集成仅在 Managed 上通过。其余 OIDC 能力按矩阵中各自的配置支持。Native AOT 使用主包快照门禁，`Platform` 的微软引擎与遥测验收属于 Managed。Admin API 的两条 FGAP 路线分别在 Managed 和 Native AOT 上验收。详见[全能力矩阵](contracts/platform-capability-matrix.md)和 [Admin API 真实验收](contracts/full-live-acceptance.md)。
+
+26.8.2 的四个包已有本地候选记录，NuGet 尚未发布。[发布清单](releases/26.8.2/654d361dc70f04811d5479a592a5a1a205b97af59d9a24263d6f9b453055d604.json)保留当时完整发布门禁的证据与包哈希。
 
 委托撤销遵循固定服务端语义：删除 delegate 权限后，主体令牌刷新移除 may_act；刷新后的令牌不能继续委托。已经签发的 access token 有自己的有效期，不能把删除权限表述为即时撤销所有令牌。即时关闭业务还须使用宿主开关及适用的会话注销/撤销。
 
@@ -84,7 +86,7 @@ preview.3 仍是未发布的开发版本。覆盖门禁通过不代表已经发�
 
 固定版本中的 `SSE_CAEP` 指旧版 Shared Signals and Events 的 CAEP 兼容格式，不是 HTTP Server-Sent Events。服务端实现的事件投递方式是 SET push/poll，不能把它描述为尚待补齐的 event-stream 接口。
 
-OIDC 的 JAR、JARM 和浏览器兼容响应分别登记并独立晋升。默认交互登录仍使用 code + PKCE。`OidcBrowserTransaction` 对前端 ID Token 强制验证适用的 `at_hash` 和 `c_hash`；OAuth-only 与 none 响应不产生登录身份。JWE 解密支持显式宿主密钥及 RSA-OAEP／RSA-OAEP-256，不允许 RSA1_5 解包。固定 26.8.1 的 JARM 会重复写入 `iss`，仅在两个值均与固定 realm 完全一致时兼容；其他重复声明一律拒绝。
+OIDC 的 JAR、JARM 和浏览器兼容响应分别登记并独立晋升。默认交互登录仍使用 code + PKCE。`OidcBrowserTransaction` 对前端 ID Token 强制验证适用的 `at_hash` 和 `c_hash`；OAuth-only 与 none 响应不产生登录身份。JWE 解密支持显式宿主密钥及 RSA-OAEP／RSA-OAEP-256，不允许 RSA1_5 解包。JARM 的两个 `iss` 值均与固定 realm 完全一致时，SDK 允许这种重复；其他重复声明一律拒绝。
 
 SSF 的未知主体默认以成功响应保护存在性隐私，验收通过独立签名 claim 确认没有订阅效果；不能只看 HTTP 200。接收方移除主体会保留服务端宽限时间戳，再添加会清除该时间戳；这与即时撤销已有会话不同。
 

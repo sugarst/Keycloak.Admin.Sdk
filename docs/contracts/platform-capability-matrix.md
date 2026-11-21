@@ -2,7 +2,7 @@
 
 固定目标 / Exact target: Keycloak 26.8.2, upstream `e514445f9dcdabc5bdcf67cab56c1e49655de067`.
 
-本表登记上游功能及责任边界，不把登记、生成或 HTTP 可调用视为完成支持。HostIntegration 仍属于应用全覆盖待完成项；ServerRuntime 和 ServerExtension 明确由服务端或外部工具承担。用户自定义 SPI 不属于有限上游清单。
+本表登记上游功能及责任边界。应用协议和 HostIntegration 的支持范围按下表的运行模式、服务端配置和验收证据确定。ServerRuntime 和 ServerExtension 由 Keycloak 或外部工具承担。用户自定义 SPI 需要独立契约。
 
 Admin API 的 520 项操作独立维护于 [操作支持矩阵](admin-api-support-matrix.tsv)。下表的上游功能数不能与操作数相加。
 
@@ -93,62 +93,67 @@ Admin API 的 520 项操作独立维护于 [操作支持矩阵](admin-api-suppor
 
 ## 应用协议与运行时 / Application protocols and runtime
 
-| Capability | Responsibility | Implementation | Verified runtime profiles |
-| --- | --- | --- | --- |
-| `oidc` | SdkProtocol | Implemented | 2; verified for referenced profiles only |
-| `oidc-standard-exchange` | SdkProtocol | Implemented | 2; verified for referenced profiles only |
-| `oidc-legacy-exchange` | SdkProtocol | Implemented | 2; verified for referenced profiles only |
-| `oidc-delegation` | SdkProtocol | Implemented | 2; verified for referenced profiles only |
-| `oidc-jwt-grant` | SdkProtocol | Implemented | 2; verified for referenced profiles only |
-| `oidc-device` | SdkProtocol | Implemented | 2; verified for referenced profiles only |
-| `oidc-ciba` | SdkProtocol | Implemented | 2; verified for referenced profiles only |
-| `oidc-par` | SdkProtocol | Implemented | 2; verified for referenced profiles only |
-| `oidc-parameterized-scopes` | SdkProtocol | Implemented | 2; verified for referenced profiles only |
-| `oidc-resources` | SdkProtocol | Implemented | 2; verified for referenced profiles only |
-| `oidc-identity-assertion` | SdkProtocol | Implemented | 2; verified for referenced profiles only |
-| `oidc-client-metadata` | SdkProtocol | Implemented | 2; verified for referenced profiles only |
-| `account` | SdkProtocol | Implemented | 2; verified for referenced profiles only |
-| `scim` | SdkProtocol | Implemented | 2; verified for referenced profiles only |
-| `registration` | SdkProtocol | Implemented | 2; verified for referenced profiles only |
-| `uma` | SdkProtocol | Implemented | 2; verified for referenced profiles only |
-| `authzen` | SdkProtocol | Implemented | 2; verified for referenced profiles only |
-| `client-admin-v2` | SdkProtocol | Implemented | 2; verified for referenced profiles only |
-| `identity-brokering-legacy` | SdkProtocol | Implemented | 2; verified for referenced profiles only |
-| `identity-brokering` | SdkProtocol | Implemented | 2; verified for referenced profiles only |
-| `wallet` | SdkProtocol | Implemented | 2; verified for referenced profiles only |
-| `wallet-pre-authorized` | SdkProtocol | Implemented | 2; verified for referenced profiles only |
-| `wallet-offers` | SdkProtocol | Implemented | 2; verified for referenced profiles only |
-| `wallet-mdoc` | SdkProtocol | Implemented | 2; verified for referenced profiles only |
-| `wallet-presentation` | SdkProtocol | Implemented | 2; verified for referenced profiles only |
-| `wallet-attestation` | HostIntegration | Implemented | 2; verified for referenced profiles only |
-| `signals` | SdkProtocol | Implemented | 2; verified for referenced profiles only |
-| `docker-registry` | SdkProtocol | Implemented | 2; verified for referenced profiles only |
-| `browser-oidc` | HostIntegration | Implemented | 1; verified for referenced profiles only |
-| `saml` | HostIntegration | Implemented | 1; verified for referenced profiles only |
-| `dpop` | HostIntegration | Implemented | 2; verified for referenced profiles only |
-| `authentication` | HostIntegration | Implemented | 2; verified for referenced profiles only |
-| `federated-client-auth` | HostIntegration | Implemented | 2; verified for referenced profiles only |
-| `runtime-openapi` | SdkProtocol | Implemented | 2; verified for referenced profiles only |
-| `mutual-tls` | HostIntegration | Implemented | 2; verified for referenced profiles only |
-| `spiffe-client-auth` | HostIntegration | Implemented | 2; verified for referenced profiles only |
-| `identity-broker-login` | HostIntegration | Implemented | 2; verified for referenced profiles only |
-| `identity-linking` | HostIntegration | Implemented | 2; verified for referenced profiles only |
-| `oidc-request-objects` | SdkProtocol | Implemented | 2; verified for referenced profiles only |
-| `oidc-signed-responses` | SdkProtocol | Implemented | 2; verified for referenced profiles only |
-| `oidc-browser-compatibility` | SdkProtocol | Implemented | 2; verified for referenced profiles only |
-| `oidc-assurance` | SdkProtocol | Implemented | 2; verified for referenced profiles only |
-| `authentication-webauthn` | HostIntegration | Implemented | 2; verified for referenced profiles only |
-| `authentication-passkeys` | HostIntegration | Implemented | 2; verified for referenced profiles only |
-| `authentication-kerberos` | HostIntegration | Implemented | 2; verified for referenced profiles only |
-| `authentication-recovery-codes` | HostIntegration | Implemented | 2; verified for referenced profiles only |
-| `authentication-update-email` | HostIntegration | Implemented | 2; verified for referenced profiles only |
-| `authentication-transient-users` | HostIntegration | Implemented | 2; verified for referenced profiles only |
-| `authentication-legacy-logout` | HostIntegration | Implemented | 2; verified for referenced profiles only |
-| `authentication-legacy-passkey-ui` | HostIntegration | Implemented | 2; verified for referenced profiles only |
-| `authentication-instagram` | HostIntegration | Implemented | 2; verified for referenced profiles only |
-| `authentication-twitter` | HostIntegration | Implemented | 2; verified for referenced profiles only |
+运行时列给出通过验收的服务端配置。Native AOT 同时标明 RID。`—` 表示该运行模式暂无通过的证据。
+
+| Capability | Responsibility | Implementation | Managed | Native AOT |
+| --- | --- | --- | --- | --- |
+| `oidc` | SdkProtocol | Implemented | standard | standard (linux-musl-x64) |
+| `oidc-standard-exchange` | SdkProtocol | Implemented | standard | standard (linux-musl-x64) |
+| `oidc-legacy-exchange` | SdkProtocol | Implemented | legacy | legacy (linux-musl-x64) |
+| `oidc-delegation` | SdkProtocol | Implemented | standard | standard (linux-musl-x64) |
+| `oidc-jwt-grant` | SdkProtocol | Implemented | standard | standard (linux-musl-x64) |
+| `oidc-device` | SdkProtocol | Implemented | standard | standard (linux-musl-x64) |
+| `oidc-ciba` | SdkProtocol | Implemented | standard | standard (linux-musl-x64) |
+| `oidc-par` | SdkProtocol | Implemented | standard | standard (linux-musl-x64) |
+| `oidc-parameterized-scopes` | SdkProtocol | Implemented | standard | standard (linux-musl-x64) |
+| `oidc-resources` | SdkProtocol | Implemented | standard | standard (linux-musl-x64) |
+| `oidc-identity-assertion` | SdkProtocol | Implemented | standard | standard (linux-musl-x64) |
+| `oidc-client-metadata` | SdkProtocol | Implemented | standard | standard (linux-musl-x64) |
+| `account` | SdkProtocol | Implemented | standard | standard (linux-musl-x64) |
+| `scim` | SdkProtocol | Implemented | standard | standard (linux-musl-x64) |
+| `registration` | SdkProtocol | Implemented | standard | standard (linux-musl-x64) |
+| `uma` | SdkProtocol | Implemented | standard | standard (linux-musl-x64) |
+| `authzen` | SdkProtocol | Implemented | standard | standard (linux-musl-x64) |
+| `client-admin-v2` | SdkProtocol | Implemented | standard | standard (linux-musl-x64) |
+| `identity-brokering-legacy` | SdkProtocol | Implemented | legacy | legacy (linux-musl-x64) |
+| `identity-brokering` | SdkProtocol | Implemented | standard | standard (linux-musl-x64) |
+| `wallet` | SdkProtocol | Implemented | standard | standard (linux-musl-x64) |
+| `wallet-pre-authorized` | SdkProtocol | Implemented | standard | standard (linux-musl-x64) |
+| `wallet-offers` | SdkProtocol | Implemented | standard | standard (linux-musl-x64) |
+| `wallet-mdoc` | SdkProtocol | Implemented | standard | standard (linux-musl-x64) |
+| `wallet-presentation` | SdkProtocol | Implemented | standard | standard (linux-musl-x64) |
+| `wallet-attestation` | HostIntegration | Implemented | standard | standard (linux-musl-x64) |
+| `signals` | SdkProtocol | Implemented | standard | standard (linux-musl-x64) |
+| `docker-registry` | SdkProtocol | Implemented | standard | standard (linux-musl-x64) |
+| `browser-oidc` | HostIntegration | Implemented | standard | — |
+| `saml` | HostIntegration | Implemented | standard | — |
+| `dpop` | HostIntegration | Implemented | standard | standard (linux-musl-x64) |
+| `authentication` | HostIntegration | Implemented | standard | standard (linux-musl-x64) |
+| `federated-client-auth` | HostIntegration | Implemented | standard | standard (linux-musl-x64) |
+| `runtime-openapi` | SdkProtocol | Implemented | standard | standard (linux-musl-x64) |
+| `mutual-tls` | HostIntegration | Implemented | standard | standard (linux-musl-x64) |
+| `spiffe-client-auth` | HostIntegration | Implemented | standard | standard (linux-musl-x64) |
+| `identity-broker-login` | HostIntegration | Implemented | standard | standard (linux-musl-x64) |
+| `identity-linking` | HostIntegration | Implemented | standard | standard (linux-musl-x64) |
+| `oidc-request-objects` | SdkProtocol | Implemented | standard | standard (linux-musl-x64) |
+| `oidc-signed-responses` | SdkProtocol | Implemented | standard | standard (linux-musl-x64) |
+| `oidc-browser-compatibility` | SdkProtocol | Implemented | standard | standard (linux-musl-x64) |
+| `oidc-assurance` | SdkProtocol | Implemented | standard | standard (linux-musl-x64) |
+| `authentication-webauthn` | HostIntegration | Implemented | standard | standard (linux-musl-x64) |
+| `authentication-passkeys` | HostIntegration | Implemented | standard | standard (linux-musl-x64) |
+| `authentication-kerberos` | HostIntegration | Implemented | standard | standard (linux-musl-x64) |
+| `authentication-recovery-codes` | HostIntegration | Implemented | standard | standard (linux-musl-x64) |
+| `authentication-update-email` | HostIntegration | Implemented | standard | standard (linux-musl-x64) |
+| `authentication-transient-users` | HostIntegration | Implemented | standard | standard (linux-musl-x64) |
+| `authentication-legacy-logout` | HostIntegration | Implemented | standard | standard (linux-musl-x64) |
+| `authentication-legacy-passkey-ui` | HostIntegration | Implemented | standard | standard (linux-musl-x64) |
+| `authentication-instagram` | HostIntegration | Implemented | standard | standard (linux-musl-x64) |
+| `authentication-twitter` | HostIntegration | Implemented | standard | standard (linux-musl-x64) |
+
+按通过验收的配置统计，Managed 覆盖 52/52 个应用能力族，Native AOT 覆盖 50/52 个。
+
 
 `Partial` 表示仅有部分调用实现；不表示完整协议支持，也不继承 Admin API 的验收。晋升引用绑定输入指纹、运行模式、RID 和不可变业务证据；修改代码后旧证据自动退出当前支持。
 
-全部审阅应用能力和 Admin API 已有支持配置。发布仍须通过完整契约、原生构建和真实验收门禁。
+全部审阅应用能力和 Admin API 已有支持配置。每个应用能力至少有一种运行模式通过验收。发布仍须通过完整契约、原生构建和真实验收门禁。
 

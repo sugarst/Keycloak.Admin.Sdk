@@ -26,7 +26,7 @@ internal static class PlatformCoverage
         var features = new JsonArray();
         var md = new StringBuilder("# Keycloak 全能力覆盖矩阵 / Platform capability coverage\n\n");
         md.AppendLine($"固定目标 / Exact target: Keycloak {baseline.Version}, upstream `{baseline.Commit}`.\n");
-        md.AppendLine("本表登记上游功能及责任边界，不把登记、生成或 HTTP 可调用视为完成支持。HostIntegration 仍属于应用全覆盖待完成项；ServerRuntime 和 ServerExtension 明确由服务端或外部工具承担。用户自定义 SPI 不属于有限上游清单。\n");
+        md.AppendLine("本表登记上游功能及责任边界。应用协议和 HostIntegration 的支持范围按下表的运行模式、服务端配置和验收证据确定。ServerRuntime 和 ServerExtension 由 Keycloak 或外部工具承担。用户自定义 SPI 需要独立契约。\n");
         md.AppendLine("Admin API 的 520 项操作独立维护于 [操作支持矩阵](admin-api-support-matrix.tsv)。下表的上游功能数不能与操作数相加。\n");
         md.AppendLine("## 上游功能 / Upstream features\n\n| Feature | Upstream stage | Deprecated | Responsibility |\n| --- | --- | --- | --- |");
         foreach (var (id, info) in upstream.OrderBy(p => p.Key, StringComparer.Ordinal))
@@ -43,7 +43,8 @@ internal static class PlatformCoverage
         var generatedDomains = new JsonArray();
         bool complete = true;
         var ids = new HashSet<string>(StringComparer.Ordinal);
-        md.AppendLine("\n## 应用协议与运行时 / Application protocols and runtime\n\n| Capability | Responsibility | Implementation | Verified runtime profiles |\n| --- | --- | --- | --- |");
+        int managedCount = 0, nativeCount = 0;
+        md.AppendLine("\n## 应用协议与运行时 / Application protocols and runtime\n\n运行时列给出通过验收的服务端配置。Native AOT 同时标明 RID。`—` 表示该运行模式暂无通过的证据。\n\n| Capability | Responsibility | Implementation | Managed | Native AOT |\n| --- | --- | --- | --- | --- |");
         foreach (var node in domains)
         {
             var item = node!.AsObject(); string id = item["id"]!.GetValue<string>();
@@ -57,18 +58,29 @@ internal static class PlatformCoverage
             if (item["verificationProfiles"]!.AsArray().Count != 0)
                 throw new InvalidDataException("Manual application profile claims are forbidden; run the independent evidence promotion tool.");
             var supported = new JsonArray();
+            var managedProfiles = new SortedSet<string>(StringComparer.Ordinal);
+            var nativeProfiles = new SortedSet<string>(StringComparer.Ordinal);
             foreach (var profile in profiles)
             {
                 var proof = profile!["capabilities"]!.AsArray().SingleOrDefault(c => c!["id"]!.GetValue<string>() == id);
                 if (item["implementation"]!.GetValue<string>() == "Implemented" && proof is not null
                     && item["acceptanceCriteria"]!.AsArray().All(c => proof["criteria"]!.AsArray().Any(p => p!["criterion"]!.GetValue<string>() == c!.GetValue<string>())))
+                {
                     supported.Add(profile["id"]!.DeepClone());
+                    string serverProfile = profile["serverProfile"]!.GetValue<string>();
+                    if (profile["runtime"]!.GetValue<string>() == "managed")
+                        managedProfiles.Add(serverProfile);
+                    else
+                        nativeProfiles.Add($"{serverProfile} ({profile["runtimeIdentifier"]!.GetValue<string>()})");
+                }
             }
             bool verified = supported.Count != 0;
             complete &= verified;
             var generated = item.DeepClone().AsObject(); generated["verificationProfiles"] = supported; generated["support"] = verified ? "Supported" : "NotVerified";
             generatedDomains.Add(generated);
-            md.AppendLine($"| `{id}` | {item["responsibility"]!.GetValue<string>()} | {item["implementation"]!.GetValue<string>()} | {supported.Count}; {(verified ? "verified for referenced profiles only" : "not promoted")} |");
+            if (managedProfiles.Count != 0) managedCount++;
+            if (nativeProfiles.Count != 0) nativeCount++;
+            md.AppendLine($"| `{id}` | {item["responsibility"]!.GetValue<string>()} | {item["implementation"]!.GetValue<string>()} | {Profiles(managedProfiles)} | {Profiles(nativeProfiles)} |");
         }
         if (new[] { "oidc", "registration", "browser-oidc", "saml", "mutual-tls", "identity-broker-login", "identity-linking", "oidc-request-objects", "oidc-signed-responses", "oidc-browser-compatibility", "oidc-assurance" }.Any(id => !ids.Contains(id)))
             throw new InvalidDataException("Missing core application protocol capability.");
@@ -78,12 +90,15 @@ internal static class PlatformCoverage
         var admin = JsonNode.Parse(File.ReadAllText(Path.Combine(root, "contracts/capabilities.json")))!;
         // Compatibility is real, verified coverage in an explicitly selected FGAP v1 route; it must not be relabelled Stable/default support.
         complete &= admin["endpoints"]!.AsArray().All(e => e!["support"]!.GetValue<string>() is "Supported" or "Compatibility");
+        md.AppendLine($"\n按通过验收的配置统计，Managed 覆盖 {managedCount}/{domains.Count} 个应用能力族，Native AOT 覆盖 {nativeCount}/{domains.Count} 个。\n");
         md.AppendLine("\n`Partial` 表示仅有部分调用实现；不表示完整协议支持，也不继承 Admin API 的验收。晋升引用绑定输入指纹、运行模式、RID 和不可变业务证据；修改代码后旧证据自动退出当前支持。\n");
-        md.AppendLine(complete ? "全部审阅应用能力和 Admin API 已有支持配置。发布仍须通过完整契约、原生构建和真实验收门禁。\n" : "全部应用能力尚未通过协议业务晋升，不能宣称全功能覆盖。运行 `Generate-PlatformMatrix.cs -- --require-complete` 会明确拒绝当前未完成项。\n");
+        md.AppendLine(complete ? "全部审阅应用能力和 Admin API 已有支持配置。每个应用能力至少有一种运行模式通过验收。发布仍须通过完整契约、原生构建和真实验收门禁。\n" : "至少一项应用能力或 Admin API 缺少支持配置。`Generate-PlatformMatrix.cs -- --require-complete` 会拒绝当前矩阵。\n");
         var result = new JsonObject { ["schemaVersion"] = 1, ["serverVersion"] = baseline.Version, ["sourceCommit"] = baseline.Commit,
             ["profileSha256"] = profileHash,
             ["adminCatalog"] = "contracts/capabilities.json", ["features"] = features,
             ["applicationCapabilities"] = generatedDomains, ["verificationProfiles"] = profiles, ["boundaries"] = rules["boundaries"]!.DeepClone(), ["complete"] = complete };
         return (result.ToJsonString(new System.Text.Json.JsonSerializerOptions { WriteIndented = true }).Replace("\r\n", "\n", StringComparison.Ordinal) + "\n", md.ToString().Replace("\r\n", "\n", StringComparison.Ordinal), complete);
     }
+
+    private static string Profiles(SortedSet<string> profiles) => profiles.Count == 0 ? "—" : string.Join(", ", profiles);
 }
