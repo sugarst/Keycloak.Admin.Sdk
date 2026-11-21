@@ -4,6 +4,8 @@
 
 面向 **.NET 10 / Native AOT** 的 Keycloak Admin REST API 客户端，本分支的固定目标是 **Keycloak 26.8.2**。主包引用 Microsoft.Extensions.Http **10.0.15** 和 Microsoft.Extensions.Http.Resilience **10.11.0**，使用源生成 JSON 元数据，默认关闭反射序列化。仓库固定 .NET SDK **10.0.403**。
 
+[从 26.8.1 到 26.8.2 的中英文升级说明](docs/releases/26.8.2/release-notes.md)
+
 公开 API 仍可能调整。开发时可引用[核心项目](src/Keycloak.Admin.Sdk/Keycloak.Admin.Sdk.csproj)。
 
 ## 快速开始
@@ -61,7 +63,7 @@ Platform 同包接入 Microsoft.FeatureManagement 及官方 Application Insights
 - 调用方释放 `HttpClient` 和 token provider。请求消费并释放传入的 `HttpContent`，每次调用须新建内容；`OpenStreamAsync` 的返回值由调用方释放。
 - 常规响应保留状态码、Location、header、原始内容和可选强类型 `Body`；`HasBody` 区分空响应。Location 不会被自动跟随。
 - DTO 的 null 属性默认省略，false、0、空集合会发送。显式 JSON null、动态载荷和自定义源生成模型可通过 `SendAsync` / `SendJsonAsync` 提交；媒体类型示例见 [特殊契约](docs/contracts/six-path-fixes.md)。
-- 更新时应构造明确的请求，避免回写只读字段、掩码密钥或 brief 数据。**26.8.1 客户端 PUT 若省略 `authorizationServicesEnabled=true` 会关闭该客户端的授权服务。**
+- 更新时应构造明确的请求，避免回写只读字段、掩码密钥或 brief 数据。更新已启用授权服务的客户端时，传入 `authorizationServicesEnabled=true` 以保留该设置。
 - HTTP 错误抛出 `KeycloakAdminException`；401 恢复默认关闭，可显式开启一次安全读取重放。写入超时后的结果可能未知。详细规则见 [认证与错误处理](docs/authentication-and-errors.md)。
 
 ## Keycloak 26.8.2 能力边界

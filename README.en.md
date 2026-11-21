@@ -2,7 +2,9 @@
 
 [简体中文](README.md) | English
 
-A **.NET 10 / Native AOT** client for the Keycloak Admin REST API, currently targeting **Keycloak 26.8.1** only. The main package references Microsoft.Extensions.Http **10.0.15** and Microsoft.Extensions.Http.Resilience **10.11.0**, and uses source-generated JSON metadata with reflection serialization disabled. This repository pins .NET SDK **10.0.403**.
+A **.NET 10 / Native AOT** client for the Keycloak Admin REST API, pinned to **Keycloak 26.8.2** on this branch. The main package references Microsoft.Extensions.Http **10.0.15** and Microsoft.Extensions.Http.Resilience **10.11.0**, and uses source-generated JSON metadata with reflection serialization disabled. This repository pins .NET SDK **10.0.403**.
+
+[Bilingual upgrade notes for 26.8.1 to 26.8.2](docs/releases/26.8.2/release-notes.md)
 
 Public APIs may change. For development, reference the [core project](src/Keycloak.Admin.Sdk/Keycloak.Admin.Sdk.csproj).
 
@@ -42,7 +44,7 @@ public sealed class UserService(IKeycloakAdminClient sdk)
 
 Provide `Keycloak:ClientSecret` through a secure host configuration source. DI manages the HTTP client and token provider lifetimes and disables automatic redirects by default. The authentication realm is independent of the target realm. Use realm names and internal client UUIDs in paths; a client UUID is different from the OIDC `clientId`. All network methods support cancellation. Pagination exposes server parameters without snapshot or total-count guarantees.
 
-For authentication validation against 26.8.2, assign `kc-admin-api` to the admin client. If it is assigned as an optional client scope, set `options.Token = new() { Scope = "kc-admin-api" };`. See the [26.8.2 admin scope setup](docs/authentication-and-errors.md#keycloak-2682-管理-scope).
+In Keycloak 26.8.2, assign `kc-admin-api` to the admin client in the token-issuing realm. For an optional client scope, set `options.Token = new() { Scope = "kc-admin-api" };`. See the [26.8.2 admin scope setup](docs/authentication-and-errors.md#keycloak-2682-管理-scope).
 
 `IKeycloakAdminClient` exposes generated resource interfaces such as `IUsersApi` for business test doubles. DI supports both the interface and concrete type, resolving the same client instance for each name. See [interfaces and test doubles](docs/authentication-and-errors.md#接口与测试替身).
 
@@ -73,10 +75,10 @@ Platform integrates Microsoft.FeatureManagement and its official Application Ins
 - The caller disposes the `HttpClient` and token provider. Each request consumes and disposes its `HttpContent`; create fresh content for every call. Dispose the response returned by `OpenStreamAsync`.
 - Buffered responses retain the status code, Location, headers, raw content and optional typed `Body`. Use `HasBody` to distinguish an empty response. Location is never followed automatically.
 - Null DTO properties are omitted; false, zero and empty collections are sent. Use `SendAsync` / `SendJsonAsync` for explicit JSON nulls, dynamic payloads or custom source-generated models. See [special contracts](docs/contracts/six-path-fixes.md) for media-type examples.
-- Build explicit update requests to avoid writing back read-only fields, masked secrets or brief representations. **In 26.8.1, a client PUT that omits `authorizationServicesEnabled=true` disables that client's authorization services.**
+- Build explicit update requests to avoid writing back read-only fields, masked secrets or brief representations. Include `authorizationServicesEnabled=true` when updating a client whose authorization services should stay enabled.
 - HTTP errors throw `KeycloakAdminException`. Optional 401 recovery is disabled by default and permits one safe read replay when enabled. A timed-out write may have an unknown outcome. See [authentication and errors](docs/authentication-and-errors.md) for details.
 
-## Keycloak 26.8.1 capability boundaries
+## Keycloak 26.8.2 capability boundaries
 
 This development branch maintains two separate matrices: [Admin API operations](docs/contracts/admin-api-support-matrix.tsv) and [platform capabilities](docs/contracts/platform-capability-matrix.md), covering 80 pinned upstream feature flags and 52 application capability families. Application capabilities are independently verified for an exact version and runtime. Deployment, databases, clustering, server UI and Java SPI responsibilities are documented in the [implementation scope](docs/full-platform-coverage.md). The 520-operation count below applies only to the Admin API.
 
@@ -111,7 +113,7 @@ Schema 2 supports Managed, NativeAot and Portable verification profiles. Managed
 
 The default v2 route also excludes 14 FGAP v1-only operations; those have passed acceptance on the v1 compatibility route. **A generated method does not itself imply SDK support.** Use `KeycloakSupportedClient.CreateAsync` to check version, maturity, route, server features and verification before sending a request. Constructing `KeycloakAdminClient` directly provides the underlying transport without applying the support policy automatically.
 
-The core package covers the Keycloak 26.8.1 Admin API. Standalone OAuth/OIDC, Account, SCIM and Client Admin API v2 are provided and independently promoted by Protocols / Hosting. Console static assets and third-party SPI implementations remain server responsibilities. Results do not automatically apply to other Keycloak versions or exhaust every permission and configuration combination.
+The core package covers the Keycloak 26.8.2 Admin API. Protocols and Hosting provide OAuth/OIDC, Account, SCIM and Client Admin API v2 with independent acceptance evidence. Keycloak owns console static assets and third-party SPI execution. Results apply to the pinned version, verified runtimes, and tested configurations.
 
 See the [support matrix](docs/contracts/admin-api-support-matrix.tsv) for per-operation status and exclusion reasons, the [verification index](docs/contracts/admin-api-validation-list.md) for a summary, and [live acceptance](docs/contracts/full-live-acceptance.md) for tested environments and evidence. See [capability policy](docs/capability-policy.md) for integration.
 
@@ -134,7 +136,7 @@ The detailed guides and generated reports below are maintained in Chinese; the e
 - [Architecture and contract sources](docs/architecture.md)
 - [Changelog](CHANGELOG.md) · [Release records and retention](docs/releases/README.md)
 - [Support routes](docs/contracts/admin-api-routing.md) · [Verification index](docs/contracts/admin-api-validation-list.md)
-- [Endpoints and source mapping](docs/contracts/endpoint-inventory.md) · [Source alignment audit](docs/contracts/keycloak-26.8.1-alignment-audit.md)
+- [Endpoints and source mapping](docs/contracts/endpoint-inventory.md) · [Source alignment audit](docs/contracts/keycloak-26.8.2-alignment-audit.md)
 
 [Apache License 2.0](LICENSE). See [third-party notices](THIRD_PARTY_NOTICES.md) for contract provenance and attribution.
 

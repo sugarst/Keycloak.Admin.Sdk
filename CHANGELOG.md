@@ -2,6 +2,17 @@
 
 记录可分发版本的变化；本地候选通过验收后生成的机器记录见 [docs/releases](docs/releases/README.md)。实际发布以对应发布记录中的 NuGet 链接和发布时间为准。
 
+## 26.8.2 本地候选 / Validated local candidate
+
+- 管理客户端须在签发 realm 分配 `kc-admin-api`。SDK 新增 `ClientCredentialsTokenProviderOptions.Scope` 来请求可选 scope。专项验证了 `401`、`403` 和 `200`。
+- 26.8.2 收紧 Protocol Mapper 委派写入和动态客户端注册策略，并按客户端可见性过滤会话统计。官方 OpenAPI 的哈希相同，SDK 继续覆盖 520 项 Admin 操作。
+- Managed 与 Linux Native AOT 通过两条 FGAP 路线、应用协议、覆盖率和包消费校验。四个 26.8.2 包处于本地候选状态。
+- Assign `kc-admin-api` in the issuing realm. The SDK adds `ClientCredentialsTokenProviderOptions.Scope` for optional scopes. Focused live checks verified `401`, `403`, and `200`.
+- Keycloak tightens delegated protocol mapper writes and dynamic registration policies and filters session statistics by client visibility. The pinned OpenAPI hash is identical, and the SDK covers 520 Admin operations.
+- Managed and Linux Native AOT passed both FGAP routes, application protocols, coverage, and package consumption. All four 26.8.2 packages are local candidates.
+
+[中英文完整升级说明 / Complete bilingual upgrade notes](docs/releases/26.8.2/release-notes.md)
+
 ## 26.8.1（本地候选通过验收 / Validated local candidate）
 
 - 更新 COSE、HTTP、ASP.NET Core 认证与加密依赖。通过 COSE 传递解析 `System.Formats.Cbor` 10.0.15，修复 `CVE-2026-118747`。同步更新 SAML 和测试依赖。

@@ -738,8 +738,8 @@
         "Client credentials, refresh, token introspection and revocation"
       ],
       "verificationProfiles": [
-        "0aa8738b165d7d7cec190f4fbe04b719126ab5d74b98ad52cc4b7b5afafbc4f0",
-        "0555b3b4420fcb872854e7012069ec45f0e2a4c028566b6fd91a1f86d269ef32"
+        "f839c3fd1b021a9d917185d580e65393017bb17e6da26bd6e7b62b3b8d3614c6",
+        "3ff26bc545d719a42347a7c6ec7e10aaf96eab8e4ce82d1b0d03c25533ea1862"
       ],
       "support": "Supported"
     },
@@ -750,8 +750,8 @@
       ],
       "responsibility": "SdkProtocol",
       "verificationProfiles": [
-        "0aa8738b165d7d7cec190f4fbe04b719126ab5d74b98ad52cc4b7b5afafbc4f0",
-        "0555b3b4420fcb872854e7012069ec45f0e2a4c028566b6fd91a1f86d269ef32"
+        "f839c3fd1b021a9d917185d580e65393017bb17e6da26bd6e7b62b3b8d3614c6",
+        "3ff26bc545d719a42347a7c6ec7e10aaf96eab8e4ce82d1b0d03c25533ea1862"
       ],
       "implementation": "Implemented",
       "acceptanceCriteria": [
@@ -766,8 +766,8 @@
       ],
       "responsibility": "SdkProtocol",
       "verificationProfiles": [
-        "96b19d09a319bc58031a873195f950e5d4ec32260f5c9681c8dd1cee1c5e8cec",
-        "a85e0a5d29fdf939e39611da86d93405dc7537077783c32d58ad668010e855af"
+        "43a7a16ae5427fb97dc11f57ce3a57f508f099c54e1e8c3432100f6401316778",
+        "9badabb70f50cd8855ad98ad9d83a8648b03c1509db6fb90d4ede8cbf71e6df4"
       ],
       "implementation": "Implemented",
       "acceptanceCriteria": [
@@ -782,8 +782,8 @@
       ],
       "responsibility": "SdkProtocol",
       "verificationProfiles": [
-        "0aa8738b165d7d7cec190f4fbe04b719126ab5d74b98ad52cc4b7b5afafbc4f0",
-        "0555b3b4420fcb872854e7012069ec45f0e2a4c028566b6fd91a1f86d269ef32"
+        "f839c3fd1b021a9d917185d580e65393017bb17e6da26bd6e7b62b3b8d3614c6",
+        "3ff26bc545d719a42347a7c6ec7e10aaf96eab8e4ce82d1b0d03c25533ea1862"
       ],
       "implementation": "Implemented",
       "acceptanceCriteria": [
@@ -798,8 +798,8 @@
       ],
       "responsibility": "SdkProtocol",
       "verificationProfiles": [
-        "0aa8738b165d7d7cec190f4fbe04b719126ab5d74b98ad52cc4b7b5afafbc4f0",
-        "0555b3b4420fcb872854e7012069ec45f0e2a4c028566b6fd91a1f86d269ef32"
+        "f839c3fd1b021a9d917185d580e65393017bb17e6da26bd6e7b62b3b8d3614c6",
+        "3ff26bc545d719a42347a7c6ec7e10aaf96eab8e4ce82d1b0d03c25533ea1862"
       ],
       "implementation": "Implemented",
       "acceptanceCriteria": [
@@ -814,8 +814,8 @@
       ],
       "responsibility": "SdkProtocol",
       "verificationProfiles": [
-        "0aa8738b165d7d7cec190f4fbe04b719126ab5d74b98ad52cc4b7b5afafbc4f0",
-        "0555b3b4420fcb872854e7012069ec45f0e2a4c028566b6fd91a1f86d269ef32"
+        "f839c3fd1b021a9d917185d580e65393017bb17e6da26bd6e7b62b3b8d3614c6",
+        "3ff26bc545d719a42347a7c6ec7e10aaf96eab8e4ce82d1b0d03c25533ea1862"
       ],
       "implementation": "Implemented",
       "acceptanceCriteria": [
@@ -830,8 +830,8 @@
       ],
       "responsibility": "SdkProtocol",
       "verificationProfiles": [
-        "0aa8738b165d7d7cec190f4fbe04b719126ab5d74b98ad52cc4b7b5afafbc4f0",
-        "0555b3b4420fcb872854e7012069ec45f0e2a4c028566b6fd91a1f86d269ef32"
+        "f839c3fd1b021a9d917185d580e65393017bb17e6da26bd6e7b62b3b8d3614c6",
+        "3ff26bc545d719a42347a7c6ec7e10aaf96eab8e4ce82d1b0d03c25533ea1862"
       ],
       "implementation": "Implemented",
       "acceptanceCriteria": [
@@ -847,8 +847,8 @@
       ],
       "responsibility": "SdkProtocol",
       "verificationProfiles": [
-        "0aa8738b165d7d7cec190f4fbe04b719126ab5d74b98ad52cc4b7b5afafbc4f0",
-        "0555b3b4420fcb872854e7012069ec45f0e2a4c028566b6fd91a1f86d269ef32"
+        "f839c3fd1b021a9d917185d580e65393017bb17e6da26bd6e7b62b3b8d3614c6",
+        "3ff26bc545d719a42347a7c6ec7e10aaf96eab8e4ce82d1b0d03c25533ea1862"
       ],
       "implementation": "Implemented",
       "acceptanceCriteria": [
@@ -863,8 +863,8 @@
       ],
       "responsibility": "SdkProtocol",
       "verificationProfiles": [
-        "0aa8738b165d7d7cec190f4fbe04b719126ab5d74b98ad52cc4b7b5afafbc4f0",
-        "0555b3b4420fcb872854e7012069ec45f0e2a4c028566b6fd91a1f86d269ef32"
+        "f839c3fd1b021a9d917185d580e65393017bb17e6da26bd6e7b62b3b8d3614c6",
+        "3ff26bc545d719a42347a7c6ec7e10aaf96eab8e4ce82d1b0d03c25533ea1862"
       ],
       "implementation": "Implemented",
       "acceptanceCriteria": [
@@ -879,8 +879,8 @@
       ],
       "responsibility": "SdkProtocol",
       "verificationProfiles": [
-        "0aa8738b165d7d7cec190f4fbe04b719126ab5d74b98ad52cc4b7b5afafbc4f0",
-        "0555b3b4420fcb872854e7012069ec45f0e2a4c028566b6fd91a1f86d269ef32"
+        "f839c3fd1b021a9d917185d580e65393017bb17e6da26bd6e7b62b3b8d3614c6",
+        "3ff26bc545d719a42347a7c6ec7e10aaf96eab8e4ce82d1b0d03c25533ea1862"
       ],
       "implementation": "Implemented",
       "acceptanceCriteria": [
@@ -895,8 +895,8 @@
       ],
       "responsibility": "SdkProtocol",
       "verificationProfiles": [
-        "0aa8738b165d7d7cec190f4fbe04b719126ab5d74b98ad52cc4b7b5afafbc4f0",
-        "0555b3b4420fcb872854e7012069ec45f0e2a4c028566b6fd91a1f86d269ef32"
+        "f839c3fd1b021a9d917185d580e65393017bb17e6da26bd6e7b62b3b8d3614c6",
+        "3ff26bc545d719a42347a7c6ec7e10aaf96eab8e4ce82d1b0d03c25533ea1862"
       ],
       "implementation": "Implemented",
       "acceptanceCriteria": [
@@ -912,8 +912,8 @@
       ],
       "responsibility": "SdkProtocol",
       "verificationProfiles": [
-        "0aa8738b165d7d7cec190f4fbe04b719126ab5d74b98ad52cc4b7b5afafbc4f0",
-        "0555b3b4420fcb872854e7012069ec45f0e2a4c028566b6fd91a1f86d269ef32"
+        "f839c3fd1b021a9d917185d580e65393017bb17e6da26bd6e7b62b3b8d3614c6",
+        "3ff26bc545d719a42347a7c6ec7e10aaf96eab8e4ce82d1b0d03c25533ea1862"
       ],
       "implementation": "Implemented",
       "acceptanceCriteria": [
@@ -934,8 +934,8 @@
         "Read/write authorization and cross-user denial"
       ],
       "verificationProfiles": [
-        "0aa8738b165d7d7cec190f4fbe04b719126ab5d74b98ad52cc4b7b5afafbc4f0",
-        "0555b3b4420fcb872854e7012069ec45f0e2a4c028566b6fd91a1f86d269ef32"
+        "f839c3fd1b021a9d917185d580e65393017bb17e6da26bd6e7b62b3b8d3614c6",
+        "3ff26bc545d719a42347a7c6ec7e10aaf96eab8e4ce82d1b0d03c25533ea1862"
       ],
       "support": "Supported"
     },
@@ -952,8 +952,8 @@
         "Cross-user and cross-realm authorization denial"
       ],
       "verificationProfiles": [
-        "0aa8738b165d7d7cec190f4fbe04b719126ab5d74b98ad52cc4b7b5afafbc4f0",
-        "0555b3b4420fcb872854e7012069ec45f0e2a4c028566b6fd91a1f86d269ef32"
+        "f839c3fd1b021a9d917185d580e65393017bb17e6da26bd6e7b62b3b8d3614c6",
+        "3ff26bc545d719a42347a7c6ec7e10aaf96eab8e4ce82d1b0d03c25533ea1862"
       ],
       "support": "Supported"
     },
@@ -967,8 +967,8 @@
         "Registration access token lifecycle and SAML metadata provider"
       ],
       "verificationProfiles": [
-        "0aa8738b165d7d7cec190f4fbe04b719126ab5d74b98ad52cc4b7b5afafbc4f0",
-        "0555b3b4420fcb872854e7012069ec45f0e2a4c028566b6fd91a1f86d269ef32"
+        "f839c3fd1b021a9d917185d580e65393017bb17e6da26bd6e7b62b3b8d3614c6",
+        "3ff26bc545d719a42347a7c6ec7e10aaf96eab8e4ce82d1b0d03c25533ea1862"
       ],
       "support": "Supported"
     },
@@ -985,8 +985,8 @@
         "PAT authorization and least-privilege checks"
       ],
       "verificationProfiles": [
-        "0aa8738b165d7d7cec190f4fbe04b719126ab5d74b98ad52cc4b7b5afafbc4f0",
-        "0555b3b4420fcb872854e7012069ec45f0e2a4c028566b6fd91a1f86d269ef32"
+        "f839c3fd1b021a9d917185d580e65393017bb17e6da26bd6e7b62b3b8d3614c6",
+        "3ff26bc545d719a42347a7c6ec7e10aaf96eab8e4ce82d1b0d03c25533ea1862"
       ],
       "support": "Supported"
     },
@@ -1002,8 +1002,8 @@
         "Decision semantics and authorization denial"
       ],
       "verificationProfiles": [
-        "0aa8738b165d7d7cec190f4fbe04b719126ab5d74b98ad52cc4b7b5afafbc4f0",
-        "0555b3b4420fcb872854e7012069ec45f0e2a4c028566b6fd91a1f86d269ef32"
+        "f839c3fd1b021a9d917185d580e65393017bb17e6da26bd6e7b62b3b8d3614c6",
+        "3ff26bc545d719a42347a7c6ec7e10aaf96eab8e4ce82d1b0d03c25533ea1862"
       ],
       "support": "Supported"
     },
@@ -1019,8 +1019,8 @@
         "Configuration reconciliation and validation failures"
       ],
       "verificationProfiles": [
-        "0aa8738b165d7d7cec190f4fbe04b719126ab5d74b98ad52cc4b7b5afafbc4f0",
-        "0555b3b4420fcb872854e7012069ec45f0e2a4c028566b6fd91a1f86d269ef32"
+        "f839c3fd1b021a9d917185d580e65393017bb17e6da26bd6e7b62b3b8d3614c6",
+        "3ff26bc545d719a42347a7c6ec7e10aaf96eab8e4ce82d1b0d03c25533ea1862"
       ],
       "support": "Supported"
     },
@@ -1031,8 +1031,8 @@
       ],
       "responsibility": "SdkProtocol",
       "verificationProfiles": [
-        "96b19d09a319bc58031a873195f950e5d4ec32260f5c9681c8dd1cee1c5e8cec",
-        "a85e0a5d29fdf939e39611da86d93405dc7537077783c32d58ad668010e855af"
+        "43a7a16ae5427fb97dc11f57ce3a57f508f099c54e1e8c3432100f6401316778",
+        "9badabb70f50cd8855ad98ad9d83a8648b03c1509db6fb90d4ede8cbf71e6df4"
       ],
       "implementation": "Implemented",
       "acceptanceCriteria": [
@@ -1052,8 +1052,8 @@
         "Client user and provider authorization and immediate access shutdown"
       ],
       "verificationProfiles": [
-        "0aa8738b165d7d7cec190f4fbe04b719126ab5d74b98ad52cc4b7b5afafbc4f0",
-        "0555b3b4420fcb872854e7012069ec45f0e2a4c028566b6fd91a1f86d269ef32"
+        "f839c3fd1b021a9d917185d580e65393017bb17e6da26bd6e7b62b3b8d3614c6",
+        "3ff26bc545d719a42347a7c6ec7e10aaf96eab8e4ce82d1b0d03c25533ea1862"
       ],
       "support": "Supported"
     },
@@ -1069,8 +1069,8 @@
         "JWT and SD-JWT credential issuance verifies issuer holder binding and selective disclosures; nonce proof batch encryption refresh and account revocation"
       ],
       "verificationProfiles": [
-        "0aa8738b165d7d7cec190f4fbe04b719126ab5d74b98ad52cc4b7b5afafbc4f0",
-        "0555b3b4420fcb872854e7012069ec45f0e2a4c028566b6fd91a1f86d269ef32"
+        "f839c3fd1b021a9d917185d580e65393017bb17e6da26bd6e7b62b3b8d3614c6",
+        "3ff26bc545d719a42347a7c6ec7e10aaf96eab8e4ce82d1b0d03c25533ea1862"
       ],
       "support": "Supported"
     },
@@ -1085,8 +1085,8 @@
         "Pre-authorized credential issuance binds the offer and user and rejects replay expiry and revoked entitlements without retrying terminal upstream errors"
       ],
       "verificationProfiles": [
-        "0aa8738b165d7d7cec190f4fbe04b719126ab5d74b98ad52cc4b7b5afafbc4f0",
-        "0555b3b4420fcb872854e7012069ec45f0e2a4c028566b6fd91a1f86d269ef32"
+        "f839c3fd1b021a9d917185d580e65393017bb17e6da26bd6e7b62b3b8d3614c6",
+        "3ff26bc545d719a42347a7c6ec7e10aaf96eab8e4ce82d1b0d03c25533ea1862"
       ],
       "support": "Supported"
     },
@@ -1101,8 +1101,8 @@
         "REST credential offers preserve configured authorization and reject unauthorized targets; URI and bounded PNG QR responses interoperate"
       ],
       "verificationProfiles": [
-        "0aa8738b165d7d7cec190f4fbe04b719126ab5d74b98ad52cc4b7b5afafbc4f0",
-        "0555b3b4420fcb872854e7012069ec45f0e2a4c028566b6fd91a1f86d269ef32"
+        "f839c3fd1b021a9d917185d580e65393017bb17e6da26bd6e7b62b3b8d3614c6",
+        "3ff26bc545d719a42347a7c6ec7e10aaf96eab8e4ce82d1b0d03c25533ea1862"
       ],
       "support": "Supported"
     },
@@ -1117,8 +1117,8 @@
         "Issued mdoc credentials verify COSE issuer signature certificate trust mobile security object digest validity and holder device key"
       ],
       "verificationProfiles": [
-        "0aa8738b165d7d7cec190f4fbe04b719126ab5d74b98ad52cc4b7b5afafbc4f0",
-        "0555b3b4420fcb872854e7012069ec45f0e2a4c028566b6fd91a1f86d269ef32"
+        "f839c3fd1b021a9d917185d580e65393017bb17e6da26bd6e7b62b3b8d3614c6",
+        "3ff26bc545d719a42347a7c6ec7e10aaf96eab8e4ce82d1b0d03c25533ea1862"
       ],
       "support": "Supported"
     },
@@ -1133,8 +1133,8 @@
         "OID4VP signed requests bind issuer client nonce state and response destination; selective disclosure and holder key binding complete real broker login without replay"
       ],
       "verificationProfiles": [
-        "0aa8738b165d7d7cec190f4fbe04b719126ab5d74b98ad52cc4b7b5afafbc4f0",
-        "0555b3b4420fcb872854e7012069ec45f0e2a4c028566b6fd91a1f86d269ef32"
+        "f839c3fd1b021a9d917185d580e65393017bb17e6da26bd6e7b62b3b8d3614c6",
+        "3ff26bc545d719a42347a7c6ec7e10aaf96eab8e4ce82d1b0d03c25533ea1862"
       ],
       "support": "Supported"
     },
@@ -1149,8 +1149,8 @@
         "A trusted attester and fresh holder proof authenticate the expected client and reject untrusted attesters foreign holder keys invalid audience and expired attestations"
       ],
       "verificationProfiles": [
-        "0aa8738b165d7d7cec190f4fbe04b719126ab5d74b98ad52cc4b7b5afafbc4f0",
-        "0555b3b4420fcb872854e7012069ec45f0e2a4c028566b6fd91a1f86d269ef32"
+        "f839c3fd1b021a9d917185d580e65393017bb17e6da26bd6e7b62b3b8d3614c6",
+        "3ff26bc545d719a42347a7c6ec7e10aaf96eab8e4ce82d1b0d03c25533ea1862"
       ],
       "support": "Supported"
     },
@@ -1166,8 +1166,8 @@
         "SET signature, audience, replay and CAEP/RISC semantics"
       ],
       "verificationProfiles": [
-        "0aa8738b165d7d7cec190f4fbe04b719126ab5d74b98ad52cc4b7b5afafbc4f0",
-        "0555b3b4420fcb872854e7012069ec45f0e2a4c028566b6fd91a1f86d269ef32"
+        "f839c3fd1b021a9d917185d580e65393017bb17e6da26bd6e7b62b3b8d3614c6",
+        "3ff26bc545d719a42347a7c6ec7e10aaf96eab8e4ce82d1b0d03c25533ea1862"
       ],
       "support": "Supported"
     },
@@ -1182,8 +1182,8 @@
         "Registry authentication challenge and access token flow"
       ],
       "verificationProfiles": [
-        "0aa8738b165d7d7cec190f4fbe04b719126ab5d74b98ad52cc4b7b5afafbc4f0",
-        "0555b3b4420fcb872854e7012069ec45f0e2a4c028566b6fd91a1f86d269ef32"
+        "f839c3fd1b021a9d917185d580e65393017bb17e6da26bd6e7b62b3b8d3614c6",
+        "3ff26bc545d719a42347a7c6ec7e10aaf96eab8e4ce82d1b0d03c25533ea1862"
       ],
       "support": "Supported"
     },
@@ -1200,7 +1200,7 @@
         "Mandatory signed authentication assurance and local-session authentication freshness"
       ],
       "verificationProfiles": [
-        "0aa8738b165d7d7cec190f4fbe04b719126ab5d74b98ad52cc4b7b5afafbc4f0"
+        "f839c3fd1b021a9d917185d580e65393017bb17e6da26bd6e7b62b3b8d3614c6"
       ],
       "support": "Supported"
     },
@@ -1217,7 +1217,7 @@
         "SP and IdP initiated single logout, atomic host revocation and signed step-up assurance"
       ],
       "verificationProfiles": [
-        "0aa8738b165d7d7cec190f4fbe04b719126ab5d74b98ad52cc4b7b5afafbc4f0"
+        "f839c3fd1b021a9d917185d580e65393017bb17e6da26bd6e7b62b3b8d3614c6"
       ],
       "support": "Supported"
     },
@@ -1232,8 +1232,8 @@
         "DPoP signing, htm/htu/ath, nonce, replay and key binding"
       ],
       "verificationProfiles": [
-        "0aa8738b165d7d7cec190f4fbe04b719126ab5d74b98ad52cc4b7b5afafbc4f0",
-        "0555b3b4420fcb872854e7012069ec45f0e2a4c028566b6fd91a1f86d269ef32"
+        "f839c3fd1b021a9d917185d580e65393017bb17e6da26bd6e7b62b3b8d3614c6",
+        "3ff26bc545d719a42347a7c6ec7e10aaf96eab8e4ce82d1b0d03c25533ea1862"
       ],
       "support": "Supported"
     },
@@ -1246,8 +1246,8 @@
         "Server-hosted authentication and application-initiated actions retain PKCE state nonce and verified identity without treating an action callback as proof of a persisted business change"
       ],
       "verificationProfiles": [
-        "0aa8738b165d7d7cec190f4fbe04b719126ab5d74b98ad52cc4b7b5afafbc4f0",
-        "0555b3b4420fcb872854e7012069ec45f0e2a4c028566b6fd91a1f86d269ef32"
+        "f839c3fd1b021a9d917185d580e65393017bb17e6da26bd6e7b62b3b8d3614c6",
+        "3ff26bc545d719a42347a7c6ec7e10aaf96eab8e4ce82d1b0d03c25533ea1862"
       ],
       "support": "Supported"
     },
@@ -1265,8 +1265,8 @@
         "Kubernetes projected credential integration"
       ],
       "verificationProfiles": [
-        "0aa8738b165d7d7cec190f4fbe04b719126ab5d74b98ad52cc4b7b5afafbc4f0",
-        "0555b3b4420fcb872854e7012069ec45f0e2a4c028566b6fd91a1f86d269ef32"
+        "f839c3fd1b021a9d917185d580e65393017bb17e6da26bd6e7b62b3b8d3614c6",
+        "3ff26bc545d719a42347a7c6ec7e10aaf96eab8e4ce82d1b0d03c25533ea1862"
       ],
       "support": "Supported"
     },
@@ -1282,8 +1282,8 @@
         "Specification identifies the pinned client API and schema subtypes without forwarding realm credentials"
       ],
       "verificationProfiles": [
-        "0aa8738b165d7d7cec190f4fbe04b719126ab5d74b98ad52cc4b7b5afafbc4f0",
-        "0555b3b4420fcb872854e7012069ec45f0e2a4c028566b6fd91a1f86d269ef32"
+        "f839c3fd1b021a9d917185d580e65393017bb17e6da26bd6e7b62b3b8d3614c6",
+        "3ff26bc545d719a42347a7c6ec7e10aaf96eab8e4ce82d1b0d03c25533ea1862"
       ],
       "support": "Supported"
     },
@@ -1294,8 +1294,8 @@
         "mTLS certificate-bound tokens and authenticated TLS peer validation"
       ],
       "verificationProfiles": [
-        "0aa8738b165d7d7cec190f4fbe04b719126ab5d74b98ad52cc4b7b5afafbc4f0",
-        "0555b3b4420fcb872854e7012069ec45f0e2a4c028566b6fd91a1f86d269ef32"
+        "f839c3fd1b021a9d917185d580e65393017bb17e6da26bd6e7b62b3b8d3614c6",
+        "3ff26bc545d719a42347a7c6ec7e10aaf96eab8e4ce82d1b0d03c25533ea1862"
       ],
       "id": "mutual-tls",
       "implementation": "Implemented",
@@ -1312,8 +1312,8 @@
       ],
       "id": "spiffe-client-auth",
       "verificationProfiles": [
-        "0aa8738b165d7d7cec190f4fbe04b719126ab5d74b98ad52cc4b7b5afafbc4f0",
-        "0555b3b4420fcb872854e7012069ec45f0e2a4c028566b6fd91a1f86d269ef32"
+        "f839c3fd1b021a9d917185d580e65393017bb17e6da26bd6e7b62b3b8d3614c6",
+        "3ff26bc545d719a42347a7c6ec7e10aaf96eab8e4ce82d1b0d03c25533ea1862"
       ],
       "support": "Supported"
     },
@@ -1324,8 +1324,8 @@
         "Browser federation verifies the downstream subject and exact linked upstream identity"
       ],
       "verificationProfiles": [
-        "0aa8738b165d7d7cec190f4fbe04b719126ab5d74b98ad52cc4b7b5afafbc4f0",
-        "0555b3b4420fcb872854e7012069ec45f0e2a4c028566b6fd91a1f86d269ef32"
+        "f839c3fd1b021a9d917185d580e65393017bb17e6da26bd6e7b62b3b8d3614c6",
+        "3ff26bc545d719a42347a7c6ec7e10aaf96eab8e4ce82d1b0d03c25533ea1862"
       ],
       "upstreamFeatures": [],
       "id": "identity-broker-login",
@@ -1338,8 +1338,8 @@
         "Application-initiated linking requires explicit consent preserves local identity and enforces self-service unlink"
       ],
       "verificationProfiles": [
-        "0aa8738b165d7d7cec190f4fbe04b719126ab5d74b98ad52cc4b7b5afafbc4f0",
-        "0555b3b4420fcb872854e7012069ec45f0e2a4c028566b6fd91a1f86d269ef32"
+        "f839c3fd1b021a9d917185d580e65393017bb17e6da26bd6e7b62b3b8d3614c6",
+        "3ff26bc545d719a42347a7c6ec7e10aaf96eab8e4ce82d1b0d03c25533ea1862"
       ],
       "upstreamFeatures": [],
       "id": "identity-linking",
@@ -1354,8 +1354,8 @@
         "Signed and encrypted request objects preserve the bound state nonce PKCE redirect and client identity and reject tampering"
       ],
       "verificationProfiles": [
-        "0aa8738b165d7d7cec190f4fbe04b719126ab5d74b98ad52cc4b7b5afafbc4f0",
-        "0555b3b4420fcb872854e7012069ec45f0e2a4c028566b6fd91a1f86d269ef32"
+        "f839c3fd1b021a9d917185d580e65393017bb17e6da26bd6e7b62b3b8d3614c6",
+        "3ff26bc545d719a42347a7c6ec7e10aaf96eab8e4ce82d1b0d03c25533ea1862"
       ],
       "support": "Supported"
     },
@@ -1368,8 +1368,8 @@
         "JARM validates signature encryption issuer audience expiry state and every supported response transport before code redemption"
       ],
       "verificationProfiles": [
-        "0aa8738b165d7d7cec190f4fbe04b719126ab5d74b98ad52cc4b7b5afafbc4f0",
-        "0555b3b4420fcb872854e7012069ec45f0e2a4c028566b6fd91a1f86d269ef32"
+        "f839c3fd1b021a9d917185d580e65393017bb17e6da26bd6e7b62b3b8d3614c6",
+        "3ff26bc545d719a42347a7c6ec7e10aaf96eab8e4ce82d1b0d03c25533ea1862"
       ],
       "support": "Supported"
     },
@@ -1382,8 +1382,8 @@
         "Implicit hybrid and none responses preserve explicit browser correlation validate nonce and token or code hashes and cannot substitute an unsolicited identity"
       ],
       "verificationProfiles": [
-        "0aa8738b165d7d7cec190f4fbe04b719126ab5d74b98ad52cc4b7b5afafbc4f0",
-        "0555b3b4420fcb872854e7012069ec45f0e2a4c028566b6fd91a1f86d269ef32"
+        "f839c3fd1b021a9d917185d580e65393017bb17e6da26bd6e7b62b3b8d3614c6",
+        "3ff26bc545d719a42347a7c6ec7e10aaf96eab8e4ce82d1b0d03c25533ea1862"
       ],
       "support": "Supported"
     },
@@ -1398,8 +1398,8 @@
         "Verified ID-token acr auth_time and amr enforce application assurance and reject stale or weaker protocol login identities"
       ],
       "verificationProfiles": [
-        "0aa8738b165d7d7cec190f4fbe04b719126ab5d74b98ad52cc4b7b5afafbc4f0",
-        "0555b3b4420fcb872854e7012069ec45f0e2a4c028566b6fd91a1f86d269ef32"
+        "f839c3fd1b021a9d917185d580e65393017bb17e6da26bd6e7b62b3b8d3614c6",
+        "3ff26bc545d719a42347a7c6ec7e10aaf96eab8e4ce82d1b0d03c25533ea1862"
       ],
       "support": "Supported"
     },
@@ -1414,8 +1414,8 @@
         "WebAuthn registration and login bind challenge origin RP user verification and signature; invalid origins and signatures cannot produce application identities"
       ],
       "verificationProfiles": [
-        "0aa8738b165d7d7cec190f4fbe04b719126ab5d74b98ad52cc4b7b5afafbc4f0",
-        "0555b3b4420fcb872854e7012069ec45f0e2a4c028566b6fd91a1f86d269ef32"
+        "f839c3fd1b021a9d917185d580e65393017bb17e6da26bd6e7b62b3b8d3614c6",
+        "3ff26bc545d719a42347a7c6ec7e10aaf96eab8e4ce82d1b0d03c25533ea1862"
       ],
       "support": "Supported"
     },
@@ -1430,8 +1430,8 @@
         "Resident user-verified passkeys complete passwordless login for the bound account through server-hosted browser mediation"
       ],
       "verificationProfiles": [
-        "0aa8738b165d7d7cec190f4fbe04b719126ab5d74b98ad52cc4b7b5afafbc4f0",
-        "0555b3b4420fcb872854e7012069ec45f0e2a4c028566b6fd91a1f86d269ef32"
+        "f839c3fd1b021a9d917185d580e65393017bb17e6da26bd6e7b62b3b8d3614c6",
+        "3ff26bc545d719a42347a7c6ec7e10aaf96eab8e4ce82d1b0d03c25533ea1862"
       ],
       "support": "Supported"
     },
@@ -1446,8 +1446,8 @@
         "SPNEGO negotiation validates the trusted Kerberos service ticket and maps its principal to the independently observed application identity"
       ],
       "verificationProfiles": [
-        "0aa8738b165d7d7cec190f4fbe04b719126ab5d74b98ad52cc4b7b5afafbc4f0",
-        "0555b3b4420fcb872854e7012069ec45f0e2a4c028566b6fd91a1f86d269ef32"
+        "f839c3fd1b021a9d917185d580e65393017bb17e6da26bd6e7b62b3b8d3614c6",
+        "3ff26bc545d719a42347a7c6ec7e10aaf96eab8e4ce82d1b0d03c25533ea1862"
       ],
       "support": "Supported"
     },
@@ -1462,8 +1462,8 @@
         "Recovery-code registration requires confirmation and one-time consumption prevents replay during second-factor login"
       ],
       "verificationProfiles": [
-        "0aa8738b165d7d7cec190f4fbe04b719126ab5d74b98ad52cc4b7b5afafbc4f0",
-        "0555b3b4420fcb872854e7012069ec45f0e2a4c028566b6fd91a1f86d269ef32"
+        "f839c3fd1b021a9d917185d580e65393017bb17e6da26bd6e7b62b3b8d3614c6",
+        "3ff26bc545d719a42347a7c6ec7e10aaf96eab8e4ce82d1b0d03c25533ea1862"
       ],
       "support": "Supported"
     },
@@ -1478,8 +1478,8 @@
         "Application-initiated email changes require server-hosted confirmation and independently persist only the verified target address"
       ],
       "verificationProfiles": [
-        "0aa8738b165d7d7cec190f4fbe04b719126ab5d74b98ad52cc4b7b5afafbc4f0",
-        "0555b3b4420fcb872854e7012069ec45f0e2a4c028566b6fd91a1f86d269ef32"
+        "f839c3fd1b021a9d917185d580e65393017bb17e6da26bd6e7b62b3b8d3614c6",
+        "3ff26bc545d719a42347a7c6ec7e10aaf96eab8e4ce82d1b0d03c25533ea1862"
       ],
       "support": "Supported"
     },
@@ -1494,8 +1494,8 @@
         "Broker login verifies a transient identity without persisting a local user and cannot silently turn it into an ordinary stored account"
       ],
       "verificationProfiles": [
-        "0aa8738b165d7d7cec190f4fbe04b719126ab5d74b98ad52cc4b7b5afafbc4f0",
-        "0555b3b4420fcb872854e7012069ec45f0e2a4c028566b6fd91a1f86d269ef32"
+        "f839c3fd1b021a9d917185d580e65393017bb17e6da26bd6e7b62b3b8d3614c6",
+        "3ff26bc545d719a42347a7c6ec7e10aaf96eab8e4ce82d1b0d03c25533ea1862"
       ],
       "support": "Supported"
     },
@@ -1510,8 +1510,8 @@
         "Explicit legacy logout-other-sessions compatibility revokes regular sessions while retaining offline sessions and requires independent deprecated capability opt-in"
       ],
       "verificationProfiles": [
-        "0aa8738b165d7d7cec190f4fbe04b719126ab5d74b98ad52cc4b7b5afafbc4f0",
-        "0555b3b4420fcb872854e7012069ec45f0e2a4c028566b6fd91a1f86d269ef32"
+        "f839c3fd1b021a9d917185d580e65393017bb17e6da26bd6e7b62b3b8d3614c6",
+        "3ff26bc545d719a42347a7c6ec7e10aaf96eab8e4ce82d1b0d03c25533ea1862"
       ],
       "support": "Supported"
     },
@@ -1526,8 +1526,8 @@
         "Explicit deprecated conditional passkey UI retains challenge origin and credential binding without enabling ordinary stable login implicitly"
       ],
       "verificationProfiles": [
-        "0aa8738b165d7d7cec190f4fbe04b719126ab5d74b98ad52cc4b7b5afafbc4f0",
-        "0555b3b4420fcb872854e7012069ec45f0e2a4c028566b6fd91a1f86d269ef32"
+        "f839c3fd1b021a9d917185d580e65393017bb17e6da26bd6e7b62b3b8d3614c6",
+        "3ff26bc545d719a42347a7c6ec7e10aaf96eab8e4ce82d1b0d03c25533ea1862"
       ],
       "support": "Supported"
     },
@@ -1542,8 +1542,8 @@
         "Deprecated Instagram federation preserves server-side state and maps only the independently verified upstream identity"
       ],
       "verificationProfiles": [
-        "0aa8738b165d7d7cec190f4fbe04b719126ab5d74b98ad52cc4b7b5afafbc4f0",
-        "0555b3b4420fcb872854e7012069ec45f0e2a4c028566b6fd91a1f86d269ef32"
+        "f839c3fd1b021a9d917185d580e65393017bb17e6da26bd6e7b62b3b8d3614c6",
+        "3ff26bc545d719a42347a7c6ec7e10aaf96eab8e4ce82d1b0d03c25533ea1862"
       ],
       "support": "Supported"
     },
@@ -1558,21 +1558,21 @@
         "Deprecated Twitter federation preserves server-side state and maps only the independently verified upstream identity"
       ],
       "verificationProfiles": [
-        "0aa8738b165d7d7cec190f4fbe04b719126ab5d74b98ad52cc4b7b5afafbc4f0",
-        "0555b3b4420fcb872854e7012069ec45f0e2a4c028566b6fd91a1f86d269ef32"
+        "f839c3fd1b021a9d917185d580e65393017bb17e6da26bd6e7b62b3b8d3614c6",
+        "3ff26bc545d719a42347a7c6ec7e10aaf96eab8e4ce82d1b0d03c25533ea1862"
       ],
       "support": "Supported"
     }
   ],
   "verificationProfiles": [
     {
-      "id": "0aa8738b165d7d7cec190f4fbe04b719126ab5d74b98ad52cc4b7b5afafbc4f0",
+      "id": "f839c3fd1b021a9d917185d580e65393017bb17e6da26bd6e7b62b3b8d3614c6",
       "serverProfile": "standard",
       "runtime": "managed",
       "runtimeIdentifier": null,
-      "sourceFingerprint": "7aa98cff3d7f0dc9832d4a90ee01640715134710619091e22fcb0e7a02a0cd4d",
-      "evidence": "docs/contracts/application-protocol-evidence/0aa8738b165d7d7cec190f4fbe04b719126ab5d74b98ad52cc4b7b5afafbc4f0.json",
-      "evidenceSha256": "0aa8738b165d7d7cec190f4fbe04b719126ab5d74b98ad52cc4b7b5afafbc4f0",
+      "sourceFingerprint": "e393bc43c3785d4b707a9b3a4f4e226f5c2abfc53da8f12ebb4374c80bf64535",
+      "evidence": "docs/contracts/application-protocol-evidence/f839c3fd1b021a9d917185d580e65393017bb17e6da26bd6e7b62b3b8d3614c6.json",
+      "evidenceSha256": "f839c3fd1b021a9d917185d580e65393017bb17e6da26bd6e7b62b3b8d3614c6",
       "capabilities": [
         {
           "id": "authzen",
@@ -3061,13 +3061,13 @@
       ]
     },
     {
-      "id": "0555b3b4420fcb872854e7012069ec45f0e2a4c028566b6fd91a1f86d269ef32",
+      "id": "3ff26bc545d719a42347a7c6ec7e10aaf96eab8e4ce82d1b0d03c25533ea1862",
       "serverProfile": "standard",
       "runtime": "native-aot",
       "runtimeIdentifier": "linux-musl-x64",
-      "sourceFingerprint": "7aa98cff3d7f0dc9832d4a90ee01640715134710619091e22fcb0e7a02a0cd4d",
-      "evidence": "docs/contracts/application-protocol-evidence/0555b3b4420fcb872854e7012069ec45f0e2a4c028566b6fd91a1f86d269ef32.json",
-      "evidenceSha256": "0555b3b4420fcb872854e7012069ec45f0e2a4c028566b6fd91a1f86d269ef32",
+      "sourceFingerprint": "e393bc43c3785d4b707a9b3a4f4e226f5c2abfc53da8f12ebb4374c80bf64535",
+      "evidence": "docs/contracts/application-protocol-evidence/3ff26bc545d719a42347a7c6ec7e10aaf96eab8e4ce82d1b0d03c25533ea1862.json",
+      "evidenceSha256": "3ff26bc545d719a42347a7c6ec7e10aaf96eab8e4ce82d1b0d03c25533ea1862",
       "capabilities": [
         {
           "id": "authzen",
@@ -4367,13 +4367,13 @@
       ]
     },
     {
-      "id": "96b19d09a319bc58031a873195f950e5d4ec32260f5c9681c8dd1cee1c5e8cec",
+      "id": "43a7a16ae5427fb97dc11f57ce3a57f508f099c54e1e8c3432100f6401316778",
       "serverProfile": "legacy",
       "runtime": "managed",
       "runtimeIdentifier": null,
-      "sourceFingerprint": "7aa98cff3d7f0dc9832d4a90ee01640715134710619091e22fcb0e7a02a0cd4d",
-      "evidence": "docs/contracts/application-protocol-evidence/96b19d09a319bc58031a873195f950e5d4ec32260f5c9681c8dd1cee1c5e8cec.json",
-      "evidenceSha256": "96b19d09a319bc58031a873195f950e5d4ec32260f5c9681c8dd1cee1c5e8cec",
+      "sourceFingerprint": "e393bc43c3785d4b707a9b3a4f4e226f5c2abfc53da8f12ebb4374c80bf64535",
+      "evidence": "docs/contracts/application-protocol-evidence/43a7a16ae5427fb97dc11f57ce3a57f508f099c54e1e8c3432100f6401316778.json",
+      "evidenceSha256": "43a7a16ae5427fb97dc11f57ce3a57f508f099c54e1e8c3432100f6401316778",
       "capabilities": [
         {
           "id": "oidc-legacy-exchange",
@@ -4430,13 +4430,13 @@
       ]
     },
     {
-      "id": "a85e0a5d29fdf939e39611da86d93405dc7537077783c32d58ad668010e855af",
+      "id": "9badabb70f50cd8855ad98ad9d83a8648b03c1509db6fb90d4ede8cbf71e6df4",
       "serverProfile": "legacy",
       "runtime": "native-aot",
       "runtimeIdentifier": "linux-musl-x64",
-      "sourceFingerprint": "7aa98cff3d7f0dc9832d4a90ee01640715134710619091e22fcb0e7a02a0cd4d",
-      "evidence": "docs/contracts/application-protocol-evidence/a85e0a5d29fdf939e39611da86d93405dc7537077783c32d58ad668010e855af.json",
-      "evidenceSha256": "a85e0a5d29fdf939e39611da86d93405dc7537077783c32d58ad668010e855af",
+      "sourceFingerprint": "e393bc43c3785d4b707a9b3a4f4e226f5c2abfc53da8f12ebb4374c80bf64535",
+      "evidence": "docs/contracts/application-protocol-evidence/9badabb70f50cd8855ad98ad9d83a8648b03c1509db6fb90d4ede8cbf71e6df4.json",
+      "evidenceSha256": "9badabb70f50cd8855ad98ad9d83a8648b03c1509db6fb90d4ede8cbf71e6df4",
       "capabilities": [
         {
           "id": "oidc-legacy-exchange",

@@ -1,11 +1,11 @@
 # 应用协议选定工作流验收
 
-固定 Keycloak 26.8.2；验证输入指纹 `7aa98cff3d7f0dc9832d4a90ee01640715134710619091e22fcb0e7a02a0cd4d`。
+固定 Keycloak 26.8.2；验证输入指纹 `e393bc43c3785d4b707a9b3a4f4e226f5c2abfc53da8f12ebb4374c80bf64535`。
 
 | 运行模式 | 业务断言 | 不可变证据 |
 | --- | --- | --- |
-| managed | 20/20 | [96b19d09a319](application-protocol-evidence/96b19d09a319bc58031a873195f950e5d4ec32260f5c9681c8dd1cee1c5e8cec.json) |
-| native-aot | 20/20 | [a85e0a5d29fd](application-protocol-evidence/a85e0a5d29fdf939e39611da86d93405dc7537077783c32d58ad668010e855af.json) |
+| managed | 20/20 | [43a7a16ae542](application-protocol-evidence/43a7a16ae5427fb97dc11f57ce3a57f508f099c54e1e8c3432100f6401316778.json) |
+| native-aot | 20/20 | [9badabb70f50](application-protocol-evidence/9badabb70f50cd8855ad98ad9d83a8648b03c1509db6fb90d4ede8cbf71e6df4.json) |
 
 覆盖安全登录、PAR、客户端委托、AuthZen、SCIM、账户、注册、UMA 共享与授权、Client Admin v2、管理端 OpenAPI、Docker 令牌、DPoP、身份代理和 SSF 的选定流程。两个运行模式均在隔离容器网络实际调用固定服务端；未验证能力不会继承这些结果。
 

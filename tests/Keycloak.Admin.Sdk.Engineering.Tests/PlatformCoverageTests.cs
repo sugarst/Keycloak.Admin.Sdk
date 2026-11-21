@@ -14,10 +14,20 @@ public sealed class PlatformCoverageTests
         Assert.IsFalse(result.Json.Contains('\r'), "Generated snapshots must use deterministic LF on every platform.");
         Assert.IsFalse(catalog["complete"]!.GetValue<bool>());
         Assert.AreEqual(80, catalog["features"]!.AsArray().Count);
-        Assert.AreEqual(52, catalog["applicationCapabilities"]!.AsArray().Count);
-        Assert.IsTrue(catalog["applicationCapabilities"]!.AsArray().All(d => d!["verificationProfiles"]!.AsArray().Count == 0));
+        var capabilities = catalog["applicationCapabilities"]!.AsArray();
+        Assert.AreEqual(52, capabilities.Count);
         StringAssert.Contains(result.Markdown, "TOKEN_EXCHANGE_DELEGATION");
-        StringAssert.Contains(result.Markdown, "不能宣称全功能覆盖");
+        StringAssert.Contains(result.Markdown, "| Managed | Native AOT |");
+        foreach (var capability in capabilities)
+        {
+            var domain = capability!.AsObject();
+            Assert.AreEqual("NotVerified", domain["support"]!.GetValue<string>());
+            Assert.AreEqual(0, domain["verificationProfiles"]!.AsArray().Count);
+            string id = domain["id"]!.GetValue<string>();
+            string responsibility = domain["responsibility"]!.GetValue<string>();
+            string implementation = domain["implementation"]!.GetValue<string>();
+            StringAssert.Contains(result.Markdown, $"| `{id}` | {responsibility} | {implementation} | — | — |\n");
+        }
     }
 
     [TestMethod]

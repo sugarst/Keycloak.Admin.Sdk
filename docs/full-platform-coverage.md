@@ -66,7 +66,7 @@ dotnet run --file tools/Verify.cs -- --native-container
 
 Managed 的验收覆盖全部 52 个应用能力族。Linux Native AOT 在 `linux-musl-x64` 上覆盖其中 50 个。ASP.NET Core 浏览器 OIDC 和 SAML 的宿主集成仅在 Managed 上通过。其余 OIDC 能力按矩阵中各自的配置支持。Native AOT 使用主包快照门禁，`Platform` 的微软引擎与遥测验收属于 Managed。Admin API 的两条 FGAP 路线分别在 Managed 和 Native AOT 上验收。详见[全能力矩阵](contracts/platform-capability-matrix.md)和 [Admin API 真实验收](contracts/full-live-acceptance.md)。
 
-26.8.2 的四个包已有本地候选记录，NuGet 尚未发布。[发布清单](releases/26.8.2/654d361dc70f04811d5479a592a5a1a205b97af59d9a24263d6f9b453055d604.json)保留当时完整发布门禁的证据与包哈希。
+26.8.2 的四个包已通过本地候选验收，NuGet 尚未发布。当前候选清单记录门禁结果与包哈希。服务端专项另有逐项结果和后续计划。 [中英文升级说明与候选清单](releases/26.8.2/release-notes.md) · [28 项服务端专项](releases/26.8.2/server-validation.md)
 
 委托撤销遵循固定服务端语义：删除 delegate 权限后，主体令牌刷新移除 may_act；刷新后的令牌不能继续委托。已经签发的 access token 有自己的有效期，不能把删除权限表述为即时撤销所有令牌。即时关闭业务还须使用宿主开关及适用的会话注销/撤销。
 
