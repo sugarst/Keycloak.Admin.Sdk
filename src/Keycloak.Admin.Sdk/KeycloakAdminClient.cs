@@ -34,7 +34,7 @@ public sealed partial class KeycloakAdminClient(HttpClient httpClient, Uri serve
     {
         using var response = await SendCoreAsync(operation, allowReplay, method, path, query, content, cancellationToken).ConfigureAwait(false);
         var bytes = await response.Content.ReadAsByteArrayAsync(cancellationToken).ConfigureAwait(false);
-        var headers = response.Headers.Concat(response.Content.Headers).ToDictionary(h => h.Key, h => h.Value.ToArray(), StringComparer.OrdinalIgnoreCase);
+        var headers = AdminResponse.SnapshotHeaders(response);
         return new AdminResponse(response.StatusCode, response.Headers.Location, headers, bytes);
     }
 
@@ -60,7 +60,7 @@ public sealed partial class KeycloakAdminClient(HttpClient httpClient, Uri serve
             var value = response.Content.IsEmpty ? default : JsonSerializer.Deserialize(response.Content.Span, responseType);
             return new AdminResponse<T>(response, value);
         }
-        catch (JsonException error) { throw new KeycloakResponseFormatException(response.StatusCode, error); }
+        catch (JsonException error) { throw new KeycloakResponseFormatException(response, error); }
     }
 
     /// <summary>Streams a download without buffering. Caller must dispose the returned response. Consumes/disposes request content.</summary>
@@ -103,15 +103,19 @@ public sealed partial class KeycloakAdminClient(HttpClient httpClient, Uri serve
             }
             var response = await httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
             if (response.IsSuccessStatusCode) return response;
-            var error = new KeycloakAdminException(response.StatusCode, method.Method, KeycloakFailureStage.AdminApi, operation);
-            response.Dispose(); // Never read untrusted error bodies, including on the first 401.
-            if (recoverUnauthorized && error.StatusCode == System.Net.HttpStatusCode.Unauthorized && token is not null
-                && path.StartsWith("/admin/", StringComparison.Ordinal) && tokenProvider is IRefreshableAccessTokenProvider refreshable)
-            {
-                await refreshable.InvalidateAsync(token, cancellationToken).ConfigureAwait(false);
-                if (attempt == 0 && allowReplay && content is null && (method == HttpMethod.Get || method == HttpMethod.Head)) continue;
-            }
-            throw error;
+            var refreshable = recoverUnauthorized && response.StatusCode == System.Net.HttpStatusCode.Unauthorized
+                && token is not null && path.StartsWith("/admin/", StringComparison.Ordinal)
+                ? tokenProvider as IRefreshableAccessTokenProvider
+                : null;
+            bool replay = refreshable is not null && attempt == 0 && allowReplay && content is null
+                && (method == HttpMethod.Get || method == HttpMethod.Head);
+            AdminErrorResponse? failure;
+            using (response)
+                failure = replay ? null : await AdminErrorResponse.ReadAsync(response, cancellationToken).ConfigureAwait(false);
+            if (refreshable is not null)
+                await refreshable.InvalidateAsync(token!, cancellationToken).ConfigureAwait(false);
+            if (failure is not null)
+                throw new KeycloakAdminException(failure.StatusCode, method.Method, KeycloakFailureStage.AdminApi, operation, failure);
         }
     }
 }

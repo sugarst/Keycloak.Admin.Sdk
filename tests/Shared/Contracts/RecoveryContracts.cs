@@ -21,11 +21,64 @@ public static class RecoveryContracts
             var sdk = new KeycloakAdminClient(http, Server);
             var error = await Expect<KeycloakAdminException>(() => sdk.Users.CreateUserAsync("private-realm", new() { Username = "secret-user" }));
             Check(error.ErrorKind == kind && error.Stage == KeycloakFailureStage.AdminApi && error.Operation == "Users.CreateUserAsync", "structured classification");
-            Check(error.ErrorCode is null && error.Method == "POST" && body.Disposed && !body.Read, "errors never read bodies");
+            Check(error.ErrorCode is null && error.Method == "POST" && body.Disposed && body.Read, "final error body is captured and disposed");
+            Check(error.Response is { BodyState: AdminErrorBodyState.ReadFailed } && error.Response.StatusCode == error.StatusCode,
+                "body read failures preserve the HTTP exception and status");
             Check(!error.ToString().Contains("secret-user") && !error.ToString().Contains("private-realm") && error.InnerException is null && error.Data.Count == 0, "safe exception");
         }
         var legacy = new KeycloakAdminException(HttpStatusCode.Conflict, "POST");
-        Check(legacy.Stage == KeycloakFailureStage.Unknown && legacy.Operation is null && legacy.StatusCode == HttpStatusCode.Conflict, "legacy exception constructor");
+        Check(legacy.Stage == KeycloakFailureStage.Unknown && legacy.Operation is null && legacy.StatusCode == HttpStatusCode.Conflict
+            && legacy.Response is null, "legacy exception constructor");
+
+        const string json = "{\"errorMessage\":\"The specified domain is invalid: 'private-domain'\",\"params\":[\"原文\"]}";
+        using var handler = new Handler((_, _) => Task.FromResult(new HttpResponseMessage(HttpStatusCode.BadRequest)
+        {
+            Content = new StringContent(json, Encoding.UTF8, "application/json"),
+            Headers = { { "X-Request-ID", ["first", "second"] } }
+        }));
+        using var transport = new HttpClient(handler);
+        var client = new KeycloakAdminClient(transport, Server);
+        var raw = await Expect<KeycloakAdminException>(() => client.Organizations.CreateAsync("demo", new() { Name = "test" }));
+        Check(raw.Response is { BodyState: AdminErrorBodyState.Complete, ContentType: "application/json; charset=utf-8" } details
+            && Encoding.UTF8.GetString(details.Content.Span) == json
+            && details.Headers["x-request-id"].SequenceEqual(["first", "second"]), "native response preserves bytes and headers");
+        Check(raw.Message == "The specified domain is invalid." && !raw.ToString().Contains("private-domain"), "legacy display never copies the domain");
+
+        const string html = "<html>proxy error</html>";
+        handler.Action = (_, _) => Task.FromResult(new HttpResponseMessage(HttpStatusCode.BadGateway)
+        {
+            Content = new StringContent(html, Encoding.UTF8, "text/html")
+        });
+        var gateway = await Expect<KeycloakAdminException>(() => client.OpenStreamAsync(HttpMethod.Get, "/admin/serverinfo"));
+        Check(gateway.Response is { BodyState: AdminErrorBodyState.Complete } gatewayResponse
+            && Encoding.UTF8.GetString(gatewayResponse.Content.Span) == html
+            && gateway.Message == "Keycloak Admin API returned 502 for GET.", "streaming error retains upstream HTML outside Message");
+
+        foreach (int size in new[] { 0, 65536, 65537 })
+        {
+            var bytes = Enumerable.Repeat((byte)0xAB, size).ToArray();
+            handler.Action = (_, _) => Task.FromResult(new HttpResponseMessage(HttpStatusCode.BadRequest) { Content = new ByteArrayContent(bytes) });
+            var failure = await Expect<KeycloakAdminException>(() => client.SendAsync(HttpMethod.Post, "/admin/serverinfo"));
+            Check(failure.Response is { } captured && captured.Content.Span.SequenceEqual(bytes.AsSpan(0, Math.Min(size, 65536)))
+                && captured.BodyState == (size > 65536 ? AdminErrorBodyState.Truncated : AdminErrorBodyState.Complete), "empty, exact-limit, and truncated bodies are distinguished");
+        }
+
+        handler.Action = (_, _) => Task.FromResult(Ok("broken JSON"));
+        var malformed = await Expect<KeycloakResponseFormatException>(() => client.Users.GetUsersAsync("demo"));
+        Check(malformed is { StatusCode: HttpStatusCode.OK, Response: { } unparsed }
+            && Encoding.UTF8.GetString(unparsed.Content.Span) == "broken JSON", "format errors retain the original successful response");
+
+        handler.Action = (_, _) => Task.FromResult(new HttpResponseMessage(HttpStatusCode.BadRequest) { Content = new SlowContent() });
+        var timedOut = await Expect<KeycloakAdminException>(() => client.SendAsync(HttpMethod.Post, "/admin/serverinfo"));
+        Check(timedOut is { StatusCode: HttpStatusCode.BadRequest, Response.BodyState: AdminErrorBodyState.ReadFailed },
+            "body read deadline preserves the HTTP failure");
+        using var cancellation = new CancellationTokenSource();
+        var slowBody = new SlowContent();
+        handler.Action = (_, _) => Task.FromResult(new HttpResponseMessage(HttpStatusCode.BadRequest) { Content = slowBody });
+        var request = client.SendAsync(HttpMethod.Post, "/admin/serverinfo", cancellationToken: cancellation.Token);
+        await slowBody.Started.WaitAsync(TimeSpan.FromSeconds(5));
+        cancellation.Cancel();
+        await Expect<OperationCanceledException>(() => request);
     }
 
     public static async Task ReplayAsync()
@@ -49,7 +102,7 @@ public static class RecoveryContracts
         using var http = new HttpClient(handler);
         var sdk = Client(http, tokens);
         await sdk.Users.GetUsersAsync("demo");
-        Check(calls == 2 && tokens.Invalidated.SequenceEqual(["old"]) && http.DefaultRequestHeaders.Authorization is null, "one recovery");
+        Check(calls == 2 && tokens.Invalidated.SequenceEqual(["old"]) && http.DefaultRequestHeaders.Authorization is null && !firstBody.Read, "one recovery without reading the first 401");
 
         foreach (var method in new[] { HttpMethod.Post, HttpMethod.Put, HttpMethod.Patch, HttpMethod.Delete, HttpMethod.Get, HttpMethod.Head })
         {
@@ -72,8 +125,16 @@ public static class RecoveryContracts
             Check(calls == 1, "cancellation between attempts prevents replay");
         }
         calls = 0; tokens = new(); sdk = Client(http, tokens);
+        using var discarded = new UnreadableContent();
+        handler.Action = (_, _) => Task.FromResult(new HttpResponseMessage(HttpStatusCode.Unauthorized)
+        {
+            Content = ++calls == 1 ? discarded : new StringContent("final 401")
+        });
         var twice = await Expect<KeycloakAdminException>(() => sdk.Users.GetUsersAsync("demo"));
-        Check(calls == 2 && tokens.Invalidated.SequenceEqual(["old", "new"]) && twice.Operation == "Users.GetUsersAsync", "final 401 invalidates and stops");
+        Check(calls == 2 && tokens.Invalidated.SequenceEqual(["old", "new"]) && twice.Operation == "Users.GetUsersAsync"
+            && discarded.Disposed && !discarded.Read && twice.Response is { } finalResponse
+            && Encoding.UTF8.GetString(finalResponse.Content.Span) == "final 401", "final 401 is captured and invalidates the token");
+        handler.Action = (_, _) => { calls++; return Task.FromResult(new HttpResponseMessage(HttpStatusCode.Unauthorized)); };
 
         foreach (var provider in new IAccessTokenProvider?[] { null, new StaticAccessTokenProvider("static") })
         {
@@ -127,7 +188,8 @@ public static class RecoveryContracts
             ? new HttpResponseMessage(HttpStatusCode.Unauthorized) { Content = firstBody } : Ok("download"))));
         var sdk = Client(http, new Tokens());
         using (var response = await sdk.OpenStreamAsync(Replay, HttpMethod.Get, "/admin/serverinfo"))
-            Check(calls == 2 && firstBody.Disposed && response.Content.ReadByte() == 'd', "stream recovery before delivery");
+            Check(calls == 2 && firstBody.Disposed && !firstBody.Read && response.Content.ReadByte() == 'd'
+                && response.Headers.ContainsKey("Content-Type"), "stream recovery and native headers before delivery");
         Check(calls == 2, "stream delivery does not replay reads");
         calls = 0;
         await Expect<KeycloakAdminException>(() => sdk.OpenStreamAsync(HttpMethod.Get, "/admin/serverinfo"));
@@ -253,5 +315,18 @@ public static class RecoveryContracts
         protected override Task SerializeToStreamAsync(Stream stream, TransportContext? context) { Read = true; throw new InvalidOperationException("sensitive body must not be read"); }
         protected override bool TryComputeLength(out long length) { length = 0; return false; }
         protected override void Dispose(bool disposing) { Disposed = true; base.Dispose(disposing); }
+    }
+
+    private sealed class SlowContent : HttpContent
+    {
+        private readonly TaskCompletionSource started = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        public Task Started => started.Task;
+        protected override Task SerializeToStreamAsync(Stream stream, TransportContext? context) => throw new NotSupportedException();
+        protected override Task SerializeToStreamAsync(Stream stream, TransportContext? context, CancellationToken cancellationToken)
+        {
+            started.SetResult();
+            return Task.Delay(Timeout.InfiniteTimeSpan, cancellationToken);
+        }
+        protected override bool TryComputeLength(out long length) { length = 0; return false; }
     }
 }
