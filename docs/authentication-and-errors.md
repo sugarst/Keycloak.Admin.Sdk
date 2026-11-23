@@ -26,9 +26,12 @@ var sdk = new KeycloakAdminClient(http, server, tokens);
 | `Stage` | Unknown、AdminApi、TokenEndpoint；旧两参数构造函数为 Unknown |
 | `ErrorKind` | 400/401/403/404/409 对应 BadRequest/Unauthorized/Forbidden/NotFound/Conflict；其他为 Unknown |
 | `Operation` | 生成方法的固定标识，如 `Users.CreateUserAsync`；原始请求和 token 端点为 null |
+| `Response` | 最终 Admin API 错误响应，包含状态码、响应头、`Location`、`ContentType` 和原始正文字节 `Content` |
 | `ErrorCode` | 当前始终为 null |
 
-错误体不读取；SDK 构造的 HTTP 异常不附加实际 URL、查询、凭据或错误正文。错误类别只表示 HTTP 分类，409 不等同于用户名重复。网络失败和取消保留自身类型；成功响应的 JSON 格式错误抛出 `KeycloakResponseFormatException`。
+自 SDK 包 `26.8.1.1` 起，生成的 Admin API 方法及 `SendAsync`、`SendJsonAsync`、`OpenStreamAsync` 都自动采集最终错误响应。`BodyState` 表示读到完整正文 (`Complete`，可能为空)、超过 64 KiB 后截断 (`Truncated`)，或在两秒读取预算内未能读完 (`ReadFailed`，可能包含已读前缀)。已重放的 401 不采集。调用方取消仍以取消异常传播。SDK 取 token 时抛出的异常和手动创建的异常没有 `Response`。
+
+`Message` 仅包含少量审核过的上游报错文案或通用 HTTP 提示。`Response` 仍可能含敏感信息，业务应用应根据已知字段选择自己的用户提示。`ErrorKind` 只表示 HTTP 分类，例如 `Conflict` 对应 409。成功的流式响应通过 `Headers` 暴露响应头。成功状态下 JSON 格式错误抛出 `KeycloakResponseFormatException`，原始响应可从其 `Response` 读取。
 
 ```csharp
 try

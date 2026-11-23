@@ -22,7 +22,7 @@ internal sealed record TargetBaseline(string Version, string Commit, string Arch
         if (!Regex.IsMatch(target.Version, @"^\d+\.\d+\.\d+$") || !Regex.IsMatch(target.Commit, "^[a-f0-9]{40}$")
             || !Regex.IsMatch(target.ArchiveHash, "^[a-f0-9]{64}$") || !Regex.IsMatch(target.OpenApiHash, "^[a-f0-9]{64}$")
             || !Regex.IsMatch(target.ServerImage, "^quay.io/keycloak/keycloak@sha256:[a-f0-9]{64}$")
-            || !Regex.IsMatch(target.Sdk, @"^10\.\d+\.\d+$") || !Regex.IsMatch(target.PackageVersion, @"^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$")
+            || !Regex.IsMatch(target.Sdk, @"^10\.\d+\.\d+$") || !Regex.IsMatch(target.PackageVersion, @"^\d+\.\d+\.\d+(?:\.[1-9]\d*)?(?:-[0-9A-Za-z.-]+)?$")
             || target.Endpoints <= 0 || target.Platform != "linux/amd64" || !Regex.IsMatch(target.PostgresVersionNumber, @"^\d{6}$")
             || !Regex.IsMatch(target.PostgresImage, @"^postgres:[\w.-]+(?:@sha256:[a-f0-9]{64})?$")
             || !target.NativeSdkImage.StartsWith("mcr.microsoft.com/dotnet/sdk:" + target.Sdk + "-", StringComparison.Ordinal)

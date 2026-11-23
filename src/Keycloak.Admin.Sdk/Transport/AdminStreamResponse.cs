@@ -10,9 +10,11 @@ public sealed class AdminStreamResponse : IDisposable
     {
         this.response = response;
         Content = content;
+        Headers = AdminResponse.SnapshotHeaders(response);
     }
     public HttpStatusCode StatusCode => response.StatusCode;
     public Uri? Location => response.Headers.Location;
+    public IReadOnlyDictionary<string, string[]> Headers { get; }
     public Stream Content { get; }
     public void Dispose() => response.Dispose();
 }
