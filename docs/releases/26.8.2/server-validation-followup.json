@@ -1,0 +1,242 @@
+{
+  "schemaVersion": 1,
+  "completedUtc": "2026-11-23T01:57:49.3430209Z",
+  "keycloakVersion": "26.8.2",
+  "keycloakSourceCommit": "e514445f9dcdabc5bdcf67cab56c1e49655de067",
+  "image": {
+    "localTag": "quay.io/keycloak/keycloak:26.8.2-3",
+    "platform": "linux/amd64",
+    "repositoryDigest": "quay.io/keycloak/keycloak@sha256:7e66a96e4739239070aeaf72e4c5decf0f7f682cfc725b9f7ea2b336eaba38b3",
+    "imageId": "sha256:4938c322f47d3736c580fc57bb335d35c784489bc7e6d8fbbd52dbdd1b27e72e"
+  },
+  "environment": {
+    "freshDataOnly": true,
+    "postgresImage": "postgres:18.0-alpine3.22",
+    "collectorImage": "otel/opentelemetry-collector-contrib:0.148.0",
+    "browserDatabase": "fresh start-dev datastore"
+  },
+  "declarativeUi": {
+    "providerType": "org.keycloak.services.ui.extend.UiPageProvider",
+    "providerId": "kc-product-fixture",
+    "browser": "Chrome/157.0.8103.80",
+    "navigationRendered": true,
+    "tableRendered": true,
+    "detailFieldRendered": true,
+    "invalidConfigHttp": 400,
+    "initialValue": "accepted",
+    "savedValue": "accepted-browser",
+    "adminRestConfirmed": true,
+    "reloadConfirmed": true
+  },
+  "rollingUpdates": [
+    {
+      "feature": "rolling-updates:v1",
+      "postgresSchemaInitiallyAbsent": true,
+      "compatibilityExit": 0,
+      "changedConfig": {
+        "logLevel": {
+          "before": "INFO",
+          "after": "INFO,org.keycloak.events:DEBUG"
+        }
+      },
+      "twoMemberViews": [
+        [
+          "node-a1",
+          "node-b1"
+        ],
+        [
+          "node-b1",
+          "node-a2"
+        ],
+        [
+          "node-a2",
+          "node-b2"
+        ]
+      ],
+      "stages": [
+        {
+          "stage": "both-original",
+          "selectedNode": "node-a1",
+          "observed": {
+            "node-a1": {
+              "discovery": 3,
+              "refresh": 3,
+              "adminRead": 3,
+              "newLogin": 3
+            }
+          }
+        },
+        {
+          "stage": "replacing-a",
+          "selectedNode": "node-b1",
+          "observed": {
+            "node-b1": {
+              "discovery": 64,
+              "refresh": 64,
+              "adminRead": 64,
+              "newLogin": 64
+            }
+          }
+        },
+        {
+          "stage": "replacing-b",
+          "selectedNode": "node-a2",
+          "observed": {
+            "node-a2": {
+              "discovery": 59,
+              "refresh": 59,
+              "adminRead": 59,
+              "newLogin": 59
+            }
+          }
+        },
+        {
+          "stage": "both-replaced",
+          "selectedNode": "node-b2",
+          "observed": {
+            "node-b2": {
+              "discovery": 3,
+              "refresh": 3,
+              "adminRead": 3,
+              "newLogin": 3
+            }
+          }
+        }
+      ],
+      "successfulProbeCycles": 129,
+      "checksPerCycle": [
+        "OIDC discovery",
+        "original session refresh",
+        "Admin REST user read",
+        "new OIDC login"
+      ],
+      "failedProbeCycles": 0,
+      "sameSubjectAndSessionId": true
+    },
+    {
+      "feature": "rolling-updates:v2",
+      "postgresSchemaInitiallyAbsent": true,
+      "compatibilityExit": 0,
+      "changedConfig": {
+        "logLevel": {
+          "before": "INFO",
+          "after": "INFO,org.keycloak.events:DEBUG"
+        }
+      },
+      "twoMemberViews": [
+        [
+          "node-a1",
+          "node-b1"
+        ],
+        [
+          "node-b1",
+          "node-a2"
+        ],
+        [
+          "node-a2",
+          "node-b2"
+        ]
+      ],
+      "stages": [
+        {
+          "stage": "both-original",
+          "selectedNode": "node-a1",
+          "observed": {
+            "node-a1": {
+              "discovery": 4,
+              "refresh": 4,
+              "adminRead": 4,
+              "newLogin": 4
+            }
+          }
+        },
+        {
+          "stage": "replacing-a",
+          "selectedNode": "node-b1",
+          "observed": {
+            "node-b1": {
+              "discovery": 60,
+              "refresh": 59,
+              "adminRead": 59,
+              "newLogin": 59
+            },
+            "node-a2": {
+              "discovery": 0,
+              "refresh": 1,
+              "adminRead": 1,
+              "newLogin": 1
+            }
+          }
+        },
+        {
+          "stage": "replacing-b",
+          "selectedNode": "node-a2",
+          "observed": {
+            "node-a2": {
+              "discovery": 61,
+              "refresh": 61,
+              "adminRead": 60,
+              "newLogin": 60
+            },
+            "node-b2": {
+              "discovery": 0,
+              "refresh": 0,
+              "adminRead": 1,
+              "newLogin": 1
+            }
+          }
+        },
+        {
+          "stage": "both-replaced",
+          "selectedNode": "node-b2",
+          "observed": {
+            "node-b2": {
+              "discovery": 4,
+              "refresh": 4,
+              "adminRead": 4,
+              "newLogin": 4
+            }
+          }
+        }
+      ],
+      "successfulProbeCycles": 129,
+      "checksPerCycle": [
+        "OIDC discovery",
+        "original session refresh",
+        "Admin REST user read",
+        "new OIDC login"
+      ],
+      "failedProbeCycles": 0,
+      "sameSubjectAndSessionId": true
+    }
+  ],
+  "mixedTelemetry": {
+    "serviceName": "kc-2682-mixed-fixture",
+    "database": "fresh PostgreSQL 18.0",
+    "startup": "build followed by start --optimized",
+    "grpc": {
+      "endpoint": "http://otel:4317",
+      "traces": true,
+      "metrics": true
+    },
+    "httpProtobuf": {
+      "endpoint": "http://otel-http:4318",
+      "observedRequest": {
+        "method": "POST",
+        "path": "/v1/logs",
+        "type": "application/x-protobuf",
+        "status": 200
+      },
+      "decodedKeycloakStartupLogs": true
+    }
+  },
+  "logEndpointPathControl": {
+    "endpoint": "http://otel-http:4318/v1/logs",
+    "observedRequest": {
+      "method": "POST",
+      "path": "/v1/logs/v1/logs",
+      "type": "application/x-protobuf",
+      "status": 404
+    }
+  }
+}
