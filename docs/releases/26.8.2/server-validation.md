@@ -21,7 +21,7 @@
 | `CLUSTERLESS` | 待环境。缺外置 Infinispan 和专用拓扑。 | 复用会话、缓存接口跑拓扑切换回归。 | 配置外置 Infinispan 认证与 TLS，演练节点退出和远端缓存故障恢复。 |
 | `DB_TIDB` | 待环境。缺本地 TiDB 服务。 | 用 520 项 Admin 契约定位数据库专属差异，再决定模型或客户端改造。 | 新建 schema，验证初始化、事务、Unicode、并发、授权和会话。 |
 | `DECLARATIVE_UI` | 镜像内 Java 21 编译并部署 `UiPage` provider。错误配置返回 `400`。真实 Chrome 渲染侧栏、列表和动态字段，保存后重载显示新值，独立 Admin REST 回读一致。 | 复用组件管理接口，在稳定新契约出现时补 SDK 类型。 | 补 `UiTab`、委派角色可见性和其他动态字段类型。 |
-| `FIPS` | 待环境。当前容器未提供合规内核和 BCFIPS 依赖。 | 用现有 TLS、OIDC、JWK 入口验证应用互操作。 | 使用受支持的 FIPS Linux/JVM 与 BCFIPS，验证所选模式和 TLS 算法。 |
+| `FIPS` | 合规模式待环境。固定镜像以 BCFIPS non-strict 成功启动，生成信任库保留同一 PEM 的两张证书。 | 用现有 TLS、OIDC、JWK 入口验证应用互操作。 | 使用启用 FIPS 的 Linux 和受支持的 JVM，核验 strict 模式和 TLS 算法。 |
 | `HTTP_CLIENT_V2` | OIDC 元数据分别经匹配代理和直连导入。慢响应在约 718 ms 被截断。 | 沿用同一 SDK 导入入口核对错误和超时。 | 与 v1 对照 TLS/mTLS、连接池饱和、重试和退出。 |
 | `HTTP_OPTIMIZED_SERIALIZERS` | Preview 开启时，Admin JSON 对象和数组保留 UUID、布尔值与用户标识。 | 对照多态、空值、日期、枚举和流式载荷，按契约差异更新源生成模型。 | 对开关前后的 Admin 和协议响应作快照对照及性能测量。 |
 | `IPA_TUURA_FEDERATION` | 待环境。缺可用 IPA/Tuura 服务。 | 复用组件配置及用户读取，按真实 provider 的契约差异补类型。 | 验证用户导入、登录、组和属性、失联及权限。 |
@@ -54,4 +54,4 @@ This review selected 28 flags from the 80-item upstream inventory. Twenty-three 
 
 Independent two-node PostgreSQL clusters ran `rolling-updates:v1` and `rolling-updates:v2`. Both passed the compatibility check for a logging change, replaced both nodes sequentially on the same 26.8.2 image, and completed 129 probe cycles each with zero failures. Probes covered discovery, refresh of the original session, a new login, and Admin REST reads. The original subject and session ID persisted.
 
-With PostgreSQL and optimized startup, the Collector decoded traces and metrics over gRPC and logs over HTTP/protobuf. The proxy recorded a successful `POST /v1/logs`. Setting the exporter URL to include that suffix caused a duplicate path and returned `404` in the control run. Dedicated environments are still needed for external caches and multi-site, TiDB, IPA/Tuura, and FIPS. Browser coverage here is for the tested `UiPage` provider. [Bilingual upgrade notes](release-notes.md) · [Platform capability matrix](../../contracts/platform-capability-matrix.md)
+With PostgreSQL and optimized startup, the Collector decoded traces and metrics over gRPC and logs over HTTP/protobuf. The proxy recorded a successful `POST /v1/logs`. Setting the exporter URL to include that suffix caused a duplicate path and returned `404` in the control run. Dedicated environments are still needed for external caches and multi-site, TiDB, IPA/Tuura, and FIPS compliance. The pinned image loaded both PEM certificates with BCFIPS non-strict. Browser coverage here is for the tested `UiPage` provider. [FIPS runtime evidence](release-service-specialty-evidence.json) · [Bilingual upgrade notes](release-notes.md) · [Platform capability matrix](../../contracts/platform-capability-matrix.md)

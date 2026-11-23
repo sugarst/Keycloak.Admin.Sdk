@@ -62,6 +62,8 @@ options.Token = new() { Scope = "kc-admin-api" };
 
 后续核对在固定镜像的发行 JAR 中确认了 Admin audience、SAML Broker bearer 与 ProxyRestriction、以及 SessionIndex 注销签名约束，并用新建数据复跑正常业务对照。四个对应的端到端拒绝场景仍在逐项矩阵中列为待验收。 [发行 JAR 与运行对照证据](release-protocol-guard-evidence.json)
 
+本轮完成 9 项原待专项条目的证据归档。定向验证覆盖 Brotli4j 发行包盘点、真实 IPv6 代理的短程 UDP 观察、BCFIPS non-strict 多证书 PEM、官方 Operator Helm 渲染版本和 PostgreSQL 行锁诊断。自定义信任库下的 CLI 正常 HTTPS、普通主题 gzip 缓存和 SAML 1.1 默认关闭属于相关证据。合规 FIPS、Kubernetes 实装和负向边界仍在矩阵中跟踪。 [服务端与制品补跑证据](release-service-specialty-evidence.json)
+
 ## English upgrade notes
 
 The local candidate targets **Keycloak 26.8.2** and **.NET 10**. When moving from 26.8.1, assign `kc-admin-api` to custom management clients first. Review delegated protocol mapper writes, dynamic registration policies, and assumptions about session statistics and token lifetimes. `Keycloak.Admin.Sdk`, `Keycloak.Admin.Sdk.Protocols`, `Keycloak.Admin.Sdk.Hosting`, and `Keycloak.Admin.Sdk.Platform` all use version `26.8.2`. NuGet publication is pending.
@@ -123,3 +125,5 @@ The issue matrix records evidence and gaps for all 59 changes in the official an
 Protocol follow-up covered Device minimum ACR with OTP, rejection of standalone CIBA type metadata, verification before organization membership, and signed SAML SessionIndex logout. SAML brokering completed with a standard signed bearer assertion. The pinned offline token verifier accepted and rejected the same signed admin token based solely on the expected audience. The equivalent Admin REST denial still needs end-to-end evidence. [Protocol follow-up evidence](release-protocol-followup.json)
 
 The pinned distribution JARs contain the Admin audience check, the SAML broker bearer and ProxyRestriction checks, and the SessionIndex logout signature requirement. Normal runtime controls passed with fresh data. The matrix tracks four corresponding end-to-end denial scenarios as pending. [Packaged checks and runtime controls](release-protocol-guard-evidence.json)
+
+The follow-up records evidence for the nine previously untested release items. Targeted checks covered the packaged Brotli4j inventory, a short UDP observation through a real IPv6 proxy, multi-certificate PEM with BCFIPS non-strict, official Operator Helm version labels, and PostgreSQL lock diagnostics. Normal CLI HTTPS with a custom truststore, warm theme gzip reuse, and the SAML 1.1 disabled default provide related evidence. The matrix tracks FIPS compliance, Kubernetes deployment, and pending negative cases. [Server and artifact follow-up evidence](release-service-specialty-evidence.json)

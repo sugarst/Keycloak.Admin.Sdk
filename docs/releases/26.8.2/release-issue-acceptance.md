@@ -4,11 +4,13 @@
 
 **定向通过**表示已记录该发布项的相关业务断言，具体范围见各行。**相关证据**表示已验收关联功能，行内列出仍待核验的发布行为。**待专项**表示尚缺该行为的验收证据。**上游维护**表示发布项对应上游文档、测试或 CI。SDK 支持范围和服务端功能开关分别由能力矩阵及服务端专项记录维护。 [能力矩阵](../../contracts/platform-capability-matrix.md) · [服务端专项](server-validation.md) · [兼容应用协议证据](../../contracts/application-protocol-legacy-workflows.md) · [标准协议证据](../../contracts/application-protocol-workflows.md)
 
-矩阵共有 **17 项定向通过、27 项有相关证据、9 项待专项、6 项属于上游维护**。首轮在 7 个隔离配置中采集了 10 个发布项的证据。协议补跑新增 6 个发布项的本地实测，其中 Device 最低 ACR、CIBA 代表性保留字段、组织按域入会和已签名的 SAML 后通道注销满足所列定向场景。 [首轮专项证据](release-issue-acceptance-evidence.json) · [协议补跑证据](release-protocol-followup.json)
+矩阵共有 **22 项定向通过、31 项有相关证据、0 项待专项、6 项属于上游维护**。首轮在 7 个隔离配置中采集了 10 个发布项的证据。协议补跑新增 6 个发布项的本地实测，其中 Device 最低 ACR、CIBA 代表性保留字段、组织按域入会和已签名的 SAML 后通道注销满足所列定向场景。 [首轮专项证据](release-issue-acceptance-evidence.json) · [协议补跑证据](release-protocol-followup.json)
 
-本轮直接检查固定镜像内的发行 JAR，确认 Admin audience 与 scope 校验、SAML Broker 的 bearer 与 ProxyRestriction 校验、SessionIndex 注销前的客户端签名约束均已打包。镜像内运行检查确认 ProxyRestriction 校验默认启用。新建环境复跑了正常 Admin、签名 bearer 代理登录和签名 SP 注销对照。 [发行 JAR 与运行对照证据](release-protocol-guard-evidence.json)
+上一轮直接检查固定镜像内的发行 JAR，确认 Admin audience 与 scope 校验、SAML Broker 的 bearer 与 ProxyRestriction 校验、SessionIndex 注销前的客户端签名约束均已打包。镜像内运行检查确认 ProxyRestriction 校验默认启用。新建环境复跑了正常 Admin、签名 bearer 代理登录和签名 SP 注销对照。 [发行 JAR 与运行对照证据](release-protocol-guard-evidence.json)
 
-后续协议验收仍包括 Admin REST 仅 audience 不匹配、SAML Broker 非 bearer 与 ProxyRestriction、以及无签名 SessionIndex 后通道注销这四个端到端拒绝场景。自动关联既有身份也待独立验收。Operator Helm、FIPS、多站点与外置缓存需要对应的服务端环境或制品。兼容性验收采用新建 realm、用户及数据库。同版本滚动的证据见服务端专项。
+本轮为原先待专项的 9 项补齐了制品或运行证据。其中 5 项通过定向检查，4 项补充了相关证据。服务端运行使用固定镜像和新建数据。Operator 使用官方 26.8.2 OCI chart。strict FIPS、Kubernetes 实装与调谐、IPv6 长时负载和安全边界的剩余范围记录在各行。 [服务端与制品补跑证据](release-service-specialty-evidence.json)
+
+Admin REST 仅 audience 不匹配、SAML Broker 非 bearer、SAML Broker ProxyRestriction、无签名 SessionIndex 后通道注销这四个端到端拒绝场景继续待验收。自动关联既有身份也待独立验收。多站点与外置缓存的环境缺口见服务端专项。
 
 ## 安全修复（33）
 
@@ -18,14 +20,14 @@
 | [#53618](https://github.com/keycloak/keycloak/issues/53618) | 设备登录最低 ACR | 协议互操作 | 定向通过 | 客户端最低 ACR 配为级别 2。真实密码和 OTP 流程中，OTP 提示时轮询仍为 authorization_pending。完成后独立验签确认令牌中的 ACR、OTP 认证方式和原用户。 |
 | [#53749](https://github.com/keycloak/keycloak/issues/53749) | DCR 保留离线令牌撤销配置 | SDK／协议互操作 | 定向通过 | 读取、更新、回读保留后通道注销撤销离线令牌的设置，Managed 与 Native AOT 均通过。 |
 | [#53813](https://github.com/keycloak/keycloak/issues/53813) | 登录页内容清理 | 服务端 | 相关证据 | 已有真实登录渲染与主题替换。发布项的输入清理边界待对照上游修复与回归记录。 |
-| [#54333](https://github.com/keycloak/keycloak/issues/54333) | 随发行包提供的 Brotli 组件修复 | 服务端／依赖 | 待专项 | 固定镜像已确认，待制品级组件版本或厂商补丁证明。 |
+| [#54333](https://github.com/keycloak/keycloak/issues/54333) | 随发行包提供的 Brotli 组件修复 | 服务端／依赖 | 定向通过 | 盘点镜像中 483 个 JAR 和发行文件，Brotli4j 解码实现与原生库均为 0。Quarkus 的集成声明类仍在。上游修复排除了 Brotli4j 依赖。 |
 | [#54687](https://github.com/keycloak/keycloak/issues/54687) | MySQL 和 MariaDB 登录失败计数 | 服务端／数据库 | 定向通过 | 两套新库在普通失败登录间隔下均按 1、2、3 递增。管理端清除后为 0，正常登录成功。 |
 | [#54688](https://github.com/keycloak/keycloak/issues/54688) | 组织 identity-first 登录上下文 | 服务端／身份代理 | 相关证据 | 已有组织管理及普通代理登录的业务证据。待核对同组织新旧登录上下文隔离。 |
-| [#54689](https://github.com/keycloak/keycloak/issues/54689) | 主题 gzip 缓存资源约束 | 服务端 | 待专项 | 正常主题 gzip 测试只佐证资源加载。待核对缓存资源约束及上游修复依据。 |
+| [#54689](https://github.com/keycloak/keycloak/issues/54689) | 主题 gzip 缓存资源约束 | 服务端 | 相关证据 | 使用新建数据请求 3 个真实登录主题 CSS，共收到 15 次 gzip 响应，每个文件的正文在重复请求中一致。缓存文件数量为 0 → 3 → 3。固定源码以已解析的主题名称计算缓存键，发布项的资源边界仍待独立验收。 |
 | [#54690](https://github.com/keycloak/keycloak/issues/54690) | SAML 端点资源保护 | 服务端 | 相关证据 | SAML 登录和 Artifact/ECP 正常工作流已通过。端点资源保护待独立核验。 |
 | [#54691](https://github.com/keycloak/keycloak/issues/54691) | 浏览器注销会话归属 | 服务端／协议互操作 | 相关证据 | 已有 OIDC 正常注销和会话删除证据。官方公告对应的会话归属隔离待验证。 |
-| [#54692](https://github.com/keycloak/keycloak/issues/54692) | 旧 SAML 1.1 解析器保护 | 服务端 | 待专项 | 官方升级指南记录默认关闭 SAML 1.1。待验证服务端默认配置和兼容开关。 |
-| [#54693](https://github.com/keycloak/keycloak/issues/54693) | 旧 SAML 1.1 解析资源保护 | 服务端 | 待专项 | 同属旧解析器边界。待验证默认关闭和上游修复依据。 |
+| [#54692](https://github.com/keycloak/keycloak/issues/54692) | 旧 SAML 1.1 解析器保护 | 服务端 | 相关证据 | 发行 JAR 的 SAML 协议工厂默认关闭 1.1，新建服务的标准 SAML 2.0 元数据返回 200。显式启用旧解析器后的输入边界仍待专项。 |
+| [#54693](https://github.com/keycloak/keycloak/issues/54693) | 旧 SAML 1.1 解析资源保护 | 服务端 | 相关证据 | 发行 JAR 的 SAML 协议工厂默认关闭 1.1，SAML 2.0 元数据业务对照通过。显式启用旧解析器后的资源边界仍待专项。 |
 | [#54694](https://github.com/keycloak/keycloak/issues/54694) | DCR Mapper 的令牌声明边界 | SDK／服务端 | 相关证据 | 已验证 realm 与注册策略白名单交集。该发布项的声明边界仍需独立证据。 |
 | [#54695](https://github.com/keycloak/keycloak/issues/54695) | CIBA 保留字段验证 | 协议互操作 | 定向通过 | 对无害类型元数据的独立表单字段返回 400 invalid_request，未分配请求 ID，也未通知认证渠道。正常请求返回 200 并到达认证渠道。Poll、ping 和签名请求另有标准协议证据。 |
 | [#54696](https://github.com/keycloak/keycloak/issues/54696) | UMA 资源类型与所有者隔离 | 协议互操作 | 相关证据 | 已有资源共享、所有者授权、撤销和拒绝。资源类型边界待补证。 |
@@ -36,7 +38,7 @@
 | [#54701](https://github.com/keycloak/keycloak/issues/54701) | Protocol Mapper 保留资源访问声明 | SDK／服务端 | 相关证据 | 已有 Mapper 委派写入约束。各令牌和协议输出的声明边界待补证。 |
 | [#54702](https://github.com/keycloak/keycloak/issues/54702) | DCR 禁止修改 realm 默认角色 | SDK／协议互操作 | 定向通过 | 注册修改默认角色被拒绝，独立回读确认 realm 默认角色组合保持既有状态。 |
 | [#54703](https://github.com/keycloak/keycloak/issues/54703) | 上游 Java SAML Adapter 的 issuer 校验 | 上游 Adapter | 相关证据 | 新建 SAML 客户端下载的安装 XML 使用实际 realm URL 作为 IdP entityID。Java Adapter 本身的 issuer 校验待运行验证。 |
-| [#54704](https://github.com/keycloak/keycloak/issues/54704) | 管理 CLI 自定义信任库 | 服务端／CLI | 待专项 | 待验证 kcadm 和 kcreg 使用显式导入证书时的正常 TLS 互操作。 |
+| [#54704](https://github.com/keycloak/keycloak/issues/54704) | 管理 CLI 自定义信任库 | 服务端／CLI | 相关证据 | 两个 CLI 分别使用显式导入证书的 PKCS12 信任库访问 HTTPS。kcadm 成功读 realm，kcreg 成功注册新客户端，Admin REST 独立确认注册。未受信任证书的拒绝场景仍待验收。 |
 | [#54705](https://github.com/keycloak/keycloak/issues/54705) | DCR 默认 Mapper 策略保护保留声明 | SDK／服务端 | 相关证据 | 已有 Mapper 白名单正反向验收。默认策略的独立声明断言待补证。 |
 | [#54706](https://github.com/keycloak/keycloak/issues/54706) | 认证并发与会话隔离 | 服务端 | 相关证据 | 已有普通登录及会话连续性。认证并发隔离待专项核对。 |
 | [#54707](https://github.com/keycloak/keycloak/issues/54707) | 身份自动关联要求可信邮件 | 服务端／身份代理 | 相关证据 | 已有确认式代理关联和组织首次入会的邮件验证证据。以既有本地身份进行自动关联时的 verified 与 Trust Email 组合待验收。 |
@@ -71,18 +73,18 @@
 | [#44474](https://github.com/keycloak/keycloak/issues/44474) | 会话数上限与登录失败计数分开 | 服务端 | 定向通过 | 单会话上限下，第二次正确登录返回 403，只保留原会话，失败计数为 0。退出原会话后可重新登录。 |
 | [#51630](https://github.com/keycloak/keycloak/issues/51630) | 保护 FGAP v2 内部 admin-permissions 客户端 | SDK／服务端 | 定向通过 | 委派更新与删除均返回 403，独立回读确认内部客户端保留。 |
 | [#52870](https://github.com/keycloak/keycloak/issues/52870) | 带独立用户 JSON 的 realm 导入 | 服务端／导入 | 定向通过 | 空库启动导入新建 realm JSON 和独立用户文件。Admin API 回读及导入用户的正常登录均通过。 |
-| [#52968](https://github.com/keycloak/keycloak/issues/52968) | 运行期间 UDP 套接字生命周期 | 服务端 | 待专项 | 待固定网络拓扑的长时运行与资源趋势证据。 |
+| [#52968](https://github.com/keycloak/keycloak/issues/52968) | 运行期间 UDP 套接字生命周期 | 服务端 | 定向通过 | 实际 IPv6 代理链路验证了裸 IPv6 信任地址的规范化。100 次正常 OIDC discovery 均使用预期 issuer，6 次采样的 UDP 套接字总数均为 1。长时生产负载仍待观察。 |
 | [#53238](https://github.com/keycloak/keycloak/issues/53238) | 冷 gzip 主题缓存的并发读取 | 服务端 | 定向通过 | 新容器首次并发请求真实登录主题的 gzip CSS，12 次均返回 200，解码后的内容 SHA-256 一致。 |
 | [#53507](https://github.com/keycloak/keycloak/issues/53507) | 下游文档建议内容 | 上游文档 | 上游维护 | 公告登记为文档变更，归入发布文档审阅。 |
 | [#53510](https://github.com/keycloak/keycloak/issues/53510) | 下游文档中的讨论链接范围 | 上游文档 | 上游维护 | 公告登记为文档变更，归入发布文档审阅。 |
-| [#53612](https://github.com/keycloak/keycloak/issues/53612) | BCFIPS 加载 PEM 中的全部证书 | 服务端／FIPS | 待专项 | 需要受支持的 FIPS JVM 和 BCFIPS 依赖。 |
+| [#53612](https://github.com/keycloak/keycloak/issues/53612) | BCFIPS 加载 PEM 中的全部证书 | 服务端／FIPS | 定向通过 | 本地镜像加载固定版本的 BCFIPS 依赖并以 non-strict 启动。生成的 PKCS12 信任库匹配单个 PEM 中的两张证书指纹。strict 模式和合规性仍需启用 FIPS 的 Linux 主机及受支持的 JVM。 |
 | [#53634](https://github.com/keycloak/keycloak/issues/53634) | 身份代理错误事件及响应处理 | 服务端／身份代理 | 相关证据 | 正常代理流程及部分拒绝场景已验证。错误事件计数和响应内容待核验。 |
 | [#53760](https://github.com/keycloak/keycloak/issues/53760) | SAML XML 验证并发安全 | 服务端 | 相关证据 | 已有 SAML 业务验收。普通 XML 验证的并发行为待专项。 |
-| [#53804](https://github.com/keycloak/keycloak/issues/53804) | Operator Helm 版本标签 | 上游 Operator | 待专项 | 需要实际发布 chart 的渲染结果与部署版本核对。 |
+| [#53804](https://github.com/keycloak/keycloak/issues/53804) | Operator Helm 版本标签 | 上游 Operator | 定向通过 | 官方 OCI chart 渲染 18 个 Kubernetes 对象。chart 版本、appVersion、13 处版本标签及 Operator 镜像标签均为 26.8.2。集群安装和调谐需要 Kubernetes 环境。 |
 | [#53809](https://github.com/keycloak/keycloak/issues/53809) | 拓扑变更期间分布式缓存锁竞争 | 服务端／缓存 | 相关证据 | 同版滚动 v1/v2 均有双节点证据。缓存锁竞争期间的拓扑变更待单独验收。 |
 | [#53819](https://github.com/keycloak/keycloak/issues/53819) | 下游 Keycloak 链接 | 上游文档 | 上游维护 | 公告登记为文档变更，归入发布文档审阅。 |
 | [#53834](https://github.com/keycloak/keycloak/issues/53834) | OID4VC 控制台可见性测试稳定性 | 上游测试 | 上游维护 | 公告项调整上游 E2E 测试。SDK 侧已有钱包业务证据。 |
-| [#53898](https://github.com/keycloak/keycloak/issues/53898) | 数据库锁获取失败的诊断 | 服务端／数据库 | 待专项 | 待在独立数据库中核对启动失败原因的可观察性。 |
+| [#53898](https://github.com/keycloak/keycloak/issues/53898) | 数据库锁获取失败的诊断 | 服务端／数据库 | 定向通过 | 新建 PostgreSQL 中由独立事务持有启动行锁。Keycloak 退出时保留 PostgreSQL 的 lock timeout 原因，未出现二次空指针异常。释放行锁后重启，OIDC discovery 返回 200。 |
 | [#53901](https://github.com/keycloak/keycloak/issues/53901) | 启动失败后的日志过滤 | 服务端 | 定向通过 | 隔离容器连接配置的不可用数据库后退出，日志保留 JDBC 连接失败诊断，且无二次日志过滤异常。 |
 | [#53930](https://github.com/keycloak/keycloak/issues/53930) | 用户存储按配置周期同步 | 服务端／LDAP | 定向通过 | 在独立新数据中分别完成四次 LDAP 全量与四次变更用户同步。每次同步均超过一秒，按配置约每 10 秒启动。 |
 | [#53999](https://github.com/keycloak/keycloak/issues/53999) | Locale Cookie 只写入受支持的语言 | 服务端／登录 | 定向通过 | 普通自助注册页接受已配置的 de 并写入 Cookie，未将不受支持的 zz 持久化。 |

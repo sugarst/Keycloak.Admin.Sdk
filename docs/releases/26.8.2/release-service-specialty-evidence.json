@@ -1,0 +1,245 @@
+{
+  "schemaVersion": 1,
+  "completedUtc": "2026-11-23T04:12:15.176Z",
+  "keycloakVersion": "26.8.2",
+  "keycloakSourceCommit": "e514445f9dcdabc5bdcf67cab56c1e49655de067",
+  "image": {
+    "tag": "quay.io/keycloak/keycloak:26.8.2-3",
+    "platform": "linux/amd64",
+    "repositoryDigest": "quay.io/keycloak/keycloak@sha256:7e66a96e4739239070aeaf72e4c5decf0f7f682cfc725b9f7ea2b336eaba38b3",
+    "imageId": "sha256:4938c322f47d3736c580fc57bb335d35c784489bc7e6d8fbbd52dbdd1b27e72e"
+  },
+  "newFixtureData": true,
+  "upstreamRelease": "https://www.keycloak.org/2026/11/keycloak-2682-released",
+  "observations": [
+    {
+      "issue": 54333,
+      "outcome": "targeted-pass",
+      "scope": "Inspect the released server distribution for Brotli4j or bundled native decoder implementations.",
+      "results": {
+        "jarArchivesScanned": 483,
+        "brotliFiles": 0,
+        "brotliImplementationEntries": 0,
+        "quarkusBrotliFeatureClasses": 1
+      },
+      "remaining": [],
+      "sources": [
+        "https://github.com/keycloak/keycloak/issues/54333",
+        "https://github.com/keycloak/keycloak/pull/54354"
+      ]
+    },
+    {
+      "issue": 54689,
+      "outcome": "related-evidence",
+      "scope": "Repeat ordinary published login-theme CSS requests after warm-up. The pinned ThemeResource also uses the resolved theme name for the cache key.",
+      "results": {
+        "publishedStylesheets": 3,
+        "successfulGzipRequests": 15,
+        "cacheFiles": [
+          0,
+          3,
+          3
+        ],
+        "repeatedDecodedBodiesIdentical": true
+      },
+      "remaining": [
+        "Published security-specific resource boundary has no local end-to-end evidence."
+      ],
+      "sources": [
+        "https://github.com/keycloak/keycloak/issues/54689",
+        "https://github.com/keycloak/keycloak/tree/e514445f9dcdabc5bdcf67cab56c1e49655de067/services/src/main/java/org/keycloak/services/resources/ThemeResource.java"
+      ]
+    },
+    {
+      "issue": 54692,
+      "outcome": "related-evidence",
+      "scope": "Inspect the packaged SAML protocol factory default and read standard SAML 2.0 metadata from a new realm datastore.",
+      "results": {
+        "packagedSaml11FactoryDefault": false,
+        "saml2MetadataHttpStatus": 200,
+        "saml2IssuerMatchesRealm": true
+      },
+      "remaining": [
+        "The opt-in SAML 1.1 parser input handling remains unverified."
+      ],
+      "sources": [
+        "https://github.com/keycloak/keycloak/issues/54692",
+        "https://www.keycloak.org/docs/26.8.2/upgrading/"
+      ]
+    },
+    {
+      "issue": 54693,
+      "outcome": "related-evidence",
+      "scope": "Inspect the packaged SAML protocol factory default and read standard SAML 2.0 metadata from a new realm datastore.",
+      "results": {
+        "packagedSaml11FactoryDefault": false,
+        "saml2MetadataHttpStatus": 200,
+        "saml2IssuerMatchesRealm": true
+      },
+      "remaining": [
+        "The opt-in SAML 1.1 parser resource boundary remains unverified."
+      ],
+      "sources": [
+        "https://github.com/keycloak/keycloak/issues/54693",
+        "https://www.keycloak.org/docs/26.8.2/upgrading/"
+      ]
+    },
+    {
+      "issue": 54704,
+      "outcome": "related-evidence",
+      "scope": "Use the bundled kcadm and kcreg over real HTTPS with separate CLI configurations and a custom PKCS12 truststore containing the fixture certificate.",
+      "results": {
+        "status": "passed",
+        "imageId": "sha256:4938c322f47d3736c580fc57bb335d35c784489bc7e6d8fbbd52dbdd1b27e72e",
+        "fixtureServerCertificate": "self-signed with fixture DNS SAN",
+        "store": "PKCS12 with imported fixture certificate",
+        "kcadmReadMasterRealm": true,
+        "kcregRegisteredFreshClient": true,
+        "independentAdminReadConfirmedRegistration": true,
+        "untrustedCertificateDenial": "pending",
+        "assertion": "Both bundled CLIs completed real HTTPS operations using separate CLI configs and an explicit PKCS12 truststore with the approved server certificate."
+      },
+      "remaining": [
+        "The CLI denial when the certificate is outside the configured truststore remains pending."
+      ],
+      "sources": [
+        "https://github.com/keycloak/keycloak/issues/54704",
+        "https://www.keycloak.org/docs/26.8.2/upgrading/"
+      ]
+    },
+    {
+      "issue": 52968,
+      "outcome": "targeted-pass",
+      "scope": "Use an IPv6 bridge with a real reverse proxy and a bare trusted IPv6 address. Verify the frontend issuer and sample UDP sockets during normal discovery requests.",
+      "results": {
+        "status": "passed",
+        "ipv6Bridge": true,
+        "proxyToServerAddressFamily": "IPv6",
+        "trustedLiteralNormalizedToBrackets": true,
+        "discoveryRequests": 100,
+        "matchingIssuers": 100,
+        "udpSocketCounts": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "protocolCounters": [
+          "udp",
+          "udp6"
+        ],
+        "observation": "bounded smoke test"
+      },
+      "remaining": [
+        "Long-duration observation under production traffic remains open."
+      ],
+      "sources": [
+        "https://github.com/keycloak/keycloak/issues/52968"
+      ]
+    },
+    {
+      "issue": 53612,
+      "outcome": "targeted-pass",
+      "scope": "Run the pinned image with BCFIPS non-strict and four documented dependencies. The initial JVM truststore supplied a different anchor, and the generated Keycloak PKCS12 contained both distinct certificates in the fixture PEM.",
+      "results": {
+        "status": "passed",
+        "imageId": "sha256:4938c322f47d3736c580fc57bb335d35c784489bc7e6d8fbbd52dbdd1b27e72e",
+        "mode": "BCFIPS non-strict",
+        "serverReady": true,
+        "hostFipsKernelFlag": "unavailable",
+        "approvedModeCertification": "not evaluated",
+        "independentJvmTruststoreAnchor": true,
+        "pemCertificates": 2,
+        "matchedCertificateFingerprints": 2,
+        "generatedStoreType": "PKCS12",
+        "bundleSha256": "630b470e2ed3d9535ae73703d168798eec838d08e88ac3bf171ecdf300796cc8",
+        "dependencies": [
+          {
+            "name": "bc-fips-2.1.3.jar",
+            "sha256": "f55fc476ede820d5c03fe87e6ced5bb0095e1dc30b387445846a3ff0274f8c0e"
+          },
+          {
+            "name": "bcpkix-fips-2.1.13.jar",
+            "sha256": "cf161ba2f6b4505816f4661663b3e0771184a50ee5b178a0018c817b336f0e5c"
+          },
+          {
+            "name": "bctls-fips-2.1.25.jar",
+            "sha256": "af604aa5b337725872651067a819ebc03aa298685572b0b2ad5343c786faad0a"
+          },
+          {
+            "name": "bcutil-fips-2.1.8.jar",
+            "sha256": "f44904f61552c823bcc3686a24052ee3135212d547754eaa2ff6532e210103cb"
+          }
+        ],
+        "assertion": "A real 26.8.2 server used BCFIPS non-strict on fresh data. Its generated system truststore contained both distinct certificates from one PEM file.",
+        "providerObserved": "BCFIPS and BCJSSE",
+        "defaultJvmTruststoreConfiguredExplicitly": true,
+        "inputCertificatesAbsentFromJvmTruststore": true
+      },
+      "remaining": [
+        "Strict mode and FIPS compliance require a FIPS-enabled Linux host and a supported JVM."
+      ],
+      "sources": [
+        "https://github.com/keycloak/keycloak/issues/53612",
+        "https://www.keycloak.org/server/fips"
+      ]
+    },
+    {
+      "issue": 53804,
+      "outcome": "targeted-pass",
+      "scope": "Pull the official OCI chart at 26.8.2 and render it locally with CRDs. Compare the chart, workload labels, and Operator image.",
+      "results": {
+        "status": "passed",
+        "tool": "Helm v4.2.0+g0646808",
+        "chart": "oci://quay.io/keycloak/keycloak-operator-helm",
+        "ociDigest": "sha256:7c540fcbc93274c8934a81abc43a11cce0bb35f2de48067edf345104b934f2b9",
+        "archiveSha256": "fcd77d83bae5b3f1ca91e5335cba41a76c68a6af3a863dbfc28418ced1cd1254",
+        "chartVersion": "26.8.2",
+        "appVersion": "26.8.2",
+        "renderedObjects": 18,
+        "versionLabelOccurrences": 13,
+        "deploymentVersionLabel": "26.8.2",
+        "podTemplateVersionLabel": "26.8.2",
+        "operatorImage": "quay.io/keycloak/keycloak-operator:26.8.2",
+        "deploymentSourceCommit": "e514445f9dcdabc5bdcf67cab56c1e49655de067",
+        "kubernetesInstallation": "not run"
+      },
+      "remaining": [
+        "Cluster installation and reconciliation require a Kubernetes environment."
+      ],
+      "sources": [
+        "https://github.com/keycloak/keycloak/issues/53804",
+        "https://www.keycloak.org/operator/installation"
+      ]
+    },
+    {
+      "issue": 53898,
+      "outcome": "targeted-pass",
+      "scope": "Hold a PostgreSQL row lock in a separate transaction on a database initialized by 26.8.2. Observe the failed boot diagnostic, release the lock, and verify startup recovery.",
+      "results": {
+        "status": "passed",
+        "database": "postgres:18.0-alpine3.22",
+        "postgresqlVersion": "18.0",
+        "freshDatabase": true,
+        "lockNamespace": "KEYCLOAK_BOOT",
+        "exitCode": 1,
+        "originalDiagnostic": "canceling statement due to lock timeout",
+        "secondaryNullPointerException": false,
+        "recoveredHttpStatus": 200,
+        "cliLockDiagnostic": "Could not acquire change log lock within specified timeout 4 seconds. Currently locked by other transaction"
+      },
+      "remaining": [],
+      "sources": [
+        "https://github.com/keycloak/keycloak/issues/53898"
+      ]
+    }
+  ],
+  "pendingProtocolDenials": [
+    54713,
+    54711,
+    54712,
+    53535
+  ]
+}
