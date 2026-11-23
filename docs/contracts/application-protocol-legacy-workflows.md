@@ -1,12 +1,12 @@
-# 应用协议选定工作流验收
+# 兼容应用协议工作流验收
 
-固定 Keycloak 26.8.2；验证输入指纹 `e393bc43c3785d4b707a9b3a4f4e226f5c2abfc53da8f12ebb4374c80bf64535`。
+固定 Keycloak 26.8.2，验证输入指纹 `9e8bc9f0d97051e44c0e2d286f6682875d93230c6bd6fca32a398b74b5ed82dc`。
 
 | 运行模式 | 业务断言 | 不可变证据 |
 | --- | --- | --- |
-| managed | 20/20 | [43a7a16ae542](application-protocol-evidence/43a7a16ae5427fb97dc11f57ce3a57f508f099c54e1e8c3432100f6401316778.json) |
-| native-aot | 20/20 | [9badabb70f50](application-protocol-evidence/9badabb70f50cd8855ad98ad9d83a8648b03c1509db6fb90d4ede8cbf71e6df4.json) |
+| managed | 20/20 | [fa22aa514303](application-protocol-evidence/fa22aa514303225a1d4955cdb872a544df72072e3ed20816bc4f17ef98d116cd.json) |
+| native-aot | 20/20 | [901061884255](application-protocol-evidence/9010618842555bc69d868cf35a5588783e6d079adfa34e8750ae4510a5e556bc.json) |
 
-覆盖安全登录、PAR、客户端委托、AuthZen、SCIM、账户、注册、UMA 共享与授权、Client Admin v2、管理端 OpenAPI、Docker 令牌、DPoP、身份代理和 SSF 的选定流程。两个运行模式均在隔离容器网络实际调用固定服务端；未验证能力不会继承这些结果。
+覆盖 FGAP v1 下的旧版令牌交换、授权模拟身份和旧版身份代理令牌访问。两个运行模式均在隔离容器网络实际调用固定服务端。
 
 报告不自行晋升（`promoted=false`）。独立工具依据审阅计划、全部验收标准和当前输入，为明确运行模式/RID 生成支持配置。稳定与非稳定能力分别晋升。当前应用覆盖与责任边界由 [全能力矩阵](platform-capability-matrix.md) 和完整发布门禁共同确定。

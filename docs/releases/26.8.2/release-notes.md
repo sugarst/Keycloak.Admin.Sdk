@@ -52,9 +52,11 @@ options.Token = new() { Scope = "kc-admin-api" };
 | 兼容应用协议 | 20/20 | 20/20 |
 | 26.8.2 专项 HTTP 观察 | 115 | 115 |
 
-两种运行模式各有 520 项 Admin 业务证据，来自 v2 稳定路线、v1 专属 14 项以及独立验收的 28 项非 Stable 操作。Managed 具备 52 个应用能力族的证据，Native AOT 具备 50 个。ASP.NET Core 浏览器 OIDC 和 SAML 宿主集成的证据适用于 Managed。完整本地候选通过 740 项测试、覆盖率、严格原生包消费、两条路线各 14 项负向门禁，以及 Client Types、SSF、OID4VC VCI 六组受保护复验。 [Admin 真实验收](../../contracts/full-live-acceptance.md) · [全能力矩阵](../../contracts/platform-capability-matrix.md) · [候选清单与包哈希](9f7dc595c7ad385c6b3baa2b5caa4e895fa98cc94aef3991b16050807ea42415.json)
+两种运行模式各有 520 项 Admin 业务证据，来自 v2 稳定路线、v1 专属 14 项以及独立验收的 28 项非 Stable 操作。Managed 具备 52 个应用能力族的证据，Native AOT 具备 50 个。ASP.NET Core 浏览器 OIDC 和 SAML 宿主集成的证据适用于 Managed。完整本地候选通过 740 项测试、覆盖率、严格原生包消费、两条路线各 14 项负向门禁，以及 Client Types、SSF、OID4VC VCI 六组受保护复验。 [Admin 真实验收](../../contracts/full-live-acceptance.md) · [全能力矩阵](../../contracts/platform-capability-matrix.md) · [候选清单与包哈希](ac0894ec2e88ca6489d369cfdcbe448779651175d4ef7ffe8cdcb514e398c94d.json)
 
 28 项服务端专项中，23 项通过具体本地场景。新增证据覆盖声明式 `UiPage` 的实际浏览器渲染、保存和重载，滚动更新 v1/v2 各两节点同版在线替换，以及 PostgreSQL 优化启动下的混合 OTLP。Collector 经 HTTP/protobuf 收到日志，经 gRPC 收到跟踪和指标。外置缓存与多站点、TiDB、IPA/Tuura 和合规 FIPS 仍需专用环境。 [28 项服务端观察与补齐方案](server-validation.md)
+
+官方公告的 59 项变更已逐项记录验收范围和缺口。使用新建数据补跑的验证包括标准令牌交换有效期、MySQL 与 MariaDB 登录失败计数、会话上限、分文件 realm 导入、冷主题缓存、LDAP 同步周期和 locale Cookie。 [59 项发布验收矩阵](release-issue-acceptance.md) · [专项证据](release-issue-acceptance-evidence.json)
 
 ## English upgrade notes
 
@@ -108,6 +110,8 @@ Upstream also updates Quarkus to `3.40.1.1` and fixes issues in organization and
 | Legacy application protocols | 20/20 | 20/20 |
 | Focused 26.8.2 HTTP observations | 115 | 115 |
 
-Each runtime has live evidence for 520 Admin operations, drawn from stable v2, 14 v1-only operations, and 28 independently verified non-Stable operations. Managed has evidence for 52 application capability families, and Native AOT for 50. The ASP.NET Core browser OIDC and SAML hosting results apply to Managed. The full local candidate passed 740 tests, coverage and strict native package consumption, 14 negative controls per FGAP route, and six guarded runs for Client Types, SSF, and OID4VC VCI. [Live Admin acceptance](../../contracts/full-live-acceptance.md) · [Platform matrix](../../contracts/platform-capability-matrix.md) · [Candidate manifest and package hashes](9f7dc595c7ad385c6b3baa2b5caa4e895fa98cc94aef3991b16050807ea42415.json)
+Each runtime has live evidence for 520 Admin operations, drawn from stable v2, 14 v1-only operations, and 28 independently verified non-Stable operations. Managed has evidence for 52 application capability families, and Native AOT for 50. The ASP.NET Core browser OIDC and SAML hosting results apply to Managed. The full local candidate passed 740 tests, coverage and strict native package consumption, 14 negative controls per FGAP route, and six guarded runs for Client Types, SSF, and OID4VC VCI. [Live Admin acceptance](../../contracts/full-live-acceptance.md) · [Platform matrix](../../contracts/platform-capability-matrix.md) · [Candidate manifest and package hashes](ac0894ec2e88ca6489d369cfdcbe448779651175d4ef7ffe8cdcb514e398c94d.json)
 
 Twenty-three of the 28 server flags passed specific local scenarios. The new evidence covers browser rendering, editing, and reloading for a declarative `UiPage` provider, live replacement of both nodes for each same-release rolling mode, and mixed OTLP with optimized PostgreSQL startup. The Collector received logs over HTTP/protobuf and traces and metrics over gRPC. External caches and multi-site operation, TiDB, IPA/Tuura, and compliant FIPS still need dedicated environments. [28 server observations and follow-up plan](server-validation.md)
+
+The issue matrix records evidence and gaps for all 59 changes in the official announcement. Fresh-data checks cover standard token-exchange expiration, MySQL and MariaDB login-failure counters, session limits, realm import with a separate user file, cold theme caches, LDAP scheduling, and locale cookies. [59-issue release acceptance matrix](release-issue-acceptance.md) · [Targeted evidence](release-issue-acceptance-evidence.json)

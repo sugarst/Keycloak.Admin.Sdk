@@ -13,7 +13,9 @@ return await ScriptHost.ExecuteAsync(args, "dotnet run --file tools/Check-Applic
 {
     string root = ScriptHost.RepositoryRoot(); var baseline = TargetBaseline.Load(root); string fingerprint = LiveEvidence.ValidationFingerprint(root);
     var rows = new List<string>();
-    string suffix = args.Contains("--legacy") ? "-legacy" : "";
+    bool legacy = args.Contains("--legacy");
+    string profileName = legacy ? "legacy" : "standard";
+    string suffix = legacy ? "-legacy" : "";
     foreach (string mode in new[] { "managed", "native-aot" })
     {
         string source = Path.Combine(root, "artifacts/application-protocols", mode + suffix + ".json");
@@ -23,7 +25,7 @@ return await ScriptHost.ExecuteAsync(args, "dotnet run --file tools/Check-Applic
         bool native = mode == "native-aot";
         var checks = report.GetProperty("checks").EnumerateArray().Select(c => c.GetString()!).ToArray();
         if (Text("runtime") != mode) throw new InvalidDataException("Protocol workflow report is stored under the wrong runtime.");
-        if ((report.TryGetProperty("serverProfile", out var profile) ? profile.GetString() : "standard") != (suffix.Length == 0 ? "standard" : "legacy"))
+        if ((report.TryGetProperty("serverProfile", out var profile) ? profile.GetString() : "standard") != profileName)
             throw new InvalidDataException("Protocol workflow report is stored under the wrong server profile.");
         string binary = Path.Combine(root, native ? "artifacts/aot/application-protocols/Keycloak.Admin.Sdk.IntegrationTests" : "tests/Keycloak.Admin.Sdk.IntegrationTests/bin/Release/net10.0/Keycloak.Admin.Sdk.IntegrationTests.dll");
         if (Text("executableSha256") != Convert.ToHexStringLower(SHA256.HashData(await File.ReadAllBytesAsync(binary, ct))))
@@ -43,9 +45,13 @@ return await ScriptHost.ExecuteAsync(args, "dotnet run --file tools/Check-Applic
     {
         foreach (string mode in new[] { "managed", "native-aot" }) ApplicationAcceptance.Promote(root, Path.Combine(root, "artifacts/application-protocols", mode + suffix + ".json"));
         await ScriptHost.RunCheckedAsync(root, "dotnet", ["run", "--file", "tools/Generate-PlatformMatrix.cs"], ct);
-        string markdown = "# 应用协议选定工作流验收\n\n" + $"固定 Keycloak {baseline.Version}；验证输入指纹 `{fingerprint}`。\n\n"
+        string title = legacy ? "兼容应用协议工作流验收" : "应用协议选定工作流验收";
+        string scope = legacy
+            ? "覆盖 FGAP v1 下的旧版令牌交换、授权模拟身份和旧版身份代理令牌访问。两个运行模式均在隔离容器网络实际调用固定服务端。"
+            : "覆盖安全登录、PAR、客户端委托、AuthZen、SCIM、账户、注册、UMA 共享与授权、Client Admin v2、管理端 OpenAPI、Docker 令牌、DPoP、身份代理和 SSF 的选定流程。两个运行模式均在隔离容器网络实际调用固定服务端。";
+        string markdown = $"# {title}\n\n固定 Keycloak {baseline.Version}，验证输入指纹 `{fingerprint}`。\n\n"
             + "| 运行模式 | 业务断言 | 不可变证据 |\n| --- | --- | --- |\n" + string.Join('\n', rows)
-            + "\n\n覆盖安全登录、PAR、客户端委托、AuthZen、SCIM、账户、注册、UMA 共享与授权、Client Admin v2、管理端 OpenAPI、Docker 令牌、DPoP、身份代理和 SSF 的选定流程。两个运行模式均在隔离容器网络实际调用固定服务端；未验证能力不会继承这些结果。\n\n"
+            + "\n\n" + scope + "\n\n"
             + "报告不自行晋升（`promoted=false`）。独立工具依据审阅计划、全部验收标准和当前输入，为明确运行模式/RID 生成支持配置。稳定与非稳定能力分别晋升。当前应用覆盖与责任边界由 [全能力矩阵](platform-capability-matrix.md) 和完整发布门禁共同确定。\n";
         await File.WriteAllTextAsync(Path.Combine(root, "docs/contracts/application-protocol" + suffix + "-workflows.md"), markdown, ct);
     }

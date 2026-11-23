@@ -1,0 +1,238 @@
+{
+  "schemaVersion": 1,
+  "completedUtc": "2026-11-23T02:31:15.6857381Z",
+  "keycloakVersion": "26.8.2",
+  "keycloakSourceCommit": "e514445f9dcdabc5bdcf67cab56c1e49655de067",
+  "image": {
+    "tag": "quay.io/keycloak/keycloak:26.8.2-3",
+    "platform": "linux/amd64",
+    "repositoryDigest": "quay.io/keycloak/keycloak@sha256:7e66a96e4739239070aeaf72e4c5decf0f7f682cfc725b9f7ea2b336eaba38b3",
+    "imageId": "sha256:4938c322f47d3736c580fc57bb335d35c784489bc7e6d8fbbd52dbdd1b27e72e"
+  },
+  "newFixtureData": true,
+  "observations": [
+    {
+      "issue": 52870,
+      "outcome": "targeted-pass",
+      "observations": [
+        {
+          "profile": "release-compat",
+          "result": {
+            "status": "passed",
+            "assertion": "Startup imported realm JSON and separately named users JSON into a fresh development datastore. Admin REST returned the expected user.",
+            "httpStatus": 200,
+            "users": 1,
+            "importedUserAuthenticated": true
+          }
+        }
+      ]
+    },
+    {
+      "issue": 53238,
+      "outcome": "targeted-pass",
+      "observations": [
+        {
+          "profile": "release-compat",
+          "result": {
+            "status": "passed",
+            "assertion": "First gzip access to a real login CSS asset returned 12 concurrent HTTP 200 responses with identical decoded content.",
+            "concurrentResponses": 12,
+            "contentEncoding": "gzip",
+            "decodedSha256": "2598a30815f0edac5dc78d48be3e92fca64695875fe1f47437da04362e9e7385"
+          }
+        }
+      ]
+    },
+    {
+      "issue": 53999,
+      "outcome": "targeted-pass",
+      "observations": [
+        {
+          "profile": "release-compat",
+          "result": {
+            "status": "passed",
+            "assertion": "A supported login locale is set and an unsupported locale value is not persisted to KEYCLOAK_LOCALE.",
+            "supported": "KEYCLOAK_LOCALE=de",
+            "unsupported": null
+          }
+        }
+      ]
+    },
+    {
+      "issue": 54184,
+      "outcome": "targeted-pass",
+      "observations": [
+        {
+          "profile": "release-compat",
+          "result": {
+            "status": "passed",
+            "assertion": "Admin server info and startup log identify the running Keycloak and Quarkus versions.",
+            "keycloak": "26.8.2",
+            "quarkus": "3.40.1.1"
+          }
+        }
+      ]
+    },
+    {
+      "issue": 54700,
+      "outcome": "targeted-pass",
+      "observations": [
+        {
+          "profile": "release-compat",
+          "result": {
+            "status": "passed",
+            "assertion": "Standard exchange issued signature-verified access and ID tokens that expire no later than the valid subject token, with a longer requester-lifetime control.",
+            "ttlBeforeSeconds": 75,
+            "ttlControlSeconds": 300,
+            "outputs": {
+              "access_token": {
+                "expiresRelativeToSubjectSeconds": 0,
+                "signed": true
+              },
+              "id_token": {
+                "expiresRelativeToSubjectSeconds": 0,
+                "signed": true
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "issue": 54703,
+      "outcome": "related",
+      "observations": [
+        {
+          "profile": "release-compat",
+          "result": {
+            "status": "passed",
+            "assertion": "Installation configuration for a normal SAML client emits the actual realm URL as the IdP entityID.",
+            "configuredRealmIssuerMatches": true,
+            "javaAdapterRuntimeVerified": false
+          }
+        }
+      ]
+    },
+    {
+      "issue": 53901,
+      "outcome": "targeted-pass",
+      "observations": [
+        {
+          "profile": "release-startup-diagnostic",
+          "result": {
+            "status": "passed",
+            "exitCode": 1,
+            "ordinaryJdbcConnectionRefused": true,
+            "secondaryLogFilterException": false,
+            "assertion": "An isolated startup with an unavailable configured database failed and preserved the JDBC diagnostic without a secondary logging-filter exception."
+          }
+        }
+      ]
+    },
+    {
+      "issue": 54687,
+      "outcome": "targeted-pass",
+      "observations": [
+        {
+          "profile": "release-mariadb",
+          "result": {
+            "status": "passed",
+            "backend": "mariadb",
+            "image": "mariadb:11.4",
+            "feature": "login-failures:v2",
+            "observedFailures": [
+              1,
+              2,
+              3
+            ],
+            "afterAdminClear": 0,
+            "validLogin": true,
+            "assertion": "Fresh SQL backend persistently counted three ordinary incorrect passwords sent outside the quick-login interval. Admin clear reset the count and normal login succeeded."
+          }
+        },
+        {
+          "profile": "release-mysql",
+          "result": {
+            "status": "passed",
+            "backend": "mysql",
+            "image": "mysql:8.4.7",
+            "feature": "login-failures:v2",
+            "observedFailures": [
+              1,
+              2,
+              3
+            ],
+            "afterAdminClear": 0,
+            "validLogin": true,
+            "assertion": "Fresh SQL backend persistently counted three ordinary incorrect passwords sent outside the quick-login interval. Admin clear reset the count and normal login succeeded."
+          }
+        }
+      ]
+    },
+    {
+      "issue": 44474,
+      "outcome": "targeted-pass",
+      "observations": [
+        {
+          "profile": "release-session-cap",
+          "result": {
+            "status": "passed",
+            "sessionLimit": 1,
+            "limitResponse": 403,
+            "activeSessions": 1,
+            "storedLoginFailures": 0,
+            "loginAfterLogout": true,
+            "assertion": "With a one-session policy, a second correct login was denied, the single existing session remained, and the brute-force counter stayed at zero. After logout, a new login succeeded."
+          }
+        }
+      ]
+    },
+    {
+      "issue": 53930,
+      "outcome": "targeted-pass",
+      "observations": [
+        {
+          "profile": "release-ldap-period",
+          "result": {
+            "status": "passed",
+            "configuredPeriodSeconds": 10,
+            "syncDurationsMilliseconds": [
+              3666,
+              2419,
+              3753,
+              2437
+            ],
+            "startIntervalsMilliseconds": [
+              10009,
+              10050,
+              10011
+            ],
+            "directoryUserImported": true,
+            "assertion": "Four timed LDAP full syncs each took more than one second and started near the configured 10-second interval. The imported user persisted."
+          }
+        },
+        {
+          "profile": "release-ldap-changed",
+          "result": {
+            "status": "passed",
+            "mode": "changed",
+            "configuredPeriodSeconds": 10,
+            "syncDurationsMilliseconds": [
+              3696,
+              2408,
+              2408,
+              2404
+            ],
+            "startIntervalsMilliseconds": [
+              9976,
+              9999,
+              9999
+            ],
+            "directoryUserImported": true,
+            "assertion": "Four timed LDAP changed-user syncs each took more than one second and started near the configured 10-second interval. The imported user persisted."
+          }
+        }
+      ]
+    }
+  ]
+}
