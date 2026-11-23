@@ -1,0 +1,120 @@
+{
+  "schemaVersion": 1,
+  "completedUtc": "2026-11-23T03:30:23.2287812Z",
+  "keycloakVersion": "26.8.2",
+  "keycloakSourceCommit": "e514445f9dcdabc5bdcf67cab56c1e49655de067",
+  "image": {
+    "tag": "quay.io/keycloak/keycloak:26.8.2-3",
+    "platform": "linux/amd64",
+    "repositoryDigest": "quay.io/keycloak/keycloak@sha256:7e66a96e4739239070aeaf72e4c5decf0f7f682cfc725b9f7ea2b336eaba38b3",
+    "imageId": "sha256:4938c322f47d3736c580fc57bb335d35c784489bc7e6d8fbbd52dbdd1b27e72e"
+  },
+  "freshDataOnly": true,
+  "observations": [
+    {
+      "issue": 53618,
+      "outcome": "targeted-pass",
+      "profile": "protocol-followup-primary",
+      "result": {
+        "status": "passed",
+        "minimumAcr": "urn:sdk:loa:2",
+        "passwordChallenges": 1,
+        "otpChallenges": 1,
+        "pendingAtOtp": true,
+        "signedAcr": "urn:sdk:loa:2",
+        "signedOtp": true,
+        "verifiedSubject": true,
+        "assertion": "Device client minimum ACR led to real password and OTP challenges. Token was pending at OTP and completed with independently verified subject, ACR and OTP."
+      }
+    },
+    {
+      "issue": 54695,
+      "outcome": "targeted-pass",
+      "profile": "protocol-followup-primary",
+      "result": {
+        "status": "passed",
+        "inputKind": "standalone type metadata",
+        "invalidHttpStatus": 400,
+        "invalidError": "invalid_request",
+        "invalidIssuedRequestId": false,
+        "invalidReachedChannel": false,
+        "validHttpStatus": 200,
+        "validIssuedRequestId": true,
+        "validReachedChannel": true,
+        "assertion": "Harmless standalone type metadata returned invalid_request before any CIBA channel call. A standard CIBA request reached the channel and was accepted."
+      }
+    },
+    {
+      "issue": 54713,
+      "outcome": "related",
+      "profile": "protocol-followup-primary",
+      "result": {
+        "status": "passed",
+        "verifiedSignature": true,
+        "issuerRealmAudienceMatches": true,
+        "scopedTokenHttpStatus": 200,
+        "ordinaryTokenHttpStatus": 401,
+        "sameSignedTokenOfflineMatchingAudienceAccepted": true,
+        "sameSignedTokenOfflineAlternateAudienceRejected": true,
+        "isolatedServerAudienceMismatch": "pending",
+        "assertion": "Admin REST accepted the correctly scoped and addressed token. The pinned TokenVerifier independently accepted or rejected that same signed token when only the expected audience changed, off-line. The same client without the management scope received 401."
+      }
+    },
+    {
+      "issue": 53815,
+      "outcome": "targeted-pass",
+      "profile": "protocol-followup-broker",
+      "result": {
+        "status": "passed",
+        "cases": {
+          "verified": {
+            "membership": true,
+            "localEmailChallenge": false
+          },
+          "unverified": {
+            "membershipBeforeEmail": false,
+            "verificationEmailDelivered": true,
+            "membershipAfterEmail": true,
+            "localEmailVerified": true
+          }
+        },
+        "trustEmailEnabled": true,
+        "realmGeneralVerifyEmail": false,
+        "assertion": "A verified OIDC identity joined normally. An explicitly unverified OIDC email stopped at local verification with no membership; the delivered verification link enabled membership."
+      }
+    },
+    {
+      "issue": 54711,
+      "outcome": "related",
+      "profile": "protocol-followup-broker",
+      "result": {
+        "status": "passed",
+        "signedBearerObserved": true,
+        "brokerSignatureValidation": true,
+        "downstreamIdTokenVerified": true,
+        "brokerLinkPersisted": true,
+        "proxyRestrictionSetting": "default",
+        "assertion": "A normal signed SAML bearer assertion from a second isolated 26.8.2 realm completed federation, produced a verified downstream ID token, and persisted the broker link."
+      }
+    },
+    {
+      "issue": 53535,
+      "outcome": "targeted-pass",
+      "profile": "managed-saml-diagnostic",
+      "result": {
+        "status": "passed",
+        "clientSignatureRequired": true,
+        "signedSpLogout": true,
+        "existingBrowserCookiesSent": false,
+        "sessionIndexFromVerifiedLogin": true,
+        "initialPostHttpStatus": 200,
+        "signedResponseCorrelated": true,
+        "keycloakSessionRemoved": true,
+        "unsignedRejection": "pending",
+        "evidenceFixture": "tests/Keycloak.Admin.Sdk.IntegrationTests/ProtocolSamlWorkflows.cs",
+        "fixtureSha256": "a0d916763f561fc1bf4cda2a9fc1e9825033d6c70b360c4b4f849cb9c271e00d",
+        "assertion": "A fresh HTTP client without prior browser cookies submitted a signed SP logout for the verified SessionIndex. The signed response was correlated and Admin REST no longer listed that session."
+      }
+    }
+  ]
+}

@@ -58,6 +58,8 @@ options.Token = new() { Scope = "kc-admin-api" };
 
 官方公告的 59 项变更已逐项记录验收范围和缺口。使用新建数据补跑的验证包括标准令牌交换有效期、MySQL 与 MariaDB 登录失败计数、会话上限、分文件 realm 导入、冷主题缓存、LDAP 同步周期和 locale Cookie。 [59 项发布验收矩阵](release-issue-acceptance.md) · [专项证据](release-issue-acceptance-evidence.json)
 
+协议补跑覆盖 Device 最低 ACR 与 OTP、CIBA 类型元数据拒绝、组织邮件验证和签名的 SAML SessionIndex 注销。SAML Broker 有正常签名 bearer 登录的证据。Admin 的 audience 匹配与不匹配已在同镜像的验签器中独立复核，Admin REST 的独立不匹配拒绝仍待验收。 [协议补跑证据](release-protocol-followup.json)
+
 ## English upgrade notes
 
 The local candidate targets **Keycloak 26.8.2** and **.NET 10**. When moving from 26.8.1, assign `kc-admin-api` to custom management clients first. Review delegated protocol mapper writes, dynamic registration policies, and assumptions about session statistics and token lifetimes. `Keycloak.Admin.Sdk`, `Keycloak.Admin.Sdk.Protocols`, `Keycloak.Admin.Sdk.Hosting`, and `Keycloak.Admin.Sdk.Platform` all use version `26.8.2`. NuGet publication is pending.
@@ -115,3 +117,5 @@ Each runtime has live evidence for 520 Admin operations, drawn from stable v2, 1
 Twenty-three of the 28 server flags passed specific local scenarios. The new evidence covers browser rendering, editing, and reloading for a declarative `UiPage` provider, live replacement of both nodes for each same-release rolling mode, and mixed OTLP with optimized PostgreSQL startup. The Collector received logs over HTTP/protobuf and traces and metrics over gRPC. External caches and multi-site operation, TiDB, IPA/Tuura, and compliant FIPS still need dedicated environments. [28 server observations and follow-up plan](server-validation.md)
 
 The issue matrix records evidence and gaps for all 59 changes in the official announcement. Fresh-data checks cover standard token-exchange expiration, MySQL and MariaDB login-failure counters, session limits, realm import with a separate user file, cold theme caches, LDAP scheduling, and locale cookies. [59-issue release acceptance matrix](release-issue-acceptance.md) · [Targeted evidence](release-issue-acceptance-evidence.json)
+
+Protocol follow-up covered Device minimum ACR with OTP, rejection of standalone CIBA type metadata, verification before organization membership, and signed SAML SessionIndex logout. SAML brokering completed with a standard signed bearer assertion. The pinned offline token verifier accepted and rejected the same signed admin token based solely on the expected audience. The equivalent Admin REST denial still needs end-to-end evidence. [Protocol follow-up evidence](release-protocol-followup.json)
