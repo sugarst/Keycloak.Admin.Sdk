@@ -6,7 +6,9 @@
 
 矩阵共有 **17 项定向通过、27 项有相关证据、9 项待专项、6 项属于上游维护**。首轮在 7 个隔离配置中采集了 10 个发布项的证据。协议补跑新增 6 个发布项的本地实测，其中 Device 最低 ACR、CIBA 代表性保留字段、组织按域入会和已签名的 SAML 后通道注销满足所列定向场景。 [首轮专项证据](release-issue-acceptance-evidence.json) · [协议补跑证据](release-protocol-followup.json)
 
-后续协议验收包括 Admin 服务端仅 audience 不匹配的隔离断言、自动关联既有身份、SAML Broker 的非 bearer 及 ProxyRestriction 边界、无签名后通道注销的独立拒绝证据。Operator Helm、FIPS、多站点与外置缓存需要对应的服务端环境或制品。兼容性验收采用新建 realm、用户及数据库。同版本滚动的证据见服务端专项。
+本轮直接检查固定镜像内的发行 JAR，确认 Admin audience 与 scope 校验、SAML Broker 的 bearer 与 ProxyRestriction 校验、SessionIndex 注销前的客户端签名约束均已打包。镜像内运行检查确认 ProxyRestriction 校验默认启用。新建环境复跑了正常 Admin、签名 bearer 代理登录和签名 SP 注销对照。 [发行 JAR 与运行对照证据](release-protocol-guard-evidence.json)
+
+后续协议验收仍包括 Admin REST 仅 audience 不匹配、SAML Broker 非 bearer 与 ProxyRestriction、以及无签名 SessionIndex 后通道注销这四个端到端拒绝场景。自动关联既有身份也待独立验收。Operator Helm、FIPS、多站点与外置缓存需要对应的服务端环境或制品。兼容性验收采用新建 realm、用户及数据库。同版本滚动的证据见服务端专项。
 
 ## 安全修复（33）
 
@@ -41,9 +43,9 @@
 | [#54708](https://github.com/keycloak/keycloak/issues/54708) | 无状态令牌与身份重新绑定防护 | 服务端 | 相关证据 | 同一 PostgreSQL 上的无状态 PKCE 跨节点接续已通过。客户端生命周期边界待验收。 |
 | [#54709](https://github.com/keycloak/keycloak/issues/54709) | SAML SOAP 请求体上限 | 服务端 | 相关证据 | 正常 SOAP Artifact 解析和 ECP 已通过。官方请求体上限配置及边界待核验。 |
 | [#54710](https://github.com/keycloak/keycloak/issues/54710) | FGAP v2 组合角色授权边界 | SDK／服务端 | 相关证据 | 已有角色组合与委派权限工作流。组合角色的发布特定限制待补证。 |
-| [#54711](https://github.com/keycloak/keycloak/issues/54711) | SAML Broker 的 bearer 确认 | 协议互操作／服务端 | 相关证据 | 两套本地 26.8.2 服务完成真实签名 bearer 断言的首次代理登录，下游 ID token 独立验签并确认关联持久化。非 bearer 的独立拒绝证据待补。 |
-| [#54712](https://github.com/keycloak/keycloak/issues/54712) | SAML Broker 的 ProxyRestriction 处理 | 协议互操作／服务端 | 相关证据 | 默认设置下，正常签名 bearer 断言成功完成代理登录。固定源码中 ProxyRestriction 校验默认启用，受限断言与配置切换的运行证据待补。 |
-| [#54713](https://github.com/keycloak/keycloak/issues/54713) | Admin REST scope 与 audience 校验 | SDK／服务端 | 相关证据 | 正确 scope 和 audience 的签名令牌实测返回 200，普通 scope 对照返回 401。用同镜像的 TokenVerifier 离线验签同一枚令牌，只改变期望 audience，匹配通过，不匹配拒绝。仅 audience 不匹配的 Admin REST 端到端拒绝仍待验收。 |
+| [#54711](https://github.com/keycloak/keycloak/issues/54711) | SAML Broker 的 bearer 确认 | 协议互操作／服务端 | 相关证据 | 发行 JAR 中确认 Broker 调用 bearer 确认数据校验。新建环境复跑正常签名 bearer 登录、下游 ID token 验签及身份关联持久化。非 bearer 的端到端拒绝仍待证据。 |
+| [#54712](https://github.com/keycloak/keycloak/issues/54712) | SAML Broker 的 ProxyRestriction 处理 | 协议互操作／服务端 | 相关证据 | 发行 JAR 中确认 Broker 将该配置传递给条件校验，镜像内运行检查确认默认启用。默认设置下正常签名 bearer 断言可以登录。受限断言的端到端拒绝仍待证据。 |
+| [#54713](https://github.com/keycloak/keycloak/issues/54713) | Admin REST scope 与 audience 校验 | SDK／服务端 | 相关证据 | 发行 JAR 确认 Admin audience 校验和 scope 校验均接入。新建环境复跑正常权限与令牌对照，得到 200、403、401。先前同镜像的 TokenVerifier 离线证明期望 audience 不匹配时拒绝。仅 audience 不匹配的 Admin REST 端到端拒绝仍待验收。 |
 | [#54714](https://github.com/keycloak/keycloak/issues/54714) | SAML Redirect 签名校验 | 协议互操作／服务端 | 相关证据 | Managed 的标准 Redirect 签名及关联检查通过。Broker 的发布特定输入验证待补证。 |
 
 ## 加固（5）
@@ -53,7 +55,7 @@
 | [#50917](https://github.com/keycloak/keycloak/issues/50917) | 会话统计按客户端可见性过滤 | SDK／服务端 | 定向通过 | FGAP v2 专项确认仅有 realm 查看权限时为空，manage-only 客户端不会进入统计。 |
 | [#52104](https://github.com/keycloak/keycloak/issues/52104) | OIDC 请求对象的 JWE 算法与密钥绑定 | 协议互操作 | 相关证据 | 已有签名与加密请求对象工作流。发布项的算法和密钥类型边界待补证。 |
 | [#53210](https://github.com/keycloak/keycloak/issues/53210) | 授权路径规范化 | 服务端／授权 | 相关证据 | 已有真实资源策略和 UMA 许可判定。服务端路径规范化的边界待核验。 |
-| [#53535](https://github.com/keycloak/keycloak/issues/53535) | SAML 后通道注销签名要求 | 协议互操作／服务端 | 定向通过 | Managed 在全新的 HTTP 会话中提交自有 SP 签名的 SessionIndex 注销，验证关联的已签名 POST 响应，并通过 Admin API 确认目标会话被移除。无签名拒绝待独立证据。 |
+| [#53535](https://github.com/keycloak/keycloak/issues/53535) | SAML 后通道注销签名要求 | 协议互操作／服务端 | 定向通过 | 发行 JAR 中确认签名约束先于按 SessionIndex 查找会话。新建环境复跑签名 SP 注销，初始请求无既有 SSO Cookie，关联响应通过验证，Admin API 确认会话已移除。无签名的端到端拒绝仍待证据。 |
 | [#53815](https://github.com/keycloak/keycloak/issues/53815) | 组织按域入会要求验证邮件 | 服务端／身份代理 | 定向通过 | 启用 IdP Trust Email、关闭 realm 通用邮件验证时，上游已验证用户正常入会。上游明确未验证的用户在完成本地邮件验证前没有成员资格，点击真实 SMTP 验证链接后邮件状态和成员资格均持久化。 |
 
 ## 增强（1）

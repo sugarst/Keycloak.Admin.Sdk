@@ -1,0 +1,99 @@
+{
+  "schemaVersion": 1,
+  "completedUtc": "2026-11-23T03:43:35.8500521Z",
+  "keycloakVersion": "26.8.2",
+  "keycloakSourceCommit": "e514445f9dcdabc5bdcf67cab56c1e49655de067",
+  "image": {
+    "tag": "quay.io/keycloak/keycloak:26.8.2-3",
+    "platform": "linux/amd64",
+    "repositoryDigest": "quay.io/keycloak/keycloak@sha256:7e66a96e4739239070aeaf72e4c5decf0f7f682cfc725b9f7ea2b336eaba38b3",
+    "imageId": "sha256:4938c322f47d3736c580fc57bb335d35c784489bc7e6d8fbbd52dbdd1b27e72e"
+  },
+  "distributionInspection": {
+    "networkDisabled": true,
+    "checks": {
+      "adminApiAudienceAndScopeGuardsPresent": true,
+      "bearerConfirmationValidationPresent": true,
+      "samlProxyRestrictionValidationEnabledByDefault": true,
+      "samlProxyRestrictionGuardPresent": true,
+      "samlLogoutSignatureGuardBeforeIndexedSessionLookup": true
+    },
+    "classes": {
+      "org.keycloak.services.resources.admin.AdminRoot": {
+        "jar": "org.keycloak.keycloak-services-26.8.2.jar",
+        "sha256": "c68877830d7698019b5d712893170c148e4516e93058825faa5170dc7c3412fb"
+      },
+      "org.keycloak.services.managers.AuthenticationManager": {
+        "jar": "org.keycloak.keycloak-services-26.8.2.jar",
+        "sha256": "8c5ebf8358e35186e082161cb27896dea4dbad7435ca6d3ff76ec08014b29511"
+      },
+      "org.keycloak.broker.saml.SAMLEndpoint": {
+        "jar": "org.keycloak.keycloak-services-26.8.2.jar",
+        "sha256": "dc87d13fb73b57b827c2aa0dac0c4c6c86d3548aa21f49033f6b7aa920b1fce1"
+      },
+      "org.keycloak.broker.saml.SAMLEndpoint$Binding": {
+        "jar": "org.keycloak.keycloak-services-26.8.2.jar",
+        "sha256": "f3750f519e2be4fb1487f38311b1e574af7cd4501f2e622eaf39e6ce94396246"
+      },
+      "org.keycloak.broker.saml.SAMLIdentityProviderConfig": {
+        "jar": "org.keycloak.keycloak-services-26.8.2.jar",
+        "sha256": "cdea5156fc0369c15392f500b1d730efbb88559126e9ce84f788df57fcfd58b7"
+      },
+      "org.keycloak.saml.validators.ConditionsValidator": {
+        "jar": "org.keycloak.keycloak-saml-core-26.8.2.jar",
+        "sha256": "a5973d142e513e4fc136d9a53ecef5c5e4e63bcb04ca75cf91c815efac872de0"
+      },
+      "org.keycloak.protocol.saml.SamlService$BindingProtocol": {
+        "jar": "org.keycloak.keycloak-services-26.8.2.jar",
+        "sha256": "6ef13d0ca3047b80c7f18e3b93392aec04d3f2f81120c9fd42ffe11517d4c79e"
+      }
+    }
+  },
+  "runtimeControls": {
+    "freshDataOnly": true,
+    "admin": {
+      "scopedWithAudienceAndViewRole": 200,
+      "scopedWithoutViewRole": 403,
+      "ordinaryToken": 401,
+      "issuerRealmAudienceConfirmed": true
+    },
+    "signedBearerBroker": {
+      "status": "passed",
+      "signedBearerObserved": true,
+      "brokerSignatureValidation": true,
+      "downstreamIdTokenVerified": true,
+      "brokerLinkPersisted": true,
+      "proxyRestrictionSetting": "default",
+      "assertion": "A normal signed SAML bearer assertion from a second isolated 26.8.2 realm completed federation, produced a verified downstream ID token, and persisted the broker link."
+    },
+    "signedLogout": {
+      "clientSignatureEnabled": true,
+      "sessionPresentBefore": true,
+      "freshHttpSessionWithoutSsoCookie": true,
+      "signedResponseCorrelated": true,
+      "sessionPresentAfter": false
+    }
+  },
+  "issueStatus": [
+    {
+      "issue": 54713,
+      "scenario": "Admin REST rejects an isolated audience mismatch",
+      "endToEndDenial": "pending"
+    },
+    {
+      "issue": 54711,
+      "scenario": "SAML broker rejects a non-bearer assertion",
+      "endToEndDenial": "pending"
+    },
+    {
+      "issue": 54712,
+      "scenario": "SAML broker rejects a restricted assertion",
+      "endToEndDenial": "pending"
+    },
+    {
+      "issue": 53535,
+      "scenario": "SAML SessionIndex back-channel logout requires the initiating client signature",
+      "endToEndDenial": "pending"
+    }
+  ]
+}
