@@ -11,13 +11,13 @@
 | `apiWrapperLinePercent` | 100.0000% | 100% |
 | `apiWrapperBranchPercent` | 100.0000% | 100% |
 | `modelLinePercent` | 100.0000% | 100% |
-| `rawLinePercent` | 94.5022% | 94% |
-| `rawBranchPercent` | 68.2353% | 59% |
+| `rawLinePercent` | 94.5193% | 94% |
+| `rawBranchPercent` | 68.9034% | 59% |
 | `capabilityMethodPercent` | 100.0000% | 100% |
 | `capabilityLinePercent` | 100.0000% | 100% |
 | `capabilityBranchPercent` | 100.0000% | 100% |
 
-MSTest 567/567 通过；矩阵 520/520，无缺失、重复、跳过或失败。SDK 自有源码覆盖 1991/1991 个可执行方法、2955/2955 行、707/707 个分支。
+MSTest 567/567 通过；矩阵 520/520，无缺失、重复、跳过或失败。SDK 自有源码覆盖 2015/2015 个可执行方法、3036/3036 行、749/749 个分支。
 
 `sdkSource*` 包含 SDK 手写代码及生成 API/DTO；`raw*` 还包含 `obj/` 中 .NET 生成的 JSON/正则实现。原始 Cobertura 不删减。能力模块单独统计；Platform 与 Hosting 见独立模块覆盖率报告；DI 通过独立生命周期及原生断言验证。
 

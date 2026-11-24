@@ -1,11 +1,11 @@
 # 兼容应用协议工作流验收
 
-固定 Keycloak 26.8.2，验证输入指纹 `9e8bc9f0d97051e44c0e2d286f6682875d93230c6bd6fca32a398b74b5ed82dc`。
+固定 Keycloak 26.8.2，验证输入指纹 `35dfd183277fbc15688b86592597ac934979c037a1c30bfd993a3aa9162d2d70`。
 
 | 运行模式 | 业务断言 | 不可变证据 |
 | --- | --- | --- |
-| managed | 20/20 | [fa22aa514303](application-protocol-evidence/fa22aa514303225a1d4955cdb872a544df72072e3ed20816bc4f17ef98d116cd.json) |
-| native-aot | 20/20 | [901061884255](application-protocol-evidence/9010618842555bc69d868cf35a5588783e6d079adfa34e8750ae4510a5e556bc.json) |
+| managed | 20/20 | [9cdce6f346c5](application-protocol-evidence/9cdce6f346c536ad288648e2755bcc68dfa79bbdfacd5f7c1beee8fc04293387.json) |
+| native-aot | 20/20 | [77b3d19870b5](application-protocol-evidence/77b3d19870b5e14d5600b08b03fb2163a38338bcaba74a39017b8579cb6d58e0.json) |
 
 覆盖 FGAP v1 下的旧版令牌交换、授权模拟身份和旧版身份代理令牌访问。两个运行模式均在隔离容器网络实际调用固定服务端。
 

@@ -44,6 +44,51 @@ public static class RecoveryContracts
             && details.Headers["x-request-id"].SequenceEqual(["first", "second"]), "native response preserves bytes and headers");
         Check(raw.Message == "The specified domain is invalid." && !raw.ToString().Contains("private-domain"), "legacy display never copies the domain");
 
+        const string generic = "Keycloak Admin API returned 400 for POST.";
+        foreach (var (content, mediaType, expected) in new[]
+        {
+            ("{\"errorMessage\":\"Organization cannot be null.\"}", "application/json", "Organization cannot be null."),
+            ("{\"errorMessage\":\"Group name is missing\"}", "application/problem+json", "Group name is missing"),
+            ("{\"errorMessage\":\"Group representation is missing\"}", "application/json", "Group representation is missing"),
+            ("{\"errorMessage\":\"Domain name cannot be empty\"}", "application/json", "Domain name cannot be empty"),
+            ("{\"errorMessage\":\"Could not create user\"}", "application/json", "Could not create user"),
+            ("{\"errorMessage\":\"unreviewed message\"}", "application/json", generic),
+            ("{\"errorMessage\":null}", "application/json", generic),
+            ("{\"errorMessage\":false}", "application/json", generic),
+            ("{}", "application/json", generic),
+            ("[]", "application/json", generic),
+            ("{\"errorMessage\":\"Group name is missing\"}", "text/plain", generic)
+        })
+        {
+            handler.Action = (_, _) => Task.FromResult(new HttpResponseMessage(HttpStatusCode.BadRequest)
+            {
+                Content = new StringContent(content, Encoding.UTF8, mediaType)
+            });
+            var failure = await Expect<KeycloakAdminException>(() => client.SendAsync(HttpMethod.Post, "/admin/serverinfo"));
+            Check(failure.Message == expected && failure.Response is { } upstream
+                && Encoding.UTF8.GetString(upstream.Content.Span) == content, "display messages are allowlisted independently of the body");
+        }
+
+        using var probeContent = new SynchronousContent(stream =>
+        {
+            Check(stream.CanWrite && !stream.CanRead && !stream.CanSeek, "error body sink is write-only");
+            Action[] unsupported = [() => _ = stream.Length, () => _ = stream.Position, () => stream.Position = 0,
+                () => Check(stream.Read([], 0, 0) == 0, "unexpected response sink read"),
+                () => stream.Seek(0, SeekOrigin.Begin), () => stream.SetLength(0)];
+            foreach (var operation in unsupported)
+            {
+                try { operation(); }
+                catch (NotSupportedException) { continue; }
+                throw new InvalidOperationException("Expected the response sink to reject an unsupported operation.");
+            }
+            stream.Write([0xAB], 0, 1);
+            stream.Flush();
+        });
+        handler.Action = (_, _) => Task.FromResult(new HttpResponseMessage(HttpStatusCode.BadRequest) { Content = probeContent });
+        var synchronous = await Expect<KeycloakAdminException>(() => client.SendAsync(HttpMethod.Post, "/admin/serverinfo"));
+        Check(synchronous.Response is { BodyState: AdminErrorBodyState.Complete } syncResponse
+            && syncResponse.Content.Span.SequenceEqual(new byte[] { 0xAB }), "synchronous response serialization preserves the native body");
+
         const string html = "<html>proxy error</html>";
         handler.Action = (_, _) => Task.FromResult(new HttpResponseMessage(HttpStatusCode.BadGateway)
         {
@@ -326,6 +371,16 @@ public static class RecoveryContracts
         {
             started.SetResult();
             return Task.Delay(Timeout.InfiniteTimeSpan, cancellationToken);
+        }
+        protected override bool TryComputeLength(out long length) { length = 0; return false; }
+    }
+
+    private sealed class SynchronousContent(Action<Stream> write) : HttpContent
+    {
+        protected override Task SerializeToStreamAsync(Stream stream, TransportContext? context)
+        {
+            write(stream);
+            return Task.CompletedTask;
         }
         protected override bool TryComputeLength(out long length) { length = 0; return false; }
     }

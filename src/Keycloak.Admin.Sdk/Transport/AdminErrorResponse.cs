@@ -35,10 +35,11 @@ public sealed class AdminErrorResponse : AdminResponse
     {
         using var deadline = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
         deadline.CancelAfter(ReadTimeout);
-        using var captured = new LimitedBodyStream();
+        using var captured = new MemoryStream();
+        using var destination = new LimitedBodyStream(captured);
         try
         {
-            await response.Content.CopyToAsync(captured, deadline.Token).ConfigureAwait(false);
+            await response.Content.CopyToAsync(destination, deadline.Token).ConfigureAwait(false);
             return new(response, captured.ToArray(), AdminErrorBodyState.Complete);
         }
         catch (BodyLimitReachedException)
@@ -56,8 +57,11 @@ public sealed class AdminErrorResponse : AdminResponse
     internal string? GetDisplayMessage()
     {
         if (StatusCode != HttpStatusCode.BadRequest || BodyState != AdminErrorBodyState.Complete || Content.IsEmpty
-            || !MediaTypeHeaderValue.TryParse(ContentType, out var type) || type.MediaType is not string mediaType
-            || !(mediaType.Equals("application/json", StringComparison.OrdinalIgnoreCase) || mediaType.EndsWith("+json", StringComparison.OrdinalIgnoreCase)))
+            || !MediaTypeHeaderValue.TryParse(ContentType, out var type))
+            return null;
+        string mediaType = type.MediaType!;
+        if (!mediaType.Equals("application/json", StringComparison.OrdinalIgnoreCase)
+            && !mediaType.EndsWith("+json", StringComparison.OrdinalIgnoreCase))
             return null;
 
         try
@@ -69,11 +73,12 @@ public sealed class AdminErrorResponse : AdminResponse
                 return null;
 
             // Never include values reflected from a request in the legacy exception message.
-            return message.GetString() switch
+            string text = message.GetString()!;
+            return text switch
             {
                 "Organization cannot be null." or "Group name is missing" or "Group representation is missing"
-                    or "Domain name cannot be empty" or "Could not create user" => message.GetString(),
-                string text when text.StartsWith("The specified domain is invalid: '", StringComparison.Ordinal)
+                    or "Domain name cannot be empty" or "Could not create user" => text,
+                _ when text.StartsWith("The specified domain is invalid: '", StringComparison.Ordinal)
                     => "The specified domain is invalid.",
                 _ => null
             };
@@ -84,11 +89,8 @@ public sealed class AdminErrorResponse : AdminResponse
     private sealed class BodyLimitReachedException : Exception;
 
     // Limit writes as they arrive so custom HttpContent implementations are bounded too.
-    private sealed class LimitedBodyStream : Stream
+    private sealed class LimitedBodyStream(MemoryStream buffer) : Stream
     {
-        private readonly MemoryStream buffer = new();
-
-        public byte[] ToArray() => buffer.ToArray();
         public override bool CanRead => false;
         public override bool CanSeek => false;
         public override bool CanWrite => true;
@@ -115,12 +117,6 @@ public sealed class AdminErrorResponse : AdminResponse
             cancellationToken.ThrowIfCancellationRequested();
             Write(bytes.Span);
             return ValueTask.CompletedTask;
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing) buffer.Dispose();
-            base.Dispose(disposing);
         }
     }
 }
